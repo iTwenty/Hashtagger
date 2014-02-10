@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Hashtagger</string>
+    <string name="str_twitter">Twitter</string>
+    <string name="str_facebook">Facebook</string>
+    <string name="str_instagram">Instagram</string>
 </resources>
