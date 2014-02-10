@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.view.Menu;
 
 public class MainActivity extends Activity implements ActionBar.TabListener
 {
@@ -24,6 +25,13 @@ public class MainActivity extends Activity implements ActionBar.TabListener
         {
             actionBar.addTab( actionBar.newTab( ).setText( HashtaggerApp.SITES.get( i ) ).setTabListener( this ) );
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu( Menu menu )
+    {
+        getMenuInflater( ).inflate( R.menu.options_menu, menu );
+        return true;
     }
 
     @Override
