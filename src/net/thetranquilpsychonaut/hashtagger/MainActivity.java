@@ -16,7 +16,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener
     public void onCreate( Bundle savedInstanceState )
     {
         super.onCreate( savedInstanceState );
-        setContentView( R.layout.main );
+        setContentView( R.layout.activity_main );
 
         actionBar = getActionBar( );
         actionBar.setNavigationMode( ActionBar.NAVIGATION_MODE_TABS );
