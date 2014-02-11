@@ -2,6 +2,8 @@ package net.thetranquilpsychonaut.hashtagger;
 
 import android.app.Application;
 import android.util.Log;
+import com.squareup.otto.Bus;
+import com.squareup.otto.ThreadEnforcer;
 
 import java.util.ArrayList;
 
@@ -13,6 +15,7 @@ public class HashtaggerApp extends Application
     public static final boolean DEBUG = true;
     public static final ArrayList<String> SITES = new ArrayList<String>( );
     private static HashtaggerApp app;
+    public static final Bus bus = new Bus( ThreadEnforcer.MAIN );
 
     @Override
     public void onCreate( )

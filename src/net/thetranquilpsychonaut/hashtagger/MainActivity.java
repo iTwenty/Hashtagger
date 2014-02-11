@@ -4,10 +4,12 @@ import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.SearchView;
 
@@ -31,6 +33,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         HashtaggerSitesAdapter vpSitesPagerAdapter = new HashtaggerSitesAdapter( getSupportFragmentManager( ), this );
         vpSitesPager.setAdapter( vpSitesPagerAdapter );
         vpSitesPager.setOnPageChangeListener( this );
+        vpSitesPager.setOffscreenPageLimit( HashtaggerApp.SITES.size( ) );
 
         actionBar = getActionBar( );
         actionBar.setNavigationMode( ActionBar.NAVIGATION_MODE_TABS );
@@ -39,6 +42,16 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         {
             actionBar.addTab( actionBar.newTab( ).setText( HashtaggerApp.SITES.get( i ) ).setTabListener( this ) );
         }
+
+        if( getIntent( ).getAction( ).equals( Intent.ACTION_SEARCH ) )
+            handleIntent( getIntent( ) );
+    }
+
+    @Override
+    protected void onNewIntent( Intent intent )
+    {
+        setIntent( intent );
+        handleIntent( intent );
     }
 
     @Override
@@ -49,6 +62,15 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         svHashtag = ( SearchView )menu.findItem( R.id.sv_hashtag ).getActionView( );
         svHashtag.setSearchableInfo( searchManager.getSearchableInfo( getComponentName( ) ) );
         return true;
+    }
+
+    public void handleIntent( Intent intent )
+    {
+        String hashtag = intent.getStringExtra( SearchManager.QUERY );
+        svHashtag.setIconified( true );
+        svHashtag.onActionViewCollapsed( );
+        setTitle( hashtag );
+        HashtaggerApp.bus.post( hashtag );
     }
 
     @Override
