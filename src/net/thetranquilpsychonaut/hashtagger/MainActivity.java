@@ -2,11 +2,14 @@ package net.thetranquilpsychonaut.hashtagger;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
+import android.widget.SearchView;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener, ViewPager.OnPageChangeListener
 {
@@ -16,6 +19,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     ActionBar actionBar;
     ViewPager vpSitesPager;
     FragmentPagerAdapter vpSitesPagerAdapter;
+    SearchView svHashtag;
 
     @Override
     public void onCreate( Bundle savedInstanceState )
@@ -41,6 +45,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     public boolean onCreateOptionsMenu( Menu menu )
     {
         getMenuInflater( ).inflate( R.menu.options_menu, menu );
+        SearchManager searchManager = ( SearchManager )getSystemService( Context.SEARCH_SERVICE );
+        svHashtag = ( SearchView )menu.findItem( R.id.sv_hashtag ).getActionView( );
+        svHashtag.setSearchableInfo( searchManager.getSearchableInfo( getComponentName( ) ) );
         return true;
     }
 
