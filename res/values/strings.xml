@@ -6,4 +6,10 @@
     <string name="str_instagram">Instagram</string>
     <string name="str_hashtag_title">Hashtag</string>
     <string name="str_hashtag_hint">Search Hashtag</string>
+    <string name="str_enter_hashtag">Enter a hashtag</string>
+    <string name="str_no_network">No network connection</string>
+    <string name="str_new_results">new results</string>
+    <string name="str_retry">Retry</string>
+    <string name="str_username">Username</string>
+    <string name="str_password">Password</string>
 </resources>

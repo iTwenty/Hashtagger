@@ -12,10 +12,14 @@ import java.util.ArrayList;
  */
 public class HashtaggerApp extends Application
 {
-    public static final boolean DEBUG = true;
+    public static final int TIME_DELAY = 5000;
     public static final ArrayList<String> SITES = new ArrayList<String>( );
-    private static HashtaggerApp app;
-    public static final Bus bus = new Bus( ThreadEnforcer.MAIN );
+    public static HashtaggerApp app;
+    public static final Bus bus = new Bus( ThreadEnforcer.ANY );
+    public static final String OAUTH_CONSUMER_KEY = "DuqA2VDJshEGIBkoJQmQ";
+    public static final String OAUTH_CONSUMER_SECRET = "urM01bpqvEyw4ii3Ein59tMaTmG1H7k1RLKwTXQgo";
+    public static final String OAUTH_ACCESS_TOKEN = "1644677155-tJl5mEps5YENMpQin5IEiKjSlMjMIIWSPJby3Wu";
+    public static final String OAUTH_ACCESS_TOKEN_SECRET = "gUpdkY75TYhPfO85VvZ6Qx6IdHwhtPzgq3hngIx7xfONn";
 
     @Override
     public void onCreate( )

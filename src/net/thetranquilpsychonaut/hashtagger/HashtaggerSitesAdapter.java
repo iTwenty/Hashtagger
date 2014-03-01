@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
 
 /**
  * Created by itwenty on 2/10/14.
@@ -27,18 +26,18 @@ public class HashtaggerSitesAdapter extends FragmentPagerAdapter
         switch ( i )
         {
             case 0:
-                return new TwitterFragment( );
+                return new TwitterFragment();
             case 1:
-                return new FacebookFragment( );
+                return new FacebookFragment();
             case 2:
-                return new InstagramFragment( );
+                return new InstagramFragment();
         }
         return null;
     }
 
     @Override
-    public int getCount( )
+    public int getCount()
     {
-        return HashtaggerApp.SITES.size( );
+        return HashtaggerApp.SITES.size();
     }
 }
