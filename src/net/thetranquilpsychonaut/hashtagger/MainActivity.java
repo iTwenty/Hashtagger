@@ -80,7 +80,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
     public void handleIntent( Intent intent )
     {
-        String hashtag = intent.getStringExtra( SearchManager.QUERY );
+        String hashtag = "#" + intent.getStringExtra( SearchManager.QUERY );
         svHashtag.setIconified( true );
         svHashtag.onActionViewCollapsed();
         setTitle( hashtag );

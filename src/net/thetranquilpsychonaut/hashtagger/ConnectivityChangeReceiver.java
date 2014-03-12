@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,12 +16,12 @@ import java.util.List;
  */
 public class ConnectivityChangeReceiver extends BroadcastReceiver
 {
-    private ArrayList<ConnectivityChangeListener> listeners;
+    private List<ConnectivityChangeListener> listeners;
 
     public ConnectivityChangeReceiver()
     {
         super();
-        listeners = new ArrayList<ConnectivityChangeListener>( );
+        listeners = new ArrayList<ConnectivityChangeListener>();
     }
 
     public void addListener( ConnectivityChangeListener ccl )
@@ -30,13 +32,43 @@ public class ConnectivityChangeReceiver extends BroadcastReceiver
     @Override
     public void onReceive( Context context, Intent intent )
     {
-        NetworkInfo info = ( ( ConnectivityManager )context.getSystemService( Context.CONNECTIVITY_SERVICE ) ).getActiveNetworkInfo();
-        for( ConnectivityChangeListener ccl : listeners )
+
+        Log.d( "twtr", "onrec" );
+        //debugIntent( intent, "twtr" );
+        NetworkInfo info = ( ( ConnectivityManager ) context.getSystemService( Context.CONNECTIVITY_SERVICE ) ).getActiveNetworkInfo();
+        for ( ConnectivityChangeListener ccl : listeners )
         {
-            if( info != null && info.isConnected() )
-                ccl.onConnected();
+            if ( info != null && info.isConnected() )
+            {
+                if( HashtaggerApp.PREV_CONNECTED == false )
+                    ccl.onConnected();
+                HashtaggerApp.PREV_CONNECTED = true;
+            }
             else
-                ccl.onDisconnected();
+            {
+                if( HashtaggerApp.PREV_CONNECTED == true )
+                    ccl.onDisconnected();
+                HashtaggerApp.PREV_CONNECTED = false;
+            }
+        }
+    }
+
+    private void debugIntent( Intent intent, String tag )
+    {
+        Log.v( tag, "action: " + intent.getAction() );
+        Log.v( tag, "component: " + intent.getComponent() );
+        Bundle extras = intent.getExtras();
+        if ( extras != null )
+        {
+            for ( String key : extras.keySet() )
+            {
+                Log.v( tag, "key [" + key + "]: " +
+                    extras.get( key ) + "\n");
+            }
+        }
+        else
+        {
+            Log.v( tag, "no extras" );
         }
     }
 }

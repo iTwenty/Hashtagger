@@ -1,82 +1,87 @@
 package net.thetranquilpsychonaut.hashtagger;
 
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.app.Fragment;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListAdapter;
-import android.widget.Toast;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import com.squareup.otto.Subscribe;
 import twitter4j.*;
-import twitter4j.conf.ConfigurationBuilder;
 
 import java.util.ArrayList;
-import java.util.TimerTask;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by itwenty on 2/26/14.
  */
 public class TwitterFragment extends SitesFragment
 {
-    ArrayList<Status>        allStatuses;
-    ArrayList<Status>        newStatuses;
-    TwitterListAdapter       twitterListAdapter;
-    ConfigurationBuilder     cb;
-    String                   hashtag;
-
-    @Override
-    public void onActivityCreated( Bundle savedInstanceState )
-    {
-        twitterListAdapter = new TwitterListAdapter( getActivity(), R.layout.fragment_twitter_list_row, allStatuses );
-        hashtag = null;
-        cb = new ConfigurationBuilder();
-        cb.setOAuthConsumerKey( HashtaggerApp.OAUTH_CONSUMER_KEY );
-        cb.setOAuthConsumerSecret( HashtaggerApp.OAUTH_CONSUMER_SECRET );
-        cb.setOAuthAccessToken( HashtaggerApp.OAUTH_ACCESS_TOKEN );
-        cb.setOAuthAccessTokenSecret( HashtaggerApp.OAUTH_ACCESS_TOKEN_SECRET );
-        super.onActivityCreated( savedInstanceState );
-    }
+    ArrayList<Status>  allStatuses;
+    ArrayList<Status>  newStatuses;
+    TwitterListAdapter twitterListAdapter;
+    String             hashtag;
+    Ready              readyHolder;
+    Loading            loadingHolder;
+    NoNetwork          noNetworkHolder;
+    TwitterTask        twitterTask;
 
     @Override
     protected View getViewReady( LayoutInflater inflater )
     {
-        viewReady = inflater.inflate( R.layout.view_ready, null );
+        View viewReady = inflater.inflate( R.layout.view_ready, null );
+        readyHolder = new Ready();
+        allStatuses = new ArrayList<Status>();
+        newStatuses = new ArrayList<Status>();
+        twitterListAdapter = new TwitterListAdapter( HashtaggerApp.app, R.layout.fragment_twitter_list_row, allStatuses );
+        readyHolder.lvResultsList = ( ListView ) viewReady.findViewById( R.id.lv_results_list );
+        readyHolder.lvResultsList.setAdapter( twitterListAdapter );
+        readyHolder.lvResultsListEmpty = ( TextView ) viewReady.findViewById( R.id.tv_results_list_empty );
+        readyHolder.lvResultsList.setEmptyView( readyHolder.lvResultsListEmpty );
+        readyHolder.btnNewResults = ( Button ) viewReady.findViewById( R.id.btn_new_results );
+        readyHolder.btnNewResults.setVisibility( View.GONE );
         return viewReady;
     }
 
     @Override
     protected View getViewLoading( LayoutInflater inflater )
     {
-        viewLoading = inflater.inflate( R.layout.view_loading, null );
+        View viewLoading = inflater.inflate( R.layout.view_loading, null );
+        loadingHolder = new Loading();
+        loadingHolder.pgbrLoadingResults = ( ProgressBar ) viewLoading.findViewById( R.id.pgbr_loading_results );
         return viewLoading;
     }
 
     @Override
     protected View getViewNoNetwork( LayoutInflater inflater )
     {
-        viewNoNetwork = inflater.inflate( R.layout.view_no_network, null );
+        View viewNoNetwork = inflater.inflate( R.layout.view_no_network, null );
+        noNetworkHolder = new NoNetwork();
+        noNetworkHolder.tvNoNetwork = ( TextView ) viewNoNetwork.findViewById( R.id.tv_no_network );
         return viewNoNetwork;
     }
 
     @Override
     protected View getViewLogin( LayoutInflater inflater )
     {
-        viewLogin = inflater.inflate( R.layout.view_login, null );
+        View viewLogin = inflater.inflate( R.layout.view_login, null );
         return viewLogin;
     }
 
     @Subscribe
-    public void searchHashtag( String hashtag )
+    public void searchHashtag( final String hashtag )
     {
+        twitterListAdapter.clear();
+        twitterListAdapter.notifyDataSetChanged();
+        if ( null != twitterTask )
+            twitterTask = null;
         if ( null == this.hashtag )
-            this.hashtag = "#" + hashtag;
-        Toast.makeText( getActivity(), this.hashtag, Toast.LENGTH_SHORT ).show();
+            this.hashtag = hashtag;
+        if ( !HashtaggerApp.isNetworkConnected() )
+            return;
+        twitterTask = new TwitterTask( this );
+        twitterTask.execute( hashtag );
     }
 
     @Override
@@ -90,4 +95,74 @@ public class TwitterFragment extends SitesFragment
     {
         super.onDisconnected();
     }
+
+    class Ready
+    {
+        public ListView lvResultsList;
+        public TextView lvResultsListEmpty;
+        public Button   btnNewResults;
+    }
+
+    ;
+
+    class Loading
+    {
+        public ProgressBar pgbrLoadingResults;
+    }
+
+    ;
+
+    class NoNetwork
+    {
+        public TextView tvNoNetwork;
+    }
+
+    ;
+
+    static class TwitterTask extends AsyncTask<String, Void, QueryResult>
+    {
+        Twitter         twitter;
+        Query           query;
+        QueryResult     result;
+        TwitterFragment fragment;
+
+        public TwitterTask( TwitterFragment f )
+        {
+            twitter = new TwitterFactory( HashtaggerApp.getTwitterConfiguration() ).getInstance();
+            query = new Query();
+            result = null;
+            fragment = f;
+        }
+
+        @Override
+        protected void onPreExecute()
+        {
+            fragment.showLoadingView();
+        }
+
+        @Override
+        protected QueryResult doInBackground( String... params )
+        {
+
+            query.setQuery( params[0] );
+            try
+            {
+                result = twitter.search( query );
+            }
+            catch ( TwitterException e )
+            {
+                e.printStackTrace();
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute( QueryResult queryResult )
+        {
+            fragment.showReadyView();
+            fragment.twitterListAdapter.addAll( queryResult.getTweets() );
+            fragment.twitterListAdapter.notifyDataSetChanged();
+        }
+    }
+
 }

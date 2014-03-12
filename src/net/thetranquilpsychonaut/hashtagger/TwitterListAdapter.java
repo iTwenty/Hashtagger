@@ -17,13 +17,11 @@ import java.util.List;
  */
 public class TwitterListAdapter extends ArrayAdapter<Status>
 {
-    List<Status> statuses;
     Context ctx;
 
     public TwitterListAdapter( Context context, int textViewResourceId, List<Status> objects )
     {
         super( context, textViewResourceId, objects );
-        statuses = new ArrayList<Status>();
         ctx = context;
     }
 
@@ -37,7 +35,7 @@ public class TwitterListAdapter extends ArrayAdapter<Status>
     {
         View view = convertView;
         ViewHolder viewHolder;
-        Status status = statuses.get( position );
+        Status status = getItem( position );
         LayoutInflater inflater = ( LayoutInflater )ctx.getSystemService( Activity.LAYOUT_INFLATER_SERVICE );
 
         if( view == null )

@@ -2,6 +2,7 @@ package net.thetranquilpsychonaut.hashtagger;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,22 @@ public abstract class SitesFragment extends Fragment implements ConnectivityChan
 {
     public enum ActiveView
     {
-        READY, LOADING, NO_NETWORK, LOGIN
+        READY       (0),
+        LOADING     (1),
+        NO_NETWORK  (2),
+        LOGIN       (3);
+
+        private int index;
+
+        ActiveView( int index )
+        {
+            this.index = index;
+        }
+
+        int index()
+        {
+            return index;
+        }
     }
 
     ;
@@ -38,10 +54,10 @@ public abstract class SitesFragment extends Fragment implements ConnectivityChan
         viewLoading = getViewLoading( inflater );
         viewNoNetwork = getViewNoNetwork( inflater );
         viewLogin = getViewLogin( inflater );
-        vaPossibleViews.addView( viewReady, 0 );
-        vaPossibleViews.addView( viewLoading, 1 );
-        vaPossibleViews.addView( viewNoNetwork, 2 );
-        vaPossibleViews.addView( viewLogin, 3 );
+        vaPossibleViews.addView( viewReady, ActiveView.READY.index() );
+        vaPossibleViews.addView( viewLoading, ActiveView.LOADING.index() );
+        vaPossibleViews.addView( viewNoNetwork, ActiveView.NO_NETWORK.index() );
+        vaPossibleViews.addView( viewLogin, ActiveView.LOGIN.index() );
         return v;
     }
 
@@ -63,23 +79,40 @@ public abstract class SitesFragment extends Fragment implements ConnectivityChan
         super.onResume();
     }
 
+    public void showReadyView()
+    {
+        vaPossibleViews.setDisplayedChild( vaPossibleViews.indexOfChild( viewReady ) );
+        activeView = ActiveView.READY;
+    }
+
+    public void showLoadingView()
+    {
+        vaPossibleViews.setDisplayedChild( vaPossibleViews.indexOfChild( viewLoading ) );
+        activeView = ActiveView.LOADING;
+    }
+
+    public void showNoNetworkView()
+    {
+        vaPossibleViews.setDisplayedChild( vaPossibleViews.indexOfChild( viewNoNetwork ) );
+        activeView = ActiveView.NO_NETWORK;
+    }
+
+    public void showLoginView()
+    {
+        vaPossibleViews.setDisplayedChild( vaPossibleViews.indexOfChild( viewLogin ) );
+        activeView = ActiveView.LOGIN;
+    }
+
     @Override
     public void onConnected()
     {
-        if ( activeView != ActiveView.READY )
-        {
-            vaPossibleViews.setDisplayedChild( vaPossibleViews.indexOfChild( viewReady ) );
-            activeView = ActiveView.READY;
-        }
+        Log.d( "twtr", "onConnected" );
+        showReadyView();
     }
 
     @Override
     public void onDisconnected()
     {
-        if ( activeView != ActiveView.NO_NETWORK )
-        {
-            vaPossibleViews.setDisplayedChild( vaPossibleViews.indexOfChild( viewNoNetwork ) );
-            activeView = ActiveView.NO_NETWORK;
-        }
+        showNoNetworkView();
     }
 }

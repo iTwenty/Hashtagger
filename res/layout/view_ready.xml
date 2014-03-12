@@ -24,7 +24,6 @@
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/str_new_results"
-        android:background="?android:selectableItemBackground" />
+        android:text="@string/str_new_results"/>
 
 </RelativeLayout>
