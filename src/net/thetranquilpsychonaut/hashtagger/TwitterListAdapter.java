@@ -9,7 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import twitter4j.Status;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

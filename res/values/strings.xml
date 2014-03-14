@@ -9,7 +9,12 @@
     <string name="str_enter_hashtag">Enter a hashtag</string>
     <string name="str_no_network">No network connection</string>
     <string name="str_new_results">new results</string>
+    <string name="str_new_result">new result</string>
+    <string name="str_0_new_results">0 new results</string>
     <string name="str_retry">Retry</string>
     <string name="str_username">Username</string>
     <string name="str_password">Password</string>
+    <string name="str_error">Something went horribly wrong :(</string>
+    <string name="str_no_results">No results found.</string>
+    <string name="str_listening_new_tweets">Listening for new tweets...</string>
 </resources>

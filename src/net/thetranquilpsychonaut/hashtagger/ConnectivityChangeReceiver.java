@@ -32,8 +32,6 @@ public class ConnectivityChangeReceiver extends BroadcastReceiver
     @Override
     public void onReceive( Context context, Intent intent )
     {
-
-        Log.d( "twtr", "onrec" );
         //debugIntent( intent, "twtr" );
         NetworkInfo info = ( ( ConnectivityManager ) context.getSystemService( Context.CONNECTIVITY_SERVICE ) ).getActiveNetworkInfo();
         for ( ConnectivityChangeListener ccl : listeners )

@@ -1,7 +1,7 @@
 package net.thetranquilpsychonaut.hashtagger;
 
-import android.os.AsyncTask;
-import android.util.Log;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -9,14 +9,15 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.squareup.otto.Subscribe;
-import twitter4j.*;
+import twitter4j.Status;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by itwenty on 2/26/14.
  */
-public class TwitterFragment extends SitesFragment
+public class TwitterFragment extends SitesFragment implements TwitterHandlerListener, View.OnClickListener
 {
     ArrayList<Status>  allStatuses;
     ArrayList<Status>  newStatuses;
@@ -25,7 +26,16 @@ public class TwitterFragment extends SitesFragment
     Ready              readyHolder;
     Loading            loadingHolder;
     NoNetwork          noNetworkHolder;
-    TwitterTask        twitterTask;
+    Error              errorHolder;
+    Twitterhandler     twitterhandler;
+    ColorStateList     tvListeningIndicatorColors;
+
+    @Override
+    protected SitesHandler getSitesHandler()
+    {
+        twitterhandler = new Twitterhandler();
+        return twitterhandler;
+    }
 
     @Override
     protected View getViewReady( LayoutInflater inflater )
@@ -35,6 +45,8 @@ public class TwitterFragment extends SitesFragment
         allStatuses = new ArrayList<Status>();
         newStatuses = new ArrayList<Status>();
         twitterListAdapter = new TwitterListAdapter( HashtaggerApp.app, R.layout.fragment_twitter_list_row, allStatuses );
+        readyHolder.tvListeningIndicator = ( TextView )viewReady.findViewById( R.id.tv_listening_indicator );
+        tvListeningIndicatorColors = readyHolder.tvListeningIndicator.getTextColors();
         readyHolder.lvResultsList = ( ListView ) viewReady.findViewById( R.id.lv_results_list );
         readyHolder.lvResultsList.setAdapter( twitterListAdapter );
         readyHolder.lvResultsListEmpty = ( TextView ) viewReady.findViewById( R.id.tv_results_list_empty );
@@ -69,35 +81,125 @@ public class TwitterFragment extends SitesFragment
         return viewLogin;
     }
 
-    @Subscribe
-    public void searchHashtag( final String hashtag )
+    @Override
+    protected View getViewError( LayoutInflater inflater )
     {
+        View viewError = inflater.inflate( R.layout.view_error, null );
+        errorHolder = new Error();
+        errorHolder.tvError = ( TextView )viewError.findViewById( R.id.tv_error );
+        return viewError;
+    }
+
+    @Subscribe
+    public void searchHashtag( String hashtag )
+    {
+        newStatuses.clear();
         twitterListAdapter.clear();
         twitterListAdapter.notifyDataSetChanged();
-        if ( null != twitterTask )
-            twitterTask = null;
-        if ( null == this.hashtag )
-            this.hashtag = hashtag;
-        if ( !HashtaggerApp.isNetworkConnected() )
-            return;
-        twitterTask = new TwitterTask( this );
-        twitterTask.execute( hashtag );
+        this.hashtag = hashtag;
+        if( null != twitterhandler )
+            twitterhandler.destroyCurrentSearch();
+        twitterhandler.setHashtag( this.hashtag );
+        twitterhandler.setListener( this );
+        twitterhandler.beginSearch();
+    }
+
+    @Override
+    public void onPreExecute()
+    {
+        showLoadingView();
+    }
+
+    @Override
+    public void onPostExecute( List<Status> statuses )
+    {
+        showReadyView();
+        if( null != statuses )
+        {
+            twitterListAdapter.addAll( statuses );
+            twitterListAdapter.notifyDataSetChanged();
+        }
+        else
+        {
+            readyHolder.lvResultsListEmpty.setText( getResources().getString( R.string.str_no_results ) );
+        }
+    }
+
+    @Override
+    public void onSwitchToListener()
+    {
+        readyHolder.tvListeningIndicator.setVisibility( View.VISIBLE );
+        readyHolder.btnNewResults.setVisibility( View.VISIBLE );
+        readyHolder.btnNewResults.setOnClickListener( this );
+        updateButtonCount( readyHolder.btnNewResults, 0 );
+    }
+
+    @Override
+    public void onStatus( Status status )
+    {
+        newStatuses.add( status );
+        getActivity().runOnUiThread( new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                updateButtonCount( readyHolder.btnNewResults, newStatuses.size() );
+            }
+        } );
+    }
+
+    @Override
+    public void onError()
+    {
+        showErrorView();
+    }
+
+    @Override
+    public void onClick( View v )
+    {
+        if ( v.equals( readyHolder.btnNewResults ) )
+        {
+            readyHolder.lvResultsList.smoothScrollToPosition( allStatuses.size() - 1 );
+            twitterListAdapter.addAll( newStatuses );
+            twitterListAdapter.notifyDataSetChanged();
+            newStatuses.clear();
+            updateButtonCount( ( Button ) v, newStatuses.size() );
+        }
+    }
+
+    private void updateButtonCount( Button button, int size )
+    {
+        int resultStringResourceId = size == 1 ? R.string.str_new_result : R.string.str_new_results;
+        button.setText( size + " " + getResources().getString( resultStringResourceId ) );
     }
 
     @Override
     public void onConnected()
     {
+        if( twitterhandler.isInListeningMode() )
+        {
+            readyHolder.tvListeningIndicator.setBackgroundColor( getResources().getColor( android.R.color.transparent ) );
+            readyHolder.tvListeningIndicator.setTextColor( tvListeningIndicatorColors.getDefaultColor() );
+            readyHolder.tvListeningIndicator.setText( getResources().getString( R.string.str_listening_new_tweets ) );
+        }
         super.onConnected();
     }
 
     @Override
     public void onDisconnected()
     {
+        if( twitterhandler.isInListeningMode() )
+        {
+            readyHolder.tvListeningIndicator.setBackgroundColor( getResources().getColor( android.R.color.holo_red_light ) );
+            readyHolder.tvListeningIndicator.setTextColor( getResources().getColor( android.R.color.black ) );
+            readyHolder.tvListeningIndicator.setText( getResources().getString( R.string.str_no_network ) );
+        }
         super.onDisconnected();
     }
 
     class Ready
     {
+        public TextView tvListeningIndicator;
         public ListView lvResultsList;
         public TextView lvResultsListEmpty;
         public Button   btnNewResults;
@@ -119,50 +221,8 @@ public class TwitterFragment extends SitesFragment
 
     ;
 
-    static class TwitterTask extends AsyncTask<String, Void, QueryResult>
+    class Error
     {
-        Twitter         twitter;
-        Query           query;
-        QueryResult     result;
-        TwitterFragment fragment;
-
-        public TwitterTask( TwitterFragment f )
-        {
-            twitter = new TwitterFactory( HashtaggerApp.getTwitterConfiguration() ).getInstance();
-            query = new Query();
-            result = null;
-            fragment = f;
-        }
-
-        @Override
-        protected void onPreExecute()
-        {
-            fragment.showLoadingView();
-        }
-
-        @Override
-        protected QueryResult doInBackground( String... params )
-        {
-
-            query.setQuery( params[0] );
-            try
-            {
-                result = twitter.search( query );
-            }
-            catch ( TwitterException e )
-            {
-                e.printStackTrace();
-            }
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute( QueryResult queryResult )
-        {
-            fragment.showReadyView();
-            fragment.twitterListAdapter.addAll( queryResult.getTweets() );
-            fragment.twitterListAdapter.notifyDataSetChanged();
-        }
+        public TextView tvError;
     }
-
 }
