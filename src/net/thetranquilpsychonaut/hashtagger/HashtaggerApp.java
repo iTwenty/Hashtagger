@@ -38,10 +38,6 @@ public class HashtaggerApp extends Application
     public static       SharedPreferences prefs                                 = null;
     public static final String            USER_KEY                              = "user";
 
-//    public static final String            OAUTH_ACCESS_TOKEN            = "1644677155-tJl5mEps5YENMpQin5IEiKjSlMjMIIWSPJby3Wu";
-//    public static final String            OAUTH_ACCESS_TOKEN_SECRET     = "gUpdkY75TYhPfO85VvZ6Qx6IdHwhtPzgq3hngIx7xfONn";
-
-
     @Override
     public void onCreate()
     {
