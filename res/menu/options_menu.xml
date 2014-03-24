@@ -7,4 +7,9 @@
         android:icon="@android:drawable/ic_menu_search"
         android:showAsAction="always"
         android:actionViewClass="android.widget.SearchView" />
+    <item
+        android:id="@+id/it_logout_twitter"
+        android:title="@string/str_logout_twitter"
+        android:showAsAction="never"
+        android:visible="false" />
 </menu>

@@ -1,23 +1,45 @@
-package net.thetranquilpsychonaut.hashtagger;
+package net.thetranquilpsychonaut.hashtagger.ui.twitter;
 
 import android.os.AsyncTask;
+import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
+import net.thetranquilpsychonaut.hashtagger.Helper;
+import net.thetranquilpsychonaut.hashtagger.ui.SitesHandler;
 import twitter4j.*;
 
 /**
  * Created by itwenty on 3/13/14.
  */
-public class Twitterhandler implements StatusListener, SitesHandler
+public class TwitterSearchHandler implements StatusListener, SitesHandler
 {
-    TwitterTask            twitterTask;
-    TwitterStream          twitterStream;
-    FilterQuery            filterQuery;
-    String                 hashtag;
-    TwitterHandlerListener listener;
-    boolean                isInListeningMode;
+    TwitterTask                  twitterTask;
+    Twitter                      twitter;
+    TwitterStream                twitterStream;
+    FilterQuery                  filterQuery;
+    String                       hashtag;
+    TwitterSearchHandlerListener listener;
+    boolean                      isInListeningMode;
 
-    public Twitterhandler()
+    public TwitterSearchHandler()
     {
+        this.twitter = new TwitterFactory( HashtaggerApp.CONFIGURATION ).getInstance();
+        this.twitterStream = new TwitterStreamFactory( HashtaggerApp.CONFIGURATION ).getInstance();
+        if( TwitterUserHandler.isUserLoggedIn() )
+        {
+            setAccessToken();
+        }
         reset();
+    }
+
+    public void setAccessToken()
+    {
+        twitter.setOAuthAccessToken( TwitterUserHandler.getAccessToken() );
+        twitterStream.setOAuthAccessToken( TwitterUserHandler.getAccessToken() );
+    }
+
+    public void clearAccessToken()
+    {
+        twitter.setOAuthAccessToken( null );
+        twitterStream.setOAuthAccessToken( null );
     }
 
     public void beginSearch()
@@ -25,11 +47,10 @@ public class Twitterhandler implements StatusListener, SitesHandler
         this.twitterTask.execute( this.hashtag );
     }
 
-    public void setListener( TwitterHandlerListener listener )
+    public void setListener( TwitterSearchHandlerListener listener )
     {
         this.listener = listener;
     }
-
 
     public void setHashtag( String hashtag )
     {
@@ -46,23 +67,19 @@ public class Twitterhandler implements StatusListener, SitesHandler
     private void reset()
     {
         twitterTask = new TwitterTask( this );
-        twitterStream = new TwitterStreamFactory( HashtaggerApp.CONFIGURATION ).getInstance();
         filterQuery = new FilterQuery();
-        listener = null;
         hashtag = null;
         isInListeningMode = false;
     }
 
-    static class TwitterTask extends AsyncTask<String, Void, QueryResult>
+    private static class TwitterTask extends AsyncTask<String, Void, Void>
     {
-        Twitter        twitter;
-        Query          query;
-        QueryResult    result;
-        Twitterhandler twitterhandler;
+        Query                query;
+        QueryResult          result;
+        TwitterSearchHandler twitterhandler;
 
-        public TwitterTask( Twitterhandler twitterhandler )
+        public TwitterTask( TwitterSearchHandler twitterhandler )
         {
-            twitter = new TwitterFactory( HashtaggerApp.CONFIGURATION ).getInstance();
             query = new Query();
             this.twitterhandler = twitterhandler;
             result = null;
@@ -71,37 +88,38 @@ public class Twitterhandler implements StatusListener, SitesHandler
         @Override
         protected void onPreExecute()
         {
-            twitterhandler.listener.onPreExecute();
+            twitterhandler.listener.whileSearching();
         }
 
         @Override
-        protected QueryResult doInBackground( String... params )
+        protected Void doInBackground( String... params )
         {
             query.setQuery( params[0] );
             try
             {
-                result = twitter.search( query );
+                if( null == twitterhandler.twitter.getOAuthAccessToken() )
+                    throw new TwitterException("");
+                result = twitterhandler.twitter.search( query );
             }
             catch ( TwitterException e )
             {
-                e.printStackTrace();
+                Helper.debug( "Error while searching  for " + params[0] );
+                twitterhandler.listener.onError();
             }
-            finally
-            {
-                return result;
-            }
+            return null;
         }
 
         @Override
-        protected void onPostExecute( QueryResult queryResult )
+        protected void onPostExecute( Void aVoid )
         {
-            if ( null != queryResult )
+            if ( null != result )
             {
-                twitterhandler.listener.onPostExecute( queryResult.getTweets() );
+                twitterhandler.listener.afterSearching( result.getTweets() );
                 twitterhandler.switchToListeningMode();
             }
             else
             {
+                Helper.debug( "Result is null" );
                 twitterhandler.listener.onError();
             }
         }
@@ -109,7 +127,7 @@ public class Twitterhandler implements StatusListener, SitesHandler
 
     public void switchToListeningMode()
     {
-        listener.onSwitchToListener();
+        listener.onBeginStream();
         isInListeningMode = true;
         filterQuery.track( new String[]{ this.hashtag } );
         twitterStream.addListener( this );
@@ -168,6 +186,7 @@ public class Twitterhandler implements StatusListener, SitesHandler
     @Override
     public void onException( Exception e )
     {
-
+        Helper.debug( "Error while listening" );
+        listener.onStreamError();
     }
 }

@@ -17,4 +17,6 @@
     <string name="str_error">Something went horribly wrong :(</string>
     <string name="str_no_results">No results found.</string>
     <string name="str_listening_new_tweets">Listening for new tweets...</string>
+    <string name="str_logout_twitter">Logout</string>
+    <string name="str_title_activity_twitter_auth">Sign In With Twitter</string>
 </resources>

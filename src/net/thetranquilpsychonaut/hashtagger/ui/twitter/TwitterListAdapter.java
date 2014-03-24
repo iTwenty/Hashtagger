@@ -1,4 +1,4 @@
-package net.thetranquilpsychonaut.hashtagger;
+package net.thetranquilpsychonaut.hashtagger.ui.twitter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import net.thetranquilpsychonaut.hashtagger.R;
 import twitter4j.Status;
 
 import java.util.List;

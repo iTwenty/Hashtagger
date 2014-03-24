@@ -1,4 +1,4 @@
-package net.thetranquilpsychonaut.hashtagger;
+package net.thetranquilpsychonaut.hashtagger.ui.instagram;
 
 import android.support.v4.app.Fragment;
 

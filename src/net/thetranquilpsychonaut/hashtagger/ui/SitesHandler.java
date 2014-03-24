@@ -1,4 +1,4 @@
-package net.thetranquilpsychonaut.hashtagger;
+package net.thetranquilpsychonaut.hashtagger.ui;
 
 /**
  * Created by itwenty on 3/14/14.

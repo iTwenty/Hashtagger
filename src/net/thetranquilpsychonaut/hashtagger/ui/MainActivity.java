@@ -1,4 +1,4 @@
-package net.thetranquilpsychonaut.hashtagger;
+package net.thetranquilpsychonaut.hashtagger.ui;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
@@ -8,10 +8,18 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.widget.SearchView;
+import net.thetranquilpsychonaut.hashtagger.*;
+import net.thetranquilpsychonaut.hashtagger.otto.OAuthLoginCancelEvent;
+import net.thetranquilpsychonaut.hashtagger.otto.HashtagEvent;
+import net.thetranquilpsychonaut.hashtagger.otto.OAuthVerifierEvent;
+import net.thetranquilpsychonaut.hashtagger.ui.twitter.TwitterAuthHandler;
+
+import java.util.List;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener, ViewPager.OnPageChangeListener
 {
@@ -76,13 +84,24 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         return true;
     }
 
+    @Override
+    protected void onActivityResult( int requestCode, int resultCode, Intent data )
+    {
+        Helper.debug( "activity onactivityresult" );
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        if( null != fragments )
+        {
+            for(  Fragment f : fragments )
+                f.onActivityResult( requestCode, resultCode, data );
+        }
+    }
+
     public void handleIntent( Intent intent )
     {
         String hashtag = "#" + intent.getStringExtra( SearchManager.QUERY );
         svHashtag.setIconified( true );
         svHashtag.onActionViewCollapsed();
-        setTitle( hashtag );
-        HashtaggerApp.bus.post( hashtag );
+        HashtaggerApp.bus.post( new HashtagEvent( hashtag ) );
     }
 
     public ConnectivityChangeReceiver getConnectivityChangeReceiver()

@@ -4,6 +4,9 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import net.thetranquilpsychonaut.hashtagger.ui.facebook.FacebookFragment;
+import net.thetranquilpsychonaut.hashtagger.ui.instagram.InstagramFragment;
+import net.thetranquilpsychonaut.hashtagger.ui.twitter.TwitterFragment;
 
 /**
  * Created by itwenty on 2/10/14.
