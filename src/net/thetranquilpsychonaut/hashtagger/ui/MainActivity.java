@@ -14,10 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.widget.SearchView;
 import net.thetranquilpsychonaut.hashtagger.*;
-import net.thetranquilpsychonaut.hashtagger.otto.OAuthLoginCancelEvent;
 import net.thetranquilpsychonaut.hashtagger.otto.HashtagEvent;
-import net.thetranquilpsychonaut.hashtagger.otto.OAuthVerifierEvent;
-import net.thetranquilpsychonaut.hashtagger.ui.twitter.TwitterAuthHandler;
 
 import java.util.List;
 

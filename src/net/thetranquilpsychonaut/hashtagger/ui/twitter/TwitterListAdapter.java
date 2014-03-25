@@ -6,7 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
 import twitter4j.Status;
 
@@ -27,7 +29,11 @@ public class TwitterListAdapter extends ArrayAdapter<Status>
 
     class ViewHolder
     {
-        TextView tvTwitter;
+        ImageView imgvProfileImage;
+        TextView  tvUserName;
+        TextView  tvScreenName;
+        TextView  tvCreatedAt;
+        TextView  tvTweetText;
     }
 
     @Override
@@ -42,14 +48,23 @@ public class TwitterListAdapter extends ArrayAdapter<Status>
         {
             view = inflater.inflate( R.layout.fragment_twitter_list_row, null );
             viewHolder = new ViewHolder();
-            viewHolder.tvTwitter = ( TextView )view.findViewById( R.id.tv_twitter );
+            viewHolder.imgvProfileImage = ( ImageView )view.findViewById( R.id.imgv_profile_image );
+            viewHolder.tvUserName = ( TextView )view.findViewById( R.id.tv_user_name );
+            viewHolder.tvScreenName = ( TextView )view.findViewById( R.id.tv_screen_name );
+            viewHolder.tvCreatedAt = ( TextView )view.findViewById( R.id.tv_created_at );
+            viewHolder.tvTweetText = ( TextView )view.findViewById( R.id.tv_tweet_text );
             view.setTag( viewHolder );
         }
         else
         {
             viewHolder = ( ViewHolder )view.getTag();
         }
-        viewHolder.tvTwitter.setText( status.getText() );
+        viewHolder.imgvProfileImage.setImageDrawable( ctx.getResources().getDrawable( R.drawable.drawable_rect ) );
+        viewHolder.tvUserName.setText( status.getUser().getName() );
+        viewHolder.tvScreenName.setText( "@" + status.getUser().getScreenName() );
+        viewHolder.tvCreatedAt.setText( Helper.getDate( status.getCreatedAt() ) );
+        viewHolder.tvTweetText.setText( status.getText() );
+        Helper.linkify( viewHolder.tvTweetText );
         return view;
     }
 }

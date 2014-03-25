@@ -21,6 +21,7 @@ import net.thetranquilpsychonaut.hashtagger.ui.SitesUserHandler;
 import twitter4j.Status;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -95,7 +96,7 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
         readyHolder = new Ready();
         allStatuses = new ArrayList<Status>();
         newStatuses = new ArrayList<Status>();
-        twitterListAdapter = new TwitterListAdapter( HashtaggerApp.app, R.layout.fragment_twitter_list_row, allStatuses );
+        twitterListAdapter = new TwitterListAdapter( getActivity(), R.layout.fragment_twitter_list_row, allStatuses );
         readyHolder.tvListeningIndicator = ( TextView ) viewReady.findViewById( R.id.tv_listening_indicator );
         readyHolder.tvListeningIndicatorColors = readyHolder.tvListeningIndicator.getTextColors();
         readyHolder.lvResultsList = ( ListView ) viewReady.findViewById( R.id.lv_results_list );
@@ -239,7 +240,6 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
         getActivity().setTitle( getResources().getString( R.string.app_name ) );
         showView( viewLogin );
         getActivity().invalidateOptionsMenu();
-
     }
 
     private void onLoginFailure()
@@ -316,6 +316,7 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
             showView( viewReady );
             if ( null != statuses )
             {
+                Collections.reverse( statuses );
                 twitterListAdapter.addAll( statuses );
                 twitterListAdapter.notifyDataSetChanged();
             }
@@ -404,5 +405,12 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     private static class Error
     {
         public TextView tvError;
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        twitterSearchHandler.destroyUtterly();
+        super.onDestroy();
     }
 }

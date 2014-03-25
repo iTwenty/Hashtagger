@@ -60,7 +60,8 @@ public class TwitterSearchHandler implements StatusListener, SitesHandler
     public void destroyCurrentSearch()
     {
         twitterTask.cancel( true );
-        twitterStream.shutdown();
+        twitterStream.clearListeners();
+        twitterStream.cleanUp();
         reset();
     }
 
@@ -141,6 +142,7 @@ public class TwitterSearchHandler implements StatusListener, SitesHandler
 
     public void pauseSearch()
     {
+        Helper.debug( "Search paused" );
         if ( !isInListeningMode )
             return;
         twitterStream.cleanUp();
@@ -148,9 +150,16 @@ public class TwitterSearchHandler implements StatusListener, SitesHandler
 
     public void resumeSearch()
     {
+        Helper.debug( "Search resumed" );
         if ( !isInListeningMode )
             return;
         twitterStream.filter( filterQuery );
+    }
+
+    public void destroyUtterly()
+    {
+        twitterTask.cancel( true );
+        twitterStream.shutdown();
     }
 
     @Override

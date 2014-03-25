@@ -1,14 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:padding="@dimen/layout_padding">
+
+    <ImageView
+        android:id="@+id/imgv_profile_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp" />
 
     <TextView
-        android:id="@+id/tv_twitter"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:id="@+id/tv_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/imgv_profile_image"
+        android:text="username"
+        android:maxLength="20"
+        android:padding="@dimen/content_padding"
+        android:singleLine="true"/>
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/tv_screen_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/tv_user_name"
+        android:text="screen name"
+        android:maxLength="20"
+        android:padding="@dimen/content_padding"
+        android:layout_toLeftOf="@+id/tv_created_at"
+        android:singleLine="true"/>
+
+    <TextView
+        android:id="@id/tv_created_at"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignBottom="@id/tv_user_name"
+        android:text="3 hours ago"
+        android:padding="@dimen/content_padding"
+        android:singleLine="true"/>
+
+    <TextView
+        android:id="@+id/tv_tweet_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/imgv_profile_image"
+        android:layout_below="@id/tv_user_name"
+        android:padding="@dimen/content_padding"
+        android:text="text"/>
+
+</RelativeLayout>
