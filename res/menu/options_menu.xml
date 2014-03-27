@@ -2,6 +2,11 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/it_refresh"
+        android:title="Refresh"
+        android:showAsAction="always"
+        android:icon="@android:drawable/stat_notify_sync" />
+    <item
         android:id="@+id/sv_hashtag"
         android:title="@string/str_hashtag_title"
         android:icon="@android:drawable/ic_menu_search"

@@ -287,6 +287,8 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
             case R.id.it_logout_twitter:
                 twitterUserHandler.logoutUser();
                 return true;
+            case R.id.it_refresh:
+                Toast.makeText( getActivity(), "Refresh pressed", Toast.LENGTH_SHORT ).show();
             default:
                 return super.onOptionsItemSelected( item );
         }
