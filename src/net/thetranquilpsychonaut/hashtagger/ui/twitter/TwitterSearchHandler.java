@@ -3,26 +3,22 @@ package net.thetranquilpsychonaut.hashtagger.ui.twitter;
 import android.os.AsyncTask;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.Helper;
-import net.thetranquilpsychonaut.hashtagger.ui.SitesHandler;
+import net.thetranquilpsychonaut.hashtagger.ui.SitesSearchHandler;
 import twitter4j.*;
 
 /**
  * Created by itwenty on 3/13/14.
  */
-public class TwitterSearchHandler implements StatusListener, SitesHandler
+public class TwitterSearchHandler implements SitesSearchHandler
 {
     TwitterTask                  twitterTask;
     Twitter                      twitter;
-    TwitterStream                twitterStream;
-    FilterQuery                  filterQuery;
     String                       hashtag;
     TwitterSearchHandlerListener listener;
-    boolean                      isInListeningMode;
 
     public TwitterSearchHandler()
     {
         this.twitter = new TwitterFactory( HashtaggerApp.CONFIGURATION ).getInstance();
-        this.twitterStream = new TwitterStreamFactory( HashtaggerApp.CONFIGURATION ).getInstance();
         if( TwitterUserHandler.isUserLoggedIn() )
         {
             setAccessToken();
@@ -33,13 +29,11 @@ public class TwitterSearchHandler implements StatusListener, SitesHandler
     public void setAccessToken()
     {
         twitter.setOAuthAccessToken( TwitterUserHandler.getAccessToken() );
-        twitterStream.setOAuthAccessToken( TwitterUserHandler.getAccessToken() );
     }
 
     public void clearAccessToken()
     {
         twitter.setOAuthAccessToken( null );
-        twitterStream.setOAuthAccessToken( null );
     }
 
     public void beginSearch()
@@ -60,17 +54,13 @@ public class TwitterSearchHandler implements StatusListener, SitesHandler
     public void destroyCurrentSearch()
     {
         twitterTask.cancel( true );
-        twitterStream.clearListeners();
-        twitterStream.cleanUp();
         reset();
     }
 
     private void reset()
     {
         twitterTask = new TwitterTask( this );
-        filterQuery = new FilterQuery();
         hashtag = null;
-        isInListeningMode = false;
     }
 
     private static class TwitterTask extends AsyncTask<String, Void, Void>
@@ -98,8 +88,8 @@ public class TwitterSearchHandler implements StatusListener, SitesHandler
             query.setQuery( params[0] );
             try
             {
-                if( null == twitterhandler.twitter.getOAuthAccessToken() )
-                    throw new TwitterException("");
+                if ( null == twitterhandler.twitter.getOAuthAccessToken() )
+                    throw new TwitterException( "" );
                 result = twitterhandler.twitter.search( query );
             }
             catch ( TwitterException e )
@@ -116,7 +106,6 @@ public class TwitterSearchHandler implements StatusListener, SitesHandler
             if ( null != result )
             {
                 twitterhandler.listener.afterSearching( result.getTweets() );
-                twitterhandler.switchToListeningMode();
             }
             else
             {
@@ -124,78 +113,11 @@ public class TwitterSearchHandler implements StatusListener, SitesHandler
                 twitterhandler.listener.onError();
             }
         }
-    }
 
-    public void switchToListeningMode()
-    {
-        listener.onBeginStream();
-        isInListeningMode = true;
-        filterQuery.track( new String[]{ this.hashtag } );
-        twitterStream.addListener( this );
-        twitterStream.filter( filterQuery );
-    }
-
-    public boolean isInListeningMode()
-    {
-        return isInListeningMode;
-    }
-
-    public void pauseSearch()
-    {
-        Helper.debug( "Search paused" );
-        if ( !isInListeningMode )
-            return;
-        twitterStream.cleanUp();
-    }
-
-    public void resumeSearch()
-    {
-        Helper.debug( "Search resumed" );
-        if ( !isInListeningMode )
-            return;
-        twitterStream.filter( filterQuery );
-    }
-
-    public void destroyUtterly()
-    {
-        twitterTask.cancel( true );
-        twitterStream.shutdown();
-    }
-
-    @Override
-    public void onStatus( Status status )
-    {
-        listener.onStatus( status );
-    }
-
-    @Override
-    public void onDeletionNotice( StatusDeletionNotice statusDeletionNotice )
-    {
-
-    }
-
-    @Override
-    public void onTrackLimitationNotice( int i )
-    {
-
-    }
-
-    @Override
-    public void onScrubGeo( long l, long l2 )
-    {
-
-    }
-
-    @Override
-    public void onStallWarning( StallWarning stallWarning )
-    {
-
-    }
-
-    @Override
-    public void onException( Exception e )
-    {
-        Helper.debug( "Error while listening" );
-        listener.onStreamError();
+        @Override
+        protected void onCancelled( Void aVoid )
+        {
+            Helper.debug( "Search canceled" );
+        }
     }
 }

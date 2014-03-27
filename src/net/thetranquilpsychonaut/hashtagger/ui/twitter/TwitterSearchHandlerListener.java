@@ -13,11 +13,5 @@ public interface TwitterSearchHandlerListener
 
     public void afterSearching( List<Status> statuses );
 
-    public void onBeginStream();
-
-    public void onStatus( Status status );
-
     public void onError();
-
-    public void onStreamError();
 }

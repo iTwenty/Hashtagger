@@ -35,15 +35,15 @@ public abstract class SitesFragment extends Fragment implements ConnectivityChan
         }
     }
 
-    private   ViewAnimator     vaPossibleViews;
-    protected View             viewReady;
-    protected View             viewLoading;
-    protected View             viewNoNetwork;
-    protected View             viewLogin;
-    protected View             viewError;
-    protected View             lastActiveView;
-    protected SitesHandler     sitesHandler;
-    protected SitesUserHandler sitesUserHandler;
+    private   ViewAnimator       vaPossibleViews;
+    protected View               viewReady;
+    protected View               viewLoading;
+    protected View               viewNoNetwork;
+    protected View               viewLogin;
+    protected View               viewError;
+    protected View               lastActiveView;
+    protected SitesSearchHandler sitesSearchHandler;
+    protected SitesUserHandler   sitesUserHandler;
 
     @Override
     public void onCreate( Bundle savedInstanceState )
@@ -58,7 +58,7 @@ public abstract class SitesFragment extends Fragment implements ConnectivityChan
         HashtaggerApp.bus.register( this );
         onInitialize();
         sitesUserHandler = getSitesUserHandler();
-        sitesHandler = getSitesSearchHandler();
+        sitesSearchHandler = getSitesSearchHandler();
         onHandlersCreated();
         View v = inflater.inflate( R.layout.fragment_sites, container, false );
         vaPossibleViews = ( ViewAnimator ) v.findViewById( R.id.va_possible_views );
@@ -77,42 +77,39 @@ public abstract class SitesFragment extends Fragment implements ConnectivityChan
         return v;
     }
 
-    protected void onInitialize() {}
+    protected void onInitialize()
+    {
+    }
 
     protected abstract SitesUserHandler getSitesUserHandler();
 
-    protected abstract SitesHandler getSitesSearchHandler();
+    protected abstract SitesSearchHandler getSitesSearchHandler();
 
-    protected void onHandlersCreated() {}
+    protected void onHandlersCreated()
+    {
+    }
 
     protected abstract View fetchView( Views views, LayoutInflater inflater );
 
-    protected void onViewsCreated() {}
+    protected void onViewsCreated()
+    {
+    }
 
     @Subscribe
     protected abstract void searchHashtag( HashtagEvent event );
 
     protected void ensureNetworkConnected() throws NoNetworkException
     {
-        if( !HashtaggerApp.isNetworkConnected() )
+        if ( !HashtaggerApp.isNetworkConnected() )
             throw new NoNetworkException( "Please connect to a network first." );
     }
 
     protected abstract void ensureUserLoggedIn() throws NotLoggedInException;
 
-    @Override
-    public void onPause()
-    {
-        if( sitesHandler.isInListeningMode() )
-            sitesHandler.pauseSearch();
-        super.onPause();
-    }
 
     @Override
     public void onResume()
     {
-        if ( sitesHandler.isInListeningMode() )
-            sitesHandler.resumeSearch();
         ( ( MainActivity ) getActivity() ).getConnectivityChangeReceiver().addListener( this );
         super.onResume();
     }
@@ -130,19 +127,13 @@ public abstract class SitesFragment extends Fragment implements ConnectivityChan
     @Override
     public void onConnected()
     {
-        if ( sitesHandler.isInListeningMode() )
-            sitesHandler.resumeSearch();
-        else
-            showView( lastActiveView );
+        showView( lastActiveView );
     }
 
     @Override
     public void onDisconnected()
     {
-        if ( sitesHandler.isInListeningMode() )
-            sitesHandler.pauseSearch();
-        else
-            showView( viewNoNetwork );
+        showView( viewNoNetwork );
     }
 
     public View getCurrentView()

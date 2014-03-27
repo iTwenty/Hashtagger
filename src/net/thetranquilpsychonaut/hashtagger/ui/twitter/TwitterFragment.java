@@ -16,7 +16,7 @@ import net.thetranquilpsychonaut.hashtagger.exception.NoNetworkException;
 import net.thetranquilpsychonaut.hashtagger.exception.NotLoggedInException;
 import net.thetranquilpsychonaut.hashtagger.otto.HashtagEvent;
 import net.thetranquilpsychonaut.hashtagger.ui.SitesFragment;
-import net.thetranquilpsychonaut.hashtagger.ui.SitesHandler;
+import net.thetranquilpsychonaut.hashtagger.ui.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.ui.SitesUserHandler;
 import twitter4j.Status;
 
@@ -54,7 +54,7 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     }
 
     @Override
-    protected SitesHandler getSitesSearchHandler()
+    protected SitesSearchHandler getSitesSearchHandler()
     {
         twitterSearchHandler = new TwitterSearchHandler();
         twitterSearchHandlerListener = new TwitterSearchHandlerListenerImpl();
@@ -97,8 +97,6 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
         allStatuses = new ArrayList<Status>();
         newStatuses = new ArrayList<Status>();
         twitterListAdapter = new TwitterListAdapter( getActivity(), R.layout.fragment_twitter_list_row, allStatuses );
-        readyHolder.tvListeningIndicator = ( TextView ) viewReady.findViewById( R.id.tv_listening_indicator );
-        readyHolder.tvListeningIndicatorColors = readyHolder.tvListeningIndicator.getTextColors();
         readyHolder.lvResultsList = ( ListView ) viewReady.findViewById( R.id.lv_results_list );
         readyHolder.lvResultsList.setAdapter( twitterListAdapter );
         readyHolder.lvResultsListEmpty = ( TextView ) viewReady.findViewById( R.id.tv_results_list_empty );
@@ -232,6 +230,7 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
 
     private void onUserLoggedOut()
     {
+        twitterSearchHandler.destroyCurrentSearch();
         twitterSearchHandler.clearAccessToken();
         newStatuses.clear();
         twitterListAdapter.clear();
@@ -251,30 +250,6 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     {
         int resultStringResourceId = size == 1 ? R.string.str_new_result : R.string.str_new_results;
         button.setText( size + " " + getResources().getString( resultStringResourceId ) );
-    }
-
-    @Override
-    public void onConnected()
-    {
-        if ( twitterSearchHandler.isInListeningMode() )
-        {
-            readyHolder.tvListeningIndicator.setBackgroundColor( getResources().getColor( android.R.color.transparent ) );
-            readyHolder.tvListeningIndicator.setTextColor( readyHolder.tvListeningIndicatorColors );
-            readyHolder.tvListeningIndicator.setText( getResources().getString( R.string.str_listening_new_tweets ) );
-        }
-        super.onConnected();
-    }
-
-    @Override
-    public void onDisconnected()
-    {
-        if ( twitterSearchHandler.isInListeningMode() )
-        {
-            readyHolder.tvListeningIndicator.setBackgroundColor( getResources().getColor( android.R.color.holo_red_light ) );
-            readyHolder.tvListeningIndicator.setTextColor( getResources().getColor( android.R.color.black ) );
-            readyHolder.tvListeningIndicator.setText( getResources().getString( R.string.str_no_network ) );
-        }
-        super.onDisconnected();
     }
 
     @Override
@@ -329,44 +304,9 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
         }
 
         @Override
-        public void onBeginStream()
-        {
-            readyHolder.tvListeningIndicator.setVisibility( View.VISIBLE );
-            readyHolder.btnNewResults.setVisibility( View.VISIBLE );
-            updateButtonCount( readyHolder.btnNewResults, 0 );
-        }
-
-        @Override
-        public void onStatus( Status status )
-        {
-            newStatuses.add( status );
-            getActivity().runOnUiThread( new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    updateButtonCount( readyHolder.btnNewResults, newStatuses.size() );
-                }
-            } );
-        }
-
-        @Override
         public void onError()
         {
-            onStreamError();
-        }
-
-        @Override
-        public void onStreamError()
-        {
-            getActivity().runOnUiThread( new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    showView( viewError );
-                }
-            } );
+            showView( viewError );
         }
     }
 
@@ -382,11 +322,9 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
 
     private static class Ready
     {
-        public TextView       tvListeningIndicator;
         public ListView       lvResultsList;
         public TextView       lvResultsListEmpty;
         public Button         btnNewResults;
-        public ColorStateList tvListeningIndicatorColors;
     }
 
     private static class Loading
@@ -412,7 +350,7 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     @Override
     public void onDestroy()
     {
-        twitterSearchHandler.destroyUtterly();
+        twitterSearchHandler.destroyCurrentSearch();
         super.onDestroy();
     }
 }
