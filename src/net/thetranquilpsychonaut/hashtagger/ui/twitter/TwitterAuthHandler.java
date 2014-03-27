@@ -73,7 +73,6 @@ public class TwitterAuthHandler implements SitesAuthHandler
             catch ( Exception e )
             {
                 Helper.debug( "Error while obtaining request token" );
-                authHandler.listener.onError();
             }
             return null;
         }
@@ -120,7 +119,6 @@ public class TwitterAuthHandler implements SitesAuthHandler
             catch ( TwitterException e )
             {
                 Helper.debug( "Error while obtaining access token" );
-                authHandler.listener.onError();
             }
             return null;
         }

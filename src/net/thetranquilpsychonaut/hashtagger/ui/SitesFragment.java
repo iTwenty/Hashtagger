@@ -21,7 +21,7 @@ public abstract class SitesFragment extends Fragment implements ConnectivityChan
 {
     protected static enum Views
     {
-        READY( 0 ), LOADING( 1 ), NO_NETWORK( 2 ), LOGIN( 3 ), ERROR( 4 );
+        READY( 0 ), LOADING( 1 ), LOGIN( 2 ), ERROR( 3 );
         private int index;
 
         Views( int index )
@@ -38,7 +38,6 @@ public abstract class SitesFragment extends Fragment implements ConnectivityChan
     private   ViewAnimator       vaPossibleViews;
     protected View               viewReady;
     protected View               viewLoading;
-    protected View               viewNoNetwork;
     protected View               viewLogin;
     protected View               viewError;
     protected View               lastActiveView;
@@ -64,12 +63,10 @@ public abstract class SitesFragment extends Fragment implements ConnectivityChan
         vaPossibleViews = ( ViewAnimator ) v.findViewById( R.id.va_possible_views );
         viewReady = fetchView( Views.READY, inflater );
         viewLoading = fetchView( Views.LOADING, inflater );
-        viewNoNetwork = fetchView( Views.NO_NETWORK, inflater );
         viewLogin = fetchView( Views.LOGIN, inflater );
         viewError = fetchView( Views.ERROR, inflater );
         vaPossibleViews.addView( viewReady, Views.READY.getIndex() );
         vaPossibleViews.addView( viewLoading, Views.LOADING.getIndex() );
-        vaPossibleViews.addView( viewNoNetwork, Views.NO_NETWORK.getIndex() );
         vaPossibleViews.addView( viewLogin, Views.LOGIN.getIndex() );
         vaPossibleViews.addView( viewError, Views.ERROR.getIndex() );
         onViewsCreated();
@@ -106,7 +103,6 @@ public abstract class SitesFragment extends Fragment implements ConnectivityChan
 
     protected abstract void ensureUserLoggedIn() throws NotLoggedInException;
 
-
     @Override
     public void onResume()
     {
@@ -127,13 +123,13 @@ public abstract class SitesFragment extends Fragment implements ConnectivityChan
     @Override
     public void onConnected()
     {
-        showView( lastActiveView );
+
     }
 
     @Override
     public void onDisconnected()
     {
-        showView( viewNoNetwork );
+
     }
 
     public View getCurrentView()

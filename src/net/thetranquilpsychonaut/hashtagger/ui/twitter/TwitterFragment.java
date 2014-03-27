@@ -2,7 +2,6 @@ package net.thetranquilpsychonaut.hashtagger.ui.twitter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,7 +20,6 @@ import net.thetranquilpsychonaut.hashtagger.ui.SitesUserHandler;
 import twitter4j.Status;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,15 +27,16 @@ import java.util.List;
  */
 public class TwitterFragment extends SitesFragment implements View.OnClickListener
 {
-    ArrayList<Status>    allStatuses;
+    ArrayList<Status>    currentStatuses;
     ArrayList<Status>    newStatuses;
+    ArrayList<Status>    oldStatuses;
     TwitterListAdapter   twitterListAdapter;
     String               hashtag;
     Ready                readyHolder;
     Loading              loadingHolder;
-    NoNetwork            noNetworkHolder;
     Login                loginHolder;
     Error                errorHolder;
+    Footer               footerHolder;
     TwitterSearchHandler twitterSearchHandler;
     TwitterUserHandler   twitterUserHandler;
 
@@ -65,9 +64,7 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     @Override
     protected void onViewsCreated()
     {
-        if ( !HashtaggerApp.isNetworkConnected() )
-            showView( viewNoNetwork );
-        else if ( !TwitterUserHandler.isUserLoggedIn() )
+        if ( !TwitterUserHandler.isUserLoggedIn() )
             showView( viewLogin );
     }
 
@@ -80,8 +77,6 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
                 return getViewReady( inflater );
             case LOADING:
                 return getViewLoading( inflater );
-            case NO_NETWORK:
-                return getViewNoNetwork( inflater );
             case LOGIN:
                 return getViewLogin( inflater );
             case ERROR:
@@ -94,17 +89,30 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     {
         View viewReady = inflater.inflate( R.layout.view_ready, null );
         readyHolder = new Ready();
-        allStatuses = new ArrayList<Status>();
+        footerHolder = getFooterHolder( inflater );
+        currentStatuses = new ArrayList<Status>();
         newStatuses = new ArrayList<Status>();
-        twitterListAdapter = new TwitterListAdapter( getActivity(), R.layout.fragment_twitter_list_row, allStatuses );
+        oldStatuses = new ArrayList<Status>();
+        twitterListAdapter = new TwitterListAdapter( getActivity(), R.layout.fragment_twitter_list_row, currentStatuses );
         readyHolder.lvResultsList = ( ListView ) viewReady.findViewById( R.id.lv_results_list );
+        readyHolder.lvResultsList.addFooterView( footerHolder.vaFooterView, readyHolder.lvResultsList, true );
         readyHolder.lvResultsList.setAdapter( twitterListAdapter );
         readyHolder.lvResultsListEmpty = ( TextView ) viewReady.findViewById( R.id.tv_results_list_empty );
         readyHolder.lvResultsList.setEmptyView( readyHolder.lvResultsListEmpty );
-        readyHolder.btnNewResults = ( Button ) viewReady.findViewById( R.id.btn_new_results );
-        readyHolder.btnNewResults.setVisibility( View.GONE );
-        readyHolder.btnNewResults.setOnClickListener( TwitterFragment.this );
         return viewReady;
+    }
+
+    private Footer getFooterHolder(LayoutInflater inflater)
+    {
+        Footer footerHolder = new Footer();
+        footerHolder.vaFooterView = ( ViewAnimator )inflater.inflate( R.layout.footer_view_results_list, null );
+        footerHolder.btnFooterLoadOlderResults = ( Button )footerHolder.vaFooterView.findViewById( R.id.btn_footer_load_older_results );
+        footerHolder.btnFooterLoadOlderResults.setOnClickListener( this );
+        footerHolder.pgbrFooterLoading = ( ProgressBar )footerHolder.vaFooterView.findViewById( R.id.pgbr_footer_loading );
+        footerHolder.tvFooterNoNetworkMsg = ( TextView )footerHolder.vaFooterView.findViewById( R.id.tv_footer_no_network_msg );
+        footerHolder.btnFooterRetry = ( Button )footerHolder.vaFooterView.findViewById( R.id.btn_footer_retry );
+        footerHolder.btnFooterRetry.setOnClickListener( this );
+        return footerHolder;
     }
 
     private View getViewLoading( LayoutInflater inflater )
@@ -113,14 +121,6 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
         loadingHolder = new Loading();
         loadingHolder.pgbrLoadingResults = ( ProgressBar ) viewLoading.findViewById( R.id.pgbr_loading_results );
         return viewLoading;
-    }
-
-    private View getViewNoNetwork( LayoutInflater inflater )
-    {
-        View viewNoNetwork = inflater.inflate( R.layout.view_no_network, null );
-        noNetworkHolder = new NoNetwork();
-        noNetworkHolder.tvNoNetwork = ( TextView ) viewNoNetwork.findViewById( R.id.tv_no_network );
-        return viewNoNetwork;
     }
 
     private View getViewLogin( LayoutInflater inflater )
@@ -179,28 +179,30 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     @Override
     public void onClick( View v )
     {
-        if ( v.equals( readyHolder.btnNewResults ) )
+        if ( v.equals( loginHolder.btnLogin ) )
+            doLogin();
+        else if( v.equals( footerHolder.btnFooterLoadOlderResults ) )
+            dolLoadOlderResults();
+    }
+
+    private void doLogin()
+    {
+        try
         {
-            readyHolder.lvResultsList.smoothScrollToPosition( allStatuses.size() - 1 );
-            twitterListAdapter.addAll( newStatuses );
-            twitterListAdapter.notifyDataSetChanged();
-            newStatuses.clear();
-            updateButtonCount( ( Button ) v, newStatuses.size() );
+            ensureNetworkConnected();
         }
-        else if ( v.equals( loginHolder.btnLogin ) )
+        catch ( NoNetworkException e )
         {
-            try
-            {
-                ensureNetworkConnected();
-            }
-            catch ( NoNetworkException e )
-            {
-                Toast.makeText( getActivity(), e.getMessage(), Toast.LENGTH_SHORT ).show();
-                return;
-            }
-            Intent i = new Intent( getActivity(), TwitterAuthActivity.class );
-            getActivity().startActivityForResult( i, HashtaggerApp.TWITTER_REQUEST_CODE );
+            Toast.makeText( getActivity(), e.getMessage(), Toast.LENGTH_SHORT ).show();
+            return;
         }
+        Intent i = new Intent( getActivity(), TwitterAuthActivity.class );
+        getActivity().startActivityForResult( i, HashtaggerApp.TWITTER_REQUEST_CODE );
+    }
+
+    private void dolLoadOlderResults()
+    {
+        Toast.makeText( getActivity(), "pressed", Toast.LENGTH_LONG ).show();
     }
 
     @Override
@@ -243,13 +245,8 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
 
     private void onLoginFailure()
     {
+        Toast.makeText( getActivity(), "Could not log you in. Please try again.", Toast.LENGTH_LONG ).show();
         showView( viewLogin );
-    }
-
-    private void updateButtonCount( Button button, int size )
-    {
-        int resultStringResourceId = size == 1 ? R.string.str_new_result : R.string.str_new_results;
-        button.setText( size + " " + getResources().getString( resultStringResourceId ) );
     }
 
     @Override
@@ -293,7 +290,6 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
             showView( viewReady );
             if ( null != statuses )
             {
-                Collections.reverse( statuses );
                 twitterListAdapter.addAll( statuses );
                 twitterListAdapter.notifyDataSetChanged();
             }
@@ -319,22 +315,24 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
         }
     }
 
-
     private static class Ready
     {
         public ListView       lvResultsList;
         public TextView       lvResultsListEmpty;
-        public Button         btnNewResults;
+    }
+
+    private static class Footer
+    {
+        public ViewAnimator vaFooterView;
+        public Button       btnFooterLoadOlderResults;
+        public ProgressBar  pgbrFooterLoading;
+        public TextView     tvFooterNoNetworkMsg;
+        public Button       btnFooterRetry;
     }
 
     private static class Loading
     {
         public ProgressBar pgbrLoadingResults;
-    }
-
-    private static class NoNetwork
-    {
-        public TextView tvNoNetwork;
     }
 
     private static class Login

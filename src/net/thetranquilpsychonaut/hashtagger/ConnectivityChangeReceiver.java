@@ -38,12 +38,14 @@ public class ConnectivityChangeReceiver extends BroadcastReceiver
         {
             if ( info != null && info.isConnected() )
             {
+                Helper.debug( "Network connected" );
                 if( HashtaggerApp.PREV_CONNECTED == false )
                     ccl.onConnected();
                 HashtaggerApp.PREV_CONNECTED = true;
             }
             else
             {
+                Helper.debug( "Network disconnected" );
                 if( HashtaggerApp.PREV_CONNECTED == true )
                     ccl.onDisconnected();
                 HashtaggerApp.PREV_CONNECTED = false;

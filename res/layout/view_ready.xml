@@ -6,21 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tv_listening_indicator"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:visibility="gone"
-        android:text="@string/str_listening_new_tweets"/>
-
     <ListView
         android:id="@+id/lv_results_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/tv_listening_indicator"
-        android:layout_above="@+id/btn_new_results"/>
+        android:layout_height="match_parent"/>
 
     <TextView
         android:id="@+id/tv_results_list_empty"
@@ -28,12 +17,5 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:text="@string/str_enter_hashtag" />
-
-    <Button
-        android:id="@id/btn_new_results"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/str_new_results"/>
 
 </RelativeLayout>

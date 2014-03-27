@@ -86,6 +86,7 @@ public class TwitterSearchHandler implements SitesSearchHandler
         protected Void doInBackground( String... params )
         {
             query.setQuery( params[0] );
+            query.setCount( 100 );
             try
             {
                 if ( null == twitterhandler.twitter.getOAuthAccessToken() )
@@ -95,7 +96,6 @@ public class TwitterSearchHandler implements SitesSearchHandler
             catch ( TwitterException e )
             {
                 Helper.debug( "Error while searching  for " + params[0] );
-                twitterhandler.listener.onError();
             }
             return null;
         }
