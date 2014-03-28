@@ -12,6 +12,7 @@
         android:label="@string/app_name"
         android:icon="@drawable/ic_launcher"
         android:theme="@android:style/Theme.Holo">
+        <service android:name=".ui.twitter.TwitterSearchHandler$TwitterSearchService"/>
         <activity
             android:name=".ui.MainActivity"
             android:label="@string/app_name"

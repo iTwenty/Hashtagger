@@ -21,7 +21,11 @@ public class HashtaggerApp extends Application
 
     public static final boolean DEBUG = true;
 
-    public static final String            SHARED_PREFS                          = "net.thetranquilpsychonaut.hashtagger.shared_prefs";
+
+    public static final String            NAMESPACE                             = "net.thetranquilpsychonaut.hashtagger.";
+    public static final String            TWITTER_KEY                           = NAMESPACE + "twitter";
+    public static final String            HASHTAG_KEY                           = NAMESPACE + "hashtag";
+    public static final String            SHARED_PREFS                          = NAMESPACE + "shared_prefs";
     public static final ArrayList<String> SITES                                 = new ArrayList<String>();
     public static       boolean           PREV_CONNECTED                        = false;
     public static final Bus               bus                                   = new Bus( ThreadEnforcer.ANY );
@@ -37,7 +41,10 @@ public class HashtaggerApp extends Application
     public static final int               TWITTER_REQUEST_CODE                  = 1;
     public static       SharedPreferences prefs                                 = null;
     public static final String            USER_KEY                              = "user";
-    public static final int               TWITTER_SEARCH_LIMIT                  = 50;
+    public static final int               TWITTER_SEARCH_LIMIT                  = 20;
+    public static final String            TWITTER_SEARCH_SERVICE                = NAMESPACE + "twitter_search_service";
+    public static final String            TWITTER_SEARCH_OVER                   = NAMESPACE + "twitter_search_over";
+
 
     @Override
     public void onCreate()

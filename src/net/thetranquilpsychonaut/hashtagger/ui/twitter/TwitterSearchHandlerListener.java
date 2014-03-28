@@ -1,5 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.ui.twitter;
 
+import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import twitter4j.Status;
 
 import java.util.List;
@@ -9,9 +10,9 @@ import java.util.List;
  */
 public interface TwitterSearchHandlerListener
 {
-    public void whileSearching();
+    public void whileSearching( SearchType searchType );
 
-    public void afterSearching( List<Status> statuses );
+    public void afterSearching( SearchType searchType, List<Status> statuses );
 
-    public void onError();
+    public void onError( SearchType searchType );
 }

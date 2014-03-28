@@ -34,6 +34,8 @@ public class ConnectivityChangeReceiver extends BroadcastReceiver
     {
         //debugIntent( intent, "twtr" );
         NetworkInfo info = ( ( ConnectivityManager ) context.getSystemService( Context.CONNECTIVITY_SERVICE ) ).getActiveNetworkInfo();
+        if( listeners.size() == 0 )
+            return;
         for ( ConnectivityChangeListener ccl : listeners )
         {
             if ( info != null && info.isConnected() )

@@ -15,7 +15,7 @@
 
     <ProgressBar
         android:id="@+id/pgbr_footer_loading"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"/>
 

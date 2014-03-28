@@ -17,7 +17,7 @@ import net.thetranquilpsychonaut.hashtagger.otto.HashtagEvent;
 /**
  * Created by itwenty on 2/26/14.
  */
-public abstract class SitesFragment extends Fragment implements ConnectivityChangeListener
+public abstract class SitesFragment extends Fragment
 {
     protected static enum Views
     {
@@ -103,13 +103,6 @@ public abstract class SitesFragment extends Fragment implements ConnectivityChan
 
     protected abstract void ensureUserLoggedIn() throws NotLoggedInException;
 
-    @Override
-    public void onResume()
-    {
-        ( ( MainActivity ) getActivity() ).getConnectivityChangeReceiver().addListener( this );
-        super.onResume();
-    }
-
     public void showView( View view )
     {
         View lastActiveView = vaPossibleViews.getCurrentView();
@@ -118,18 +111,6 @@ public abstract class SitesFragment extends Fragment implements ConnectivityChan
             throw new RuntimeException( "showView() must be called with a view contained in the ViewAnimator" );
         vaPossibleViews.setDisplayedChild( viewIndex );
         this.lastActiveView = lastActiveView;
-    }
-
-    @Override
-    public void onConnected()
-    {
-
-    }
-
-    @Override
-    public void onDisconnected()
-    {
-
     }
 
     public View getCurrentView()

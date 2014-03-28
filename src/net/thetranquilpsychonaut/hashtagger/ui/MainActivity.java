@@ -24,7 +24,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     ViewPager                  vpSitesPager;
     HashtaggerSitesAdapter     vpSitesPagerAdapter;
     SearchView                 svHashtag;
-    ConnectivityChangeReceiver connectivityChangeReceiver;
 
     @Override
     public void onCreate( Bundle savedInstanceState )
@@ -47,21 +46,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         if ( getIntent().getAction().equals( Intent.ACTION_SEARCH ) )
             handleIntent( getIntent() );
-    }
-
-    @Override
-    protected void onResume()
-    {
-        this.connectivityChangeReceiver = new ConnectivityChangeReceiver();
-        registerReceiver( connectivityChangeReceiver, new IntentFilter( ConnectivityManager.CONNECTIVITY_ACTION ) );
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause()
-    {
-        unregisterReceiver( connectivityChangeReceiver );
-        super.onPause();
     }
 
     @Override
@@ -99,11 +83,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         svHashtag.setIconified( true );
         svHashtag.onActionViewCollapsed();
         HashtaggerApp.bus.post( new HashtagEvent( hashtag ) );
-    }
-
-    public ConnectivityChangeReceiver getConnectivityChangeReceiver()
-    {
-        return connectivityChangeReceiver;
     }
 
     @Override
