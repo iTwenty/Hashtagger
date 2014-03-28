@@ -41,6 +41,10 @@ public class TwitterSearchHandler implements SitesSearchHandler
         this.twitterTask.execute( this.hashtag );
     }
 
+    public void beginOlderSearch() {}
+
+    public void beginNewerSearch() {}
+
     public void setListener( TwitterSearchHandlerListener listener )
     {
         this.listener = listener;
@@ -86,7 +90,7 @@ public class TwitterSearchHandler implements SitesSearchHandler
         protected Void doInBackground( String... params )
         {
             query.setQuery( params[0] );
-            query.setCount( 100 );
+            query.setCount( HashtaggerApp.TWITTER_SEARCH_LIMIT );
             try
             {
                 if ( null == twitterhandler.twitter.getOAuthAccessToken() )

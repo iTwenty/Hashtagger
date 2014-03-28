@@ -6,5 +6,7 @@ package net.thetranquilpsychonaut.hashtagger.ui;
 public interface SitesSearchHandler
 {
     public void beginSearch();
+    public void beginOlderSearch();
+    public void beginNewerSearch();
     public void destroyCurrentSearch();
 }

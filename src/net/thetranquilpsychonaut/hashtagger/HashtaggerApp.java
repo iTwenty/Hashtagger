@@ -37,6 +37,7 @@ public class HashtaggerApp extends Application
     public static final int               TWITTER_REQUEST_CODE                  = 1;
     public static       SharedPreferences prefs                                 = null;
     public static final String            USER_KEY                              = "user";
+    public static final int               TWITTER_SEARCH_LIMIT                  = 50;
 
     @Override
     public void onCreate()
