@@ -5,12 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tv_error"
+    <ProgressBar
+        android:id="@+id/pgbr_footer_loading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:text="@string/str_error" />
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>

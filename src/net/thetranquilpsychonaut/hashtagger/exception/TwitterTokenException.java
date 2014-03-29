@@ -7,6 +7,6 @@ public class TwitterTokenException extends Exception
 {
     public TwitterTokenException( String s )
     {
-        super(s);
+        super( s );
     }
 }

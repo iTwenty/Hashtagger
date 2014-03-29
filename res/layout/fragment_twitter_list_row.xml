@@ -19,7 +19,7 @@
         android:text="username"
         android:maxLength="20"
         android:padding="@dimen/content_padding"
-        android:singleLine="true"/>
+        android:singleLine="true" />
 
     <TextView
         android:id="@+id/tv_screen_name"
@@ -30,7 +30,7 @@
         android:maxLength="20"
         android:padding="@dimen/content_padding"
         android:layout_toLeftOf="@+id/tv_created_at"
-        android:singleLine="true"/>
+        android:singleLine="true" />
 
     <TextView
         android:id="@id/tv_created_at"
@@ -40,7 +40,7 @@
         android:layout_alignBottom="@id/tv_user_name"
         android:text="3 hours ago"
         android:padding="@dimen/content_padding"
-        android:singleLine="true"/>
+        android:singleLine="true" />
 
     <TextView
         android:id="@+id/tv_tweet_text"
@@ -49,6 +49,6 @@
         android:layout_toRightOf="@id/imgv_profile_image"
         android:layout_below="@id/tv_user_name"
         android:padding="@dimen/content_padding"
-        android:text="text"/>
+        android:text="text" />
 
 </RelativeLayout>

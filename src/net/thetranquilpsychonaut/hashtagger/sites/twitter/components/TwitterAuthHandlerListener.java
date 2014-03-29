@@ -1,4 +1,4 @@
-package net.thetranquilpsychonaut.hashtagger.ui.twitter;
+package net.thetranquilpsychonaut.hashtagger.sites.twitter.components;
 
 import twitter4j.auth.RequestToken;
 
@@ -8,7 +8,10 @@ import twitter4j.auth.RequestToken;
 public interface TwitterAuthHandlerListener
 {
     public void onError();
+
     public void whileObtainingReqToken();
+
     public void onObtainingReqToken( RequestToken requestToken );
+
     public void onUserLoggedIn();
 }

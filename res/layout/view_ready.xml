@@ -9,7 +9,7 @@
     <ListView
         android:id="@+id/lv_results_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <TextView
         android:id="@+id/tv_results_list_empty"

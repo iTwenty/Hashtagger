@@ -34,21 +34,21 @@ public class ConnectivityChangeReceiver extends BroadcastReceiver
     {
         //debugIntent( intent, "twtr" );
         NetworkInfo info = ( ( ConnectivityManager ) context.getSystemService( Context.CONNECTIVITY_SERVICE ) ).getActiveNetworkInfo();
-        if( listeners.size() == 0 )
+        if ( listeners.size() == 0 )
             return;
         for ( ConnectivityChangeListener ccl : listeners )
         {
             if ( info != null && info.isConnected() )
             {
                 Helper.debug( "Network connected" );
-                if( HashtaggerApp.PREV_CONNECTED == false )
+                if ( HashtaggerApp.PREV_CONNECTED == false )
                     ccl.onConnected();
                 HashtaggerApp.PREV_CONNECTED = true;
             }
             else
             {
                 Helper.debug( "Network disconnected" );
-                if( HashtaggerApp.PREV_CONNECTED == true )
+                if ( HashtaggerApp.PREV_CONNECTED == true )
                     ccl.onDisconnected();
                 HashtaggerApp.PREV_CONNECTED = false;
             }
@@ -65,7 +65,7 @@ public class ConnectivityChangeReceiver extends BroadcastReceiver
             for ( String key : extras.keySet() )
             {
                 Log.v( tag, "key [" + key + "]: " +
-                    extras.get( key ) + "\n");
+                    extras.get( key ) + "\n" );
             }
         }
         else

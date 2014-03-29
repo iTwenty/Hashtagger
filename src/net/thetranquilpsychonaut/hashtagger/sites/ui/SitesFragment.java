@@ -1,4 +1,4 @@
-package net.thetranquilpsychonaut.hashtagger.ui;
+package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,24 +7,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ViewAnimator;
 import com.squareup.otto.Subscribe;
-import net.thetranquilpsychonaut.hashtagger.ConnectivityChangeListener;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.exception.NoNetworkException;
 import net.thetranquilpsychonaut.hashtagger.exception.NotLoggedInException;
 import net.thetranquilpsychonaut.hashtagger.otto.HashtagEvent;
+import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
 
 /**
  * Created by itwenty on 2/26/14.
  */
 public abstract class SitesFragment extends Fragment
 {
-    protected static enum Views
+    public static enum SitesView
     {
         READY( 0 ), LOADING( 1 ), LOGIN( 2 ), ERROR( 3 );
         private int index;
 
-        Views( int index )
+        SitesView( int index )
         {
             this.index = index;
         }
@@ -35,12 +36,12 @@ public abstract class SitesFragment extends Fragment
         }
     }
 
-    private   ViewAnimator       vaPossibleViews;
+    private   ViewAnimator       vaSitesView;
     protected View               viewReady;
+    protected SitesFooter        sitesFooter;
     protected View               viewLoading;
     protected View               viewLogin;
     protected View               viewError;
-    protected View               lastActiveView;
     protected SitesSearchHandler sitesSearchHandler;
     protected SitesUserHandler   sitesUserHandler;
 
@@ -60,17 +61,17 @@ public abstract class SitesFragment extends Fragment
         sitesSearchHandler = getSitesSearchHandler();
         onHandlersCreated();
         View v = inflater.inflate( R.layout.fragment_sites, container, false );
-        vaPossibleViews = ( ViewAnimator ) v.findViewById( R.id.va_possible_views );
-        viewReady = fetchView( Views.READY, inflater );
-        viewLoading = fetchView( Views.LOADING, inflater );
-        viewLogin = fetchView( Views.LOGIN, inflater );
-        viewError = fetchView( Views.ERROR, inflater );
-        vaPossibleViews.addView( viewReady, Views.READY.getIndex() );
-        vaPossibleViews.addView( viewLoading, Views.LOADING.getIndex() );
-        vaPossibleViews.addView( viewLogin, Views.LOGIN.getIndex() );
-        vaPossibleViews.addView( viewError, Views.ERROR.getIndex() );
+        vaSitesView = ( ViewAnimator ) v.findViewById( R.id.va_sites_view );
+        viewReady = fetchView( SitesView.READY, inflater );
+        viewLoading = fetchView( SitesView.LOADING, inflater );
+        viewLogin = fetchView( SitesView.LOGIN, inflater );
+        viewError = fetchView( SitesView.ERROR, inflater );
+        vaSitesView.addView( viewReady, SitesView.READY.getIndex() );
+        vaSitesView.addView( viewLoading, SitesView.LOADING.getIndex() );
+        vaSitesView.addView( viewLogin, SitesView.LOGIN.getIndex() );
+        vaSitesView.addView( viewError, SitesView.ERROR.getIndex() );
+        sitesFooter = getSitesFooter( inflater );
         onViewsCreated();
-        lastActiveView = vaPossibleViews.getCurrentView();
         return v;
     }
 
@@ -86,7 +87,9 @@ public abstract class SitesFragment extends Fragment
     {
     }
 
-    protected abstract View fetchView( Views views, LayoutInflater inflater );
+    protected abstract View fetchView( SitesView sitesView, LayoutInflater inflater );
+
+    public abstract SitesFooter getSitesFooter( LayoutInflater inflater );
 
     protected void onViewsCreated()
     {
@@ -103,18 +106,8 @@ public abstract class SitesFragment extends Fragment
 
     protected abstract void ensureUserLoggedIn() throws NotLoggedInException;
 
-    public void showView( View view )
+    public void showView( SitesView sitesView )
     {
-        View lastActiveView = vaPossibleViews.getCurrentView();
-        int viewIndex = vaPossibleViews.indexOfChild( view );
-        if ( viewIndex == -1 )
-            throw new RuntimeException( "showView() must be called with a view contained in the ViewAnimator" );
-        vaPossibleViews.setDisplayedChild( viewIndex );
-        this.lastActiveView = lastActiveView;
-    }
-
-    public View getCurrentView()
-    {
-        return vaPossibleViews.getCurrentView();
+        vaSitesView.setDisplayedChild( sitesView.index );
     }
 }

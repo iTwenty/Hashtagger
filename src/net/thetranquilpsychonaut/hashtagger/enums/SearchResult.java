@@ -8,6 +8,6 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 public enum SearchResult
 {
     SUCCESS, FAILURE;
-    public static String SEARCH_RESULT_KEY = HashtaggerApp.NAMESPACE + "search_result_key";
+    public static String SEARCH_RESULT_KEY  = HashtaggerApp.NAMESPACE + "search_result_key";
     public static String SEARCH_RESULT_DATA = HashtaggerApp.NAMESPACE + "search_result_data";
 }

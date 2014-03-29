@@ -1,7 +1,7 @@
-package net.thetranquilpsychonaut.hashtagger.ui.twitter;
+package net.thetranquilpsychonaut.hashtagger.sites.twitter.components;
 
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import net.thetranquilpsychonaut.hashtagger.ui.SitesUserHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
 import twitter4j.auth.AccessToken;
 
 /**
@@ -36,9 +36,9 @@ public class TwitterUserHandler implements SitesUserHandler
 
     public static AccessToken getAccessToken()
     {
-        if( !isUserLoggedIn() )
+        if ( !isUserLoggedIn() )
             throw new RuntimeException( "User must be logged in before prodding access token." );
-        if( null == accessToken )
+        if ( null == accessToken )
             accessToken = new AccessToken(
                 HashtaggerApp.prefs.getString( HashtaggerApp.TWITTER_OAUTH_ACCESS_TOKEN_KEY, "" ),
                 HashtaggerApp.prefs.getString( HashtaggerApp.TWITTER_OAUTH_ACCESS_TOKEN_SECRET_KEY, "" ) );
@@ -47,9 +47,9 @@ public class TwitterUserHandler implements SitesUserHandler
 
     public static String getUserName()
     {
-        if( !isUserLoggedIn() )
+        if ( !isUserLoggedIn() )
             throw new RuntimeException( "User must be logged in before prodding access token." );
-        if( null == userName )
+        if ( null == userName )
             userName = HashtaggerApp.prefs.getString( HashtaggerApp.USER_KEY, "" );
         return userName;
     }

@@ -1,35 +1,35 @@
-package net.thetranquilpsychonaut.hashtagger.ui;
+package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.widget.SearchView;
-import net.thetranquilpsychonaut.hashtagger.*;
+import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
+import net.thetranquilpsychonaut.hashtagger.Helper;
+import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.otto.HashtagEvent;
 
 import java.util.List;
 
-public class MainActivity extends FragmentActivity implements ActionBar.TabListener, ViewPager.OnPageChangeListener
+public class SitesActivity extends FragmentActivity implements ActionBar.TabListener, ViewPager.OnPageChangeListener
 {
-    ActionBar                  actionBar;
-    ViewPager                  vpSitesPager;
-    HashtaggerSitesAdapter     vpSitesPagerAdapter;
-    SearchView                 svHashtag;
+    ActionBar              actionBar;
+    ViewPager              vpSitesPager;
+    HashtaggerSitesAdapter vpSitesPagerAdapter;
+    SearchView             svHashtag;
 
     @Override
     public void onCreate( Bundle savedInstanceState )
     {
         super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_main );
+        setContentView( R.layout.activity_sites );
         vpSitesPager = ( ViewPager ) findViewById( R.id.vp_sites_pager );
         HashtaggerSitesAdapter vpSitesPagerAdapter = new HashtaggerSitesAdapter( getSupportFragmentManager(), this );
         vpSitesPager.setAdapter( vpSitesPagerAdapter );
@@ -70,9 +70,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     {
         Helper.debug( "activity onactivityresult" );
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
-        if( null != fragments )
+        if ( null != fragments )
         {
-            for(  Fragment f : fragments )
+            for ( Fragment f : fragments )
                 f.onActivityResult( requestCode, resultCode, data );
         }
     }

@@ -1,4 +1,4 @@
-package net.thetranquilpsychonaut.hashtagger.ui;
+package net.thetranquilpsychonaut.hashtagger.sites.components;
 
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 
@@ -8,5 +8,4 @@ import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 public interface SitesSearchHandler
 {
     public void beginSearch( SearchType searchType );
-    public void destroySearch();
 }

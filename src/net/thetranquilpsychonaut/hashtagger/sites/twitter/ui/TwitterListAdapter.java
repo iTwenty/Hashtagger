@@ -1,4 +1,4 @@
-package net.thetranquilpsychonaut.hashtagger.ui.twitter;
+package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.app.Activity;
 import android.content.Context;
@@ -42,22 +42,22 @@ public class TwitterListAdapter extends ArrayAdapter<Status>
         View view = convertView;
         ViewHolder viewHolder;
         Status status = getItem( position );
-        LayoutInflater inflater = ( LayoutInflater )ctx.getSystemService( Activity.LAYOUT_INFLATER_SERVICE );
+        LayoutInflater inflater = ( LayoutInflater ) ctx.getSystemService( Activity.LAYOUT_INFLATER_SERVICE );
 
-        if( view == null )
+        if ( view == null )
         {
             view = inflater.inflate( R.layout.fragment_twitter_list_row, null );
             viewHolder = new ViewHolder();
-            viewHolder.imgvProfileImage = ( ImageView )view.findViewById( R.id.imgv_profile_image );
-            viewHolder.tvUserName = ( TextView )view.findViewById( R.id.tv_user_name );
-            viewHolder.tvScreenName = ( TextView )view.findViewById( R.id.tv_screen_name );
-            viewHolder.tvCreatedAt = ( TextView )view.findViewById( R.id.tv_created_at );
-            viewHolder.tvTweetText = ( TextView )view.findViewById( R.id.tv_tweet_text );
+            viewHolder.imgvProfileImage = ( ImageView ) view.findViewById( R.id.imgv_profile_image );
+            viewHolder.tvUserName = ( TextView ) view.findViewById( R.id.tv_user_name );
+            viewHolder.tvScreenName = ( TextView ) view.findViewById( R.id.tv_screen_name );
+            viewHolder.tvCreatedAt = ( TextView ) view.findViewById( R.id.tv_created_at );
+            viewHolder.tvTweetText = ( TextView ) view.findViewById( R.id.tv_tweet_text );
             view.setTag( viewHolder );
         }
         else
         {
-            viewHolder = ( ViewHolder )view.getTag();
+            viewHolder = ( ViewHolder ) view.getTag();
         }
         viewHolder.imgvProfileImage.setImageDrawable( ctx.getResources().getDrawable( R.drawable.drawable_rect ) );
         viewHolder.tvUserName.setText( status.getUser().getName() );

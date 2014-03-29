@@ -6,5 +6,6 @@ package net.thetranquilpsychonaut.hashtagger;
 public interface ConnectivityChangeListener
 {
     public void onConnected();
+
     public void onDisconnected();
 }

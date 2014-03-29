@@ -1,4 +1,4 @@
-package net.thetranquilpsychonaut.hashtagger.ui.twitter;
+package net.thetranquilpsychonaut.hashtagger.sites.twitter.components;
 
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import twitter4j.Status;

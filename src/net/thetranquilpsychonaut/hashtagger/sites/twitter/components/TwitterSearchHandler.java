@@ -1,4 +1,4 @@
-package net.thetranquilpsychonaut.hashtagger.ui.twitter;
+package net.thetranquilpsychonaut.hashtagger.sites.twitter.components;
 
 import android.app.IntentService;
 import android.content.BroadcastReceiver;
@@ -9,7 +9,7 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchResult;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
-import net.thetranquilpsychonaut.hashtagger.ui.SitesSearchHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import twitter4j.*;
 
 /**
@@ -17,7 +17,6 @@ import twitter4j.*;
  */
 public class TwitterSearchHandler implements SitesSearchHandler
 {
-    //TwitterTask                  twitterTask;
     TwitterSearchService           twitterSearchService;
     Twitter                        twitter;
     String                         hashtag;
@@ -86,80 +85,16 @@ public class TwitterSearchHandler implements SitesSearchHandler
         this.hashtag = hashtag;
     }
 
-    public void destroySearch()
-    {
-        //twitterTask.cancel( true );
-        twitterSearchService.stopSelf();
-    }
-
     public void unregisterReceiver()
     {
         context.unregisterReceiver( twitterSearchBroadcastReceiver );
     }
 
-//    private static class TwitterTask extends AsyncTask<String, Void, Void>
-//    {
-//        Query                query;
-//        QueryResult          result;
-//        TwitterSearchHandler twitterhandler;
-//
-//        public TwitterTask( TwitterSearchHandler twitterhandler )
-//        {
-//            query = new Query();
-//            this.twitterhandler = twitterhandler;
-//            result = null;
-//        }
-//
-//        @Override
-//        protected void onPreExecute()
-//        {
-//            twitterhandler.listener.whileSearching();
-//        }
-//
-//        @Override
-//        protected Void doInBackground( String... params )
-//        {
-//            query.setQuery( params[0] );
-//            query.setCount( HashtaggerApp.TWITTER_SEARCH_LIMIT );
-//            try
-//            {
-//                if ( null == twitterhandler.twitter.getOAuthAccessToken() )
-//                    throw new TwitterException( "" );
-//                result = twitterhandler.twitter.search( query );
-//            }
-//            catch ( TwitterException e )
-//            {
-//                Helper.debug( "Error while searching  for " + params[0] );
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute( Void aVoid )
-//        {
-//            if ( null != result )
-//            {
-//                twitterhandler.listener.afterSearching( result.getTweets() );
-//            }
-//            else
-//            {
-//                Helper.debug( "Result is null" );
-//                twitterhandler.listener.onError();
-//            }
-//        }
-//
-//        @Override
-//        protected void onCancelled( Void aVoid )
-//        {
-//            Helper.debug( "Search canceled" );
-//        }
-//    }
-
     public static class TwitterSearchService extends IntentService
     {
         public TwitterSearchService()
         {
-            super(HashtaggerApp.TWITTER_SEARCH_SERVICE);
+            super( HashtaggerApp.TWITTER_SEARCH_SERVICE );
         }
 
         @Override
@@ -216,7 +151,7 @@ public class TwitterSearchHandler implements SitesSearchHandler
             Helper.debug( "twitter search over" );
             SearchType searchType = ( SearchType ) intent.getSerializableExtra( SearchType.SEARCH_TYPE_KEY );
             SearchResult resultType = ( SearchResult ) intent.getSerializableExtra( SearchResult.SEARCH_RESULT_KEY );
-            if( resultType == SearchResult.FAILURE )
+            if ( resultType == SearchResult.FAILURE )
             {
                 handler.listener.onError( searchType );
                 return;

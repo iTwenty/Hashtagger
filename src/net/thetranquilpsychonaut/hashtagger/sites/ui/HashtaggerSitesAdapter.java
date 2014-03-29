@@ -1,12 +1,13 @@
-package net.thetranquilpsychonaut.hashtagger;
+package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import net.thetranquilpsychonaut.hashtagger.ui.facebook.FacebookFragment;
-import net.thetranquilpsychonaut.hashtagger.ui.instagram.InstagramFragment;
-import net.thetranquilpsychonaut.hashtagger.ui.twitter.TwitterFragment;
+import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
+import net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookFragment;
+import net.thetranquilpsychonaut.hashtagger.sites.instagram.ui.InstagramFragment;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterFragment;
 
 /**
  * Created by itwenty on 2/10/14.

@@ -1,44 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ViewAnimator
-    android:id="@+id/va_footer_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/va_footer_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <Button
-        android:id="@+id/btn_footer_load_older_results"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/str_load_older_results"
-        style="?android:attr/borderlessButtonStyle"/>
-
-    <ProgressBar
-        android:id="@+id/pgbr_footer_loading"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
-
-    <RelativeLayout
-        android:id="@+id/rl_footer_no_network_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/tv_footer_no_network_msg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/str_no_network"
-            android:layout_toLeftOf="@+id/btn_footer_retry"/>
-
-        <Button
-            android:id="@id/btn_footer_retry"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="@string/str_retry"/>
-
-    </RelativeLayout>
 
 </ViewAnimator>

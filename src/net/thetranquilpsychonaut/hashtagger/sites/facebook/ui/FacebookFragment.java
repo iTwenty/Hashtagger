@@ -1,4 +1,4 @@
-package net.thetranquilpsychonaut.hashtagger.ui.facebook;
+package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.support.v4.app.Fragment;
 

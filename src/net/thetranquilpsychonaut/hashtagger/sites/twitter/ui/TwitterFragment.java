@@ -1,4 +1,4 @@
-package net.thetranquilpsychonaut.hashtagger.ui.twitter;
+package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,9 +15,11 @@ import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.exception.NoNetworkException;
 import net.thetranquilpsychonaut.hashtagger.exception.NotLoggedInException;
 import net.thetranquilpsychonaut.hashtagger.otto.HashtagEvent;
-import net.thetranquilpsychonaut.hashtagger.ui.SitesFragment;
-import net.thetranquilpsychonaut.hashtagger.ui.SitesSearchHandler;
-import net.thetranquilpsychonaut.hashtagger.ui.SitesUserHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.*;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFooter;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
 import twitter4j.Status;
 
 import java.util.ArrayList;
@@ -35,19 +37,15 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     Loading              loadingHolder;
     Login                loginHolder;
     Error                errorHolder;
-    Footer               footerHolder;
+    TwitterFooter        twitterFooter;
     TwitterSearchHandler twitterSearchHandler;
     TwitterUserHandler   twitterUserHandler;
-
-    private TwitterSearchHandlerListenerImpl twitterSearchHandlerListener;
-    private TwitterUserHandlerListenerImpl   twitteryUserHandlerListener;
 
     @Override
     protected SitesUserHandler getSitesUserHandler()
     {
         twitterUserHandler = new TwitterUserHandler();
-        twitteryUserHandlerListener = new TwitterUserHandlerListenerImpl();
-        twitterUserHandler.setListener( twitteryUserHandlerListener );
+        twitterUserHandler.setListener( new TwitterUserHandlerListenerImpl() );
         return twitterUserHandler;
     }
 
@@ -55,8 +53,7 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     protected SitesSearchHandler getSitesSearchHandler()
     {
         twitterSearchHandler = new TwitterSearchHandler();
-        twitterSearchHandlerListener = new TwitterSearchHandlerListenerImpl();
-        twitterSearchHandler.setListener( twitterSearchHandlerListener );
+        twitterSearchHandler.setListener( new TwitterSearchHandlerListenerImpl() );
         return twitterSearchHandler;
     }
 
@@ -64,13 +61,13 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     protected void onViewsCreated()
     {
         if ( !TwitterUserHandler.isUserLoggedIn() )
-            showView( viewLogin );
+            showView( SitesView.LOGIN );
     }
 
     @Override
-    protected View fetchView( Views views, LayoutInflater inflater )
+    protected View fetchView( SitesView sitesView, LayoutInflater inflater )
     {
-        switch ( views )
+        switch ( sitesView )
         {
             case READY:
                 return getViewReady( inflater );
@@ -88,29 +85,13 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     {
         View viewReady = inflater.inflate( R.layout.view_ready, null );
         readyHolder = new Ready();
-        footerHolder = getFooterHolder( inflater );
         currentStatuses = new ArrayList<Status>();
         twitterListAdapter = new TwitterListAdapter( getActivity(), R.layout.fragment_twitter_list_row, currentStatuses );
         readyHolder.lvResultsList = ( ListView ) viewReady.findViewById( R.id.lv_results_list );
-        readyHolder.lvResultsList.addFooterView( footerHolder.vaFooterView, readyHolder.lvResultsList, true );
         readyHolder.lvResultsList.setAdapter( twitterListAdapter );
         readyHolder.lvResultsListEmpty = ( TextView ) viewReady.findViewById( R.id.tv_results_list_empty );
         readyHolder.lvResultsList.setEmptyView( readyHolder.lvResultsListEmpty );
         return viewReady;
-    }
-
-    private Footer getFooterHolder( LayoutInflater inflater )
-    {
-        Footer footerHolder = new Footer();
-        footerHolder.vaFooterView = ( ViewAnimator ) inflater.inflate( R.layout.footer_view_results_list, null );
-        footerHolder.btnFooterLoadOlderResults = ( Button ) footerHolder.vaFooterView.findViewById( R.id.btn_footer_load_older_results );
-        footerHolder.btnFooterLoadOlderResults.setOnClickListener( this );
-        footerHolder.pgbrFooterLoading = ( ProgressBar ) footerHolder.vaFooterView.findViewById( R.id.pgbr_footer_loading );
-        footerHolder.rlNoNetworkView = ( RelativeLayout )footerHolder.vaFooterView.findViewById( R.id.rl_footer_no_network_view );
-        footerHolder.tvFooterNoNetworkMsg = ( TextView ) footerHolder.vaFooterView.findViewById( R.id.tv_footer_no_network_msg );
-        footerHolder.btnFooterRetry = ( Button ) footerHolder.vaFooterView.findViewById( R.id.btn_footer_retry );
-        footerHolder.btnFooterRetry.setOnClickListener( this );
-        return footerHolder;
     }
 
     private View getViewLoading( LayoutInflater inflater )
@@ -136,6 +117,16 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
         errorHolder = new Error();
         errorHolder.tvError = ( TextView ) viewError.findViewById( R.id.tv_error );
         return viewError;
+    }
+
+    @Override
+    public SitesFooter getSitesFooter( LayoutInflater inflater )
+    {
+        twitterFooter = new TwitterFooter( inflater );
+        twitterFooter.setListener( new TwitterFooterListenerImpl() );
+        twitterFooter.appendFooterToList( readyHolder.lvResultsList );
+        readyHolder.lvResultsList.setAdapter( twitterListAdapter );
+        return twitterFooter;
     }
 
     @Subscribe
@@ -176,8 +167,6 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     {
         if ( v.equals( loginHolder.btnLogin ) )
             doLogin();
-        else if ( v.equals( footerHolder.btnFooterLoadOlderResults ) )
-            dolLoadOlderResults();
     }
 
     private void doLogin()
@@ -229,27 +218,25 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     private void onUserLoggedIn()
     {
         twitterSearchHandler.setAccessToken();
-        showView( viewReady );
+        showView( SitesView.READY );
         Toast.makeText( getActivity(), "Logged in to Twitter as " + twitterUserHandler.getUserName(), Toast.LENGTH_LONG ).show();
         getActivity().invalidateOptionsMenu();
     }
 
     private void onUserLoggedOut()
     {
-        twitterSearchHandler.destroySearch();
         twitterSearchHandler.clearAccessToken();
         twitterListAdapter.clear();
         twitterListAdapter.notifyDataSetChanged();
-        twitterSearchHandler.destroySearch();
         getActivity().setTitle( getResources().getString( R.string.app_name ) );
-        showView( viewLogin );
+        showView( SitesView.LOGIN );
         getActivity().invalidateOptionsMenu();
     }
 
     private void onLoginFailure()
     {
         Toast.makeText( getActivity(), "Could not log you in. Please try again.", Toast.LENGTH_LONG ).show();
-        showView( viewLogin );
+        showView( SitesView.LOGIN );
     }
 
     @Override
@@ -287,10 +274,10 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
             switch ( searchType )
             {
                 case CURRENT:
-                    showView( viewLoading );
+                    showView( SitesView.LOADING );
                     break;
                 case OLDER:
-                    footerHolder.vaFooterView.setDisplayedChild( footerHolder.vaFooterView.indexOfChild( footerHolder.pgbrFooterLoading ) );
+                    twitterFooter.showFooterView( SitesFooter.SitesFooterView.LOADING );
                     break;
                 case NEWER:
                     break;
@@ -316,7 +303,7 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
 
         private void afterCurrentSearch( List<Status> statuses )
         {
-            showView( viewReady );
+            showView( SitesView.READY );
             if ( null != statuses )
             {
                 twitterListAdapter.addAll( statuses );
@@ -330,7 +317,7 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
 
         private void afterOlderSearch( List<Status> statuses )
         {
-            footerHolder.vaFooterView.setDisplayedChild( footerHolder.vaFooterView.indexOfChild( footerHolder.btnFooterLoadOlderResults ) );
+            twitterFooter.showFooterView( SitesFooter.SitesFooterView.LOAD_OLDER );
             if ( null != statuses )
             {
                 twitterListAdapter.addAll( statuses );
@@ -354,9 +341,10 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
             switch ( searchType )
             {
                 case CURRENT:
-                    showView( viewError ); break;
+                    showView( SitesView.ERROR );
+                    break;
                 case OLDER:
-                    footerHolder.vaFooterView.setDisplayedChild( footerHolder.vaFooterView.indexOfChild( footerHolder.rlNoNetworkView ) );
+                    twitterFooter.showFooterView( SitesFooter.SitesFooterView.ERROR );
             }
         }
     }
@@ -370,20 +358,24 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
         }
     }
 
+    private class TwitterFooterListenerImpl implements TwitterFooterListener
+    {
+        @Override
+        public void onLoadOlderResultsClicked()
+        {
+            dolLoadOlderResults();
+        }
+
+        @Override
+        public void onRetryClicked()
+        {
+        }
+    }
+
     private static class Ready
     {
         public ListView lvResultsList;
         public TextView lvResultsListEmpty;
-    }
-
-    private static class Footer
-    {
-        public ViewAnimator   vaFooterView;
-        public Button         btnFooterLoadOlderResults;
-        public ProgressBar    pgbrFooterLoading;
-        public RelativeLayout rlNoNetworkView;
-        public TextView       tvFooterNoNetworkMsg;
-        public Button         btnFooterRetry;
     }
 
     private static class Loading
@@ -404,7 +396,6 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     @Override
     public void onDestroy()
     {
-        twitterSearchHandler.destroySearch();
         twitterSearchHandler.unregisterReceiver();
         super.onDestroy();
     }

@@ -1,10 +1,10 @@
-package net.thetranquilpsychonaut.hashtagger.ui.twitter;
+package net.thetranquilpsychonaut.hashtagger.sites.twitter.components;
 
 import android.content.Context;
 import android.os.AsyncTask;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.Helper;
-import net.thetranquilpsychonaut.hashtagger.ui.SitesAuthHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.components.SitesAuthHandler;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -126,7 +126,7 @@ public class TwitterAuthHandler implements SitesAuthHandler
         @Override
         protected void onPostExecute( Void aVoid )
         {
-            if( null != authHandler.accessToken )
+            if ( null != authHandler.accessToken )
             {
                 HashtaggerApp.prefs.edit()
                     .putString( HashtaggerApp.TWITTER_OAUTH_ACCESS_TOKEN_KEY, authHandler.accessToken.getToken() )

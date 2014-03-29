@@ -1,4 +1,4 @@
-package net.thetranquilpsychonaut.hashtagger.ui.twitter;
+package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -10,6 +10,8 @@ import android.widget.ProgressBar;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterAuthHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterAuthHandlerListener;
 import twitter4j.auth.RequestToken;
 
 /**
@@ -17,16 +19,16 @@ import twitter4j.auth.RequestToken;
  */
 public class TwitterAuthActivity extends FragmentActivity implements TwitterAuthHandlerListener
 {
-    WebView wvTwitterSignIn;
+    WebView            wvTwitterSignIn;
     TwitterAuthHandler authHandler;
-    ProgressBar pgbrLoadingAuth;
+    ProgressBar        pgbrLoadingAuth;
 
     public void onCreate( Bundle savedInstanceState )
     {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_twitter_auth );
         wvTwitterSignIn = ( WebView ) findViewById( R.id.wv_twitter_sign_in );
-        pgbrLoadingAuth = ( ProgressBar )findViewById( R.id.pgbr_loading_auth );
+        pgbrLoadingAuth = ( ProgressBar ) findViewById( R.id.pgbr_loading_auth );
         setTitle( getString( R.string.str_title_activity_twitter_auth ) );
         authHandler = new TwitterAuthHandler( this );
         authHandler.setListener( this );
@@ -44,7 +46,7 @@ public class TwitterAuthActivity extends FragmentActivity implements TwitterAuth
     {
         Uri uri = intent.getData();
         Helper.debug( uri.toString() );
-        if( null != uri && uri.toString().startsWith( HashtaggerApp.CALLBACK_URL ) && null != uri.getQueryParameter( HashtaggerApp.OAUTH_VERIFIER_KEY ) )
+        if ( null != uri && uri.toString().startsWith( HashtaggerApp.CALLBACK_URL ) && null != uri.getQueryParameter( HashtaggerApp.OAUTH_VERIFIER_KEY ) )
         {
             authHandler.verifyUser( uri.getQueryParameter( HashtaggerApp.OAUTH_VERIFIER_KEY ) );
         }
