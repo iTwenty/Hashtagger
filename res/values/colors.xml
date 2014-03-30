@@ -5,4 +5,9 @@
     <item name="twitter_verified_blue" type="color">#1dcaff</item>
     <item name="twitter_background_blue" type="color">#c0deed</item>
     <item name="twitter_white" type="color">#ffffff</item>
+    <item name="facebook_blue" type="color">#3b5998</item>
+    <item name="facebook_light_blue" type="color">#8b9dc3</item>
+    <item name="facebook_lighter_blue" type="color">#dfe3ee</item>
+    <item name="googlep_red" type="color">#d34836</item>
+    <item name="googlep_gray" type="color">#d2d2d2</item>
 </resources>
