@@ -20,10 +20,10 @@ import java.util.List;
 
 public class SitesActivity extends FragmentActivity implements ActionBar.TabListener, ViewPager.OnPageChangeListener
 {
-    ActionBar              actionBar;
-    ViewPager              vpSitesPager;
-    HashtaggerSitesAdapter vpSitesPagerAdapter;
-    SearchView             svHashtag;
+    ActionBar    actionBar;
+    ViewPager    vpSitesPager;
+    SitesAdapter vpSitesPagerAdapter;
+    SearchView   svHashtag;
 
     @Override
     public void onCreate( Bundle savedInstanceState )
@@ -31,7 +31,7 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_sites );
         vpSitesPager = ( ViewPager ) findViewById( R.id.vp_sites_pager );
-        HashtaggerSitesAdapter vpSitesPagerAdapter = new HashtaggerSitesAdapter( getSupportFragmentManager(), this );
+        SitesAdapter vpSitesPagerAdapter = new SitesAdapter( getSupportFragmentManager(), this );
         vpSitesPager.setAdapter( vpSitesPagerAdapter );
         vpSitesPager.setOnPageChangeListener( this );
         vpSitesPager.setOffscreenPageLimit( HashtaggerApp.SITES.size() );

@@ -2,6 +2,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,8 +13,6 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
-import net.thetranquilpsychonaut.hashtagger.exception.NoNetworkException;
-import net.thetranquilpsychonaut.hashtagger.exception.NotLoggedInException;
 import net.thetranquilpsychonaut.hashtagger.otto.HashtagEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
@@ -28,7 +27,7 @@ import java.util.List;
 /**
  * Created by itwenty on 2/26/14.
  */
-public class TwitterFragment extends SitesFragment implements View.OnClickListener
+public class TwitterFragment extends SitesFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, TwitterUserHandlerListener, TwitterSearchHandlerListener, TwitterFooterListener
 {
     ArrayList<Status>    currentStatuses;
     TwitterListAdapter   twitterListAdapter;
@@ -45,7 +44,7 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     protected SitesUserHandler getSitesUserHandler()
     {
         twitterUserHandler = new TwitterUserHandler();
-        twitterUserHandler.setListener( new TwitterUserHandlerListenerImpl() );
+        twitterUserHandler.setListener( this );
         return twitterUserHandler;
     }
 
@@ -53,7 +52,7 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     protected SitesSearchHandler getSitesSearchHandler()
     {
         twitterSearchHandler = new TwitterSearchHandler();
-        twitterSearchHandler.setListener( new TwitterSearchHandlerListenerImpl() );
+        twitterSearchHandler.setListener( this );
         return twitterSearchHandler;
     }
 
@@ -87,6 +86,12 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
         readyHolder = new Ready();
         currentStatuses = new ArrayList<Status>();
         twitterListAdapter = new TwitterListAdapter( getActivity(), R.layout.fragment_twitter_list_row, currentStatuses );
+        readyHolder.srlReady = ( SwipeRefreshLayout ) viewReady.findViewById( R.id.srl_ready );
+        readyHolder.srlReady.setOnRefreshListener( this );
+        readyHolder.srlReady.setColorScheme( android.R.color.holo_blue_bright,
+            android.R.color.holo_green_light,
+            android.R.color.holo_orange_light,
+            android.R.color.holo_red_light );
         readyHolder.lvResultsList = ( ListView ) viewReady.findViewById( R.id.lv_results_list );
         readyHolder.lvResultsList.setAdapter( twitterListAdapter );
         readyHolder.lvResultsListEmpty = ( TextView ) viewReady.findViewById( R.id.tv_results_list_empty );
@@ -123,7 +128,7 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     public SitesFooter getSitesFooter( LayoutInflater inflater )
     {
         twitterFooter = new TwitterFooter( inflater );
-        twitterFooter.setListener( new TwitterFooterListenerImpl() );
+        twitterFooter.setListener( this );
         twitterFooter.appendFooterToList( readyHolder.lvResultsList );
         readyHolder.lvResultsList.setAdapter( twitterListAdapter );
         return twitterFooter;
@@ -132,52 +137,27 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     @Subscribe
     public void searchHashtag( HashtagEvent event )
     {
-        try
+        if ( !TwitterUserHandler.isUserLoggedIn() )
         {
-            ensureNetworkConnected();
-            ensureUserLoggedIn();
-        }
-        catch ( NoNetworkException e )
-        {
-            Toast.makeText( getActivity(), e.getMessage(), Toast.LENGTH_SHORT ).show();
+            Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_no_network ), Toast.LENGTH_LONG ).show();
             return;
         }
-        catch ( NotLoggedInException e )
+        if ( !HashtaggerApp.isNetworkConnected() )
         {
-            Toast.makeText( getActivity(), e.getMessage(), Toast.LENGTH_SHORT ).show();
+            Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_twitter_not_logged_in ), Toast.LENGTH_LONG ).show();
             return;
         }
-        twitterListAdapter.clear();
-        twitterListAdapter.notifyDataSetChanged();
         this.hashtag = event.getHashtag();
         getActivity().setTitle( hashtag );
         twitterSearchHandler.setHashtag( this.hashtag );
-        twitterSearchHandler.beginSearch( SearchType.CURRENT );
-    }
-
-    @Override
-    protected void ensureUserLoggedIn() throws NotLoggedInException
-    {
-        if ( !twitterUserHandler.isUserLoggedIn() )
-            throw new NotLoggedInException( "Please sign in to Twitter first." );
-    }
-
-    @Override
-    public void onClick( View v )
-    {
-        if ( v.equals( loginHolder.btnLogin ) )
-            doLogin();
+        twitterSearchHandler.beginSearch( SearchType.INITIAL );
     }
 
     private void doLogin()
     {
-        try
+        if ( !HashtaggerApp.isNetworkConnected() )
         {
-            ensureNetworkConnected();
-        }
-        catch ( NoNetworkException e )
-        {
-            Toast.makeText( getActivity(), e.getMessage(), Toast.LENGTH_SHORT ).show();
+            Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_twitter_not_logged_in ), Toast.LENGTH_LONG ).show();
             return;
         }
         Intent i = new Intent( getActivity(), TwitterAuthActivity.class );
@@ -186,16 +166,22 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
 
     private void dolLoadOlderResults()
     {
-        try
+        if ( !HashtaggerApp.isNetworkConnected() )
         {
-            ensureNetworkConnected();
-        }
-        catch ( NoNetworkException e )
-        {
-            Toast.makeText( getActivity(), e.getMessage(), Toast.LENGTH_SHORT ).show();
+            Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_twitter_not_logged_in ), Toast.LENGTH_LONG ).show();
             return;
         }
         twitterSearchHandler.beginSearch( SearchType.OLDER );
+    }
+
+    private void doLoadNewerResults()
+    {
+        if ( !HashtaggerApp.isNetworkConnected() )
+        {
+            Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_twitter_not_logged_in ), Toast.LENGTH_LONG ).show();
+            return;
+        }
+        twitterSearchHandler.beginSearch( SearchType.NEWER );
     }
 
     @Override
@@ -220,16 +206,6 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
         twitterSearchHandler.setAccessToken();
         showView( SitesView.READY );
         Toast.makeText( getActivity(), "Logged in to Twitter as " + twitterUserHandler.getUserName(), Toast.LENGTH_LONG ).show();
-        getActivity().invalidateOptionsMenu();
-    }
-
-    private void onUserLoggedOut()
-    {
-        twitterSearchHandler.clearAccessToken();
-        twitterListAdapter.clear();
-        twitterListAdapter.notifyDataSetChanged();
-        getActivity().setTitle( getResources().getString( R.string.app_name ) );
-        showView( SitesView.LOGIN );
         getActivity().invalidateOptionsMenu();
     }
 
@@ -266,116 +242,159 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
             menu.findItem( R.id.it_logout_twitter ).setVisible( false );
     }
 
-    private class TwitterSearchHandlerListenerImpl implements TwitterSearchHandlerListener
+    /**
+     * **************** for OnClickListener *********************
+     */
+
+    @Override
+    public void onClick( View v )
     {
-        @Override
-        public void whileSearching( SearchType searchType )
-        {
-            switch ( searchType )
-            {
-                case CURRENT:
-                    showView( SitesView.LOADING );
-                    break;
-                case OLDER:
-                    twitterFooter.showFooterView( SitesFooter.SitesFooterView.LOADING );
-                    break;
-                case NEWER:
-                    break;
-            }
-        }
+        if ( v.equals( loginHolder.btnLogin ) )
+            doLogin();
+    }
 
-        @Override
-        public void afterSearching( SearchType searchType, List<Status> statuses )
-        {
-            switch ( searchType )
-            {
-                case CURRENT:
-                    afterCurrentSearch( statuses );
-                    break;
-                case OLDER:
-                    afterOlderSearch( statuses );
-                    break;
-                case NEWER:
-                    afterNewerSearch( statuses );
-                    break;
-            }
-        }
+    /**
+     * *************** For UserHandlerListener ****************
+     */
 
-        private void afterCurrentSearch( List<Status> statuses )
-        {
-            showView( SitesView.READY );
-            if ( null != statuses )
-            {
-                twitterListAdapter.addAll( statuses );
-                twitterListAdapter.notifyDataSetChanged();
-            }
-            else
-            {
-                readyHolder.lvResultsListEmpty.setText( getResources().getString( R.string.str_no_results ) );
-            }
-        }
+    @Override
+    public void onUserLoggedOut()
+    {
+        twitterSearchHandler.clearAccessToken();
+        twitterListAdapter.clear();
+        twitterListAdapter.notifyDataSetChanged();
+        getActivity().setTitle( getResources().getString( R.string.app_name ) );
+        showView( SitesView.LOGIN );
+        getActivity().invalidateOptionsMenu();
+    }
 
-        private void afterOlderSearch( List<Status> statuses )
-        {
-            twitterFooter.showFooterView( SitesFooter.SitesFooterView.LOAD_OLDER );
-            if ( null != statuses )
-            {
-                twitterListAdapter.addAll( statuses );
-                twitterListAdapter.notifyDataSetChanged();
-            }
 
-        }
+    /**
+     * **************** for onRefreshListener **************
+     */
 
-        private void afterNewerSearch( List<Status> statuses )
-        {
-            if ( null != statuses )
-            {
-                currentStatuses.addAll( 0, statuses );
-                twitterListAdapter.notifyDataSetChanged();
-            }
-        }
+    @Override
+    public void onRefresh()
+    {
+        doLoadNewerResults();
+    }
 
-        @Override
-        public void onError( SearchType searchType )
+    /**
+     * ****************for SearchHandlerListener *************
+     */
+
+    @Override
+    public void whileSearching( SearchType searchType )
+    {
+        switch ( searchType )
         {
-            switch ( searchType )
-            {
-                case CURRENT:
-                    showView( SitesView.ERROR );
-                    break;
-                case OLDER:
-                    twitterFooter.showFooterView( SitesFooter.SitesFooterView.ERROR );
-            }
+            case INITIAL:
+                showView( SitesView.LOADING );
+                getActivity().invalidateOptionsMenu();
+                break;
+            case OLDER:
+                twitterFooter.showFooterView( SitesFooter.SitesFooterView.LOADING );
+                break;
+            case NEWER:
+                readyHolder.srlReady.setRefreshing( true );
+                break;
         }
     }
 
-    private class TwitterUserHandlerListenerImpl implements TwitterUserHandlerListener
+    @Override
+    public void afterSearching( SearchType searchType, List<Status> statuses )
     {
-        @Override
-        public void onUserLoggedOut()
+        switch ( searchType )
         {
-            TwitterFragment.this.onUserLoggedOut();
+            case INITIAL:
+                afterCurrentSearch( statuses );
+                break;
+            case OLDER:
+                afterOlderSearch( statuses );
+                break;
+            case NEWER:
+                afterNewerSearch( statuses );
+                break;
         }
     }
 
-    private class TwitterFooterListenerImpl implements TwitterFooterListener
+    private void afterCurrentSearch( List<Status> statuses )
     {
-        @Override
-        public void onLoadOlderResultsClicked()
+        showView( SitesView.READY );
+        twitterListAdapter.clear();
+        if ( null != statuses )
         {
-            dolLoadOlderResults();
+            twitterListAdapter.addAll( statuses );
+        }
+        else
+        {
+            readyHolder.lvResultsListEmpty.setText( getResources().getString( R.string.str_no_results ) );
+        }
+        twitterListAdapter.notifyDataSetChanged();
+    }
+
+    private void afterOlderSearch( List<Status> statuses )
+    {
+        twitterFooter.showFooterView( SitesFooter.SitesFooterView.LOAD_OLDER );
+        if ( null != statuses )
+        {
+            twitterListAdapter.addAll( statuses );
+            twitterListAdapter.notifyDataSetChanged();
+        }
+        else
+        {
+            Toast.makeText( getActivity(), "No older results", Toast.LENGTH_LONG ).show();
         }
 
-        @Override
-        public void onRetryClicked()
+    }
+
+    private void afterNewerSearch( List<Status> statuses )
+    {
+        readyHolder.srlReady.setRefreshing( false );
+        if ( null != statuses )
         {
+            currentStatuses.addAll( 0, statuses );
+            twitterListAdapter.notifyDataSetChanged();
         }
+        else
+        {
+            Toast.makeText( getActivity(), "No newer results", Toast.LENGTH_LONG ).show();
+        }
+    }
+
+    @Override
+    public void onError( SearchType searchType )
+    {
+        switch ( searchType )
+        {
+            case INITIAL:
+                showView( SitesView.ERROR );
+                break;
+            case OLDER:
+                twitterFooter.showFooterView( SitesFooter.SitesFooterView.ERROR );
+        }
+    }
+
+    /**
+     * ************** for FooterListener **********************
+     */
+
+    @Override
+    public void onLoadOlderResultsClicked()
+    {
+        dolLoadOlderResults();
+    }
+
+    @Override
+    public void onRetryClicked()
+    {
     }
 
     private static class Ready
     {
         public ListView lvResultsList;
         public TextView lvResultsListEmpty;
+        SwipeRefreshLayout srlReady;
     }
 
     private static class Loading

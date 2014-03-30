@@ -12,12 +12,12 @@ import net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterFragment;
 /**
  * Created by itwenty on 2/10/14.
  */
-public class HashtaggerSitesAdapter extends FragmentPagerAdapter
+public class SitesAdapter extends FragmentPagerAdapter
 {
     Context         ctx;
     FragmentManager fm;
 
-    public HashtaggerSitesAdapter( FragmentManager fm, Context ctx )
+    public SitesAdapter( FragmentManager fm, Context ctx )
     {
         super( fm );
         this.fm = fm;

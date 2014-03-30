@@ -9,8 +9,6 @@ import android.widget.ViewAnimator;
 import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.exception.NoNetworkException;
-import net.thetranquilpsychonaut.hashtagger.exception.NotLoggedInException;
 import net.thetranquilpsychonaut.hashtagger.otto.HashtagEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
@@ -97,14 +95,6 @@ public abstract class SitesFragment extends Fragment
 
     @Subscribe
     protected abstract void searchHashtag( HashtagEvent event );
-
-    protected void ensureNetworkConnected() throws NoNetworkException
-    {
-        if ( !HashtaggerApp.isNetworkConnected() )
-            throw new NoNetworkException( "Please connect to a network first." );
-    }
-
-    protected abstract void ensureUserLoggedIn() throws NotLoggedInException;
 
     public void showView( SitesView sitesView )
     {

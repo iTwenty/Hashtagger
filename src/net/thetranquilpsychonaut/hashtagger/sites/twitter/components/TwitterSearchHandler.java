@@ -12,6 +12,8 @@ import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import twitter4j.*;
 
+import java.util.List;
+
 /**
  * Created by itwenty on 3/13/14.
  */
@@ -25,6 +27,10 @@ public class TwitterSearchHandler implements SitesSearchHandler
     IntentFilter                   filter;
     TwitterSearchBroadcastReceiver twitterSearchBroadcastReceiver;
 
+    /*
+    max and since ids are used to navigate through the tweets timeline.
+    tweet ids are time based i.e later tweets have higher ids than older tweets.
+     */
     private static final String MAX_ID   = "maxId";
     private static final String SINCE_ID = "sinceId";
     private static long maxId;
@@ -60,9 +66,14 @@ public class TwitterSearchHandler implements SitesSearchHandler
         serviceIntent.putExtra( SearchType.SEARCH_TYPE_KEY, searchType );
         serviceIntent.putExtra( HashtaggerApp.TWITTER_KEY, twitter );
         serviceIntent.putExtra( HashtaggerApp.HASHTAG_KEY, this.hashtag );
+        /*
+        for our initial search we dont pass in either max or since id.
+        Older search retrieves tweets with ids lower than the maxId we pass it
+        Newer search retrieves tweets with ids higher than the sinceId we pass it
+         */
         switch ( searchType )
         {
-            case CURRENT:
+            case INITIAL:
                 break;
             case OLDER:
                 serviceIntent.putExtra( MAX_ID, maxId );
@@ -113,7 +124,7 @@ public class TwitterSearchHandler implements SitesSearchHandler
                     throw new TwitterException( "" );
                 switch ( searchType )
                 {
-                    case CURRENT:
+                    case INITIAL:
                         break;
                     case OLDER:
                         query.setMaxId( intent.getLongExtra( MAX_ID, -1 ) );
@@ -126,13 +137,35 @@ public class TwitterSearchHandler implements SitesSearchHandler
             {
                 Helper.debug( "Error while searching for " + hashtag );
             }
+            SearchResult searchResult = null == result ? SearchResult.FAILURE : SearchResult.SUCCESS;
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction( HashtaggerApp.TWITTER_SEARCH_OVER );
             broadcastIntent.addCategory( Intent.CATEGORY_DEFAULT );
             broadcastIntent.putExtra( SearchType.SEARCH_TYPE_KEY, searchType );
-            broadcastIntent.putExtra( SearchResult.SEARCH_RESULT_KEY, null == result ? SearchResult.FAILURE : SearchResult.SUCCESS );
-            broadcastIntent.putExtra( SearchResult.SEARCH_RESULT_DATA, result );
+            broadcastIntent.putExtra( SearchResult.SEARCH_RESULT_KEY, searchResult );
+            if ( searchResult == SearchResult.SUCCESS )
+            {
+                broadcastIntent.putExtra( SearchResult.SEARCH_RESULT_DATA, result );
+                if ( result.getTweets() != null )
+                {
+                    /*
+                    if our current search is the initial one, we set both the max and since ids for subsquent searches.
+                    if our current search is older, we don't want it to change the sinceId for our next newer search.
+                    if our current search is newer, we don't want it to change the maxId for our next older search.
+                     */
+                    if ( searchType != SearchType.OLDER )
+                        sinceId = result.getMaxId();
+                    if ( searchType != SearchType.NEWER )
+                        maxId = result.getSinceId() == 0 ? getLowestId( result.getTweets() ) : result.getSinceId();
+
+                }
+            }
             sendBroadcast( broadcastIntent );
+        }
+
+        private long getLowestId( List<Status> list )
+        {
+            return list.get( list.size() - 1 ).getId();
         }
     }
 
@@ -157,18 +190,14 @@ public class TwitterSearchHandler implements SitesSearchHandler
                 return;
             }
             QueryResult result = ( QueryResult ) intent.getSerializableExtra( SearchResult.SEARCH_RESULT_DATA );
-            if ( result.getTweets() != null )
+            // In case the search was for older results, we remove the newest one as maxId parameter is inclusive
+            // and causes tweet to repeat.
+            List<Status> resultList = result.getTweets();
+            if ( searchType == SearchType.OLDER )
             {
-                sinceId = result.getMaxId();
-                maxId = result.getSinceId() == 0 ? getLowestId( result ) : result.getSinceId();
+                resultList = resultList.subList( 1, resultList.size() );
             }
-            handler.listener.afterSearching( searchType, result.getTweets() );
-        }
-
-        private long getLowestId( QueryResult result )
-        {
-            int last = result.getTweets().size() - 1;
-            return result.getTweets().get( last ).getId();
+            handler.listener.afterSearching( searchType, resultList );
         }
     }
 }
