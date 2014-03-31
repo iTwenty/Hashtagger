@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import com.squareup.otto.Bus;
-import com.squareup.otto.ThreadEnforcer;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
@@ -28,7 +26,6 @@ public class HashtaggerApp extends Application
     public static final String            SHARED_PREFS                          = NAMESPACE + "shared_prefs";
     public static final ArrayList<String> SITES                                 = new ArrayList<String>();
     public static       boolean           PREV_CONNECTED                        = false;
-    public static final Bus               bus                                   = new Bus( ThreadEnforcer.ANY );
     public static final String            OAUTH_CONSUMER_KEY                    = "M8ezCrLbz1TyyjIE77muA";
     public static final String            OAUTH_CONSUMER_SECRET                 = "CfAivT6J3KGEAML2l8w2OVjBXKTo9lzrFQxFXIPzk";
     public static       Configuration     CONFIGURATION                         = null;

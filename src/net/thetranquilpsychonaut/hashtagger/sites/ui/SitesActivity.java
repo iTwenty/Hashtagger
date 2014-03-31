@@ -14,7 +14,6 @@ import android.widget.SearchView;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.otto.HashtagEvent;
 
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_sites );
         vpSitesPager = ( ViewPager ) findViewById( R.id.vp_sites_pager );
-        SitesAdapter vpSitesPagerAdapter = new SitesAdapter( getSupportFragmentManager(), this );
+        SitesAdapter vpSitesPagerAdapter = new SitesAdapter( getSupportFragmentManager() );
         vpSitesPager.setAdapter( vpSitesPagerAdapter );
         vpSitesPager.setOnPageChangeListener( this );
         vpSitesPager.setOffscreenPageLimit( HashtaggerApp.SITES.size() );
@@ -82,7 +81,17 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
         String hashtag = "#" + intent.getStringExtra( SearchManager.QUERY );
         svHashtag.setIconified( true );
         svHashtag.onActionViewCollapsed();
-        HashtaggerApp.bus.post( new HashtagEvent( hashtag ) );
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        if ( null != fragments )
+        {
+            for ( Fragment f : fragments )
+            {
+                if ( f instanceof SitesFragment )
+                {
+                    ( ( SitesFragment ) f ).searchHashtag( hashtag );
+                }
+            }
+        }
     }
 
     @Override

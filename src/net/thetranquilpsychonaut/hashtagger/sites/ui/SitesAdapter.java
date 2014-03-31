@@ -1,6 +1,5 @@
 package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -14,14 +13,12 @@ import net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterFragment;
  */
 public class SitesAdapter extends FragmentPagerAdapter
 {
-    Context         ctx;
     FragmentManager fm;
 
-    public SitesAdapter( FragmentManager fm, Context ctx )
+    public SitesAdapter( FragmentManager fm )
     {
         super( fm );
         this.fm = fm;
-        this.ctx = ctx;
     }
 
     @Override

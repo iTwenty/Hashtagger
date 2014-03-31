@@ -8,12 +8,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
-import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
-import net.thetranquilpsychonaut.hashtagger.otto.HashtagEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.*;
@@ -134,8 +132,8 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
         return twitterFooter;
     }
 
-    @Subscribe
-    public void searchHashtag( HashtagEvent event )
+    @Override
+    public void searchHashtag( String hashtag )
     {
         if ( !TwitterUserHandler.isUserLoggedIn() )
         {
@@ -147,7 +145,7 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
             Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_twitter_not_logged_in ), Toast.LENGTH_LONG ).show();
             return;
         }
-        this.hashtag = event.getHashtag();
+        this.hashtag = hashtag;
         getActivity().setTitle( hashtag );
         twitterSearchHandler.setHashtag( this.hashtag );
         twitterSearchHandler.beginSearch( SearchType.INITIAL );

@@ -6,10 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ViewAnimator;
-import com.squareup.otto.Subscribe;
-import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.otto.HashtagEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
 
@@ -53,7 +50,6 @@ public abstract class SitesFragment extends Fragment
     @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
     {
-        HashtaggerApp.bus.register( this );
         onInitialize();
         sitesUserHandler = getSitesUserHandler();
         sitesSearchHandler = getSitesSearchHandler();
@@ -93,8 +89,7 @@ public abstract class SitesFragment extends Fragment
     {
     }
 
-    @Subscribe
-    protected abstract void searchHashtag( HashtagEvent event );
+    protected abstract void searchHashtag( String hashtag );
 
     public void showView( SitesView sitesView )
     {
