@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/layout_padding">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imgv_profile_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:padding="@dimen/content_padding" />
+
+        <TextView
+            android:id="@+id/tv_user_name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/imgv_profile_image"
+            android:padding="@dimen/content_padding" />
+
+        <TextView
+            android:id="@+id/tv_screen_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_user_name"
+            android:layout_toRightOf="@id/imgv_profile_image"
+            android:padding="@dimen/content_padding" />
+
+        <TextView
+            android:id="@+id/tv_status_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imgv_profile_image"
+            android:padding="@dimen/content_padding" />
+
+        <TextView
+            android:id="@+id/tv_created_at"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_status_text"
+            android:padding="@dimen/content_padding" />
+
+        <ImageView
+            android:id="@+id/imgv_media_entity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_created_at"
+            android:adjustViewBounds="true"
+            android:visibility="gone"
+            android:layout_centerHorizontal="true"
+            android:padding="@dimen/content_padding" />
+
+    </RelativeLayout>
+</ScrollView>

@@ -43,7 +43,7 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
             actionBar.addTab( actionBar.newTab().setText( HashtaggerApp.SITES.get( i ) ).setTabListener( this ) );
         }
 
-        if ( getIntent().getAction().equals( Intent.ACTION_SEARCH ) )
+        if ( null != getIntent() && getIntent().getAction().equals( Intent.ACTION_SEARCH ) )
             handleIntent( getIntent() );
     }
 
@@ -52,6 +52,7 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
     {
         setIntent( intent );
         handleIntent( intent );
+        setIntent( null );
     }
 
     @Override
@@ -78,7 +79,9 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
 
     public void handleIntent( Intent intent )
     {
-        String hashtag = "#" + intent.getStringExtra( SearchManager.QUERY );
+        Helper.debug( "onHandleIntent" );
+        String input = intent.getStringExtra( SearchManager.QUERY );
+        String hashtag = input.startsWith( "#" ) ? input : "#" + input;
         svHashtag.setIconified( true );
         svHashtag.onActionViewCollapsed();
         List<Fragment> fragments = getSupportFragmentManager().getFragments();

@@ -7,15 +7,15 @@ import twitter4j.auth.AccessToken;
 /**
  * Created by itwenty on 3/24/14.
  */
-public class TwitterUserHandler implements SitesUserHandler
+public class TwitterUserHandler extends SitesUserHandler
 {
-    TwitterUserHandlerListener listener;
+    SitesUserListener sitesUserListener;
     private static AccessToken accessToken;
     private static String      userName;
 
-    public void setListener( TwitterUserHandlerListener tuhl )
+    public void setSitesUserListener( SitesUserListener tuhl )
     {
-        this.listener = tuhl;
+        this.sitesUserListener = tuhl;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class TwitterUserHandler implements SitesUserHandler
             .remove( HashtaggerApp.TWITTER_OAUTH_ACCESS_TOKEN_SECRET_KEY )
             .remove( HashtaggerApp.USER_KEY )
             .commit();
-        listener.onUserLoggedOut();
+        sitesUserListener.onUserLoggedOut();
     }
 
     public static boolean isUserLoggedIn()

@@ -1,12 +1,12 @@
 package net.thetranquilpsychonaut.hashtagger;
 
+import android.text.format.DateUtils;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.util.Patterns;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,10 +16,6 @@ import java.util.regex.Pattern;
  */
 public class Helper
 {
-    static Date now;
-    static SimpleDateFormat timeFormat = new SimpleDateFormat( "kk:mm:ss" );
-    static SimpleDateFormat dateFormat = new SimpleDateFormat( "dd/MM/yy" );
-
     public static void debug( String s )
     {
         if ( HashtaggerApp.DEBUG )
@@ -28,21 +24,25 @@ public class Helper
         }
     }
 
-    public static String getDate( Date then )
+    public static CharSequence getFuzzyDateTime( long time )
     {
-        now = Calendar.getInstance().getTime();
-        long dateDiff = now.getTime() - then.getTime();
-        if ( dateDiff < 24 * 60 * 60 * 1000 )
-            return timeFormat.format( then );
-        else
-            return dateFormat.format( then );
+        return DateUtils.getRelativeDateTimeString( HashtaggerApp.app.getApplicationContext(),
+            time,
+            DateUtils.SECOND_IN_MILLIS,
+            DateUtils.WEEK_IN_MILLIS,
+            DateUtils.FORMAT_ABBREV_ALL );
     }
 
-    public static void linkify( TextView tv )
+    public static String getStringDate( Date date )
+    {
+        SimpleDateFormat sdf = new SimpleDateFormat( "hh:mm:ss dd/MM/yyyy" );
+        return sdf.format( date );
+    }
+
+    public static void linkifyTwitter( TextView tv )
     {
         Linkify.TransformFilter filter = new Linkify.TransformFilter()
         {
-
             public final String transformUrl( final Matcher match, String url )
             {
                 return match.group();

@@ -3,7 +3,19 @@ package net.thetranquilpsychonaut.hashtagger.sites.components;
 /**
  * Created by itwenty on 3/24/14.
  */
-public interface SitesUserHandler
+public abstract class SitesUserHandler
 {
-    public void logoutUser();
+    public static interface SitesUserListener
+    {
+        public void onUserLoggedOut();
+    }
+
+    protected SitesUserListener sitesUserListener;
+
+    public void setSitesUserListener( SitesUserListener sitesUserListener )
+    {
+        this.sitesUserListener = sitesUserListener;
+    }
+
+    public abstract void logoutUser();
 }

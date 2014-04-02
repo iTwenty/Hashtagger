@@ -11,13 +11,11 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterAuthHandler;
-import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterAuthHandlerListener;
-import twitter4j.auth.RequestToken;
 
 /**
  * Created by itwenty on 3/17/14.
  */
-public class TwitterAuthActivity extends FragmentActivity implements TwitterAuthHandlerListener
+public class TwitterAuthActivity extends FragmentActivity implements TwitterAuthHandler.TwitterAuthListener
 {
     WebView            wvTwitterSignIn;
     TwitterAuthHandler authHandler;
@@ -30,9 +28,12 @@ public class TwitterAuthActivity extends FragmentActivity implements TwitterAuth
         wvTwitterSignIn = ( WebView ) findViewById( R.id.wv_twitter_sign_in );
         pgbrLoadingAuth = ( ProgressBar ) findViewById( R.id.pgbr_loading_auth );
         setTitle( getString( R.string.str_title_activity_twitter_auth ) );
-        authHandler = new TwitterAuthHandler( this );
-        authHandler.setListener( this );
-        authHandler.authorizeUser();
+        if ( null == authHandler )
+        {
+            authHandler = new TwitterAuthHandler( this );
+            authHandler.setTwitterAuthListener( this );
+            authHandler.fetchRequestToken();
+        }
     }
 
     @Override
@@ -48,7 +49,7 @@ public class TwitterAuthActivity extends FragmentActivity implements TwitterAuth
         Helper.debug( uri.toString() );
         if ( null != uri && uri.toString().startsWith( HashtaggerApp.CALLBACK_URL ) && null != uri.getQueryParameter( HashtaggerApp.OAUTH_VERIFIER_KEY ) )
         {
-            authHandler.verifyUser( uri.getQueryParameter( HashtaggerApp.OAUTH_VERIFIER_KEY ) );
+            authHandler.fetchAccessToken( uri.getQueryParameter( HashtaggerApp.OAUTH_VERIFIER_KEY ) );
         }
         else
         {
@@ -72,12 +73,18 @@ public class TwitterAuthActivity extends FragmentActivity implements TwitterAuth
     }
 
     @Override
-    public void onObtainingReqToken( RequestToken requestToken )
+    public void onObtainingReqToken( String authorizationUrl )
     {
         pgbrLoadingAuth.setVisibility( View.GONE );
         wvTwitterSignIn.setVisibility( View.VISIBLE );
-        wvTwitterSignIn.loadUrl( requestToken.getAuthorizationURL() );
-        Helper.debug( requestToken.getAuthorizationURL() );
+        wvTwitterSignIn.loadUrl( authorizationUrl );
+        Helper.debug( authorizationUrl );
+    }
+
+    @Override
+    public void whileObtainingAccessToken()
+    {
+        whileObtainingReqToken();
     }
 
     @Override

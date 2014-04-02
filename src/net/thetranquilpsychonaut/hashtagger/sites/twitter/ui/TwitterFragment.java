@@ -2,6 +2,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,7 +15,9 @@ import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
-import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.*;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterFooterListener;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterSearchHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFooter;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
 import twitter4j.Status;
@@ -25,7 +28,7 @@ import java.util.List;
 /**
  * Created by itwenty on 2/26/14.
  */
-public class TwitterFragment extends SitesFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, TwitterUserHandlerListener, TwitterSearchHandlerListener, TwitterFooterListener
+public class TwitterFragment extends SitesFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, SitesUserHandler.SitesUserListener, SitesSearchHandler.SitesSearchListener, TwitterFooterListener, AdapterView.OnItemClickListener
 {
     ArrayList<Status>    currentStatuses;
     TwitterListAdapter   twitterListAdapter;
@@ -42,7 +45,7 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     protected SitesUserHandler getSitesUserHandler()
     {
         twitterUserHandler = new TwitterUserHandler();
-        twitterUserHandler.setListener( this );
+        twitterUserHandler.setSitesUserListener( this );
         return twitterUserHandler;
     }
 
@@ -50,7 +53,7 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     protected SitesSearchHandler getSitesSearchHandler()
     {
         twitterSearchHandler = new TwitterSearchHandler();
-        twitterSearchHandler.setListener( this );
+        twitterSearchHandler.setSitesSearchListener( this );
         return twitterSearchHandler;
     }
 
@@ -92,6 +95,7 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
             android.R.color.holo_red_light );
         readyHolder.lvResultsList = ( ListView ) viewReady.findViewById( R.id.lv_results_list );
         readyHolder.lvResultsList.setAdapter( twitterListAdapter );
+        readyHolder.lvResultsList.setOnItemClickListener( this );
         readyHolder.lvResultsListEmpty = ( TextView ) viewReady.findViewById( R.id.tv_results_list_empty );
         readyHolder.lvResultsList.setEmptyView( readyHolder.lvResultsListEmpty );
         return viewReady;
@@ -223,8 +227,6 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
             case R.id.it_logout_twitter:
                 twitterUserHandler.logoutUser();
                 return true;
-            case R.id.it_refresh:
-                Toast.makeText( getActivity(), "Refresh pressed", Toast.LENGTH_SHORT ).show();
             default:
                 return super.onOptionsItemSelected( item );
         }
@@ -300,18 +302,19 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     }
 
     @Override
-    public void afterSearching( SearchType searchType, List<Status> statuses )
+    public void afterSearching( SearchType searchType, Bundle resultBundle )
     {
+        ArrayList<Status> results = ( ArrayList<Status> ) resultBundle.getSerializable( HashtaggerApp.TWITTER_SEARCH_RESULT_LIST_KEY );
         switch ( searchType )
         {
             case INITIAL:
-                afterCurrentSearch( statuses );
+                afterCurrentSearch( results );
                 break;
             case OLDER:
-                afterOlderSearch( statuses );
+                afterOlderSearch( results );
                 break;
             case NEWER:
-                afterNewerSearch( statuses );
+                afterNewerSearch( results );
                 break;
         }
     }
@@ -386,6 +389,18 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     @Override
     public void onRetryClicked()
     {
+        dolLoadOlderResults();
+    }
+
+    /*
+    *******************for listview onItemClickListener
+     */
+    @Override
+    public void onItemClick( AdapterView<?> parent, View view, int position, long id )
+    {
+        Status status = ( Status ) parent.getItemAtPosition( position );
+        TwitterDetailsDialogFragment twitterDetailsDialogFragment = TwitterDetailsDialogFragment.getInstance( status );
+        twitterDetailsDialogFragment.show( getFragmentManager(), HashtaggerApp.TWITTER_DIALOG_TAG );
     }
 
     private static class Ready

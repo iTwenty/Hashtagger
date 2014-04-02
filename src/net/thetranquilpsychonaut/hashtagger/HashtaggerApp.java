@@ -31,16 +31,18 @@ public class HashtaggerApp extends Application
     public static       Configuration     CONFIGURATION                         = null;
     public static final String            TWITTER_OAUTH_ACCESS_TOKEN_KEY        = "oauth_access_token";
     public static final String            TWITTER_OAUTH_ACCESS_TOKEN_SECRET_KEY = "oauth_access_token_secret";
-    public static final String            AUTH_URL_KEY                          = "auth_url";
     public static final String            OAUTH_VERIFIER_KEY                    = "oauth_verifier";
-    public static final String            OAUTH_DENIED_KEY                      = "denied";
     public static final String            CALLBACK_URL                          = "twitter-auth-callback:///";
     public static final int               TWITTER_REQUEST_CODE                  = 1;
     public static       SharedPreferences prefs                                 = null;
     public static final String            USER_KEY                              = "user";
     public static final int               TWITTER_SEARCH_LIMIT                  = 20;
-    public static final String            TWITTER_SEARCH_SERVICE                = NAMESPACE + "twitter_search_service";
-    public static final String            TWITTER_SEARCH_OVER                   = NAMESPACE + "twitter_search_over";
+    public static final String            TWITTER_SEARCH_ACTION                 = NAMESPACE + "twitter_search_action";
+    public static final String            TWITTER_AUTH_ACTION                   = NAMESPACE + "twitter_auth_action";
+    public static final String            TWITTER_STATUS_KEY                    = NAMESPACE + "twitter_status_key";
+    public static final String            TWITTER_DIALOG_TAG                    = NAMESPACE + "twitter_dialog_tag";
+    public static final String            TWITTER_SEARCH_RESULT_LIST_KEY        = NAMESPACE + "twitter_search_result_list";
+    public static final String            TWITTER_REQUEST_TOKEN_KEY             = NAMESPACE + "twitter_request_token_key";
 
 
     @Override
@@ -50,7 +52,8 @@ public class HashtaggerApp extends Application
         app = this;
         CONFIGURATION = new ConfigurationBuilder()
             .setOAuthConsumerKey( OAUTH_CONSUMER_KEY )
-            .setOAuthConsumerSecret( OAUTH_CONSUMER_SECRET ).build();
+            .setOAuthConsumerSecret( OAUTH_CONSUMER_SECRET )
+            .build();
         PREV_CONNECTED = isNetworkConnected();
         SITES.add( getResources().getString( R.string.str_twitter ) );
         SITES.add( getResources().getString( R.string.str_facebook ) );
