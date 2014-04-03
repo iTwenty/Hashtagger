@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ViewAnimator;
+import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 
 /**
@@ -11,6 +12,15 @@ import net.thetranquilpsychonaut.hashtagger.R;
  */
 public abstract class SitesFooter
 {
+    public static final String ACTIVE_FOOTER_VIEW_KEY = HashtaggerApp.NAMESPACE + "active_footer_view_key";
+
+    public interface SitesFooterListener
+    {
+        public void onLoadOlderResultsClicked();
+
+        public void onRetryClicked();
+    }
+
     public static enum SitesFooterView
     {
         LOAD_OLDER( 0 ), LOADING( 1 ), ERROR( 2 );
@@ -28,10 +38,12 @@ public abstract class SitesFooter
         }
     }
 
-    ViewAnimator vaSitesFooterView;
-    View         viewFooterLoadOlder;
-    View         viewFooterLoading;
-    View         viewFooterError;
+    ViewAnimator    vaSitesFooterView;
+    View            viewFooterLoadOlder;
+    View            viewFooterLoading;
+    View            viewFooterError;
+    SitesFooterView activeFooterView;
+    protected SitesFooterListener sitesFooterListener;
 
     public SitesFooter( LayoutInflater inflater )
     {
@@ -44,11 +56,17 @@ public abstract class SitesFooter
         vaSitesFooterView.addView( viewFooterError, SitesFooterView.ERROR.index );
     }
 
+    public void setSitesFooterListener( SitesFooterListener listener )
+    {
+        this.sitesFooterListener = listener;
+    }
+
     protected abstract View getFooterView( SitesFooterView sitesFooterView, LayoutInflater inflater );
 
     public void showFooterView( SitesFooterView sitesFooterView )
     {
         vaSitesFooterView.setDisplayedChild( sitesFooterView.index );
+        activeFooterView = sitesFooterView;
     }
 
     public void appendFooterToList( ListView lv )

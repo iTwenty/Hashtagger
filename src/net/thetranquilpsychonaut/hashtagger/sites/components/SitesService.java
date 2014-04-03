@@ -5,8 +5,6 @@ import android.content.Intent;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.AuthActionName;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SearchActionName;
 
 /**
  * Created by itwenty on 4/2/14.

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SearchActionName;
 
 /**
  * Created by itwenty on 3/14/14.
@@ -25,7 +24,6 @@ public abstract class SitesSearchHandler extends BroadcastReceiver implements Se
 
     protected IntentFilter        filter;
     protected SitesSearchListener sitesSearchListener;
-    protected String              hashtag;
 
     public SitesSearchHandler()
     {
@@ -34,21 +32,17 @@ public abstract class SitesSearchHandler extends BroadcastReceiver implements Se
         HashtaggerApp.app.getApplicationContext().registerReceiver( this, filter );
     }
 
-    public void setHashtag( String hashtag )
-    {
-        this.hashtag = hashtag;
-    }
-
     public void setSitesSearchListener( SitesSearchListener sitesSearchListener )
     {
         this.sitesSearchListener = sitesSearchListener;
     }
 
-    public void beginSearch( SearchType searchType )
+    public void beginSearch( SearchType searchType, String hashtag )
     {
         Intent searchIntent = new Intent( HashtaggerApp.app.getApplicationContext(), getServiceClass() );
         searchIntent.putExtra( ActionType.ACTION_TYPE_KEY, ActionType.SEARCH );
         searchIntent.putExtra( SearchType.SEARCH_TYPE_KEY, searchType );
+        searchIntent.putExtra( HashtaggerApp.HASHTAG_KEY, hashtag );
         searchIntent = addExtraParameters( searchIntent );
         HashtaggerApp.app.getApplicationContext().startService( searchIntent );
         sitesSearchListener.whileSearching( searchType );

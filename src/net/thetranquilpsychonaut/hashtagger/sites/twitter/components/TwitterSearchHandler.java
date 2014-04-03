@@ -60,7 +60,6 @@ public class TwitterSearchHandler extends SitesSearchHandler
     protected Intent addExtraParameters( Intent searchIntent )
     {
         searchIntent.putExtra( HashtaggerApp.TWITTER_KEY, twitter );
-        searchIntent.putExtra( HashtaggerApp.HASHTAG_KEY, this.hashtag );
         return searchIntent;
     }
 

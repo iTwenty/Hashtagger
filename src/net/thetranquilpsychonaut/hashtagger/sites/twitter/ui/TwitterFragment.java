@@ -15,9 +15,9 @@ import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
-import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterFooterListener;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterUserHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFooter;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
 import twitter4j.Status;
@@ -28,11 +28,12 @@ import java.util.List;
 /**
  * Created by itwenty on 2/26/14.
  */
-public class TwitterFragment extends SitesFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, SitesUserHandler.SitesUserListener, SitesSearchHandler.SitesSearchListener, TwitterFooterListener, AdapterView.OnItemClickListener
+public class TwitterFragment extends SitesFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, SitesUserHandler.SitesUserListener, SitesSearchHandler.SitesSearchListener, SitesFooter.SitesFooterListener, AdapterView.OnItemClickListener
 {
-    ArrayList<Status>    currentStatuses;
+    private static final String TWITTER_RESULTS_LIST_KEY = HashtaggerApp.NAMESPACE + "twitter_results_list_key";
+
+    ArrayList<Status>    statuses;
     TwitterListAdapter   twitterListAdapter;
-    String               hashtag;
     Ready                readyHolder;
     Loading              loadingHolder;
     Login                loginHolder;
@@ -65,28 +66,31 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     }
 
     @Override
-    protected View fetchView( SitesView sitesView, LayoutInflater inflater )
+    protected View fetchView( SitesView sitesView, LayoutInflater inflater, Bundle savedInstaceState )
     {
         switch ( sitesView )
         {
             case READY:
-                return getViewReady( inflater );
+                return getViewReady( inflater, savedInstaceState );
             case LOADING:
-                return getViewLoading( inflater );
+                return getViewLoading( inflater, savedInstaceState );
             case LOGIN:
-                return getViewLogin( inflater );
+                return getViewLogin( inflater, savedInstaceState );
             case ERROR:
-                return getViewError( inflater );
+                return getViewError( inflater, savedInstaceState );
         }
         return null;
     }
 
-    private View getViewReady( LayoutInflater inflater )
+    private View getViewReady( LayoutInflater inflater, Bundle savedInstanceState )
     {
         View viewReady = inflater.inflate( R.layout.view_ready, null );
         readyHolder = new Ready();
-        currentStatuses = new ArrayList<Status>();
-        twitterListAdapter = new TwitterListAdapter( getActivity(), R.layout.fragment_twitter_list_row, currentStatuses );
+        if ( null != savedInstanceState )
+            statuses = ( ArrayList<Status> ) savedInstanceState.getSerializable( TWITTER_RESULTS_LIST_KEY );
+        else
+            statuses = new ArrayList<Status>();
+        twitterListAdapter = new TwitterListAdapter( getActivity(), R.layout.fragment_twitter_list_row, statuses );
         readyHolder.srlReady = ( SwipeRefreshLayout ) viewReady.findViewById( R.id.srl_ready );
         readyHolder.srlReady.setOnRefreshListener( this );
         readyHolder.srlReady.setColorScheme( android.R.color.holo_blue_bright,
@@ -95,13 +99,14 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
             android.R.color.holo_red_light );
         readyHolder.lvResultsList = ( ListView ) viewReady.findViewById( R.id.lv_results_list );
         readyHolder.lvResultsList.setAdapter( twitterListAdapter );
+        twitterListAdapter.notifyDataSetChanged();
         readyHolder.lvResultsList.setOnItemClickListener( this );
         readyHolder.lvResultsListEmpty = ( TextView ) viewReady.findViewById( R.id.tv_results_list_empty );
         readyHolder.lvResultsList.setEmptyView( readyHolder.lvResultsListEmpty );
         return viewReady;
     }
 
-    private View getViewLoading( LayoutInflater inflater )
+    private View getViewLoading( LayoutInflater inflater, Bundle savedInstanceState )
     {
         View viewLoading = inflater.inflate( R.layout.view_loading, null );
         loadingHolder = new Loading();
@@ -109,7 +114,7 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
         return viewLoading;
     }
 
-    private View getViewLogin( LayoutInflater inflater )
+    private View getViewLogin( LayoutInflater inflater, Bundle savedInstanceState )
     {
         View viewLogin = inflater.inflate( R.layout.view_login, null );
         loginHolder = new Login();
@@ -118,7 +123,7 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
         return viewLogin;
     }
 
-    private View getViewError( LayoutInflater inflater )
+    private View getViewError( LayoutInflater inflater, Bundle savedInstanceState )
     {
         View viewError = inflater.inflate( R.layout.view_error, null );
         errorHolder = new Error();
@@ -130,7 +135,7 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     public SitesFooter getSitesFooter( LayoutInflater inflater )
     {
         twitterFooter = new TwitterFooter( inflater );
-        twitterFooter.setListener( this );
+        twitterFooter.setSitesFooterListener( this );
         twitterFooter.appendFooterToList( readyHolder.lvResultsList );
         readyHolder.lvResultsList.setAdapter( twitterListAdapter );
         return twitterFooter;
@@ -141,25 +146,24 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     {
         if ( !TwitterUserHandler.isUserLoggedIn() )
         {
-            Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_no_network ), Toast.LENGTH_LONG ).show();
-            return;
-        }
-        if ( !HashtaggerApp.isNetworkConnected() )
-        {
             Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_twitter_not_logged_in ), Toast.LENGTH_LONG ).show();
             return;
         }
-        this.hashtag = hashtag;
-        getActivity().setTitle( hashtag );
-        twitterSearchHandler.setHashtag( this.hashtag );
-        twitterSearchHandler.beginSearch( SearchType.INITIAL );
+        twitterSearchHandler.beginSearch( SearchType.INITIAL, hashtag );
+    }
+
+    @Override
+    public void onSaveInstanceState( Bundle outState )
+    {
+        super.onSaveInstanceState( outState );
+        outState.putSerializable( TWITTER_RESULTS_LIST_KEY, statuses );
     }
 
     private void doLogin()
     {
         if ( !HashtaggerApp.isNetworkConnected() )
         {
-            Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_twitter_not_logged_in ), Toast.LENGTH_LONG ).show();
+            Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_no_network ), Toast.LENGTH_LONG ).show();
             return;
         }
         Intent i = new Intent( getActivity(), TwitterAuthActivity.class );
@@ -173,17 +177,17 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
             Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_twitter_not_logged_in ), Toast.LENGTH_LONG ).show();
             return;
         }
-        twitterSearchHandler.beginSearch( SearchType.OLDER );
+        twitterSearchHandler.beginSearch( SearchType.OLDER, ( ( SitesActivity ) getActivity() ).getHashtag() );
     }
 
     private void doLoadNewerResults()
     {
         if ( !HashtaggerApp.isNetworkConnected() )
         {
-            Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_twitter_not_logged_in ), Toast.LENGTH_LONG ).show();
+            Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_no_network ), Toast.LENGTH_LONG ).show();
             return;
         }
-        twitterSearchHandler.beginSearch( SearchType.NEWER );
+        twitterSearchHandler.beginSearch( SearchType.NEWER, ( ( SitesActivity ) getActivity() ).getHashtag() );
     }
 
     @Override
@@ -323,13 +327,13 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     {
         showView( SitesView.READY );
         twitterListAdapter.clear();
-        if ( null != statuses )
+        if ( !statuses.isEmpty() )
         {
             twitterListAdapter.addAll( statuses );
         }
         else
         {
-            readyHolder.lvResultsListEmpty.setText( getResources().getString( R.string.str_no_results ) );
+            readyHolder.lvResultsListEmpty.setText( getResources().getString( R.string.str_toast_no_results ) );
         }
         twitterListAdapter.notifyDataSetChanged();
     }
@@ -344,7 +348,7 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
         }
         else
         {
-            Toast.makeText( getActivity(), "No older results", Toast.LENGTH_LONG ).show();
+            Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_no_older_results ), Toast.LENGTH_LONG ).show();
         }
 
     }
@@ -354,12 +358,12 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
         readyHolder.srlReady.setRefreshing( false );
         if ( null != statuses )
         {
-            currentStatuses.addAll( 0, statuses );
+            this.statuses.addAll( 0, statuses );
             twitterListAdapter.notifyDataSetChanged();
         }
         else
         {
-            Toast.makeText( getActivity(), "No newer results", Toast.LENGTH_LONG ).show();
+            Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_no_newer_results ), Toast.LENGTH_LONG ).show();
         }
     }
 
@@ -373,6 +377,11 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
                 break;
             case OLDER:
                 twitterFooter.showFooterView( SitesFooter.SitesFooterView.ERROR );
+                break;
+            case NEWER:
+                readyHolder.srlReady.setRefreshing( false );
+                Toast.makeText( getActivity(), "Failed to load newer results", Toast.LENGTH_LONG ).show();
+                break;
         }
     }
 

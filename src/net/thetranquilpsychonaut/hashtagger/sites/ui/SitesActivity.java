@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.widget.SearchView;
+import android.widget.Toast;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
@@ -23,6 +24,7 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
     ViewPager    vpSitesPager;
     SitesAdapter vpSitesPagerAdapter;
     SearchView   svHashtag;
+    String       hashtag;
 
     @Override
     public void onCreate( Bundle savedInstanceState )
@@ -77,13 +79,32 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
         }
     }
 
+    @Override
+    protected void onSaveInstanceState( Bundle outState )
+    {
+        super.onSaveInstanceState( outState );
+        outState.putSerializable( HashtaggerApp.HASHTAG_KEY, hashtag );
+    }
+
+    @Override
+    protected void onRestoreInstanceState( Bundle savedInstanceState )
+    {
+        this.hashtag = savedInstanceState.getString( HashtaggerApp.HASHTAG_KEY );
+    }
+
     public void handleIntent( Intent intent )
     {
         Helper.debug( "onHandleIntent" );
-        String input = intent.getStringExtra( SearchManager.QUERY );
-        String hashtag = input.startsWith( "#" ) ? input : "#" + input;
         svHashtag.setIconified( true );
         svHashtag.onActionViewCollapsed();
+        if ( !HashtaggerApp.isNetworkConnected() )
+        {
+            Toast.makeText( this, getResources().getString( R.string.str_toast_no_network ), Toast.LENGTH_LONG ).show();
+            return;
+        }
+        String input = intent.getStringExtra( SearchManager.QUERY );
+        hashtag = input.startsWith( "#" ) ? input : "#" + input;
+        setTitle( hashtag );
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
         if ( null != fragments )
         {
@@ -95,6 +116,11 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
                 }
             }
         }
+    }
+
+    public String getHashtag()
+    {
+        return hashtag;
     }
 
     @Override

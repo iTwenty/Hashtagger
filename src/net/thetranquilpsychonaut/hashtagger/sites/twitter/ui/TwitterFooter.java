@@ -6,7 +6,6 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterFooterListener;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFooter;
 
 /**
@@ -17,16 +16,10 @@ public class TwitterFooter extends SitesFooter implements View.OnClickListener
     FooterLoadOlderViewHolder footerLoadOlderViewHolder;
     FooterLoadingViewHolder   footerLoadingViewHolder;
     FooterErrorViewHolder     footerErrorViewHolder;
-    TwitterFooterListener     listener;
 
     public TwitterFooter( LayoutInflater inflater )
     {
         super( inflater );
-    }
-
-    public void setListener( TwitterFooterListener listener )
-    {
-        this.listener = listener;
     }
 
     @Override
@@ -74,12 +67,12 @@ public class TwitterFooter extends SitesFooter implements View.OnClickListener
     @Override
     public void onClick( View v )
     {
-        if ( null == listener )
+        if ( null == sitesFooterListener )
             return;
         if ( v.equals( footerLoadOlderViewHolder.btnFooterLoadOlderResults ) )
-            listener.onLoadOlderResultsClicked();
+            sitesFooterListener.onLoadOlderResultsClicked();
         else if ( v.equals( footerErrorViewHolder.btnFooterRetry ) )
-            listener.onRetryClicked();
+            sitesFooterListener.onRetryClicked();
     }
 
     private static class FooterLoadOlderViewHolder

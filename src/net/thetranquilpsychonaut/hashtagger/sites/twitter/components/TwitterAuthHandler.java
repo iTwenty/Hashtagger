@@ -8,7 +8,7 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
 import net.thetranquilpsychonaut.hashtagger.enums.AuthType;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.AuthActionName;
+import net.thetranquilpsychonaut.hashtagger.sites.components.AuthActionName;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
