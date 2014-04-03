@@ -20,6 +20,7 @@ import java.util.List;
 
 public class SitesActivity extends FragmentActivity implements ActionBar.TabListener, ViewPager.OnPageChangeListener
 {
+    private static final String TITLE_KEY = HashtaggerApp.NAMESPACE + "title_key";
     ActionBar    actionBar;
     ViewPager    vpSitesPager;
     SitesAdapter vpSitesPagerAdapter;
@@ -83,13 +84,15 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
     protected void onSaveInstanceState( Bundle outState )
     {
         super.onSaveInstanceState( outState );
-        outState.putSerializable( HashtaggerApp.HASHTAG_KEY, hashtag );
+        outState.putString( HashtaggerApp.HASHTAG_KEY, hashtag );
+        outState.putCharSequence( TITLE_KEY, getTitle() );
     }
 
     @Override
     protected void onRestoreInstanceState( Bundle savedInstanceState )
     {
         this.hashtag = savedInstanceState.getString( HashtaggerApp.HASHTAG_KEY );
+        setTitle( savedInstanceState.getCharSequence( TITLE_KEY ) );
     }
 
     public void handleIntent( Intent intent )
@@ -117,6 +120,7 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
             }
         }
     }
+
 
     public String getHashtag()
     {

@@ -17,6 +17,8 @@ import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterAuth
  */
 public class TwitterAuthActivity extends FragmentActivity implements TwitterAuthHandler.TwitterAuthListener
 {
+    private static final String TWITTER_AUTH_HANDLER_KEY = HashtaggerApp.NAMESPACE + "twitter_auth_handler_key";
+
     WebView            wvTwitterSignIn;
     TwitterAuthHandler authHandler;
     ProgressBar        pgbrLoadingAuth;
@@ -28,9 +30,15 @@ public class TwitterAuthActivity extends FragmentActivity implements TwitterAuth
         wvTwitterSignIn = ( WebView ) findViewById( R.id.wv_twitter_sign_in );
         pgbrLoadingAuth = ( ProgressBar ) findViewById( R.id.pgbr_loading_auth );
         setTitle( getString( R.string.str_title_activity_twitter_auth ) );
-        if ( null == authHandler )
+        if( null != savedInstanceState )
         {
-            authHandler = new TwitterAuthHandler( this );
+            authHandler = ( TwitterAuthHandler ) savedInstanceState.getSerializable( TWITTER_AUTH_HANDLER_KEY );
+            authHandler.setTwitterAuthListener( this );
+            wvTwitterSignIn.restoreState( savedInstanceState );
+        }
+        else
+        {
+            authHandler = new TwitterAuthHandler();
             authHandler.setTwitterAuthListener( this );
             authHandler.fetchRequestToken();
         }
@@ -41,6 +49,7 @@ public class TwitterAuthActivity extends FragmentActivity implements TwitterAuth
     {
         setIntent( intent );
         handleIntent( intent );
+        setIntent( null );
     }
 
     private void handleIntent( Intent intent )
@@ -56,6 +65,14 @@ public class TwitterAuthActivity extends FragmentActivity implements TwitterAuth
             setResult( RESULT_CANCELED );
             finish();
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState( Bundle outState )
+    {
+        super.onSaveInstanceState( outState );
+        outState.putSerializable( TWITTER_AUTH_HANDLER_KEY, authHandler );
+        wvTwitterSignIn.saveState( outState );
     }
 
     @Override

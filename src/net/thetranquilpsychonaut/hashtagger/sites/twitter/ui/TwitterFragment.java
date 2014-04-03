@@ -31,6 +31,7 @@ import java.util.List;
 public class TwitterFragment extends SitesFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, SitesUserHandler.SitesUserListener, SitesSearchHandler.SitesSearchListener, SitesFooter.SitesFooterListener, AdapterView.OnItemClickListener
 {
     private static final String TWITTER_RESULTS_LIST_KEY = HashtaggerApp.NAMESPACE + "twitter_results_list_key";
+    private static final String    SRL_IS_REFRESHING_KEY = HashtaggerApp.NAMESPACE + "srl_is_refreshing_key";
 
     ArrayList<Status>    statuses;
     TwitterListAdapter   twitterListAdapter;
@@ -86,20 +87,24 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     {
         View viewReady = inflater.inflate( R.layout.view_ready, null );
         readyHolder = new Ready();
-        if ( null != savedInstanceState )
-            statuses = ( ArrayList<Status> ) savedInstanceState.getSerializable( TWITTER_RESULTS_LIST_KEY );
-        else
-            statuses = new ArrayList<Status>();
-        twitterListAdapter = new TwitterListAdapter( getActivity(), R.layout.fragment_twitter_list_row, statuses );
         readyHolder.srlReady = ( SwipeRefreshLayout ) viewReady.findViewById( R.id.srl_ready );
         readyHolder.srlReady.setOnRefreshListener( this );
         readyHolder.srlReady.setColorScheme( android.R.color.holo_blue_bright,
             android.R.color.holo_green_light,
             android.R.color.holo_orange_light,
             android.R.color.holo_red_light );
+        if ( null != savedInstanceState )
+        {
+            statuses = ( ArrayList<Status> ) savedInstanceState.getSerializable( TWITTER_RESULTS_LIST_KEY );
+            readyHolder.srlReady.setRefreshing( savedInstanceState.getBoolean( SRL_IS_REFRESHING_KEY ) );
+        }
+        else
+        {
+            statuses = new ArrayList<Status>();
+        }
+        twitterListAdapter = new TwitterListAdapter( getActivity(), R.layout.fragment_twitter_list_row, statuses );
         readyHolder.lvResultsList = ( ListView ) viewReady.findViewById( R.id.lv_results_list );
         readyHolder.lvResultsList.setAdapter( twitterListAdapter );
-        twitterListAdapter.notifyDataSetChanged();
         readyHolder.lvResultsList.setOnItemClickListener( this );
         readyHolder.lvResultsListEmpty = ( TextView ) viewReady.findViewById( R.id.tv_results_list_empty );
         readyHolder.lvResultsList.setEmptyView( readyHolder.lvResultsListEmpty );
@@ -157,6 +162,7 @@ public class TwitterFragment extends SitesFragment implements View.OnClickListen
     {
         super.onSaveInstanceState( outState );
         outState.putSerializable( TWITTER_RESULTS_LIST_KEY, statuses );
+        outState.putBoolean( SRL_IS_REFRESHING_KEY, readyHolder.srlReady.isRefreshing() );
     }
 
     private void doLogin()

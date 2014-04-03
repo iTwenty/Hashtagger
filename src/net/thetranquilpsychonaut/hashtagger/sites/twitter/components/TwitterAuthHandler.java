@@ -14,10 +14,12 @@ import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 
+import java.io.Serializable;
+
 /**
  * Created by itwenty on 3/15/14.
  */
-public class TwitterAuthHandler extends BroadcastReceiver implements AuthActionName
+public class TwitterAuthHandler extends BroadcastReceiver implements AuthActionName, Serializable
 {
     public interface TwitterAuthListener
     {
@@ -37,12 +39,10 @@ public class TwitterAuthHandler extends BroadcastReceiver implements AuthActionN
     RequestToken        requestToken;
     AccessToken         accessToken;
     String              userName;
-    Context             context;
     IntentFilter        filter;
 
-    public TwitterAuthHandler( Context context )
+    public TwitterAuthHandler()
     {
-        this.context = context;
         twitter = new TwitterFactory( HashtaggerApp.CONFIGURATION ).getInstance();
         filter = new IntentFilter( getAuthActionName() );
         filter.addCategory( Intent.CATEGORY_DEFAULT );
