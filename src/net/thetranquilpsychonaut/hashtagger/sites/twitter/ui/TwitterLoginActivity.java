@@ -15,7 +15,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterAuth
 /**
  * Created by itwenty on 3/17/14.
  */
-public class TwitterAuthActivity extends FragmentActivity implements TwitterAuthHandler.TwitterAuthListener
+public class TwitterLoginActivity extends FragmentActivity implements TwitterAuthHandler.TwitterAuthListener
 {
     private static final String TWITTER_AUTH_HANDLER_KEY = HashtaggerApp.NAMESPACE + "twitter_auth_handler_key";
 

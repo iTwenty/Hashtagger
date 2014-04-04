@@ -17,5 +17,9 @@ public abstract class SitesUserHandler
         this.sitesUserListener = sitesUserListener;
     }
 
+    public abstract boolean isUserLoggedIn();
+
+    public abstract String getUserName();
+
     public abstract void logoutUser();
 }

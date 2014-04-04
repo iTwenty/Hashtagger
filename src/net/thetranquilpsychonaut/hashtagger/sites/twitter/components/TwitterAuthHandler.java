@@ -95,11 +95,7 @@ public class TwitterAuthHandler extends BroadcastReceiver implements AuthActionN
             case ACCESS:
                 this.accessToken = ( AccessToken ) intent.getSerializableExtra( Result.RESULT_DATA );
                 this.userName = intent.getStringExtra( Result.RESULT_EXTRAS );
-                HashtaggerApp.prefs.edit()
-                    .putString( HashtaggerApp.TWITTER_OAUTH_ACCESS_TOKEN_KEY, accessToken.getToken() )
-                    .putString( HashtaggerApp.TWITTER_OAUTH_ACCESS_TOKEN_SECRET_KEY, accessToken.getTokenSecret() )
-                    .putString( HashtaggerApp.USER_KEY, userName )
-                    .commit();
+                SharedPreferencesHelper.addTwitterDetails( accessToken.getToken(), accessToken.getTokenSecret(), this.userName );
                 twitterAuthListener.onUserLoggedIn();
         }
     }

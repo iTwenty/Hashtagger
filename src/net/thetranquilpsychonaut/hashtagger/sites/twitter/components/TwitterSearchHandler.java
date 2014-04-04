@@ -12,6 +12,7 @@ import twitter4j.QueryResult;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
+import twitter4j.auth.AccessToken;
 
 import java.util.ArrayList;
 
@@ -34,15 +35,13 @@ public class TwitterSearchHandler extends SitesSearchHandler
     {
         super();
         this.twitter = new TwitterFactory( HashtaggerApp.CONFIGURATION ).getInstance();
-        if ( TwitterUserHandler.isUserLoggedIn() )
-        {
-            setAccessToken();
-        }
     }
 
     public void setAccessToken()
     {
-        twitter.setOAuthAccessToken( TwitterUserHandler.getAccessToken() );
+        if ( !SharedPreferencesHelper.areTwitterDetailsPresent() )
+            throw new RuntimeException( "must be logged in before setting access token!" );
+        twitter.setOAuthAccessToken( new AccessToken( SharedPreferencesHelper.getTwitterOauthAccessToken(), SharedPreferencesHelper.getTwitterOauthAccessTokenSecret() ) );
     }
 
     public void clearAccessToken()
@@ -77,7 +76,7 @@ public class TwitterSearchHandler extends SitesSearchHandler
         }
         QueryResult result = ( QueryResult ) intent.getSerializableExtra( Result.RESULT_DATA );
         Bundle outBundle = new Bundle();
-        outBundle.putSerializable( HashtaggerApp.TWITTER_SEARCH_RESULT_LIST_KEY, ( ArrayList<Status> ) result.getTweets() );
+        outBundle.putSerializable( HashtaggerApp.SEARCH_RESULT_LIST_KEY, ( ArrayList<Status> ) result.getTweets() );
         sitesSearchListener.afterSearching( searchType, outBundle );
     }
 

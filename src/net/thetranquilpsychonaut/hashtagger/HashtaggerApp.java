@@ -20,29 +20,24 @@ public class HashtaggerApp extends Application
     public static final boolean DEBUG = true;
 
 
-    public static final String            NAMESPACE                             = "net.thetranquilpsychonaut.hashtagger.";
-    public static final String            TWITTER_KEY                           = NAMESPACE + "twitter";
-    public static final String            HASHTAG_KEY                           = NAMESPACE + "hashtag";
-    public static final String            SHARED_PREFS                          = NAMESPACE + "shared_prefs";
-    public static final ArrayList<String> SITES                                 = new ArrayList<String>();
-    public static       boolean           PREV_CONNECTED                        = false;
-    public static final String            OAUTH_CONSUMER_KEY                    = "M8ezCrLbz1TyyjIE77muA";
-    public static final String            OAUTH_CONSUMER_SECRET                 = "CfAivT6J3KGEAML2l8w2OVjBXKTo9lzrFQxFXIPzk";
-    public static       Configuration     CONFIGURATION                         = null;
-    public static final String            TWITTER_OAUTH_ACCESS_TOKEN_KEY        = "oauth_access_token";
-    public static final String            TWITTER_OAUTH_ACCESS_TOKEN_SECRET_KEY = "oauth_access_token_secret";
-    public static final String            OAUTH_VERIFIER_KEY                    = "oauth_verifier";
-    public static final String            CALLBACK_URL                          = "twitter-auth-callback:///";
-    public static final int               TWITTER_REQUEST_CODE                  = 1;
-    public static       SharedPreferences prefs                                 = null;
-    public static final String            USER_KEY                              = "user";
-    public static final int               TWITTER_SEARCH_LIMIT                  = 20;
-    public static final String            TWITTER_SEARCH_ACTION                 = NAMESPACE + "twitter_search_action";
-    public static final String            TWITTER_AUTH_ACTION                   = NAMESPACE + "twitter_auth_action";
-    public static final String            TWITTER_STATUS_KEY                    = NAMESPACE + "twitter_status_key";
-    public static final String            TWITTER_DIALOG_TAG                    = NAMESPACE + "twitter_dialog_tag";
-    public static final String            TWITTER_SEARCH_RESULT_LIST_KEY        = NAMESPACE + "twitter_search_result_list";
-    public static final String            TWITTER_REQUEST_TOKEN_KEY             = NAMESPACE + "twitter_request_token_key";
+    public static final String            NAMESPACE                 = "hashtagger:";
+    public static final String            TWITTER_KEY               = NAMESPACE + "twitter";
+    public static final String            HASHTAG_KEY               = NAMESPACE + "hashtag";
+    public static final ArrayList<String> SITES                     = new ArrayList<String>();
+    public static       boolean           PREV_CONNECTED            = false;
+    public static final String            OAUTH_CONSUMER_KEY        = "M8ezCrLbz1TyyjIE77muA";
+    public static final String            OAUTH_CONSUMER_SECRET     = "CfAivT6J3KGEAML2l8w2OVjBXKTo9lzrFQxFXIPzk";
+    public static       Configuration     CONFIGURATION             = null;
+    public static final String            OAUTH_VERIFIER_KEY        = "oauth_verifier";
+    public static final String            CALLBACK_URL              = "twitter-auth-callback:///";
+    public static final int               LOGIN_REQUEST_CODE        = 1;
+    public static final int               TWITTER_SEARCH_LIMIT      = 20;
+    public static final String            TWITTER_SEARCH_ACTION     = NAMESPACE + "twitter_search_action";
+    public static final String            TWITTER_AUTH_ACTION       = NAMESPACE + "twitter_auth_action";
+    public static final String            TWITTER_STATUS_KEY        = NAMESPACE + "twitter_status_key";
+    public static final String            TWITTER_DIALOG_TAG        = NAMESPACE + "twitter_dialog_tag";
+    public static final String            SEARCH_RESULT_LIST_KEY    = NAMESPACE + "twitter_search_result_list";
+    public static final String            TWITTER_REQUEST_TOKEN_KEY = NAMESPACE + "twitter_request_token_key";
 
 
     @Override
@@ -58,7 +53,6 @@ public class HashtaggerApp extends Application
         SITES.add( getResources().getString( R.string.str_twitter ) );
         SITES.add( getResources().getString( R.string.str_facebook ) );
         SITES.add( getResources().getString( R.string.str_instagram ) );
-        prefs = getSharedPreferences( SHARED_PREFS, Context.MODE_PRIVATE );
     }
 
     public static boolean isNetworkConnected()

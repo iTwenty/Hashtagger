@@ -22,9 +22,9 @@ public class TwitterListAdapter extends ArrayAdapter<Status>
 {
     Context ctx;
 
-    public TwitterListAdapter( Context context, int textViewResourceId, List<Status> objects )
+    public TwitterListAdapter( Context context, int textViewResourceId, List<Status> statuses )
     {
-        super( context, textViewResourceId, objects );
+        super( context, textViewResourceId, statuses );
         ctx = context;
     }
 

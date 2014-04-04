@@ -21,36 +21,32 @@ public class TwitterUserHandler extends SitesUserHandler
     @Override
     public void logoutUser()
     {
-        HashtaggerApp.prefs.edit()
-            .remove( HashtaggerApp.TWITTER_OAUTH_ACCESS_TOKEN_KEY )
-            .remove( HashtaggerApp.TWITTER_OAUTH_ACCESS_TOKEN_SECRET_KEY )
-            .remove( HashtaggerApp.USER_KEY )
-            .commit();
+        SharedPreferencesHelper.removeTwitterDetails();
         sitesUserListener.onUserLoggedOut();
     }
 
-    public static boolean isUserLoggedIn()
+    @Override
+    public boolean isUserLoggedIn()
     {
-        return HashtaggerApp.prefs.contains( HashtaggerApp.TWITTER_OAUTH_ACCESS_TOKEN_KEY );
+        return SharedPreferencesHelper.areTwitterDetailsPresent();
     }
 
-    public static AccessToken getAccessToken()
+    public AccessToken getAccessToken()
     {
         if ( !isUserLoggedIn() )
             throw new RuntimeException( "User must be logged in before prodding access token." );
         if ( null == accessToken )
-            accessToken = new AccessToken(
-                HashtaggerApp.prefs.getString( HashtaggerApp.TWITTER_OAUTH_ACCESS_TOKEN_KEY, "" ),
-                HashtaggerApp.prefs.getString( HashtaggerApp.TWITTER_OAUTH_ACCESS_TOKEN_SECRET_KEY, "" ) );
+            accessToken = new AccessToken( SharedPreferencesHelper.getTwitterOauthAccessToken(), SharedPreferencesHelper.getTwitterOauthAccessTokenSecret() );
         return accessToken;
     }
 
-    public static String getUserName()
+    @Override
+    public String getUserName()
     {
         if ( !isUserLoggedIn() )
             throw new RuntimeException( "User must be logged in before prodding access token." );
         if ( null == userName )
-            userName = HashtaggerApp.prefs.getString( HashtaggerApp.USER_KEY, "" );
+            userName = SharedPreferencesHelper.getTwitterUserName();
         return userName;
     }
 }

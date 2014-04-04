@@ -35,7 +35,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".sites.twitter.ui.TwitterAuthActivity"
+            android:name=".sites.twitter.ui.TwitterLoginActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
