@@ -9,10 +9,10 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
  */
 public class SharedPreferencesHelper
 {
-    public static final String            SHARED_PREFS                          = HashtaggerApp.NAMESPACE + "shared_prefs";
-    public static final String            TWITTER_OAUTH_ACCESS_TOKEN_KEY        = HashtaggerApp.NAMESPACE + "oauth_access_token";
-    public static final String            TWITTER_OAUTH_ACCESS_TOKEN_SECRET_KEY = HashtaggerApp.NAMESPACE + "oauth_access_token_secret";
-    public static final String            TWITTER_USER_NAME_KEY                 = HashtaggerApp.NAMESPACE + "twitter_user_name";
+    public static final String SHARED_PREFS                          = HashtaggerApp.NAMESPACE + "shared_prefs";
+    public static final String TWITTER_OAUTH_ACCESS_TOKEN_KEY        = HashtaggerApp.NAMESPACE + "oauth_access_token";
+    public static final String TWITTER_OAUTH_ACCESS_TOKEN_SECRET_KEY = HashtaggerApp.NAMESPACE + "oauth_access_token_secret";
+    public static final String TWITTER_USER_NAME_KEY                 = HashtaggerApp.NAMESPACE + "twitter_user_name";
 
     public static SharedPreferences prefs = HashtaggerApp.app.getSharedPreferences( SHARED_PREFS, Context.MODE_PRIVATE );
 

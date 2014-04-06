@@ -3,7 +3,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.components;
 /**
  * Created by itwenty on 4/2/14.
  */
-public interface AuthActionName
+public interface LoginActionName
 {
-    public String getAuthActionName();
+    public String getLoginActionName();
 }

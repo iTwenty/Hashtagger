@@ -13,7 +13,6 @@ import android.view.Menu;
 import android.widget.SearchView;
 import android.widget.Toast;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
 
 import java.util.List;
@@ -71,7 +70,6 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
     @Override
     protected void onActivityResult( int requestCode, int resultCode, Intent data )
     {
-        Helper.debug( "activity onactivityresult" );
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
         if ( null != fragments )
         {
@@ -97,7 +95,7 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
 
     public void handleIntent( Intent intent )
     {
-        Helper.debug( "onHandleIntent" );
+
         svHashtag.setIconified( true );
         svHashtag.onActionViewCollapsed();
         if ( !HashtaggerApp.isNetworkConnected() )

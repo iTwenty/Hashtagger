@@ -3,44 +3,46 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.webkit.WebView;
-import android.widget.ProgressBar;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterAuthHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterLoginHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.LoadingActivity;
+import twitter4j.auth.RequestToken;
 
 /**
  * Created by itwenty on 3/17/14.
  */
-public class TwitterLoginActivity extends FragmentActivity implements TwitterAuthHandler.TwitterAuthListener
+public class TwitterLoginActivity extends LoadingActivity implements TwitterLoginHandler.TwitterLoginListener
 {
-    private static final String TWITTER_AUTH_HANDLER_KEY = HashtaggerApp.NAMESPACE + "twitter_auth_handler_key";
+    WebView             wvTwitterSignIn;
+    TwitterLoginHandler loginHandler;
+    // We need to persist this request token throughout the entire login procedure. So make sure it
+    // does not get destroyed anytime during activity lifecycle!
+    RequestToken        requestToken;
 
-    WebView            wvTwitterSignIn;
-    TwitterAuthHandler authHandler;
-    ProgressBar        pgbrLoadingAuth;
-
-    public void onCreate( Bundle savedInstanceState )
+    @Override
+    protected View initMainView( Bundle savedInstanceState )
     {
-        super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_twitter_auth );
-        wvTwitterSignIn = ( WebView ) findViewById( R.id.wv_twitter_sign_in );
-        pgbrLoadingAuth = ( ProgressBar ) findViewById( R.id.pgbr_loading_auth );
+        wvTwitterSignIn = new WebView( this );
+        return wvTwitterSignIn;
+    }
+
+
+    @Override
+    protected void onViewsCreated( Bundle savedInstanceState )
+    {
         setTitle( getString( R.string.str_title_activity_twitter_auth ) );
-        if( null != savedInstanceState )
+        loginHandler = new TwitterLoginHandler( this );
+        if ( null != savedInstanceState )
         {
-            authHandler = ( TwitterAuthHandler ) savedInstanceState.getSerializable( TWITTER_AUTH_HANDLER_KEY );
-            authHandler.setTwitterAuthListener( this );
             wvTwitterSignIn.restoreState( savedInstanceState );
+            requestToken = ( RequestToken ) savedInstanceState.getSerializable( HashtaggerApp.TWITTER_REQUEST_TOKEN_KEY );
         }
         else
         {
-            authHandler = new TwitterAuthHandler();
-            authHandler.setTwitterAuthListener( this );
-            authHandler.fetchRequestToken();
+            loginHandler.fetchRequestToken();
         }
     }
 
@@ -55,10 +57,9 @@ public class TwitterLoginActivity extends FragmentActivity implements TwitterAut
     private void handleIntent( Intent intent )
     {
         Uri uri = intent.getData();
-        Helper.debug( uri.toString() );
         if ( null != uri && uri.toString().startsWith( HashtaggerApp.CALLBACK_URL ) && null != uri.getQueryParameter( HashtaggerApp.OAUTH_VERIFIER_KEY ) )
         {
-            authHandler.fetchAccessToken( uri.getQueryParameter( HashtaggerApp.OAUTH_VERIFIER_KEY ) );
+            loginHandler.fetchAccessToken( this.requestToken, uri.getQueryParameter( HashtaggerApp.OAUTH_VERIFIER_KEY ) );
         }
         else
         {
@@ -71,8 +72,8 @@ public class TwitterLoginActivity extends FragmentActivity implements TwitterAut
     protected void onSaveInstanceState( Bundle outState )
     {
         super.onSaveInstanceState( outState );
-        outState.putSerializable( TWITTER_AUTH_HANDLER_KEY, authHandler );
         wvTwitterSignIn.saveState( outState );
+        outState.putSerializable( HashtaggerApp.TWITTER_REQUEST_TOKEN_KEY, requestToken );
     }
 
     @Override
@@ -85,23 +86,21 @@ public class TwitterLoginActivity extends FragmentActivity implements TwitterAut
     @Override
     public void whileObtainingReqToken()
     {
-        wvTwitterSignIn.setVisibility( View.GONE );
-        pgbrLoadingAuth.setVisibility( View.VISIBLE );
+        showLoadingView();
     }
 
     @Override
-    public void onObtainingReqToken( String authorizationUrl )
+    public void onObtainingReqToken( RequestToken requestToken )
     {
-        pgbrLoadingAuth.setVisibility( View.GONE );
-        wvTwitterSignIn.setVisibility( View.VISIBLE );
-        wvTwitterSignIn.loadUrl( authorizationUrl );
-        Helper.debug( authorizationUrl );
+        showMainView();
+        this.requestToken = requestToken;
+        wvTwitterSignIn.loadUrl( this.requestToken.getAuthorizationURL() );
     }
 
     @Override
     public void whileObtainingAccessToken()
     {
-        whileObtainingReqToken();
+        showLoadingView();
     }
 
     @Override

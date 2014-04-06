@@ -1,19 +1,16 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
-import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterUserHandler;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFooter;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
 import twitter4j.Status;
 
@@ -28,16 +25,14 @@ public class TwitterFragment extends SitesFragment implements AdapterView.OnItem
     @Override
     protected SitesUserHandler initSitesUserHandler()
     {
-        TwitterUserHandler twitterUserHandler = new TwitterUserHandler();
-        twitterUserHandler.setSitesUserListener( this );
+        TwitterUserHandler twitterUserHandler = new TwitterUserHandler( this );
         return twitterUserHandler;
     }
 
     @Override
     protected SitesSearchHandler initSitesSearchHandler()
     {
-        TwitterSearchHandler twitterSearchHandler = new TwitterSearchHandler();
-        twitterSearchHandler.setSitesSearchListener( this );
+        TwitterSearchHandler twitterSearchHandler = new TwitterSearchHandler( this );
         return twitterSearchHandler;
     }
 
@@ -53,6 +48,24 @@ public class TwitterFragment extends SitesFragment implements AdapterView.OnItem
     {
         List<Status> results = new ArrayList<Status>();
         return results;
+    }
+
+    @Override
+    protected int getNotLoggedInToastTextId()
+    {
+        return R.string.str_toast_twitter_not_logged_in;
+    }
+
+    @Override
+    protected int getLoggedInToastTextId()
+    {
+        return R.string.str_toast_twitter_logged_in_as;
+    }
+
+    @Override
+    protected int getLoginFailureToastTextId()
+    {
+        return R.string.str_toast_twitter_login_failed;
     }
 
     @Override

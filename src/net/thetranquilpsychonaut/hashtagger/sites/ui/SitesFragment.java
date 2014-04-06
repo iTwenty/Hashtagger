@@ -10,15 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
-import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterUserHandler;
-import twitter4j.Status;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -164,11 +160,13 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         if ( !sitesUserHandler.isUserLoggedIn() )
         {
-            Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_twitter_not_logged_in ), Toast.LENGTH_LONG ).show();
+            Toast.makeText( getActivity(), getResources().getString( getNotLoggedInToastTextId() ), Toast.LENGTH_LONG ).show();
             return;
         }
         sitesSearchHandler.beginSearch( SearchType.INITIAL, hashtag );
     }
+
+    protected abstract int getNotLoggedInToastTextId();
 
     public void showView( SitesView sitesView )
     {
@@ -179,24 +177,24 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     @Override
     public void onSaveInstanceState( Bundle outState )
     {
-        Helper.debug( "sitesfragment save instance" );
+
         super.onSaveInstanceState( outState );
         outState.putSerializable( ACTIVE_VIEW_KEY, activeView );
         outState.putSerializable( sitesFooter.ACTIVE_FOOTER_VIEW_KEY, sitesFooter.activeFooterView );
+        outState.putSerializable( RESULTS_LIST_KEY, ( java.io.Serializable ) results );
     }
 
 
     @Override
     public void onActivityResult( int requestCode, int resultCode, Intent data )
     {
-        Helper.debug( "onActivityResult" );
-        if ( requestCode == HashtaggerApp.LOGIN_REQUEST_CODE )
+        if ( requestCode == HashtaggerApp.TWITTER_LOGIN_REQUEST_CODE )
         {
             if ( resultCode == Activity.RESULT_OK )
             {
                 onUserLoggedIn();
             }
-            else if ( requestCode == Activity.RESULT_CANCELED )
+            else if ( resultCode == Activity.RESULT_CANCELED )
             {
                 onLoginFailure();
             }
@@ -206,15 +204,19 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     public void onUserLoggedIn()
     {
         showView( SitesView.READY );
-        Toast.makeText( getActivity(), "Logged in to Twitter as " + sitesUserHandler.getUserName(), Toast.LENGTH_LONG ).show();
+        Toast.makeText( getActivity(), getResources().getString( getLoggedInToastTextId() ) + sitesUserHandler.getUserName(), Toast.LENGTH_LONG ).show();
         getActivity().invalidateOptionsMenu();
     }
 
+    protected abstract int getLoggedInToastTextId();
+
     public void onLoginFailure()
     {
-        Toast.makeText( getActivity(), "Could not log you in. Please try again.", Toast.LENGTH_LONG ).show();
         showView( SitesView.LOGIN );
+        Toast.makeText( getActivity(), getResources().getString( getLoginFailureToastTextId() ), Toast.LENGTH_LONG ).show();
     }
+
+    protected abstract int getLoginFailureToastTextId();
 
     /**
      * **************** for onRefreshListener **************
@@ -255,7 +257,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             return;
         }
         Intent i = new Intent( getActivity(), getLoginActivityClassName() );
-        getActivity().startActivityForResult( i, HashtaggerApp.LOGIN_REQUEST_CODE );
+        getActivity().startActivityForResult( i, HashtaggerApp.TWITTER_LOGIN_REQUEST_CODE );
     }
 
     protected abstract Class<?> getLoginActivityClassName();
@@ -269,7 +271,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         if ( !HashtaggerApp.isNetworkConnected() )
         {
-            Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_twitter_not_logged_in ), Toast.LENGTH_LONG ).show();
+            Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_no_network ), Toast.LENGTH_LONG ).show();
             return;
         }
         sitesSearchHandler.beginSearch( SearchType.OLDER, ( ( SitesActivity ) getActivity() ).getHashtag() );
@@ -375,7 +377,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
                 break;
             case NEWER:
                 readyHolder.srlReady.setRefreshing( false );
-                Toast.makeText( getActivity(), "Failed to load newer results", Toast.LENGTH_LONG ).show();
+                Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_newer_results_error ), Toast.LENGTH_LONG ).show();
                 break;
         }
     }
@@ -387,7 +389,6 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         resultsAdapter.clear();
         resultsAdapter.notifyDataSetChanged();
-        getActivity().setTitle( getResources().getString( R.string.app_name ) );
         showView( SitesView.LOGIN );
         getActivity().invalidateOptionsMenu();
     }

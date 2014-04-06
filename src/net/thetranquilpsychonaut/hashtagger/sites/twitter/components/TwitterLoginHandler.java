@@ -8,7 +8,7 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
 import net.thetranquilpsychonaut.hashtagger.enums.AuthType;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
-import net.thetranquilpsychonaut.hashtagger.sites.components.AuthActionName;
+import net.thetranquilpsychonaut.hashtagger.sites.components.LoginActionName;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
@@ -19,13 +19,13 @@ import java.io.Serializable;
 /**
  * Created by itwenty on 3/15/14.
  */
-public class TwitterAuthHandler extends BroadcastReceiver implements AuthActionName, Serializable
+public class TwitterLoginHandler extends BroadcastReceiver implements LoginActionName, Serializable
 {
-    public interface TwitterAuthListener
+    public interface TwitterLoginListener
     {
         public void whileObtainingReqToken();
 
-        public void onObtainingReqToken( String authorizationUrl );
+        public void onObtainingReqToken( RequestToken requestToken );
 
         public void whileObtainingAccessToken();
 
@@ -34,38 +34,31 @@ public class TwitterAuthHandler extends BroadcastReceiver implements AuthActionN
         public void onUserLoggedIn();
     }
 
-    TwitterAuthListener twitterAuthListener;
-    Twitter             twitter;
-    RequestToken        requestToken;
-    AccessToken         accessToken;
-    String              userName;
-    IntentFilter        filter;
+    TwitterLoginListener twitterLoginListener;
+    IntentFilter         filter;
 
-    public TwitterAuthHandler()
+    public TwitterLoginHandler( TwitterLoginListener listener )
     {
-        twitter = new TwitterFactory( HashtaggerApp.CONFIGURATION ).getInstance();
-        filter = new IntentFilter( getAuthActionName() );
+        filter = new IntentFilter( getLoginActionName() );
         filter.addCategory( Intent.CATEGORY_DEFAULT );
         HashtaggerApp.app.getApplicationContext().registerReceiver( this, filter );
-    }
-
-    public void setTwitterAuthListener( TwitterAuthListener twitterAuthListener )
-    {
-        this.twitterAuthListener = twitterAuthListener;
+        twitterLoginListener = listener;
     }
 
     public void fetchRequestToken()
     {
+        Twitter twitter = new TwitterFactory( HashtaggerApp.CONFIGURATION ).getInstance();
         Intent requestIntent = new Intent( HashtaggerApp.app.getApplicationContext(), TwitterService.class );
         requestIntent.putExtra( ActionType.ACTION_TYPE_KEY, ActionType.AUTH );
         requestIntent.putExtra( AuthType.AUTH_TYPE_KEY, AuthType.REQUEST );
         requestIntent.putExtra( HashtaggerApp.TWITTER_KEY, twitter );
         HashtaggerApp.app.getApplicationContext().startService( requestIntent );
-        twitterAuthListener.whileObtainingReqToken();
+        twitterLoginListener.whileObtainingReqToken();
     }
 
-    public void fetchAccessToken( String oauthVerifier )
+    public void fetchAccessToken( RequestToken requestToken, String oauthVerifier )
     {
+        Twitter twitter = new TwitterFactory( HashtaggerApp.CONFIGURATION ).getInstance();
         Intent verifyIntent = new Intent( HashtaggerApp.app.getApplicationContext(), TwitterService.class );
         verifyIntent.putExtra( ActionType.ACTION_TYPE_KEY, ActionType.AUTH );
         verifyIntent.putExtra( AuthType.AUTH_TYPE_KEY, AuthType.ACCESS );
@@ -73,7 +66,7 @@ public class TwitterAuthHandler extends BroadcastReceiver implements AuthActionN
         verifyIntent.putExtra( HashtaggerApp.TWITTER_REQUEST_TOKEN_KEY, requestToken );
         verifyIntent.putExtra( HashtaggerApp.OAUTH_VERIFIER_KEY, oauthVerifier );
         HashtaggerApp.app.getApplicationContext().startService( verifyIntent );
-        twitterAuthListener.whileObtainingAccessToken();
+        twitterLoginListener.whileObtainingAccessToken();
     }
 
     @Override
@@ -82,27 +75,27 @@ public class TwitterAuthHandler extends BroadcastReceiver implements AuthActionN
         Result resultType = ( Result ) intent.getSerializableExtra( Result.RESULT_KEY );
         if ( resultType == Result.FAILURE )
         {
-            twitterAuthListener.onError();
+            twitterLoginListener.onError();
             return;
         }
         AuthType authType = ( AuthType ) intent.getSerializableExtra( AuthType.AUTH_TYPE_KEY );
         switch ( authType )
         {
             case REQUEST:
-                this.requestToken = ( RequestToken ) intent.getSerializableExtra( Result.RESULT_DATA );
-                twitterAuthListener.onObtainingReqToken( this.requestToken.getAuthorizationURL() );
+                RequestToken requestToken = ( RequestToken ) intent.getSerializableExtra( Result.RESULT_DATA );
+                twitterLoginListener.onObtainingReqToken( requestToken );
                 break;
             case ACCESS:
-                this.accessToken = ( AccessToken ) intent.getSerializableExtra( Result.RESULT_DATA );
-                this.userName = intent.getStringExtra( Result.RESULT_EXTRAS );
-                SharedPreferencesHelper.addTwitterDetails( accessToken.getToken(), accessToken.getTokenSecret(), this.userName );
-                twitterAuthListener.onUserLoggedIn();
+                AccessToken accessToken = ( AccessToken ) intent.getSerializableExtra( Result.RESULT_DATA );
+                String userName = intent.getStringExtra( Result.RESULT_EXTRAS );
+                SharedPreferencesHelper.addTwitterDetails( accessToken.getToken(), accessToken.getTokenSecret(), userName );
+                twitterLoginListener.onUserLoggedIn();
         }
     }
 
     @Override
-    public String getAuthActionName()
+    public String getLoginActionName()
     {
-        return HashtaggerApp.TWITTER_AUTH_ACTION;
+        return HashtaggerApp.TWITTER_LOGIN_ACTION;
     }
 }

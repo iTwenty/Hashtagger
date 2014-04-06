@@ -46,5 +46,6 @@
                 <data android:scheme="twitter-auth-callback" />
             </intent-filter>
         </activity>
+        <activity android:name=".sites.ui.LoadingActivity" />
     </application>
 </manifest>

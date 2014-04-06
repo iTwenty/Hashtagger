@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentActivity;
 /**
  * Created by itwenty on 4/4/14.
  */
-public class FacebookAuthActivity extends FragmentActivity
+public class FacebookLoginActivity extends FragmentActivity
 {
     @Override
     protected void onCreate( Bundle savedInstanceState )

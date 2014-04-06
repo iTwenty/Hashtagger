@@ -9,6 +9,11 @@ import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
  */
 public class FacebookSearchHandler extends SitesSearchHandler
 {
+    public FacebookSearchHandler( SitesSearchListener listener )
+    {
+        super( listener );
+    }
+
     @Override
     protected Intent addExtraParameters( Intent searchIntent )
     {

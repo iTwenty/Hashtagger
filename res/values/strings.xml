@@ -20,4 +20,7 @@
     <string name="str_toast_twitter_not_logged_in">Log in to Twitter first.</string>
     <string name="str_toast_no_older_results">No older results</string>
     <string name="str_toast_no_newer_results">No newer results</string>
+    <string name="str_toast_newer_results_error">Failed to load newer results</string>
+    <string name="str_toast_twitter_logged_in_as">Logged in to Twitter as :</string>
+    <string name="str_toast_twitter_login_failed">Failed to log in to Twitter. Please try again.</string>
 </resources>

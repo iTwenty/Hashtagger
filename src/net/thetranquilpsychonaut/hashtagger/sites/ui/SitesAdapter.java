@@ -4,7 +4,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.instagram.ui.InstagramFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterFragment;
@@ -19,7 +18,6 @@ public class SitesAdapter extends FragmentPagerAdapter
     public SitesAdapter( FragmentManager fm )
     {
         super( fm );
-        Helper.debug( "sitesadapter" );
         this.fm = fm;
     }
 

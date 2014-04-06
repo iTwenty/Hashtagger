@@ -43,11 +43,9 @@ public class TwitterService extends SitesService
                 case INITIAL:
                     break;
                 case OLDER:
-                    Helper.debug( "max id in before search" + String.valueOf( TwitterSearchHandler.maxId ) );
                     query.setMaxId( TwitterSearchHandler.maxId );
                     break;
                 case NEWER:
-                    Helper.debug( "since id in before search" + String.valueOf( TwitterSearchHandler.sinceId ) );
                     query.setSinceId( TwitterSearchHandler.sinceId );
                     break;
             }
@@ -76,8 +74,6 @@ public class TwitterService extends SitesService
                     TwitterSearchHandler.sinceId = queryResult.getMaxId();
                 if ( searchType != SearchType.NEWER )
                     TwitterSearchHandler.maxId = queryResult.getSinceId() == 0 ? getLowestId( queryResult.getTweets() ) : queryResult.getSinceId();
-                Helper.debug( "max id in after search" + String.valueOf( TwitterSearchHandler.maxId ) );
-                Helper.debug( "since id in after search" + String.valueOf( TwitterSearchHandler.sinceId ) );
             }
             resultIntent.putExtra( Result.RESULT_DATA, queryResult );
         }
@@ -92,7 +88,7 @@ public class TwitterService extends SitesService
     @Override
     protected Intent doAuth( Intent intent )
     {
-        Helper.debug( "doAuth()" );
+
         final Twitter twitter = ( Twitter ) intent.getSerializableExtra( HashtaggerApp.TWITTER_KEY );
         final AuthType authType = ( AuthType ) intent.getSerializableExtra( AuthType.AUTH_TYPE_KEY );
         Intent resultIntent = new Intent();
@@ -165,8 +161,8 @@ public class TwitterService extends SitesService
     }
 
     @Override
-    public String getAuthActionName()
+    public String getLoginActionName()
     {
-        return HashtaggerApp.TWITTER_AUTH_ACTION;
+        return HashtaggerApp.TWITTER_LOGIN_ACTION;
     }
 }

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
@@ -31,14 +30,18 @@ public class TwitterSearchHandler extends SitesSearchHandler
     static long maxId;
     static long sinceId;
 
-    public TwitterSearchHandler()
+    public TwitterSearchHandler( SitesSearchListener listener )
     {
-        super();
+        super( listener );
         this.twitter = new TwitterFactory( HashtaggerApp.CONFIGURATION ).getInstance();
+        // If user was previously logged in, we need to restore hir's credentials from shared prefs
+        if ( SharedPreferencesHelper.areTwitterDetailsPresent() )
+            setAccessToken();
     }
 
-    public void setAccessToken()
+    public void setAccessToken() throws RuntimeException
     {
+
         if ( !SharedPreferencesHelper.areTwitterDetailsPresent() )
             throw new RuntimeException( "must be logged in before setting access token!" );
         twitter.setOAuthAccessToken( new AccessToken( SharedPreferencesHelper.getTwitterOauthAccessToken(), SharedPreferencesHelper.getTwitterOauthAccessTokenSecret() ) );
@@ -65,12 +68,11 @@ public class TwitterSearchHandler extends SitesSearchHandler
     @Override
     public void onReceive( Context context, Intent intent )
     {
-        Helper.debug( "twitter search over" );
+
         SearchType searchType = ( SearchType ) intent.getSerializableExtra( SearchType.SEARCH_TYPE_KEY );
         Result resultType = ( Result ) intent.getSerializableExtra( Result.RESULT_KEY );
         if ( resultType == Result.FAILURE )
         {
-            Helper.debug( "Twitter Search Result : Failure" );
             sitesSearchListener.onError( searchType );
             return;
         }

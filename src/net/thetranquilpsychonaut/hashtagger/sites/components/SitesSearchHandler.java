@@ -25,16 +25,12 @@ public abstract class SitesSearchHandler extends BroadcastReceiver implements Se
     protected IntentFilter        filter;
     protected SitesSearchListener sitesSearchListener;
 
-    public SitesSearchHandler()
+    public SitesSearchHandler( SitesSearchListener listener )
     {
         filter = new IntentFilter( getSearchActionName() );
         filter.addCategory( Intent.CATEGORY_DEFAULT );
         HashtaggerApp.app.getApplicationContext().registerReceiver( this, filter );
-    }
-
-    public void setSitesSearchListener( SitesSearchListener sitesSearchListener )
-    {
-        this.sitesSearchListener = sitesSearchListener;
+        sitesSearchListener = listener;
     }
 
     public void beginSearch( SearchType searchType, String hashtag )

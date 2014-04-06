@@ -2,6 +2,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,13 +40,14 @@ public class TwitterListAdapter extends ArrayAdapter<Status>
     @Override
     public View getView( int position, View convertView, ViewGroup parent )
     {
+        Helper.debug( "Twitter item position : " + position );
         View view = convertView;
         ViewHolder viewHolder;
         Status status = getItem( position );
         LayoutInflater inflater = ( LayoutInflater ) ctx.getSystemService( Activity.LAYOUT_INFLATER_SERVICE );
-
         if ( view == null )
         {
+            Helper.debug( "convertView is NULL" );
             view = inflater.inflate( R.layout.fragment_twitter_list_row, null );
             viewHolder = new ViewHolder();
             viewHolder.imgvProfileImage = ( ImageView ) view.findViewById( R.id.imgv_profile_image );
@@ -56,6 +58,7 @@ public class TwitterListAdapter extends ArrayAdapter<Status>
         }
         else
         {
+            Helper.debug( "convertView is NOT NULL" );
             viewHolder = ( ViewHolder ) view.getTag();
         }
         UrlImageViewHelper.setUrlDrawable( viewHolder.imgvProfileImage, status.getUser().getProfileImageURL(), R.drawable.twitter_logo_blue );

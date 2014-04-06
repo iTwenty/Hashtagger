@@ -12,9 +12,9 @@ public abstract class SitesUserHandler
 
     protected SitesUserListener sitesUserListener;
 
-    public void setSitesUserListener( SitesUserListener sitesUserListener )
+    public SitesUserHandler( SitesUserListener listener )
     {
-        this.sitesUserListener = sitesUserListener;
+        sitesUserListener = listener;
     }
 
     public abstract boolean isUserLoggedIn();
