@@ -20,3 +20,5 @@ proguard/
 *.ipr
 *.iws
 .idea/
+# Config keys
+src/net/thetranquilpsychonaut/hashtagger/config/

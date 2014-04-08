@@ -2,7 +2,6 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.app.Activity;
 import android.content.Context;
-import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

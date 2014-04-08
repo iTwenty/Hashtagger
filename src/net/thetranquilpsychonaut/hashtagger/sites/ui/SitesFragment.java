@@ -107,6 +107,8 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         }
         resultsAdapter = initResultsAdapter();
         readyHolder.lvResultsList = ( ListView ) viewReady.findViewById( R.id.lv_results_list );
+        sitesFooter = initSitesFooter( inflater );
+        sitesFooter.appendFooterToList( readyHolder.lvResultsList );
         readyHolder.lvResultsList.setAdapter( resultsAdapter );
         readyHolder.lvResultsList.setOnItemClickListener( this );
         readyHolder.lvResultsListEmpty = ( TextView ) viewReady.findViewById( R.id.tv_results_list_empty );
@@ -141,10 +143,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     public SitesFooter initSitesFooter( LayoutInflater inflater )
     {
-        SitesFooter sitesFooter = new SitesFooter( inflater );
-        sitesFooter.setSitesFooterListener( this );
-        sitesFooter.appendFooterToList( readyHolder.lvResultsList );
-        readyHolder.lvResultsList.setAdapter( resultsAdapter );
+        SitesFooter sitesFooter = new SitesFooter( inflater, this );
         return sitesFooter;
     }
 
@@ -188,7 +187,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     @Override
     public void onActivityResult( int requestCode, int resultCode, Intent data )
     {
-        if ( requestCode == HashtaggerApp.TWITTER_LOGIN_REQUEST_CODE )
+        if ( requestCode == getLoginRequestCode() )
         {
             if ( resultCode == Activity.RESULT_OK )
             {
@@ -257,8 +256,10 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             return;
         }
         Intent i = new Intent( getActivity(), getLoginActivityClassName() );
-        getActivity().startActivityForResult( i, HashtaggerApp.TWITTER_LOGIN_REQUEST_CODE );
+        getActivity().startActivityForResult( i, getLoginRequestCode() );
     }
+
+    protected abstract int getLoginRequestCode();
 
     protected abstract Class<?> getLoginActivityClassName();
 

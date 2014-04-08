@@ -42,17 +42,13 @@ public class SitesFooter implements View.OnClickListener
     FooterErrorViewHolder     footerErrorViewHolder;
     protected SitesFooterListener sitesFooterListener;
 
-    public SitesFooter( LayoutInflater inflater )
+    public SitesFooter( LayoutInflater inflater, SitesFooterListener listener )
     {
         vaSitesFooterView = ( ViewAnimator ) inflater.inflate( R.layout.footer_view_results_list, null );
         vaSitesFooterView.addView( initLoadOlderView( inflater ), SitesFooterView.LOAD_OLDER.index );
         vaSitesFooterView.addView( initLoadingView( inflater ), SitesFooterView.LOADING.index );
         vaSitesFooterView.addView( initErrorView( inflater ), SitesFooterView.ERROR.index );
-    }
-
-    public void setSitesFooterListener( SitesFooterListener listener )
-    {
-        this.sitesFooterListener = listener;
+        sitesFooterListener = listener;
     }
 
     public void showFooterView( SitesFooterView sitesFooterView )

@@ -69,6 +69,12 @@ public class TwitterFragment extends SitesFragment implements AdapterView.OnItem
     }
 
     @Override
+    protected int getLoginRequestCode()
+    {
+        return HashtaggerApp.TWITTER_LOGIN_REQUEST_CODE;
+    }
+
+    @Override
     public boolean onOptionsItemSelected( MenuItem item )
     {
         switch ( item.getItemId() )

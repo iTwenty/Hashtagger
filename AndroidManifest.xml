@@ -15,6 +15,7 @@
         android:icon="@drawable/ic_launcher"
         android:theme="@android:style/Theme.Holo">
         <service android:name=".sites.twitter.components.TwitterService" />
+        <service android:name=".sites.facebook.components.FacebookService" />
 
         <activity
             android:name=".sites.ui.SitesActivity"
@@ -43,9 +44,12 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="twitter-auth-callback" />
+                <data android:scheme="twitter-login-callback" />
             </intent-filter>
         </activity>
-        <activity android:name=".sites.ui.LoadingActivity" />
+        <activity
+            android:name=".sites.facebook.ui.FacebookLoginActivity"
+            android:launchMode="singleTop">
+        </activity>
     </application>
 </manifest>

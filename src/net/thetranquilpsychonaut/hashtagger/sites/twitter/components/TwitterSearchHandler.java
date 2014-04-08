@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
+import net.thetranquilpsychonaut.hashtagger.config.TwitterConfig;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
@@ -33,7 +34,7 @@ public class TwitterSearchHandler extends SitesSearchHandler
     public TwitterSearchHandler( SitesSearchListener listener )
     {
         super( listener );
-        this.twitter = new TwitterFactory( HashtaggerApp.CONFIGURATION ).getInstance();
+        this.twitter = new TwitterFactory( TwitterConfig.CONFIGURATION ).getInstance();
         // If user was previously logged in, we need to restore hir's credentials from shared prefs
         if ( SharedPreferencesHelper.areTwitterDetailsPresent() )
             setAccessToken();

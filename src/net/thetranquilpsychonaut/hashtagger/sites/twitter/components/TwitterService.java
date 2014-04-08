@@ -3,6 +3,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.components;
 import android.content.Intent;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.Helper;
+import net.thetranquilpsychonaut.hashtagger.config.TwitterConfig;
 import net.thetranquilpsychonaut.hashtagger.enums.AuthType;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
@@ -88,20 +89,18 @@ public class TwitterService extends SitesService
     @Override
     protected Intent doAuth( Intent intent )
     {
-
-        final Twitter twitter = ( Twitter ) intent.getSerializableExtra( HashtaggerApp.TWITTER_KEY );
         final AuthType authType = ( AuthType ) intent.getSerializableExtra( AuthType.AUTH_TYPE_KEY );
         Intent resultIntent = new Intent();
         resultIntent.putExtra( AuthType.AUTH_TYPE_KEY, authType );
         switch ( authType )
         {
             case REQUEST:
-                resultIntent = doRequestAuth( resultIntent, twitter );
+                resultIntent = doRequestAuth( resultIntent );
                 break;
             case ACCESS:
                 final RequestToken requestToken = ( RequestToken ) intent.getSerializableExtra( HashtaggerApp.TWITTER_REQUEST_TOKEN_KEY );
-                final String oauthVerifier = intent.getStringExtra( HashtaggerApp.OAUTH_VERIFIER_KEY );
-                resultIntent = doAccessAuth( resultIntent, twitter, requestToken, oauthVerifier );
+                final String oauthVerifier = intent.getStringExtra( HashtaggerApp.TWITTER_OAUTH_VERIFIER_KEY );
+                resultIntent = doAccessAuth( resultIntent, requestToken, oauthVerifier );
                 break;
             default:
                 throw new RuntimeException( "Invalid authorization type" );
@@ -109,32 +108,34 @@ public class TwitterService extends SitesService
         return resultIntent;
     }
 
-    private Intent doRequestAuth( Intent resultIntent, Twitter twitter )
+    private Intent doRequestAuth( Intent resultIntent )
     {
         RequestToken requestToken = null;
         try
         {
-            requestToken = twitter.getOAuthRequestToken( HashtaggerApp.CALLBACK_URL );
+            Twitter twitter = new TwitterFactory( TwitterConfig.CONFIGURATION ).getInstance();
+            requestToken = twitter.getOAuthRequestToken( HashtaggerApp.TWITTER_CALLBACK_URL );
         }
         catch ( TwitterException e )
         {
             Helper.debug( "Error while obtaining request token" );
         }
-        Result authResult = null == requestToken ? Result.FAILURE : Result.SUCCESS;
-        resultIntent.putExtra( Result.RESULT_KEY, authResult );
-        if ( authResult == Result.SUCCESS )
+        Result requestResult = null == requestToken ? Result.FAILURE : Result.SUCCESS;
+        resultIntent.putExtra( Result.RESULT_KEY, requestResult );
+        if ( requestResult == Result.SUCCESS )
         {
             resultIntent.putExtra( Result.RESULT_DATA, requestToken );
         }
         return resultIntent;
     }
 
-    private Intent doAccessAuth( Intent resultIntent, Twitter twitter, RequestToken requestToken, String oauthVerifier )
+    private Intent doAccessAuth( Intent resultIntent, RequestToken requestToken, String oauthVerifier )
     {
         AccessToken accessToken = null;
         String userName = null;
         try
         {
+            Twitter twitter = new TwitterFactory( TwitterConfig.CONFIGURATION ).getInstance();
             accessToken = twitter.getOAuthAccessToken( requestToken, oauthVerifier );
             twitter.setOAuthAccessToken( accessToken );
             userName = twitter.verifyCredentials().getName();
@@ -143,9 +144,9 @@ public class TwitterService extends SitesService
         {
             Helper.debug( "Error while obtaining access token" );
         }
-        Result authResult = null == accessToken ? Result.FAILURE : Result.SUCCESS;
-        resultIntent.putExtra( Result.RESULT_KEY, authResult );
-        if ( authResult == Result.SUCCESS )
+        Result accessResult = null == accessToken ? Result.FAILURE : Result.SUCCESS;
+        resultIntent.putExtra( Result.RESULT_KEY, accessResult );
+        if ( accessResult == Result.SUCCESS )
         {
             resultIntent.putExtra( Result.RESULT_DATA, accessToken );
             resultIntent.putExtra( Result.RESULT_EXTRAS, userName );

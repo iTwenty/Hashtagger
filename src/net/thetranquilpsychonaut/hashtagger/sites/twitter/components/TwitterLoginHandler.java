@@ -9,17 +9,13 @@ import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
 import net.thetranquilpsychonaut.hashtagger.enums.AuthType;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.sites.components.LoginActionName;
-import twitter4j.Twitter;
-import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
-
-import java.io.Serializable;
 
 /**
  * Created by itwenty on 3/15/14.
  */
-public class TwitterLoginHandler extends BroadcastReceiver implements LoginActionName, Serializable
+public class TwitterLoginHandler extends BroadcastReceiver implements LoginActionName
 {
     public interface TwitterLoginListener
     {
@@ -47,25 +43,21 @@ public class TwitterLoginHandler extends BroadcastReceiver implements LoginActio
 
     public void fetchRequestToken()
     {
-        Twitter twitter = new TwitterFactory( HashtaggerApp.CONFIGURATION ).getInstance();
         Intent requestIntent = new Intent( HashtaggerApp.app.getApplicationContext(), TwitterService.class );
         requestIntent.putExtra( ActionType.ACTION_TYPE_KEY, ActionType.AUTH );
         requestIntent.putExtra( AuthType.AUTH_TYPE_KEY, AuthType.REQUEST );
-        requestIntent.putExtra( HashtaggerApp.TWITTER_KEY, twitter );
         HashtaggerApp.app.getApplicationContext().startService( requestIntent );
         twitterLoginListener.whileObtainingReqToken();
     }
 
     public void fetchAccessToken( RequestToken requestToken, String oauthVerifier )
     {
-        Twitter twitter = new TwitterFactory( HashtaggerApp.CONFIGURATION ).getInstance();
-        Intent verifyIntent = new Intent( HashtaggerApp.app.getApplicationContext(), TwitterService.class );
-        verifyIntent.putExtra( ActionType.ACTION_TYPE_KEY, ActionType.AUTH );
-        verifyIntent.putExtra( AuthType.AUTH_TYPE_KEY, AuthType.ACCESS );
-        verifyIntent.putExtra( HashtaggerApp.TWITTER_KEY, twitter );
-        verifyIntent.putExtra( HashtaggerApp.TWITTER_REQUEST_TOKEN_KEY, requestToken );
-        verifyIntent.putExtra( HashtaggerApp.OAUTH_VERIFIER_KEY, oauthVerifier );
-        HashtaggerApp.app.getApplicationContext().startService( verifyIntent );
+        Intent accessIntent = new Intent( HashtaggerApp.app.getApplicationContext(), TwitterService.class );
+        accessIntent.putExtra( ActionType.ACTION_TYPE_KEY, ActionType.AUTH );
+        accessIntent.putExtra( AuthType.AUTH_TYPE_KEY, AuthType.ACCESS );
+        accessIntent.putExtra( HashtaggerApp.TWITTER_REQUEST_TOKEN_KEY, requestToken );
+        accessIntent.putExtra( HashtaggerApp.TWITTER_OAUTH_VERIFIER_KEY, oauthVerifier );
+        HashtaggerApp.app.getApplicationContext().startService( accessIntent );
         twitterLoginListener.whileObtainingAccessToken();
     }
 
