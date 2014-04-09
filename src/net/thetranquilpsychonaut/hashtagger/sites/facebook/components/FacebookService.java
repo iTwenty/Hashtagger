@@ -1,15 +1,17 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.components;
 
 import android.content.Intent;
-import facebook4j.Facebook;
-import facebook4j.FacebookException;
-import facebook4j.FacebookFactory;
+import facebook4j.*;
 import facebook4j.auth.AccessToken;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.config.FacebookConfig;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
+import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesService;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by itwenty on 4/7/14.
@@ -17,9 +19,31 @@ import net.thetranquilpsychonaut.hashtagger.sites.components.SitesService;
 public class FacebookService extends SitesService
 {
     @Override
-    protected Intent doSearch( Intent intent )
+    protected Intent doSearch( Intent searchIntent )
     {
-        return null;
+        final SearchType searchType = ( SearchType ) searchIntent.getSerializableExtra( SearchType.SEARCH_TYPE_KEY );
+        final Facebook facebook = ( Facebook ) searchIntent.getSerializableExtra( HashtaggerApp.FACEBOOK_KEY );
+        final String hashtag = searchIntent.getStringExtra( HashtaggerApp.HASHTAG_KEY );
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra( SearchType.SEARCH_TYPE_KEY, searchType );
+        List<Post> responseList = null;
+        try
+        {
+            if( null == facebook.getOAuthAccessToken() )
+                throw new FacebookException( "" );
+            responseList = facebook.searchPosts( hashtag );
+        }
+        catch ( FacebookException e )
+        {
+            Helper.debug( "Error while searching for " + hashtag );
+        }
+        Result searchResult = null == responseList ? Result.FAILURE : Result.SUCCESS;
+        resultIntent.putExtra( Result.RESULT_KEY, searchResult );
+        if ( searchResult == Result.SUCCESS )
+        {
+            resultIntent.putExtra( Result.RESULT_DATA, ( Serializable ) responseList );
+        }
+        return resultIntent;
     }
 
     @Override

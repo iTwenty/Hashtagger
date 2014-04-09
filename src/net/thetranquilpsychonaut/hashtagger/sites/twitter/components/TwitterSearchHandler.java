@@ -26,7 +26,7 @@ public class TwitterSearchHandler extends SitesSearchHandler
     /*
     max and since ids are used to navigate through the tweets timeline.
     tweet ids are time based i.e later tweets have higher ids than older tweets.
-     */
+    */
 
     static long maxId;
     static long sinceId;
@@ -42,7 +42,6 @@ public class TwitterSearchHandler extends SitesSearchHandler
 
     public void setAccessToken() throws RuntimeException
     {
-
         if ( !SharedPreferencesHelper.areTwitterDetailsPresent() )
             throw new RuntimeException( "must be logged in before setting access token!" );
         twitter.setOAuthAccessToken( new AccessToken( SharedPreferencesHelper.getTwitterOauthAccessToken(), SharedPreferencesHelper.getTwitterOauthAccessTokenSecret() ) );
@@ -69,7 +68,6 @@ public class TwitterSearchHandler extends SitesSearchHandler
     @Override
     public void onReceive( Context context, Intent intent )
     {
-
         SearchType searchType = ( SearchType ) intent.getSerializableExtra( SearchType.SEARCH_TYPE_KEY );
         Result resultType = ( Result ) intent.getSerializableExtra( Result.RESULT_KEY );
         if ( resultType == Result.FAILURE )

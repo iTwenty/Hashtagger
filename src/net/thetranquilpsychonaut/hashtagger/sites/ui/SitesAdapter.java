@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookFragment;
-import net.thetranquilpsychonaut.hashtagger.sites.instagram.ui.InstagramFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterFragment;
 
 /**
@@ -30,8 +29,6 @@ public class SitesAdapter extends FragmentPagerAdapter
                 return new TwitterFragment();
             case 1:
                 return new FacebookFragment();
-            case 2:
-                return new InstagramFragment();
         }
         return null;
     }

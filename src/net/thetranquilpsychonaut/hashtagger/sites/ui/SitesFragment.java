@@ -176,7 +176,6 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     @Override
     public void onSaveInstanceState( Bundle outState )
     {
-
         super.onSaveInstanceState( outState );
         outState.putSerializable( ACTIVE_VIEW_KEY, activeView );
         outState.putSerializable( sitesFooter.ACTIVE_FOOTER_VIEW_KEY, sitesFooter.activeFooterView );
@@ -204,7 +203,6 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         showView( SitesView.READY );
         Toast.makeText( getActivity(), getResources().getString( getLoggedInToastTextId() ) + sitesUserHandler.getUserName(), Toast.LENGTH_LONG ).show();
-        getActivity().invalidateOptionsMenu();
     }
 
     protected abstract int getLoggedInToastTextId();
@@ -302,28 +300,30 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     @Override
     public void afterSearching( SearchType searchType, Bundle resultBundle )
     {
-        List<?> results = ( List<?> ) resultBundle.getSerializable( HashtaggerApp.SEARCH_RESULT_LIST_KEY );
+        List<?> searchResults = ( List<?> ) resultBundle.getSerializable( HashtaggerApp.SEARCH_RESULT_LIST_KEY );
         switch ( searchType )
         {
             case INITIAL:
-                afterCurrentSearch( results );
+                afterCurrentSearch( searchResults );
                 break;
             case OLDER:
-                afterOlderSearch( results );
+                afterOlderSearch( searchResults );
                 break;
             case NEWER:
-                afterNewerSearch( results );
+                afterNewerSearch( searchResults );
                 break;
         }
     }
 
-    public void afterCurrentSearch( List<?> statuses )
+    public void afterCurrentSearch( List<?> searchResults )
     {
         showView( SitesView.READY );
         resultsAdapter.clear();
-        if ( !statuses.isEmpty() )
+        if ( !searchResults.isEmpty() )
         {
-            addToEnd( statuses );
+            // Since we cannot add directly to List<?>, we have to delegate the adding to subclass which
+            // casts the list to appropriate type and then does the adding
+            addToEnd( searchResults );
             resultsAdapter.notifyDataSetChanged();
         }
         else
@@ -332,12 +332,14 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         }
     }
 
-    public void afterOlderSearch( List<?> statuses )
+    public void afterOlderSearch( List<?> searchResults )
     {
         sitesFooter.showFooterView( SitesFooter.SitesFooterView.LOAD_OLDER );
-        if ( null != statuses )
+        if ( !searchResults.isEmpty() )
         {
-            addToEnd( statuses );
+            // Since we cannot add directly to List<?>, we have to delegate the adding to subclass which
+            // casts the list to appropriate type and then does the adding
+            addToEnd( searchResults );
             resultsAdapter.notifyDataSetChanged();
         }
         else
@@ -347,14 +349,16 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     }
 
-    protected abstract void addToEnd( List<?> statuses );
+    protected abstract void addToEnd( List<?> searchResults );
 
-    public void afterNewerSearch( List<?> statuses )
+    public void afterNewerSearch( List<?> searchResults )
     {
         readyHolder.srlReady.setRefreshing( false );
-        if ( null != statuses )
+        if ( !searchResults.isEmpty() )
         {
-            addToStart( statuses );
+            // Since we cannot add directly to List<?>, we have to delegate the adding to subclass which
+            // casts the list to appropriate type and then does the adding
+            addToStart( searchResults );
             resultsAdapter.notifyDataSetChanged();
         }
         else
@@ -363,7 +367,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         }
     }
 
-    protected abstract void addToStart( List<?> statuses );
+    protected abstract void addToStart( List<?> searchResults );
 
     @Override
     public void onError( SearchType searchType )

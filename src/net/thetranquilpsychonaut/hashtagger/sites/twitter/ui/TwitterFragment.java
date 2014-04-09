@@ -1,7 +1,5 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,7 +18,7 @@ import java.util.List;
 /**
  * Created by itwenty on 2/26/14.
  */
-public class TwitterFragment extends SitesFragment implements AdapterView.OnItemClickListener
+public class TwitterFragment extends SitesFragment
 {
     @Override
     protected SitesUserHandler initSitesUserHandler()
@@ -75,31 +73,6 @@ public class TwitterFragment extends SitesFragment implements AdapterView.OnItem
     }
 
     @Override
-    public boolean onOptionsItemSelected( MenuItem item )
-    {
-        switch ( item.getItemId() )
-        {
-            case R.id.sv_hashtag:
-                return false;
-            case R.id.it_logout_twitter:
-                sitesUserHandler.logoutUser();
-                return true;
-            default:
-                return super.onOptionsItemSelected( item );
-        }
-    }
-
-    @Override
-    public void onPrepareOptionsMenu( Menu menu )
-    {
-        super.onPrepareOptionsMenu( menu );
-        if ( sitesUserHandler.isUserLoggedIn() )
-            menu.findItem( R.id.it_logout_twitter ).setVisible( true );
-        else
-            menu.findItem( R.id.it_logout_twitter ).setVisible( false );
-    }
-
-    @Override
     public void onUserLoggedIn()
     {
         ( ( TwitterSearchHandler ) sitesSearchHandler ).setAccessToken();
@@ -135,14 +108,14 @@ public class TwitterFragment extends SitesFragment implements AdapterView.OnItem
     }
 
     @Override
-    protected void addToEnd( List<?> statuses )
+    protected void addToEnd( List<?> searchResults )
     {
-        ( ( ArrayList<Status> ) results ).addAll( ( ArrayList<Status> ) statuses );
+        ( ( ArrayList<Status> ) results ).addAll( ( ArrayList<Status> ) searchResults );
     }
 
     @Override
-    protected void addToStart( List<?> statuses )
+    protected void addToStart( List<?> searchResults )
     {
-        ( ( ArrayList<Status> ) results ).addAll( 0, ( ArrayList<Status> ) statuses );
+        ( ( ArrayList<Status> ) results ).addAll( 0, ( ArrayList<Status> ) searchResults );
     }
 }

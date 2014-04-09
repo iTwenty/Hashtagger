@@ -44,7 +44,6 @@ public class HashtaggerApp extends Application
         app = this;
         SITES.add( getResources().getString( R.string.str_twitter ) );
         SITES.add( getResources().getString( R.string.str_facebook ) );
-        SITES.add( getResources().getString( R.string.str_instagram ) );
     }
 
     public static boolean isNetworkConnected()

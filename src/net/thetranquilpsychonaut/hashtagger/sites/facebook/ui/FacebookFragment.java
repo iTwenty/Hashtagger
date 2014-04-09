@@ -3,13 +3,16 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.facebook.components.FacebookSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.components.FacebookUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,19 +30,22 @@ public class FacebookFragment extends SitesFragment
     @Override
     protected SitesSearchHandler initSitesSearchHandler()
     {
-        return null;
+        FacebookSearchHandler facebookSearchHandler = new FacebookSearchHandler( this );
+        return facebookSearchHandler;
     }
 
     @Override
     protected ArrayAdapter<?> initResultsAdapter()
     {
-        return null;
+        FacebookListAdapter facebookListAdapter = new FacebookListAdapter( getActivity(), R.layout.fragment_twitter_list_row, ( ArrayList<Post> ) results );
+        return facebookListAdapter;
     }
 
     @Override
     protected List<?> initResultsList()
     {
-        return null;
+        List<Post> results = new ArrayList<Post>();
+        return results;
     }
 
     @Override
@@ -73,15 +79,29 @@ public class FacebookFragment extends SitesFragment
     }
 
     @Override
-    protected void addToEnd( List<?> statuses )
+    public void onUserLoggedIn()
     {
-
+        ( ( FacebookSearchHandler ) sitesSearchHandler ).setAccessToken();
+        super.onUserLoggedIn();
     }
 
     @Override
-    protected void addToStart( List<?> statuses )
+    public void onUserLoggedOut()
     {
+        ( ( FacebookSearchHandler ) sitesSearchHandler ).clearAccessToken();
+        super.onUserLoggedOut();
+    }
 
+    @Override
+    protected void addToEnd( List<?> searchResults )
+    {
+        ( ( ArrayList<Post> ) results ).addAll( ( ( ArrayList<Post> ) searchResults ) );
+    }
+
+    @Override
+    protected void addToStart( List<?> searchResults )
+    {
+        ( ( ArrayList<Post> ) results ).addAll( 0, ( ( ArrayList<Post> ) searchResults ) );
     }
 
     @Override
