@@ -11,7 +11,6 @@ import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesService;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * Created by itwenty on 4/7/14.
@@ -26,12 +25,23 @@ public class FacebookService extends SitesService
         final String hashtag = searchIntent.getStringExtra( HashtaggerApp.HASHTAG_KEY );
         Intent resultIntent = new Intent();
         resultIntent.putExtra( SearchType.SEARCH_TYPE_KEY, searchType );
-        List<Post> responseList = null;
+        ResponseList<Post> responseList = null;
         try
         {
-            if( null == facebook.getOAuthAccessToken() )
+            if ( null == facebook.getOAuthAccessToken() )
                 throw new FacebookException( "" );
-            responseList = facebook.searchPosts( hashtag );
+            switch ( searchType )
+            {
+                case INITIAL:
+                    responseList = facebook.searchPosts( hashtag );
+                    break;
+                case OLDER:
+                    responseList = facebook.fetchNext( FacebookSearchHandler.oldestPage );
+                    break;
+                case NEWER:
+                    responseList = facebook.fetchPrevious( FacebookSearchHandler.newestPage );
+                    break;
+            }
         }
         catch ( FacebookException e )
         {
@@ -41,6 +51,13 @@ public class FacebookService extends SitesService
         resultIntent.putExtra( Result.RESULT_KEY, searchResult );
         if ( searchResult == Result.SUCCESS )
         {
+            if ( !responseList.isEmpty() )
+            {
+                if ( searchType != SearchType.OLDER )
+                    FacebookSearchHandler.newestPage = responseList.getPaging();
+                if ( searchType != SearchType.NEWER )
+                    FacebookSearchHandler.oldestPage = responseList.getPaging();
+            }
             resultIntent.putExtra( Result.RESULT_DATA, ( Serializable ) responseList );
         }
         return resultIntent;
@@ -56,6 +73,7 @@ public class FacebookService extends SitesService
         try
         {
             Facebook facebook = new FacebookFactory( FacebookConfig.CONFIGURATION ).getInstance();
+            //Callback URL is needed for making a successful call.
             facebook.setOAuthCallbackURL( HashtaggerApp.FACEBOOK_CALLBACK_URL );
             accessToken = facebook.getOAuthAccessToken( code );
             facebook.setOAuthAccessToken( accessToken );

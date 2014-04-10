@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import facebook4j.Post;
+import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public class FacebookListAdapter extends ArrayAdapter<Post>
         ViewHolder viewHolder;
         Post post = getItem( position );
         LayoutInflater inflater = ( LayoutInflater ) ctx.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-        if( view == null )
+        if ( view == null )
         {
             view = inflater.inflate( R.layout.fragment_facebook_list_row, null );
             viewHolder = new ViewHolder();
@@ -47,7 +48,7 @@ public class FacebookListAdapter extends ArrayAdapter<Post>
         {
             viewHolder = ( ViewHolder ) view.getTag();
         }
-        viewHolder.tvFacebookRow.setText( post.getMessage() );
+        viewHolder.tvFacebookRow.setText( position + " " + Helper.getStringDate( post.getCreatedTime() ) );
         return view;
     }
 }

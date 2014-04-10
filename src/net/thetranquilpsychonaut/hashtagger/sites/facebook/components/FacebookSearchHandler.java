@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import facebook4j.Facebook;
 import facebook4j.FacebookFactory;
+import facebook4j.Paging;
 import facebook4j.Post;
-import facebook4j.ResponseList;
 import facebook4j.auth.AccessToken;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.config.FacebookConfig;
@@ -23,6 +23,12 @@ import java.util.List;
 public class FacebookSearchHandler extends SitesSearchHandler
 {
     Facebook facebook;
+
+    /*
+    * Facebook post search results are navigated using pages.
+    */
+    static Paging<Post> newestPage;
+    static Paging<Post> oldestPage;
 
     public FacebookSearchHandler( SitesSearchListener listener )
     {
