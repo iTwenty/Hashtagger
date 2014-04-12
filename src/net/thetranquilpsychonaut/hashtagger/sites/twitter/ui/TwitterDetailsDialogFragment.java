@@ -44,8 +44,8 @@ public class TwitterDetailsDialogFragment extends DialogFragment
         imgvProfileImage = ( ImageView ) v.findViewById( R.id.imgv_profile_image );
         tvUserName = ( TextView ) v.findViewById( R.id.tv_user_name );
         tvScreenName = ( TextView ) v.findViewById( R.id.tv_screen_name );
-        tvStatusText = ( TextView ) v.findViewById( R.id.tv_status_text );
-        tvCreatedAt = ( TextView ) v.findViewById( R.id.tv_created_at );
+        tvStatusText = ( TextView ) v.findViewById( R.id.tv_message );
+        tvCreatedAt = ( TextView ) v.findViewById( R.id.tv_created_time );
         imgvMediaEntity = ( ImageView ) v.findViewById( R.id.imgv_media_entity );
 
         UrlImageViewHelper.setUrlDrawable( imgvProfileImage, status.getUser().getBiggerProfileImageURL() );

@@ -5,7 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ViewAnimator;
+import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
@@ -25,9 +28,13 @@ public class FacebookListAdapter extends ArrayAdapter<Post>
         this.ctx = context;
     }
 
-    class ViewHolder
+    static class ViewHolder
     {
-        TextView tvFacebookRow;
+        ImageView              imgvProfileImage;
+        TextView               tvUserNameOrStory;
+        TextView               tvCreatedTime;
+        TextView               tvMessage;
+        FacebookAttachmentView favAttachment;
     }
 
     @Override
@@ -36,19 +43,43 @@ public class FacebookListAdapter extends ArrayAdapter<Post>
         View view = convertView;
         ViewHolder viewHolder;
         Post post = getItem( position );
-        LayoutInflater inflater = ( LayoutInflater ) ctx.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
         if ( view == null )
         {
-            view = inflater.inflate( R.layout.fragment_facebook_list_row, null );
+            view = LayoutInflater.from( ctx ).inflate( R.layout.fragment_facebook_list_row, null );
             viewHolder = new ViewHolder();
-            viewHolder.tvFacebookRow = ( TextView ) view.findViewById( R.id.tv_facebook_row );
+            viewHolder.imgvProfileImage = ( ImageView ) view.findViewById( R.id.imgv_profile_image );
+            viewHolder.tvUserNameOrStory = ( TextView ) view.findViewById( R.id.tv_user_name_or_story );
+            viewHolder.tvCreatedTime = ( TextView ) view.findViewById( R.id.tv_created_time );
+            viewHolder.tvMessage = ( TextView ) view.findViewById( R.id.tv_message );
+            viewHolder.favAttachment = ( FacebookAttachmentView ) view.findViewById( R.id.fav_attachment );
             view.setTag( viewHolder );
         }
         else
         {
             viewHolder = ( ViewHolder ) view.getTag();
         }
-        viewHolder.tvFacebookRow.setText( position + " " + Helper.getStringDate( post.getCreatedTime() ) );
+        UrlImageViewHelper.setUrlDrawable( viewHolder.imgvProfileImage, Helper.getFacebookPictureUrl( post.getFrom().getId() ) );
+        viewHolder.tvUserNameOrStory.setText( post.getStory() == null ? post.getFrom().getName() : post.getStory() );
+        viewHolder.tvCreatedTime.setText( Helper.getFuzzyDateTime( post.getCreatedTime().getTime() ) );
+        if ( null != post.getMessage() )
+        {
+            viewHolder.tvMessage.setVisibility( View.VISIBLE );
+            viewHolder.tvMessage.setText( post.getMessage() );
+        }
+        else
+        {
+            viewHolder.tvMessage.setVisibility( View.GONE );
+            viewHolder.tvMessage.setText( "" );
+        }
+        if( "status".equals( post.getType() ) )
+        {
+            viewHolder.favAttachment.setVisibility( View.GONE );
+        }
+        else
+        {
+            viewHolder.favAttachment.setVisibility( View.VISIBLE );
+            viewHolder.favAttachment.setAttachmentFromPost( post );
+        }
         return view;
     }
 }

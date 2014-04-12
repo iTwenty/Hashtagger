@@ -76,9 +76,7 @@ public class TwitterSearchHandler extends SitesSearchHandler
             return;
         }
         QueryResult result = ( QueryResult ) intent.getSerializableExtra( Result.RESULT_DATA );
-        Bundle outBundle = new Bundle();
-        outBundle.putSerializable( HashtaggerApp.SEARCH_RESULT_LIST_KEY, ( ArrayList<Status> ) result.getTweets() );
-        sitesSearchListener.afterSearching( searchType, outBundle );
+        sitesSearchListener.afterSearching( searchType, result.getTweets() );
     }
 
     @Override

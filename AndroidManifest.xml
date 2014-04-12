@@ -13,7 +13,7 @@
         android:name="net.thetranquilpsychonaut.hashtagger.HashtaggerApp"
         android:label="@string/app_name"
         android:icon="@drawable/ic_launcher"
-        android:theme="@android:style/Theme.Holo">
+        android:theme="@android:style/Theme.Holo.Light">
         <service android:name=".sites.twitter.components.TwitterService" />
         <service android:name=".sites.facebook.components.FacebookService" />
 

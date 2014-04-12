@@ -49,7 +49,7 @@ public class TwitterListAdapter extends ArrayAdapter<Status>
             viewHolder = new ViewHolder();
             viewHolder.imgvProfileImage = ( ImageView ) view.findViewById( R.id.imgv_profile_image );
             viewHolder.tvScreenName = ( TextView ) view.findViewById( R.id.tv_screen_name );
-            viewHolder.tvCreatedAt = ( TextView ) view.findViewById( R.id.tv_created_at );
+            viewHolder.tvCreatedAt = ( TextView ) view.findViewById( R.id.tv_created_time );
             viewHolder.tvTweetText = ( TextView ) view.findViewById( R.id.tv_tweet_text );
             view.setTag( viewHolder );
         }

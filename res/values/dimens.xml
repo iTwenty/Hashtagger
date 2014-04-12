@@ -2,4 +2,5 @@
 <resources>
     <dimen name="layout_padding">5dp</dimen>
     <dimen name="content_padding">2dp</dimen>
+    <dimen name="shadow_padding">5dp</dimen>
 </resources>

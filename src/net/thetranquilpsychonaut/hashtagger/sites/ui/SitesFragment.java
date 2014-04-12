@@ -298,9 +298,8 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     }
 
     @Override
-    public void afterSearching( SearchType searchType, Bundle resultBundle )
+    public void afterSearching( SearchType searchType, List<?> searchResults )
     {
-        List<?> searchResults = ( List<?> ) resultBundle.getSerializable( HashtaggerApp.SEARCH_RESULT_LIST_KEY );
         switch ( searchType )
         {
             case INITIAL:

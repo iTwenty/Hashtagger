@@ -60,4 +60,9 @@ public class Helper
         Pattern urlPattern = Patterns.WEB_URL;
         Linkify.addLinks( tv, urlPattern, null, null, filter );
     }
+
+    public static String getFacebookPictureUrl( String userId )
+    {
+        return String.format( HashtaggerApp.FACEBOOK_PROFILE_PICTURE_URL, userId );
+    }
 }

@@ -9,6 +9,7 @@ import facebook4j.Paging;
 import facebook4j.Post;
 import facebook4j.auth.AccessToken;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
+import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.config.FacebookConfig;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
@@ -75,9 +76,7 @@ public class FacebookSearchHandler extends SitesSearchHandler
             return;
         }
         List<Post> results = ( List<Post> ) intent.getSerializableExtra( Result.RESULT_DATA );
-        Bundle outBundle = new Bundle();
-        outBundle.putSerializable( HashtaggerApp.SEARCH_RESULT_LIST_KEY, ( java.io.Serializable ) results );
-        sitesSearchListener.afterSearching( searchType, outBundle );
+        sitesSearchListener.afterSearching( searchType, results );
     }
 
     @Override

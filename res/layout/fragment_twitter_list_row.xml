@@ -19,11 +19,11 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/imgv_profile_image"
         android:padding="@dimen/content_padding"
-        android:layout_toLeftOf="@+id/tv_created_at"
+        android:layout_toLeftOf="@+id/tv_created_time"
         android:singleLine="true" />
 
     <TextView
-        android:id="@id/tv_created_at"
+        android:id="@id/tv_created_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"

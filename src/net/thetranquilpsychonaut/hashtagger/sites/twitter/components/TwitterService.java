@@ -62,10 +62,6 @@ public class TwitterService extends SitesService
         {
             if ( !queryResult.getTweets().isEmpty() )
             {
-                // In case the search was for older results, we remove the newest one as maxId parameter is inclusive
-                // and causes tweet to repeat.
-                if ( searchType == SearchType.OLDER )
-                    queryResult.getTweets().remove( 0 );
                     /*
                     if our current search is the initial one, we set both the max and since ids for subsquent searches.
                     if our current search is older, we don't want it to change the sinceId for our next newer search.
@@ -75,6 +71,10 @@ public class TwitterService extends SitesService
                     TwitterSearchHandler.sinceId = queryResult.getMaxId();
                 if ( searchType != SearchType.NEWER )
                     TwitterSearchHandler.maxId = queryResult.getSinceId() == 0 ? getLowestId( queryResult.getTweets() ) : queryResult.getSinceId();
+                // In case the search was for older results, we remove the newest one as maxId parameter is inclusive
+                // and causes tweet to repeat.
+                if ( searchType == SearchType.OLDER )
+                    queryResult.getTweets().remove( 0 );
             }
             resultIntent.putExtra( Result.RESULT_DATA, queryResult );
         }

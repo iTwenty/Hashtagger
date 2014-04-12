@@ -8,6 +8,8 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 
+import java.util.List;
+
 /**
  * Created by itwenty on 3/14/14.
  */
@@ -17,7 +19,7 @@ public abstract class SitesSearchHandler extends BroadcastReceiver implements Se
     {
         public void whileSearching( SearchType searchType );
 
-        public void afterSearching( SearchType searchType, Bundle resultBundle );
+        public void afterSearching( SearchType searchType, List<?> results );
 
         public void onError( SearchType searchType );
     }

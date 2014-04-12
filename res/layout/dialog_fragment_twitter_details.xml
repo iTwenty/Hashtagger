@@ -32,24 +32,24 @@
             android:padding="@dimen/content_padding" />
 
         <TextView
-            android:id="@+id/tv_status_text"
+            android:id="@+id/tv_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/imgv_profile_image"
             android:padding="@dimen/content_padding" />
 
         <TextView
-            android:id="@+id/tv_created_at"
+            android:id="@+id/tv_created_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_status_text"
+            android:layout_below="@id/tv_message"
             android:padding="@dimen/content_padding" />
 
         <ImageView
             android:id="@+id/imgv_media_entity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_created_at"
+            android:layout_below="@id/tv_created_time"
             android:adjustViewBounds="true"
             android:visibility="gone"
             android:layout_centerHorizontal="true"
