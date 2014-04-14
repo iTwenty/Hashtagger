@@ -1,14 +1,11 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
-import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.components.FacebookSearchHandler;
@@ -110,6 +107,16 @@ public class FacebookFragment extends SitesFragment
     @Override
     public void onItemClick( AdapterView<?> parent, View view, int position, long id )
     {
-        Helper.debug( results.get( position ).toString() );
+        FacebookListRow facebookListRow = ( FacebookListRow ) view.getTag();
+        if ( facebookListRow.isExpanded() )
+        {
+            parent.setTag( new Integer( -1 ) );
+            facebookListRow.collapseRow();
+        }
+        else
+        {
+            parent.setTag( new Integer( position ) );
+            facebookListRow.expandRow( ( Post ) parent.getItemAtPosition( position ) );
+        }
     }
 }

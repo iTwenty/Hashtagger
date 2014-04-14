@@ -2,19 +2,15 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.components;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.config.TwitterConfig;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import twitter4j.QueryResult;
-import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
-
-import java.util.ArrayList;
 
 /**
  * Created by itwenty on 3/13/14.

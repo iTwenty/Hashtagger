@@ -2,14 +2,12 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.components;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import facebook4j.Facebook;
 import facebook4j.FacebookFactory;
 import facebook4j.Paging;
 import facebook4j.Post;
 import facebook4j.auth.AccessToken;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.config.FacebookConfig;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
