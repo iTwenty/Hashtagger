@@ -11,11 +11,12 @@ import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.ExpandableRow;
 
 /**
  * Created by itwenty on 4/14/14.
  */
-public class FacebookListRow
+public class FacebookListRow implements ExpandableRow
 {
     private boolean      isExpanded;
     private ImageView    imgvProfileImage;
@@ -47,8 +48,10 @@ public class FacebookListRow
         isExpanded = false;
     }
 
-    public void showPost( Post post )
+    @Override
+    public void showRow( Object data )
     {
+        final Post post = ( Post ) data;
         UrlImageViewHelper.setUrlDrawable( imgvProfileImage, Helper.getFacebookPictureUrl( post.getFrom().getId() ) );
         tvUserNameOrStory.setText( post.getStory() == null ? post.getFrom().getName() : post.getStory() );
         tvCreatedTime.setText( Helper.getFuzzyDateTime( post.getCreatedTime().getTime() ) );
@@ -63,9 +66,11 @@ public class FacebookListRow
         }
     }
 
-    public void expandRow( final Post post )
+    @Override
+    public void expandRow( Object data )
     {
-        clearView();
+        final Post post = ( Post ) data;
+        clearExpandedData();
         if ( isExpanded )
             return;
         // No need to show anything if post is of type status
@@ -113,6 +118,7 @@ public class FacebookListRow
         isExpanded = true;
     }
 
+    @Override
     public void collapseRow()
     {
         vaAttachmentView.setVisibility( View.GONE );
@@ -121,12 +127,14 @@ public class FacebookListRow
         isExpanded = false;
     }
 
+    @Override
     public boolean isExpanded()
     {
         return isExpanded;
     }
 
-    private void clearView()
+
+    private void clearExpandedData()
     {
         imgvPicture.setImageDrawable( null );
         tvName.setText( "" );

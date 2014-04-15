@@ -2,41 +2,60 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:padding="@dimen/layout_padding">
 
     <ImageView
+        tools:src="@drawable/twitter_logo_blue"
         android:id="@+id/imgv_profile_image"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:padding="@dimen/content_padding"
-        android:layout_centerVertical="true" />
+        android:padding="@dimen/content_padding" />
 
     <TextView
+        tools:text="@screen name"
         android:id="@+id/tv_screen_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/imgv_profile_image"
         android:padding="@dimen/content_padding"
-        android:layout_toLeftOf="@+id/tv_created_time"
+        android:layout_toLeftOf="@+id/tv_created_at"
         android:singleLine="true" />
 
     <TextView
-        android:id="@id/tv_created_time"
+        tools:text="dd/mm/yyyy"
+        android:id="@id/tv_created_at"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignBottom="@id/tv_user_name"
         android:padding="@dimen/content_padding"
         android:singleLine="true" />
 
     <TextView
+        tools:text="tweet tweet tweet\ntweet"
         android:id="@+id/tv_tweet_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/imgv_profile_image"
-        android:layout_below="@id/tv_screen_name"
+        android:layout_below="@id/imgv_profile_image"
         android:padding="@dimen/content_padding" />
+
+    <ViewAnimator
+        android:layout_below="@id/tv_tweet_text"
+        android:id="@+id/va_expanded_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+    </ViewAnimator>
+
+    <TextView
+        android:id="@+id/tv_expand"
+        android:text="@string/str_expand"
+        android:layout_below="@id/va_expanded_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/holo_green_dark"
+        android:padding="@dimen/layout_padding" />
 
 </RelativeLayout>

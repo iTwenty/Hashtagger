@@ -95,9 +95,17 @@ public class TwitterFragment extends SitesFragment
     @Override
     public void onItemClick( AdapterView<?> parent, View view, int position, long id )
     {
-        Status status = ( Status ) parent.getItemAtPosition( position );
-        TwitterDetailsDialogFragment twitterDetailsDialogFragment = TwitterDetailsDialogFragment.getInstance( status );
-        twitterDetailsDialogFragment.show( getFragmentManager(), HashtaggerApp.TWITTER_DIALOG_TAG );
+        TwitterListRow twitterListRow = ( TwitterListRow ) view.getTag();
+        if ( twitterListRow.isExpanded() )
+        {
+            parent.setTag( new Integer( -1 ) );
+            twitterListRow.collapseRow();
+        }
+        else
+        {
+            parent.setTag( new Integer( position ) );
+            twitterListRow.expandRow( parent.getItemAtPosition( position ) );
+        }
     }
 
     @Override

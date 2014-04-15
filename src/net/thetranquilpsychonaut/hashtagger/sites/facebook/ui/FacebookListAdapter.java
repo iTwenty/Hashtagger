@@ -39,7 +39,7 @@ public class FacebookListAdapter extends ArrayAdapter<Post>
         {
             facebookListRow = ( FacebookListRow ) view.getTag();
         }
-        facebookListRow.showPost( post );
+        facebookListRow.showRow( post );
         Integer expandedPosition = ( Integer ) parent.getTag();
         if ( null != expandedPosition )
         {

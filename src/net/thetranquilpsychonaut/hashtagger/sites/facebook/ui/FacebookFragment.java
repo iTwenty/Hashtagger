@@ -49,6 +49,12 @@ public class FacebookFragment extends SitesFragment
     }
 
     @Override
+    protected void searchHashtag( String hashtag )
+    {
+
+    }
+
+    @Override
     protected int getNotLoggedInToastTextId()
     {
         return R.string.str_toast_facebook_not_logged_in;
@@ -116,7 +122,7 @@ public class FacebookFragment extends SitesFragment
         else
         {
             parent.setTag( new Integer( position ) );
-            facebookListRow.expandRow( ( Post ) parent.getItemAtPosition( position ) );
+            facebookListRow.expandRow( parent.getItemAtPosition( position ) );
         }
     }
 }
