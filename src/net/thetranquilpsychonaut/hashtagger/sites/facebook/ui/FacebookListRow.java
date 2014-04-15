@@ -1,7 +1,9 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -11,14 +13,13 @@ import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.ExpandableRow;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 
 /**
  * Created by itwenty on 4/14/14.
  */
-public class FacebookListRow implements ExpandableRow
+public class FacebookListRow extends SitesListRow
 {
-    private boolean      isExpanded;
     private ImageView    imgvProfileImage;
     private TextView     tvUserNameOrStory;
     private TextView     tvCreatedTime;
@@ -31,21 +32,19 @@ public class FacebookListRow implements ExpandableRow
     private TextView     tvDescription;
     private TextView     tvCaption;
 
-    public FacebookListRow( View view )
+    protected FacebookListRow( Context context )
     {
-        imgvProfileImage = ( ImageView ) view.findViewById( R.id.imgv_profile_image );
-        tvUserNameOrStory = ( TextView ) view.findViewById( R.id.tv_user_name_or_story );
-        tvCreatedTime = ( TextView ) view.findViewById( R.id.tv_created_time );
-        tvMessage = ( TextView ) view.findViewById( R.id.tv_message );
-        tvExpand = ( TextView ) view.findViewById( R.id.tv_expand );
-        vaAttachmentView = ( ViewAnimator ) view.findViewById( R.id.va_attachment_view );
-        imgvPictureCenter = ( ImageView ) view.findViewById( R.id.imgv_picture_center );
-        imgvPicture = ( ImageView ) view.findViewById( R.id.imgv_picture );
-        tvName = ( TextView ) view.findViewById( R.id.tv_name );
-        tvDescription = ( TextView ) view.findViewById( R.id.tv_description );
-        tvCaption = ( TextView ) view.findViewById( R.id.tv_caption );
-        vaAttachmentView.setVisibility( View.GONE );
-        isExpanded = false;
+        this( context, null, 0 );
+    }
+
+    protected FacebookListRow( Context context, AttributeSet attrs )
+    {
+        this( context, attrs, 0 );
+    }
+
+    protected FacebookListRow( Context context, AttributeSet attrs, int defStyle )
+    {
+        super( context, attrs, defStyle );
     }
 
     @Override
@@ -58,21 +57,39 @@ public class FacebookListRow implements ExpandableRow
         tvMessage.setText( post.getMessage() );
         if ( !"status".equals( post.getType() ) )
         {
-            tvExpand.setVisibility( View.VISIBLE );
+            tvExpand.setVisibility( VISIBLE );
         }
         else
         {
-            tvExpand.setVisibility( View.GONE );
+            tvExpand.setVisibility( GONE );
         }
+    }
+
+    @Override
+    protected void init( Context context )
+    {
+        imgvProfileImage = ( ImageView ) findViewById( R.id.imgv_profile_image );
+        tvUserNameOrStory = ( TextView ) findViewById( R.id.tv_user_name_or_story );
+        tvCreatedTime = ( TextView ) findViewById( R.id.tv_created_time );
+        tvMessage = ( TextView ) findViewById( R.id.tv_message );
+        tvExpand = ( TextView ) findViewById( R.id.tv_expand );
+        vaAttachmentView = ( ViewAnimator ) findViewById( R.id.va_attachment_view );
+        imgvPictureCenter = ( ImageView ) findViewById( R.id.imgv_picture_center );
+        imgvPicture = ( ImageView ) findViewById( R.id.imgv_picture );
+        tvName = ( TextView ) findViewById( R.id.tv_name );
+        tvDescription = ( TextView ) findViewById( R.id.tv_description );
+        tvCaption = ( TextView ) findViewById( R.id.tv_caption );
+        vaAttachmentView.setVisibility( GONE );
     }
 
     @Override
     public void expandRow( Object data )
     {
-        final Post post = ( Post ) data;
-        clearExpandedData();
-        if ( isExpanded )
+        ExpandablePost ep = ( ExpandablePost ) data;
+        if( ep.isExpanded() )
             return;
+        final Post post = ep.getPost();
+        clearExpandedData();
         // No need to show anything if post is of type status
         if ( "status".equals( post.getType() ) )
         {
@@ -82,11 +99,11 @@ public class FacebookListRow implements ExpandableRow
         if ( null != post.getObjectId() && null == post.getPicture() )
             return;
         // If object id is not null and we have a picture, show it in center
-        vaAttachmentView.setVisibility( View.VISIBLE );
-        vaAttachmentView.setOnClickListener( new View.OnClickListener()
+        vaAttachmentView.setVisibility( VISIBLE );
+        vaAttachmentView.setOnClickListener( new OnClickListener()
         {
             @Override
-            public void onClick( View v )
+            public void onClick( View view )
             {
                 Uri uri = Uri.parse( post.getLink().toString() );
                 HashtaggerApp.app.startActivity( new Intent( Intent.ACTION_VIEW ).setData( uri ).setFlags( Intent.FLAG_ACTIVITY_NEW_TASK ) );
@@ -115,22 +132,14 @@ public class FacebookListRow implements ExpandableRow
             tvCaption.setText( post.getCaption() );
         }
         tvExpand.setText( "Collapse" );
-        isExpanded = true;
     }
 
     @Override
     public void collapseRow()
     {
-        vaAttachmentView.setVisibility( View.GONE );
+        vaAttachmentView.setVisibility( GONE );
         vaAttachmentView.setOnClickListener( null );
         tvExpand.setText( "Expand" );
-        isExpanded = false;
-    }
-
-    @Override
-    public boolean isExpanded()
-    {
-        return isExpanded;
     }
 
 

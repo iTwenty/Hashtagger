@@ -5,19 +5,19 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewAnimator;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.ExpandableRow;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.ExpandableStatus;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 import twitter4j.Status;
 
 /**
  * Created by itwenty on 4/15/14.
  */
-public class TwitterListRow extends RelativeLayout implements ExpandableRow
+public class TwitterListRow extends SitesListRow
 {
     ImageView    imgvProfileImage;
     TextView     tvScreenName;
@@ -25,7 +25,6 @@ public class TwitterListRow extends RelativeLayout implements ExpandableRow
     TextView     tvTweetText;
     TextView     tvExpand;
     ViewAnimator vaExpandedView;
-    boolean      isExpanded;
 
     public TwitterListRow( Context context )
     {
@@ -40,6 +39,11 @@ public class TwitterListRow extends RelativeLayout implements ExpandableRow
     public TwitterListRow( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
+    }
+
+    @Override
+    protected void init( Context context )
+    {
         LayoutInflater.from( context ).inflate( R.layout.fragment_twitter_list_row, this );
         imgvProfileImage = ( ImageView ) findViewById( R.id.imgv_profile_image );
         tvScreenName = ( TextView ) findViewById( R.id.tv_screen_name );
@@ -47,16 +51,16 @@ public class TwitterListRow extends RelativeLayout implements ExpandableRow
         tvTweetText = ( TextView ) findViewById( R.id.tv_tweet_text );
         vaExpandedView = ( ViewAnimator ) findViewById( R.id.va_expanded_view );
         tvExpand = ( TextView ) findViewById( R.id.tv_expand );
-        isExpanded = false;
         vaExpandedView.setVisibility( View.GONE );
     }
 
     @Override
-    public void expandRow( Object data )
+    public void expandRow( final Object data )
     {
-        if ( tvExpand.getVisibility() == GONE )
+        ExpandableStatus es = ( ExpandableStatus ) data;
+        if ( !es.isExpanded() )
             return;
-        final Status status = ( Status ) data;
+        Status status = es.getStatus();
         vaExpandedView.removeAllViews();
         vaExpandedView.setVisibility( View.VISIBLE );
         if ( status.getMediaEntities().length > 0 )
@@ -64,21 +68,20 @@ public class TwitterListRow extends RelativeLayout implements ExpandableRow
             TwitterMediaEntity twitterMediaEntity = new TwitterMediaEntity( getContext() );
             vaExpandedView.addView( twitterMediaEntity );
             twitterMediaEntity.showMediaFromStatus( status );
-            isExpanded = true;
         }
         else if ( status.getURLEntities().length > 0 )
         {
             TwitterLinkEntity twitterLinkEntity = new TwitterLinkEntity( getContext() );
             vaExpandedView.addView( twitterLinkEntity );
             twitterLinkEntity.setLinkFromStatus( status );
-            isExpanded = true;
         }
     }
 
     @Override
-    public void showRow( Object data )
+    public void showRow( final Object data )
     {
-        final Status status = ( Status ) data;
+        ExpandableStatus es = ( ExpandableStatus ) data;
+        Status status = es.getStatus();
         UrlImageViewHelper.setUrlDrawable( imgvProfileImage, status.getUser().getProfileImageURL(), R.drawable.drawable_image_loading );
         tvScreenName.setText( "@" + status.getUser().getScreenName() );
         tvCreatedAt.setText( Helper.getFuzzyDateTime( status.getCreatedAt().getTime() ) );
@@ -91,6 +94,8 @@ public class TwitterListRow extends RelativeLayout implements ExpandableRow
         {
             tvExpand.setVisibility( GONE );
         }
+        if ( es.isExpanded() )
+            expandRow( data );
     }
 
     @Override
@@ -98,12 +103,5 @@ public class TwitterListRow extends RelativeLayout implements ExpandableRow
     {
         vaExpandedView.removeAllViews();
         vaExpandedView.setVisibility( GONE );
-        isExpanded = false;
-    }
-
-    @Override
-    public boolean isExpanded()
-    {
-        return isExpanded;
     }
 }

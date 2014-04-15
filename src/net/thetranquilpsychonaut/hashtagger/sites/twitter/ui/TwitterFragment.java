@@ -9,10 +9,13 @@ import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterUserHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.ExpandableStatus;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import twitter4j.Status;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,16 +38,16 @@ public class TwitterFragment extends SitesFragment
     }
 
     @Override
-    protected ArrayAdapter<?> initResultsAdapter()
+    protected SitesListAdapter initSitesListAdapter()
     {
-        TwitterListAdapter twitterListAdapter = new TwitterListAdapter( getActivity(), R.layout.fragment_twitter_list_row, ( ArrayList<Status> ) results );
+        TwitterListAdapter twitterListAdapter = new TwitterListAdapter( getActivity(), R.layout.fragment_twitter_list_row, ( ArrayList<ExpandableStatus> ) results );
         return twitterListAdapter;
     }
 
     @Override
     protected List<?> initResultsList()
     {
-        List<Status> results = new ArrayList<Status>();
+        List<ExpandableStatus> results = new ArrayList<ExpandableStatus>();
         return results;
     }
 
@@ -95,16 +98,17 @@ public class TwitterFragment extends SitesFragment
     @Override
     public void onItemClick( AdapterView<?> parent, View view, int position, long id )
     {
+        ExpandableStatus es = ( ExpandableStatus ) parent.getItemAtPosition( position );
         TwitterListRow twitterListRow = ( TwitterListRow ) view.getTag();
-        if ( twitterListRow.isExpanded() )
+        if ( es.isExpanded() )
         {
-            parent.setTag( new Integer( -1 ) );
             twitterListRow.collapseRow();
+            es.setExpanded( false );
         }
         else
         {
-            parent.setTag( new Integer( position ) );
-            twitterListRow.expandRow( parent.getItemAtPosition( position ) );
+            twitterListRow.expandRow( es );
+            es.setExpanded( true );
         }
     }
 
@@ -118,12 +122,19 @@ public class TwitterFragment extends SitesFragment
     @Override
     protected void addToEnd( List<?> searchResults )
     {
-        ( ( ArrayList<Status> ) results ).addAll( ( ArrayList<Status> ) searchResults );
+        for( Status status : ( ArrayList<Status> ) searchResults )
+        {
+            ( ( ArrayList<ExpandableStatus> ) results ).add( new ExpandableStatus( status, false ) );
+        }
     }
 
     @Override
     protected void addToStart( List<?> searchResults )
     {
-        ( ( ArrayList<Status> ) results ).addAll( 0, ( ArrayList<Status> ) searchResults );
+        Collections.reverse( searchResults );
+        for( Status status : ( ArrayList<Status> ) searchResults )
+        {
+            ( ( ArrayList<ExpandableStatus> ) results ).add( 0, new ExpandableStatus( status, false ) );
+        }
     }
 }

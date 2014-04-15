@@ -7,51 +7,28 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by itwenty on 4/4/14.
  */
-public class FacebookListAdapter extends ArrayAdapter<Post>
+public class FacebookListAdapter extends SitesListAdapter
 {
     Context ctx;
 
-    public FacebookListAdapter( Context context, int textViewResourceId, List<Post> posts )
+    public FacebookListAdapter( Context context, int textViewResourceId, ArrayList<ExpandablePost> posts )
     {
         super( context, textViewResourceId, posts );
         this.ctx = context;
     }
 
     @Override
-    public View getView( int position, View convertView, ViewGroup parent )
+    protected SitesListRow initSitesListRow( Context context )
     {
-        View view = convertView;
-        FacebookListRow facebookListRow;
-        final Post post = getItem( position );
-        if ( view == null )
-        {
-            view = LayoutInflater.from( ctx ).inflate( R.layout.fragment_facebook_list_row, null );
-            facebookListRow = new FacebookListRow( view );
-            view.setTag( facebookListRow );
-        }
-        else
-        {
-            facebookListRow = ( FacebookListRow ) view.getTag();
-        }
-        facebookListRow.showRow( post );
-        Integer expandedPosition = ( Integer ) parent.getTag();
-        if ( null != expandedPosition )
-        {
-            if ( expandedPosition == position )
-            {
-                facebookListRow.expandRow( post );
-            }
-            else
-            {
-                facebookListRow.collapseRow();
-            }
-        }
-        return view;
+        return new FacebookListRow( context );
     }
 }

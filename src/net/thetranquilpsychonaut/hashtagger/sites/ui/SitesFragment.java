@@ -52,7 +52,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     protected SitesUserHandler   sitesUserHandler;
     protected SitesView          activeView;
     protected List<?>            results;
-    protected ArrayAdapter<?>    resultsAdapter;
+    protected SitesListAdapter   sitesListAdapter;
 
     @Override
     public void onCreate( Bundle savedInstanceState )
@@ -105,11 +105,11 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         {
             results = initResultsList();
         }
-        resultsAdapter = initResultsAdapter();
+        sitesListAdapter = initSitesListAdapter();
         readyHolder.lvResultsList = ( ListView ) viewReady.findViewById( R.id.lv_results_list );
         sitesFooter = initSitesFooter( inflater );
         sitesFooter.appendFooterToList( readyHolder.lvResultsList );
-        readyHolder.lvResultsList.setAdapter( resultsAdapter );
+        readyHolder.lvResultsList.setAdapter( sitesListAdapter );
         readyHolder.lvResultsList.setOnItemClickListener( this );
         readyHolder.lvResultsListEmpty = ( TextView ) viewReady.findViewById( R.id.tv_results_list_empty );
         readyHolder.lvResultsList.setEmptyView( readyHolder.lvResultsListEmpty );
@@ -151,7 +151,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     protected abstract SitesSearchHandler initSitesSearchHandler();
 
-    protected abstract ArrayAdapter<?> initResultsAdapter();
+    protected abstract SitesListAdapter initSitesListAdapter();
 
     protected abstract List<?> initResultsList();
 
@@ -317,13 +317,13 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     public void afterCurrentSearch( List<?> searchResults )
     {
         showView( SitesView.READY );
-        resultsAdapter.clear();
+        sitesListAdapter.clear();
         if ( !searchResults.isEmpty() )
         {
             // Since we cannot add directly to List<?>, we have to delegate the adding to subclass which
             // casts the list to appropriate type and then does the adding
             addToEnd( searchResults );
-            resultsAdapter.notifyDataSetChanged();
+            sitesListAdapter.notifyDataSetChanged();
         }
         else
         {
@@ -339,7 +339,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             // Since we cannot add directly to List<?>, we have to delegate the adding to subclass which
             // casts the list to appropriate type and then does the adding
             addToEnd( searchResults );
-            resultsAdapter.notifyDataSetChanged();
+            sitesListAdapter.notifyDataSetChanged();
         }
         else
         {
@@ -358,7 +358,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             // Since we cannot add directly to List<?>, we have to delegate the adding to subclass which
             // casts the list to appropriate type and then does the adding
             addToStart( searchResults );
-            resultsAdapter.notifyDataSetChanged();
+            sitesListAdapter.notifyDataSetChanged();
         }
         else
         {
@@ -391,8 +391,8 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
      */
     public void onUserLoggedOut()
     {
-        resultsAdapter.clear();
-        resultsAdapter.notifyDataSetChanged();
+        sitesListAdapter.clear();
+        sitesListAdapter.notifyDataSetChanged();
         showView( SitesView.LOGIN );
         getActivity().invalidateOptionsMenu();
     }
