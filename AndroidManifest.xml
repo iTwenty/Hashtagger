@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="net.thetranquilpsychonaut.hashtagger"
-          android:versionCode="1"
-          android:versionName="1.0">
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="net.thetranquilpsychonaut.hashtagger"
+    android:versionCode="1"
+    android:versionName="1.0">
 
     <uses-sdk android:minSdkVersion="14" />
 
@@ -14,6 +15,7 @@
         android:label="@string/app_name"
         android:icon="@drawable/ic_launcher"
         android:theme="@android:style/Theme.Holo.Light">
+
         <service android:name=".sites.twitter.components.TwitterService" />
         <service android:name=".sites.facebook.components.FacebookService" />
 
@@ -35,6 +37,7 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
+
         <activity
             android:name=".sites.twitter.ui.TwitterLoginActivity"
             android:launchMode="singleTop">
@@ -47,9 +50,15 @@
                 <data android:scheme="twitter-login-callback" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".sites.facebook.ui.FacebookLoginActivity"
             android:launchMode="singleTop">
         </activity>
+
+        <provider
+            android:authorities="hashtagger:HashtagSuggestionsProvider"
+            android:name=".HashtagSuggestionsProvider" />
+
     </application>
 </manifest>

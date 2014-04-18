@@ -6,12 +6,14 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.widget.SearchView;
 import android.widget.Toast;
+import net.thetranquilpsychonaut.hashtagger.HashtagSuggestionsProvider;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 
@@ -94,7 +96,6 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
 
     public void handleIntent( Intent intent )
     {
-
         svHashtag.setIconified( true );
         svHashtag.onActionViewCollapsed();
         if ( !HashtaggerApp.isNetworkConnected() )
@@ -104,6 +105,8 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
         }
         String input = intent.getStringExtra( SearchManager.QUERY );
         hashtag = input.startsWith( "#" ) ? input : "#" + input;
+        SearchRecentSuggestions suggestions = new SearchRecentSuggestions( this, HashtagSuggestionsProvider.AUTHORITY, HashtagSuggestionsProvider.MODE );
+        suggestions.saveRecentQuery( hashtag, null );
         setTitle( hashtag );
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
         if ( null != fragments )
