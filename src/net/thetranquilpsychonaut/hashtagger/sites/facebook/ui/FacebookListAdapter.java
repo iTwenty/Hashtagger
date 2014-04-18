@@ -1,12 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import facebook4j.Post;
-import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 
@@ -20,7 +14,7 @@ public class FacebookListAdapter extends SitesListAdapter
 {
     Context ctx;
 
-    public FacebookListAdapter( Context context, int textViewResourceId, ArrayList<ExpandablePost> posts )
+    public FacebookListAdapter( Context context, int textViewResourceId, List<?> posts )
     {
         super( context, textViewResourceId, posts );
         this.ctx = context;

@@ -1,8 +1,5 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
@@ -39,21 +36,15 @@ public class FacebookFragment extends SitesFragment
     @Override
     protected SitesListAdapter initSitesListAdapter()
     {
-        FacebookListAdapter facebookListAdapter = new FacebookListAdapter( getActivity(), R.layout.fragment_twitter_list_row, ( ArrayList<ExpandablePost> ) results );
+        FacebookListAdapter facebookListAdapter = new FacebookListAdapter( getActivity(), R.layout.fragment_twitter_list_row, results );
         return facebookListAdapter;
     }
 
     @Override
     protected List<?> initResultsList()
     {
-        List<ExpandablePost> results = new ArrayList<ExpandablePost>();
+        List<Post> results = new ArrayList<Post>();
         return results;
-    }
-
-    @Override
-    protected void searchHashtag( String hashtag )
-    {
-
     }
 
     @Override
@@ -103,36 +94,12 @@ public class FacebookFragment extends SitesFragment
     @Override
     protected void addToEnd( List<?> searchResults )
     {
-        Collections.reverse( searchResults );
-        for( Post post : ( ArrayList<Post> ) searchResults )
-        {
-            ( ( ArrayList<ExpandablePost> )results ).add( 0, new ExpandablePost( post, false ) );
-        }
+        ( ( List<Post> ) results ).addAll( ( List<Post> ) searchResults );
     }
 
     @Override
     protected void addToStart( List<?> searchResults )
     {
-        for( Post post : ( ArrayList<Post> ) searchResults )
-        {
-            ( ( ArrayList<ExpandablePost> )results ).add( new ExpandablePost( post, false ) );
-        }
-    }
-
-    @Override
-    public void onItemClick( AdapterView<?> parent, View view, int position, long id )
-    {
-        ExpandablePost ep = ( ExpandablePost ) parent.getItemAtPosition( position );
-        FacebookListRow facebookListRow = ( FacebookListRow ) view.getTag();
-        if ( ep.isExpanded() )
-        {
-            facebookListRow.collapseRow();
-            ep.setExpanded( false );
-        }
-        else
-        {
-            facebookListRow.expandRow( ep );
-            ep.setExpanded( true );
-        }
+        ( ( List<Post> ) results ).addAll( 0, ( List<Post> ) searchResults );
     }
 }

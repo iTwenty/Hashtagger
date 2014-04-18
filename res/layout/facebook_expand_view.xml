@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ViewAnimator
+        android:id="@+id/va_facebook_expand_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:measureAllChildren="false">
+
+        <net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookObjectView
+            android:id="@+id/facebook_object_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"/>
+
+        <net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookDetailView
+            android:id="@+id/facebook_detail_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"/>
+
+    </ViewAnimator>
+
+    <net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookButtons
+        android:id="@+id/facebook_buttons"
+        android:layout_below="@id/va_facebook_expand_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"/>
+
+</merge>

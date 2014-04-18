@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
+import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
@@ -73,6 +74,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         vaSitesView.addView( initViewLogin( inflater, savedInstanceState ), SitesView.LOGIN.getIndex() );
         vaSitesView.addView( initViewError( inflater, savedInstanceState ), SitesView.ERROR.getIndex() );
         sitesFooter = initSitesFooter( inflater );
+        activeView = SitesView.READY;
         sitesFooter.activeFooterView = SitesFooter.SitesFooterView.LOAD_OLDER;
         if ( null != savedInstanceState )
         {
@@ -162,6 +164,8 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             Toast.makeText( getActivity(), getResources().getString( getNotLoggedInToastTextId() ), Toast.LENGTH_LONG ).show();
             return;
         }
+        // We use the listview tag to keep track of selected position. On a new search, we clear this tag.
+        readyHolder.lvResultsList.setTag( null );
         sitesSearchHandler.beginSearch( SearchType.INITIAL, hashtag );
     }
 
@@ -395,6 +399,50 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         sitesListAdapter.notifyDataSetChanged();
         showView( SitesView.LOGIN );
         getActivity().invalidateOptionsMenu();
+    }
+
+    /*
+    *****************for List item click ************************
+    */
+
+    @Override
+    public void onItemClick( AdapterView<?> parent, View view, int position, long id )
+    {
+        // We use the tag of the listview to remember position that was last clicked.
+        Object data = parent.getItemAtPosition( position );
+        SitesListRow sitesListRow = ( SitesListRow ) view;
+        // If tag is null, no position has been expanded yet.
+        // Simply expand the view for currently selected position and set tag
+        if ( null == parent.getTag() )
+        {
+            sitesListRow.expandRow( data, true );
+            parent.setTag( position );
+        }
+        // If tag is not null, it means we have an already expanded a position...
+        else
+        {
+            int expandedPosition = ( Integer ) parent.getTag();
+            // If currently selected position is the same as previously expanded one,
+            // we need to collapse the view and set tag to null
+            if ( position == expandedPosition )
+            {
+                sitesListRow.collapseRow( true );
+                parent.setTag( null );
+            }
+            // Else the previously selected position is different from our current selected position
+            else
+            {
+                // If the last selected position is visible on screen, then collapse it first.
+                // If it's not visible, we don't do anything since adapter's getView method will take care of collapsing
+                if( expandedPosition >= parent.getFirstVisiblePosition() && expandedPosition <= parent.getLastVisiblePosition() )
+                {
+                    ( ( SitesListRow )parent.getChildAt( expandedPosition - parent.getFirstVisiblePosition() ) ).collapseRow( true );
+                }
+                // Then expand the current selected position and set the tag
+                sitesListRow.expandRow( data, true );
+                parent.setTag( position );
+            }
+        }
     }
 
     protected static class Ready

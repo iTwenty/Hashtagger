@@ -40,11 +40,8 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
 
         actionBar = getActionBar();
         actionBar.setNavigationMode( ActionBar.NAVIGATION_MODE_TABS );
-
-        for ( int i = 0; i < HashtaggerApp.SITES.size(); ++i )
-        {
-            actionBar.addTab( actionBar.newTab().setText( HashtaggerApp.SITES.get( i ) ).setTabListener( this ) );
-        }
+        actionBar.addTab( actionBar.newTab().setText( HashtaggerApp.SITES.get( 0 ) ).setIcon( getResources().getDrawable( R.drawable.twitter_logo_monochrome ) ).setTabListener( this ) );
+        actionBar.addTab( actionBar.newTab().setText( HashtaggerApp.SITES.get( 1 ) ).setIcon( getResources().getDrawable( R.drawable.facebook_logo_monochrome ) ).setTabListener( this ) );
 
         if ( null != getIntent() && getIntent().getAction().equals( Intent.ACTION_SEARCH ) )
             handleIntent( getIntent() );

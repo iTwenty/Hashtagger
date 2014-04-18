@@ -1,21 +1,16 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterUserHandler;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.ExpandableStatus;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import twitter4j.Status;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -40,14 +35,14 @@ public class TwitterFragment extends SitesFragment
     @Override
     protected SitesListAdapter initSitesListAdapter()
     {
-        TwitterListAdapter twitterListAdapter = new TwitterListAdapter( getActivity(), R.layout.fragment_twitter_list_row, ( ArrayList<ExpandableStatus> ) results );
+        TwitterListAdapter twitterListAdapter = new TwitterListAdapter( getActivity(), R.layout.fragment_twitter_list_row, results );
         return twitterListAdapter;
     }
 
     @Override
     protected List<?> initResultsList()
     {
-        List<ExpandableStatus> results = new ArrayList<ExpandableStatus>();
+        List<Status> results = new ArrayList<Status>();
         return results;
     }
 
@@ -96,23 +91,6 @@ public class TwitterFragment extends SitesFragment
     }
 
     @Override
-    public void onItemClick( AdapterView<?> parent, View view, int position, long id )
-    {
-        ExpandableStatus es = ( ExpandableStatus ) parent.getItemAtPosition( position );
-        TwitterListRow twitterListRow = ( TwitterListRow ) view.getTag();
-        if ( es.isExpanded() )
-        {
-            twitterListRow.collapseRow();
-            es.setExpanded( false );
-        }
-        else
-        {
-            twitterListRow.expandRow( es );
-            es.setExpanded( true );
-        }
-    }
-
-    @Override
     public void onDestroy()
     {
         sitesSearchHandler.unregisterReceiver();
@@ -122,19 +100,12 @@ public class TwitterFragment extends SitesFragment
     @Override
     protected void addToEnd( List<?> searchResults )
     {
-        for( Status status : ( ArrayList<Status> ) searchResults )
-        {
-            ( ( ArrayList<ExpandableStatus> ) results ).add( new ExpandableStatus( status, false ) );
-        }
+        ( ( List<Status> )results ).addAll( ( List<Status> ) searchResults );
     }
 
     @Override
     protected void addToStart( List<?> searchResults )
     {
-        Collections.reverse( searchResults );
-        for( Status status : ( ArrayList<Status> ) searchResults )
-        {
-            ( ( ArrayList<ExpandableStatus> ) results ).add( 0, new ExpandableStatus( status, false ) );
-        }
+        ( ( List<Status> )results ).addAll( 0,  ( List<Status> )searchResults );
     }
 }

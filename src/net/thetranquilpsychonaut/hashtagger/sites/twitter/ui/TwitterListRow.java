@@ -3,14 +3,11 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ViewAnimator;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.ExpandableStatus;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 import twitter4j.Status;
 
@@ -19,12 +16,11 @@ import twitter4j.Status;
  */
 public class TwitterListRow extends SitesListRow
 {
-    ImageView    imgvProfileImage;
-    TextView     tvScreenName;
-    TextView     tvCreatedAt;
-    TextView     tvTweetText;
-    TextView     tvExpand;
-    ViewAnimator vaExpandedView;
+    ImageView         imgvProfileImage;
+    TextView          tvScreenName;
+    TextView          tvCreatedAt;
+    TextView          tvTweetText;
+    TwitterExpandView twitterExpandView;
 
     public TwitterListRow( Context context )
     {
@@ -49,59 +45,40 @@ public class TwitterListRow extends SitesListRow
         tvScreenName = ( TextView ) findViewById( R.id.tv_screen_name );
         tvCreatedAt = ( TextView ) findViewById( R.id.tv_created_at );
         tvTweetText = ( TextView ) findViewById( R.id.tv_tweet_text );
-        vaExpandedView = ( ViewAnimator ) findViewById( R.id.va_expanded_view );
-        tvExpand = ( TextView ) findViewById( R.id.tv_expand );
-        vaExpandedView.setVisibility( View.GONE );
+        twitterExpandView = ( TwitterExpandView ) findViewById( R.id.twitter_expand_view );
+        twitterExpandView.setVisibility( GONE );
     }
 
     @Override
-    public void expandRow( final Object data )
+    public void expandRow( final Object data, boolean animate )
     {
-        ExpandableStatus es = ( ExpandableStatus ) data;
-        if ( !es.isExpanded() )
-            return;
-        Status status = es.getStatus();
-        vaExpandedView.removeAllViews();
-        vaExpandedView.setVisibility( View.VISIBLE );
-        if ( status.getMediaEntities().length > 0 )
-        {
-            TwitterMediaEntity twitterMediaEntity = new TwitterMediaEntity( getContext() );
-            vaExpandedView.addView( twitterMediaEntity );
-            twitterMediaEntity.showMediaFromStatus( status );
-        }
-        else if ( status.getURLEntities().length > 0 )
-        {
-            TwitterLinkEntity twitterLinkEntity = new TwitterLinkEntity( getContext() );
-            vaExpandedView.addView( twitterLinkEntity );
-            twitterLinkEntity.setLinkFromStatus( status );
-        }
+        super.expandRow( data, animate );
+        final Status status = ( Status ) data;
+        twitterExpandView.showStatus( status );
+        twitterExpandView.setVisibility( VISIBLE );
     }
 
     @Override
-    public void showRow( final Object data )
+    public void updateExpandedRow( Object data )
     {
-        ExpandableStatus es = ( ExpandableStatus ) data;
-        Status status = es.getStatus();
+        final Status status = ( Status ) data;
+        twitterExpandView.showStatus( status );
+    }
+
+    @Override
+    public void updateRow( final Object data )
+    {
+        final Status status = ( Status ) data;
         UrlImageViewHelper.setUrlDrawable( imgvProfileImage, status.getUser().getProfileImageURL(), R.drawable.drawable_image_loading );
         tvScreenName.setText( "@" + status.getUser().getScreenName() );
         tvCreatedAt.setText( Helper.getFuzzyDateTime( status.getCreatedAt().getTime() ) );
         tvTweetText.setText( status.isRetweet() ? status.getRetweetedStatus().getText() : status.getText() );
-        if ( status.getMediaEntities().length > 0 || status.getURLEntities().length > 0 )
-        {
-            tvExpand.setVisibility( VISIBLE );
-        }
-        else
-        {
-            tvExpand.setVisibility( GONE );
-        }
-        if ( es.isExpanded() )
-            expandRow( data );
     }
 
     @Override
-    public void collapseRow()
+    public void collapseRow( boolean animate )
     {
-        vaExpandedView.removeAllViews();
-        vaExpandedView.setVisibility( GONE );
+        super.collapseRow( animate );
+        twitterExpandView.setVisibility( GONE );
     }
 }

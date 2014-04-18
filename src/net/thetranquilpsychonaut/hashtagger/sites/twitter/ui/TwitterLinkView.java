@@ -7,41 +7,52 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
+import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
 import twitter4j.Status;
 
 /**
  * Created by itwenty on 4/15/14.
  */
-public class TwitterLinkEntity extends RelativeLayout
+public class TwitterLinkView extends RelativeLayout
 {
     ImageView imgvFavicon;
     TextView  tvDisplayUrl;
     TextView  tvExpandedUrl;
 
-    public TwitterLinkEntity( Context context )
+    public TwitterLinkView( Context context )
     {
         this( context, null, 0 );
     }
 
-    public TwitterLinkEntity( Context context, AttributeSet attrs )
+    public TwitterLinkView( Context context, AttributeSet attrs )
     {
         this( context, attrs, 0 );
     }
 
-    public TwitterLinkEntity( Context context, AttributeSet attrs, int defStyle )
+    public TwitterLinkView( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
-        LayoutInflater.from( context ).inflate( R.layout.twitter_entity_link, this );
+        LayoutInflater.from( context ).inflate( R.layout.twitter_link_view, this );
         imgvFavicon = ( ImageView ) findViewById( R.id.imgv_favicon );
         tvDisplayUrl = ( TextView ) findViewById( R.id.tv_display_url );
         tvExpandedUrl = ( TextView ) findViewById( R.id.tv_expanded_url );
     }
 
-    public void setLinkFromStatus( Status status )
+    public void showLinkFromStatus( Status status )
     {
-        UrlImageViewHelper.setUrlDrawable( imgvFavicon, "http://g.etfv.co" + status.getURLEntities()[0].getDisplayURL() );
+        Helper.debug( status.getURLEntities()[0].getDisplayURL() );
+        Helper.debug( status.getURLEntities()[0].getExpandedURL() );
+        Helper.debug( status.getURLEntities()[0].getURL() );
+        UrlImageViewHelper.setUrlDrawable( imgvFavicon, "http://g.etfv.co/http://" + status.getURLEntities()[0].getDisplayURL() );
         tvDisplayUrl.setText( status.getURLEntities()[0].getDisplayURL() );
         tvExpandedUrl.setText( status.getURLEntities()[0].getExpandedURL() );
+    }
+
+    public void clearView()
+    {
+        imgvFavicon.setImageDrawable( null );
+        tvDisplayUrl.setText( "" );
+        tvExpandedUrl.setText( "" );
     }
 }

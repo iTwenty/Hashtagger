@@ -41,21 +41,20 @@
         android:layout_below="@id/imgv_profile_image"
         android:padding="@dimen/content_padding" />
 
-    <ViewAnimator
-        android:layout_below="@id/tv_tweet_text"
-        android:id="@+id/va_expanded_view"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-
-    </ViewAnimator>
 
     <TextView
         android:id="@+id/tv_expand"
         android:text="@string/str_expand"
-        android:layout_below="@id/va_expanded_view"
+        android:layout_below="@id/tv_tweet_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/holo_green_dark"
         android:padding="@dimen/layout_padding" />
+
+    <net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterExpandView
+        android:id="@+id/twitter_expand_view"
+        android:layout_below="@id/tv_expand"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"/>
 
 </RelativeLayout>

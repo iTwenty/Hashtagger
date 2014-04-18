@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+
 import java.util.List;
 
 /**
@@ -24,16 +25,19 @@ public abstract class SitesListAdapter extends ArrayAdapter
     {
         SitesListRow sitesListRow = ( SitesListRow ) convertView;
         Object data = getItem( position );
-        if( sitesListRow == null )
+        if ( sitesListRow == null )
         {
             sitesListRow = initSitesListRow( context );
-            sitesListRow.setTag( sitesListRow );
         }
-        else
+        sitesListRow.updateRow( data );
+        if( null != parent.getTag() )
         {
-            sitesListRow = ( SitesListRow ) sitesListRow.getTag();
+            int expandedPosition = ( Integer ) parent.getTag();
+            if ( position == expandedPosition )
+                sitesListRow.expandRow( data, true );
+            else
+                sitesListRow.collapseRow( false );
         }
-        sitesListRow.showRow( data );
         return sitesListRow;
     }
 
