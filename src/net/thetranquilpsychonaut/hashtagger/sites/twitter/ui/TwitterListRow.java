@@ -16,11 +16,11 @@ import twitter4j.Status;
  */
 public class TwitterListRow extends SitesListRow
 {
-    ImageView         imgvProfileImage;
-    TextView          tvScreenName;
-    TextView          tvCreatedAt;
-    TextView          tvTweetText;
-    TwitterExpandView twitterExpandView;
+    private ImageView         imgvProfileImage;
+    private TextView          tvScreenName;
+    private TextView          tvCreatedAt;
+    private TextView          tvTweetText;
+    private TwitterExpandView twitterExpandView;
 
     public TwitterListRow( Context context )
     {

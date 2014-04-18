@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="@dimen/layout_padding">
+    android:padding="@dimen/layout_padding"
+    android:animateLayoutChanges="true">
 
     <ImageView
         android:id="@+id/imgv_profile_image"
