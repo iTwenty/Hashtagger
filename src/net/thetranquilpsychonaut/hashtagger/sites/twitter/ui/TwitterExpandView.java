@@ -50,7 +50,7 @@ public class TwitterExpandView extends RelativeLayout
             vaTwitterExpandView.setDisplayedChild( 1 );
             twitterMediaView.showMediaFromStatus( status );
         }
-        else if( hasLink )
+        else if ( hasLink )
         {
             vaTwitterExpandView.setVisibility( View.VISIBLE );
             vaTwitterExpandView.setDisplayedChild( 0 );

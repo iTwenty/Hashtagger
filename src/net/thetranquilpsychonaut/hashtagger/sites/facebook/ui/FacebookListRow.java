@@ -1,17 +1,12 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ViewAnimator;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import facebook4j.Post;
-import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
@@ -21,10 +16,10 @@ import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
  */
 public class FacebookListRow extends SitesListRow
 {
-    private ImageView    imgvProfileImage;
-    private TextView     tvUserNameOrStory;
-    private TextView     tvCreatedTime;
-    private TextView     tvMessage;
+    private ImageView          imgvProfileImage;
+    private TextView           tvUserNameOrStory;
+    private TextView           tvCreatedTime;
+    private TextView           tvMessage;
     private FacebookExpandView facebookExpandView;
 
     protected FacebookListRow( Context context )

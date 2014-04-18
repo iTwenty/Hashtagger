@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:text="Like"
         android:focusable="false"
-        style="?android:attr/borderlessButtonStyle"/>
+        style="?android:attr/borderlessButtonStyle" />
 
     <Button
         android:id="@+id/btn_comment"
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:text="Comment"
         android:focusable="false"
-        style="?android:attr/borderlessButtonStyle"/>
+        style="?android:attr/borderlessButtonStyle" />
 
     <Button
         android:id="@+id/btn_share"
@@ -32,6 +32,6 @@
         android:layout_height="wrap_content"
         android:text="Share"
         android:focusable="false"
-        style="?android:attr/borderlessButtonStyle"/>
+        style="?android:attr/borderlessButtonStyle" />
 
 </LinearLayout>

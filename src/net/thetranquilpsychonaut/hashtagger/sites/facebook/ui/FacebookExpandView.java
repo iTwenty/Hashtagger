@@ -49,7 +49,7 @@ public class FacebookExpandView extends RelativeLayout
             vaFacebookExpandView.setDisplayedChild( 0 );
             facebookObjectView.showObjectFromPost( post );
         }
-        else if(  hasDetails )
+        else if ( hasDetails )
         {
             vaFacebookExpandView.setVisibility( VISIBLE );
             vaFacebookExpandView.setDisplayedChild( 1 );

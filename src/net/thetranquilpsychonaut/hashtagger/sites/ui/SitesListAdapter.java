@@ -30,7 +30,7 @@ public abstract class SitesListAdapter extends ArrayAdapter
             sitesListRow = initSitesListRow( context );
         }
         sitesListRow.updateRow( data );
-        if( null != parent.getTag() )
+        if ( null != parent.getTag() )
         {
             int expandedPosition = ( Integer ) parent.getTag();
             if ( position == expandedPosition )

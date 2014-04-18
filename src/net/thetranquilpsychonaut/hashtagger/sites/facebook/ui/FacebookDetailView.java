@@ -10,17 +10,15 @@ import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.R;
 
-import java.net.URL;
-
 /**
  * Created by itwenty on 4/18/14.
  */
 public class FacebookDetailView extends RelativeLayout
 {
     private ImageView imgvPicture;
-    private TextView tvName;
-    private TextView tvDescription;
-    private TextView tvCaption;
+    private TextView  tvName;
+    private TextView  tvDescription;
+    private TextView  tvCaption;
 
     public FacebookDetailView( Context context )
     {

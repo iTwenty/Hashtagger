@@ -100,12 +100,12 @@ public class TwitterFragment extends SitesFragment
     @Override
     protected void addToEnd( List<?> searchResults )
     {
-        ( ( List<Status> )results ).addAll( ( List<Status> ) searchResults );
+        ( ( List<Status> ) results ).addAll( ( List<Status> ) searchResults );
     }
 
     @Override
     protected void addToStart( List<?> searchResults )
     {
-        ( ( List<Status> )results ).addAll( 0,  ( List<Status> )searchResults );
+        ( ( List<Status> ) results ).addAll( 0, ( List<Status> ) searchResults );
     }
 }

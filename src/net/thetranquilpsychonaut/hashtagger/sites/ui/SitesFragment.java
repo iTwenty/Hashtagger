@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
@@ -434,9 +433,9 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             {
                 // If the last selected position is visible on screen, then collapse it first.
                 // If it's not visible, we don't do anything since adapter's getView method will take care of collapsing
-                if( expandedPosition >= parent.getFirstVisiblePosition() && expandedPosition <= parent.getLastVisiblePosition() )
+                if ( expandedPosition >= parent.getFirstVisiblePosition() && expandedPosition <= parent.getLastVisiblePosition() )
                 {
-                    ( ( SitesListRow )parent.getChildAt( expandedPosition - parent.getFirstVisiblePosition() ) ).collapseRow( true );
+                    ( ( SitesListRow ) parent.getChildAt( expandedPosition - parent.getFirstVisiblePosition() ) ).collapseRow( true );
                 }
                 // Then expand the current selected position and set the tag
                 sitesListRow.expandRow( data, true );

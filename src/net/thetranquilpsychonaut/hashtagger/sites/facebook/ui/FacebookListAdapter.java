@@ -4,7 +4,6 @@ import android.content.Context;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

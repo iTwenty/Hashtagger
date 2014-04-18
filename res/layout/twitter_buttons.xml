@@ -15,7 +15,7 @@
         android:text="Reply"
         android:drawableLeft="@drawable/twitter_reply"
         android:focusable="false"
-        style="?android:attr/borderlessButtonStyle"/>
+        style="?android:attr/borderlessButtonStyle" />
 
     <Button
         android:id="@+id/btn_retweet"
@@ -36,6 +36,6 @@
         android:text="Favorite"
         android:drawableLeft="@drawable/twitter_favorite"
         android:focusable="false"
-        style="?android:attr/borderlessButtonStyle"/>
+        style="?android:attr/borderlessButtonStyle" />
 
 </LinearLayout>

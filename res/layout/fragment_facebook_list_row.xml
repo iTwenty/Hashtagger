@@ -54,6 +54,6 @@
         android:id="@+id/facebook_expand_view"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_message"/>
+        android:layout_below="@id/tv_message" />
 
 </RelativeLayout>
