@@ -5,12 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="@dimen/layout_padding"
-    android:animateLayoutChanges="true">
+    android:padding="@dimen/layout_padding">
 
     <ImageView
         android:id="@+id/imgv_profile_image"
-        tools:src="@drawable/twitter_logo_blue"
+        android:background="@drawable/drawable_image_loading"
         android:layout_height="50dp"
         android:layout_width="50dp"
         android:scaleType="centerCrop"
@@ -53,8 +52,8 @@
 
     <net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookExpandView
         android:id="@+id/facebook_expand_view"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_below="@id/tv_message" />
 
 </RelativeLayout>

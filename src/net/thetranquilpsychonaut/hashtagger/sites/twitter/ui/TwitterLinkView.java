@@ -7,7 +7,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
-import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
 import twitter4j.Status;
 
@@ -41,9 +40,6 @@ public class TwitterLinkView extends RelativeLayout
 
     public void showLinkFromStatus( Status status )
     {
-        Helper.debug( status.getURLEntities()[0].getDisplayURL() );
-        Helper.debug( status.getURLEntities()[0].getExpandedURL() );
-        Helper.debug( status.getURLEntities()[0].getURL() );
         UrlImageViewHelper.setUrlDrawable( imgvFavicon, "http://g.etfv.co/http://" + status.getURLEntities()[0].getDisplayURL() );
         tvDisplayUrl.setText( status.getURLEntities()[0].getDisplayURL() );
         tvExpandedUrl.setText( status.getURLEntities()[0].getExpandedURL() );

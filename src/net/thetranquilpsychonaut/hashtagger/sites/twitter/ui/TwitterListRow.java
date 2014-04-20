@@ -35,34 +35,20 @@ public class TwitterListRow extends SitesListRow
     public TwitterListRow( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
-    }
-
-    @Override
-    protected void init( Context context )
-    {
         LayoutInflater.from( context ).inflate( R.layout.fragment_twitter_list_row, this );
         imgvProfileImage = ( ImageView ) findViewById( R.id.imgv_profile_image );
         tvScreenName = ( TextView ) findViewById( R.id.tv_screen_name );
         tvCreatedAt = ( TextView ) findViewById( R.id.tv_created_at );
         tvTweetText = ( TextView ) findViewById( R.id.tv_tweet_text );
         twitterExpandView = ( TwitterExpandView ) findViewById( R.id.twitter_expand_view );
-        twitterExpandView.setVisibility( GONE );
     }
 
     @Override
-    public void expandRow( final Object data, boolean animate )
+    public void expandRow( final Object data, final boolean animate )
     {
         super.expandRow( data, animate );
         final Status status = ( Status ) data;
-        twitterExpandView.showStatus( status );
-        twitterExpandView.setVisibility( VISIBLE );
-    }
-
-    @Override
-    public void updateExpandedRow( Object data )
-    {
-        final Status status = ( Status ) data;
-        twitterExpandView.showStatus( status );
+        twitterExpandView.expandStatus( status, animate );
     }
 
     @Override
@@ -79,6 +65,6 @@ public class TwitterListRow extends SitesListRow
     public void collapseRow( boolean animate )
     {
         super.collapseRow( animate );
-        twitterExpandView.setVisibility( GONE );
+        twitterExpandView.collapseStatus( animate );
     }
 }

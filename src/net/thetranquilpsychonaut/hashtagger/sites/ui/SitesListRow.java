@@ -25,10 +25,7 @@ public abstract class SitesListRow extends RelativeLayout
     {
         super( context, attrs, defStyle );
         this.isExpanded = false;
-        init( context );
     }
-
-    protected abstract void init( Context context );
 
     public void expandRow( final Object data, boolean animate )
     {
@@ -41,8 +38,6 @@ public abstract class SitesListRow extends RelativeLayout
     {
         isExpanded = false;
     }
-
-    public abstract void updateExpandedRow( final Object data );
 
     public boolean isExpanded()
     {

@@ -35,20 +35,13 @@ public class FacebookListRow extends SitesListRow
     protected FacebookListRow( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
-    }
-
-    @Override
-    protected void init( Context context )
-    {
         LayoutInflater.from( context ).inflate( R.layout.fragment_facebook_list_row, this );
         imgvProfileImage = ( ImageView ) findViewById( R.id.imgv_profile_image );
         tvUserNameOrStory = ( TextView ) findViewById( R.id.tv_user_name_or_story );
         tvCreatedTime = ( TextView ) findViewById( R.id.tv_created_time );
         tvMessage = ( TextView ) findViewById( R.id.tv_message );
         facebookExpandView = ( FacebookExpandView ) findViewById( R.id.facebook_expand_view );
-        facebookExpandView.setVisibility( GONE );
     }
-
 
     @Override
     public void updateRow( final Object data )
@@ -65,21 +58,13 @@ public class FacebookListRow extends SitesListRow
     {
         super.expandRow( data, animate );
         final Post post = ( Post ) data;
-        facebookExpandView.showPost( post );
-        facebookExpandView.setVisibility( VISIBLE );
+        facebookExpandView.expandPost( post, animate );
     }
 
     @Override
     public void collapseRow( boolean animate )
     {
         super.collapseRow( animate );
-        facebookExpandView.setVisibility( GONE );
-    }
-
-    @Override
-    public void updateExpandedRow( Object data )
-    {
-        final Post post = ( Post ) data;
-        facebookExpandView.showPost( post );
+        facebookExpandView.collapsePost( animate );
     }
 }

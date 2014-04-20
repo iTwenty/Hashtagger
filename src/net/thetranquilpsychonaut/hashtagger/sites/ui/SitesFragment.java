@@ -446,11 +446,8 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     protected static class Ready
     {
-        public Ready()
-        {
-        }
+        public Ready() { }
 
-        ;
         public ListView           lvResultsList;
         public TextView           lvResultsListEmpty;
         public SwipeRefreshLayout srlReady;
@@ -458,29 +455,21 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     protected static class Loading
     {
-        public Loading()
-        {
-        }
+        public Loading() { }
 
-        ;
         public ProgressBar pgbrLoadingResults;
     }
 
     protected static class Login
     {
-        public Login()
-        {
-        }
+        public Login() { }
 
-        ;
         public Button btnLogin;
     }
 
     protected static class Error
     {
-        public Error()
-        {
-        }
+        public Error() { }
 
         public TextView tvError;
     }

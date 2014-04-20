@@ -10,7 +10,7 @@
         android:id="@+id/imgv_favicon"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:adjustViewBounds="true" />
+        android:scaleType="centerCrop" />
 
     <TextView
         tools:text="21st Century Schizoid Man | Google Search"

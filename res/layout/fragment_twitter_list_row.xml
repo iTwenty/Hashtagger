@@ -3,10 +3,9 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/layout_padding"
-    android:animateLayoutChanges="true">
+    android:padding="@dimen/layout_padding">
 
     <ImageView
         tools:src="@drawable/twitter_logo_blue"
@@ -55,7 +54,7 @@
     <net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterExpandView
         android:id="@+id/twitter_expand_view"
         android:layout_below="@id/tv_expand"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
 
 </RelativeLayout>

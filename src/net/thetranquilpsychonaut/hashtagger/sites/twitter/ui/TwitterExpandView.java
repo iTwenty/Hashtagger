@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.ViewAnimator;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.sites.components.ViewExpander;
 import twitter4j.Status;
 
 /**
@@ -14,10 +15,11 @@ import twitter4j.Status;
  */
 public class TwitterExpandView extends RelativeLayout
 {
-    ViewAnimator     vaTwitterExpandView;
-    TwitterLinkView  twitterLinkView;
-    TwitterMediaView twitterMediaView;
-    TwitterButtons   twitterButtons;
+    private ViewAnimator     vaTwitterExpandView;
+    private TwitterLinkView  twitterLinkView;
+    private TwitterMediaView twitterMediaView;
+    private TwitterButtons   twitterButtons;
+    private ViewExpander     expander;
 
     public TwitterExpandView( Context context )
     {
@@ -38,9 +40,11 @@ public class TwitterExpandView extends RelativeLayout
         twitterMediaView = ( TwitterMediaView ) findViewById( R.id.twitter_media_view );
         twitterButtons = ( TwitterButtons ) findViewById( R.id.twitter_buttons );
         vaTwitterExpandView.setVisibility( GONE );
+        expander = new ViewExpander( this );
     }
 
-    public void showStatus( Status status )
+
+    public void expandStatus( Status status, boolean animate )
     {
         boolean hasMedia = status.getMediaEntities().length > 0;
         boolean hasLink = status.getURLEntities().length > 0;
@@ -61,5 +65,14 @@ public class TwitterExpandView extends RelativeLayout
             vaTwitterExpandView.setVisibility( GONE );
         }
         twitterButtons.setVisibility( VISIBLE );
+        int widthMeasureSpec = MeasureSpec.makeMeasureSpec( LayoutParams.MATCH_PARENT, MeasureSpec.EXACTLY );
+        int heightMeasureSpec = MeasureSpec.makeMeasureSpec( LayoutParams.WRAP_CONTENT, MeasureSpec.EXACTLY );
+        measure( widthMeasureSpec, heightMeasureSpec );
+        expander.expandView( getMeasuredHeight(), animate );
+    }
+
+    public void collapseStatus( boolean animate )
+    {
+        expander.collapseView( animate );
     }
 }

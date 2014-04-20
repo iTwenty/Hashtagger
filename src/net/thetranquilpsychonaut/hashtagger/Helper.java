@@ -2,6 +2,7 @@ package net.thetranquilpsychonaut.hashtagger;
 
 import android.text.format.DateUtils;
 import android.text.util.Linkify;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Patterns;
 import android.widget.TextView;
@@ -64,5 +65,17 @@ public class Helper
     public static String getFacebookPictureUrl( String userId )
     {
         return String.format( HashtaggerApp.FACEBOOK_PROFILE_PICTURE_URL, userId );
+    }
+
+    public static int convertPxToDp( int px )
+    {
+        DisplayMetrics displayMetrics = HashtaggerApp.app.getResources().getDisplayMetrics();
+        return ( int ) ( ( px / displayMetrics.density ) + 0.5 );
+    }
+
+    public static int convertDpToPx( int dp )
+    {
+        DisplayMetrics displayMetrics = HashtaggerApp.app.getResources().getDisplayMetrics();
+        return ( int ) ( ( dp * displayMetrics.density ) + 0.5 );
     }
 }
