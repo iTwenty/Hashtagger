@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import facebook4j.Post;
+import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 
 /**
@@ -35,6 +36,6 @@ public class FacebookObjectView extends RelativeLayout
 
     public void showObjectFromPost( Post post )
     {
-        UrlImageViewHelper.setUrlDrawable( imgvPicture, post.getPicture().toString(), getResources().getDrawable( R.drawable.drawable_image_loading ) );
+        UrlImageViewHelper.setUrlDrawable( imgvPicture, post.getPicture().toString(), getResources().getDrawable( R.drawable.drawable_image_loading ), HashtaggerApp.CACHE_DURATION_MS );
     }
 }

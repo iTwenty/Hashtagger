@@ -36,6 +36,7 @@ public class HashtaggerApp extends Application
     public static final String            FACEBOOK_SEARCH_ACTION       = NAMESPACE + "facebook_search_action";
     public static final String            FACEBOOK_PROFILE_PICTURE_URL = "http://graph.facebook.com/%s/picture?type=square";
     public static final int               FACEBOOK_LOGIN_REQUEST_CODE  = 2;
+    public static final int               CACHE_DURATION_MS            = 1000 * 60 * 60; // One hour
 
     @Override
     public void onCreate()

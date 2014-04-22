@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
+import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import twitter4j.Status;
 
@@ -35,7 +36,7 @@ public class TwitterMediaView extends RelativeLayout
 
     public void showMediaFromStatus( Status status )
     {
-        UrlImageViewHelper.setUrlDrawable( imgvMedia, status.getMediaEntities()[0].getMediaURL(), getResources().getDrawable( R.drawable.drawable_image_loading ) );
+        UrlImageViewHelper.setUrlDrawable( imgvMedia, status.getMediaEntities()[0].getMediaURL(), getResources().getDrawable( R.drawable.drawable_image_loading ), HashtaggerApp.CACHE_DURATION_MS );
     }
 
     public void clearView()

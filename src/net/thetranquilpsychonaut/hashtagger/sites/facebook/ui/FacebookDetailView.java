@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import facebook4j.Post;
+import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 
 /**
@@ -42,7 +43,7 @@ public class FacebookDetailView extends RelativeLayout
 
     public void showDetailsFromPost( Post post )
     {
-        UrlImageViewHelper.setUrlDrawable( imgvPicture, post.getPicture().toString(), getResources().getDrawable( R.drawable.drawable_image_loading ) );
+        UrlImageViewHelper.setUrlDrawable( imgvPicture, post.getPicture().toString(), getResources().getDrawable( R.drawable.drawable_image_loading ), HashtaggerApp.CACHE_DURATION_MS );
         tvName.setText( post.getName() );
         tvDescription.setText( post.getDescription() );
         tvCaption.setText( post.getCaption() );

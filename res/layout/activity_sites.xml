@@ -1,14 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
+<android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rl_network"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:id="@+id/dl_nav_drawer"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vp_sites_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-</RelativeLayout>
+    <RelativeLayout
+        android:layout_width="240dp"
+        android:layout_gravity="start"
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
+
+        <ListView
+            android:id="@+id/lv_saved_hashtags"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent" />
+
+        <TextView
+            android:id="@+id/tv_saved_hashtags_empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/str_no_saved_hashtags" />
+
+    </RelativeLayout>
+
+</android.support.v4.widget.DrawerLayout>
