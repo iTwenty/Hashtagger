@@ -9,16 +9,6 @@
         android:id="@+id/tv_saved_hashtag"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_toLeftOf="@+id/imgb_delete_saved_hashtag"
         android:gravity="center_vertical" />
-
-    <ImageButton
-        android:id="@id/imgb_delete_saved_hashtag"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:src="@android:drawable/ic_delete"
-        android:focusable="false"
-        style="?android:attr/borderlessButtonStyle" />
 
 </RelativeLayout>

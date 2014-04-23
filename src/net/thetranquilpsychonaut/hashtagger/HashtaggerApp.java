@@ -16,6 +16,7 @@ public class HashtaggerApp extends Application
 
     public static final boolean DEBUG = true;
 
+    public static final String            PACKAGE_NAMESPACE            = "net.thetranquilpsychonaut.hashtagger";
     public static final String            NAMESPACE                    = "hashtagger:";
     public static final ArrayList<String> SITES                        = new ArrayList<String>();
     public static final String            TWITTER_OAUTH_VERIFIER_KEY   = "oauth_verifier";

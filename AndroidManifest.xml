@@ -60,5 +60,11 @@
             android:authorities="hashtagger:HashtagSuggestionsProvider"
             android:name=".HashtagSuggestionsProvider" />
 
+        <provider
+            android:authorities="net.thetranquilpsychonaut.hashtagger.saved_hashtags"
+            android:name=".savedhashtags.SavedHashtagsProvider"
+            android:exported="false"
+            android:label="SavedHashtagsProvider" />
+
     </application>
 </manifest>

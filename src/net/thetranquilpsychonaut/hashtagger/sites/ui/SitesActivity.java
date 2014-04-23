@@ -3,38 +3,47 @@ package net.thetranquilpsychonaut.hashtagger.sites.ui;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.app.SearchManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
-import android.widget.SearchView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import net.thetranquilpsychonaut.hashtagger.HashtagSuggestionsProvider;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
+import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.sites.components.SavedHashtagsHandler;
+import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsDBContract;
+import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsDBHelper;
+import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsProviderContract;
 
-import java.io.IOException;
 import java.util.List;
 
-public class SitesActivity extends FragmentActivity implements ActionBar.TabListener, ViewPager.OnPageChangeListener
+public class SitesActivity extends FragmentActivity implements ActionBar.TabListener, ViewPager.OnPageChangeListener, LoaderManager.LoaderCallbacks<Cursor>
 {
-    ActionBar            actionBar;
-    ViewPager            vpSitesPager;
-    ListView             lvSavedHashtags;
-    TextView             tvSavedHashtagsEmpty;
-    SitesAdapter         vpSitesPagerAdapter;
-    SearchView           svHashtag;
-    String               hashtag;
-    SavedHashtagsHandler savedHashtagsHandler;
-    SavedHashtagsAdapter savedHashtagsAdapter;
+    private static final int SAVED_HASHTAG_LOADER = 0;
+
+    ActionBar             actionBar;
+    ViewPager             vpSitesPager;
+    ListView              lvSavedHashtags;
+    TextView              tvSavedHashtagsEmpty;
+    SitesAdapter          vpSitesPagerAdapter;
+    SearchView            svHashtag;
+    String                hashtag;
+    SimpleCursorAdapter   savedHashtagAdapter;
+    SavedHashtagsDBHelper savedHashtagsDBHelper;
 
     @Override
     public void onCreate( Bundle savedInstanceState )
@@ -51,16 +60,14 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
         lvSavedHashtags = ( ListView ) findViewById( R.id.lv_saved_hashtags );
         tvSavedHashtagsEmpty = ( TextView ) findViewById( R.id.tv_saved_hashtags_empty );
         lvSavedHashtags.setEmptyView( tvSavedHashtagsEmpty );
-        try
-        {
-            savedHashtagsHandler = new SavedHashtagsHandler();
-            savedHashtagsAdapter = new SavedHashtagsAdapter( this, R.layout.saved_hashtags_list_row, savedHashtagsHandler.getSavedHashtags() );
-            lvSavedHashtags.setAdapter( savedHashtagsAdapter );
-        }
-        catch ( IOException e )
-        {
-            tvSavedHashtagsEmpty.setText( "Could not load saved hashtags." );
-        }
+
+        savedHashtagsDBHelper = new SavedHashtagsDBHelper( this );
+        getSupportLoaderManager().initLoader( SAVED_HASHTAG_LOADER, null, this );
+
+        String[] from = new String[]{ SavedHashtagsDBContract.SavedHashtags.COLUMN_HASHTAG };
+        int[] to = new int[]{ R.id.tv_saved_hashtag };
+        savedHashtagAdapter = new SimpleCursorAdapter( this, R.layout.saved_hashtags_list_row, null, from, to, 0 );
+        lvSavedHashtags.setAdapter( savedHashtagAdapter );
 
         actionBar = getActionBar();
         actionBar.setNavigationMode( ActionBar.NAVIGATION_MODE_TABS );
@@ -98,24 +105,12 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
 
     public void doSaveHashtag( MenuItem item )
     {
-        if ( null == savedHashtagsHandler )
-        {
-            Toast.makeText( this, "Failed to save hashtag " + this.hashtag, Toast.LENGTH_LONG );
-            return;
-        }
         if ( null == this.hashtag || "".equals( this.hashtag ) )
             return;
-        try
-        {
-            savedHashtagsHandler.saveHashtag( this.hashtag );
-            Toast.makeText( this, "Hashtag " + this.hashtag + " saved.", Toast.LENGTH_LONG );
-        }
-        catch ( IOException e )
-        {
-            Toast.makeText( this, "Failed to save hashtag " + this.hashtag, Toast.LENGTH_LONG );
-            return;
-        }
-        savedHashtagsAdapter.notifyDataSetChanged();
+        ContentValues values = new ContentValues();
+        values.put( SavedHashtagsDBContract.SavedHashtags.COLUMN_HASHTAG, this.hashtag );
+        Uri result = getContentResolver().insert( SavedHashtagsProviderContract.SavedHashtags.CONTENT_URI, values );
+        Helper.debug( result.toString() );
     }
 
     @Override
@@ -208,5 +203,39 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
     @Override
     public void onPageScrollStateChanged( int i )
     {
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader( int loaderId, Bundle bundle )
+    {
+        switch ( loaderId )
+        {
+            case SAVED_HASHTAG_LOADER:
+                String[] projection = new String[]{
+                    SavedHashtagsProviderContract.SavedHashtags._ID,
+                    SavedHashtagsProviderContract.SavedHashtags.COLUMN_HASHTAG };
+                Uri savedHashtagsUri = SavedHashtagsProviderContract.SavedHashtags.CONTENT_URI;
+                return new CursorLoader(
+                    this,
+                    savedHashtagsUri,
+                    projection,
+                    null,
+                    null,
+                    null );
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public void onLoadFinished( Loader<Cursor> cursorLoader, Cursor cursor )
+    {
+        savedHashtagAdapter.swapCursor( cursor );
+    }
+
+    @Override
+    public void onLoaderReset( Loader<Cursor> cursorLoader )
+    {
+        savedHashtagAdapter.swapCursor( null );
     }
 }
