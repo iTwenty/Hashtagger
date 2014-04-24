@@ -1,6 +1,5 @@
 package net.thetranquilpsychonaut.hashtagger.sites.components;
 
-import android.app.IntentService;
 import android.content.Intent;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
@@ -8,7 +7,7 @@ import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
 /**
  * Created by itwenty on 4/2/14.
  */
-public abstract class SitesService extends IntentService implements SearchActionName, LoginActionName
+public abstract class SitesService extends MyIntentService implements SearchActionName, LoginActionName
 {
     private static final String SITES_SERVICE_NAME = HashtaggerApp.NAMESPACE + "sites_service_name";
 

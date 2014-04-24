@@ -18,8 +18,10 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.*;
 import net.thetranquilpsychonaut.hashtagger.HashtagSuggestionsProvider;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
@@ -31,11 +33,12 @@ import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsProviderC
 
 import java.util.List;
 
-public class SitesActivity extends FragmentActivity implements ActionBar.TabListener, ViewPager.OnPageChangeListener, LoaderManager.LoaderCallbacks<Cursor>
+public class SitesActivity extends FragmentActivity implements ActionBar.TabListener, ViewPager.OnPageChangeListener, LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener
 {
     private static final int SAVED_HASHTAG_LOADER = 0;
 
     ActionBar             actionBar;
+    DrawerLayout          dlNavDrawer;
     ViewPager             vpSitesPager;
     ListView              lvSavedHashtags;
     TextView              tvSavedHashtagsEmpty;
@@ -50,6 +53,7 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
     {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_sites );
+        dlNavDrawer = ( DrawerLayout ) findViewById( R.id.dl_nav_drawer );
 
         vpSitesPager = ( ViewPager ) findViewById( R.id.vp_sites_pager );
         SitesAdapter vpSitesPagerAdapter = new SitesAdapter( getSupportFragmentManager() );
@@ -68,6 +72,7 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
         int[] to = new int[]{ R.id.tv_saved_hashtag };
         savedHashtagAdapter = new SimpleCursorAdapter( this, R.layout.saved_hashtags_list_row, null, from, to, 0 );
         lvSavedHashtags.setAdapter( savedHashtagAdapter );
+        lvSavedHashtags.setOnItemClickListener( this );
 
         actionBar = getActionBar();
         actionBar.setNavigationMode( ActionBar.NAVIGATION_MODE_TABS );
@@ -99,6 +104,7 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
     @Override
     public boolean onPrepareOptionsMenu( Menu menu )
     {
+        // Don't show save option if no hashtag has been entered
         menu.findItem( R.id.it_save_hashtag ).setVisible( null == this.hashtag ? false : true );
         return true;
     }
@@ -140,8 +146,10 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
 
     public void handleIntent( Intent intent )
     {
+        // Collapse the searchView, supposed to happen automatically, but doesn't :(
         svHashtag.setIconified( true );
         svHashtag.onActionViewCollapsed();
+        // No point continuing is network is not available
         if ( !HashtaggerApp.isNetworkConnected() )
         {
             Toast.makeText( this, getResources().getString( R.string.str_toast_no_network ), Toast.LENGTH_LONG ).show();
@@ -149,7 +157,9 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
         }
         String input = intent.getStringExtra( SearchManager.QUERY );
         hashtag = input.startsWith( "#" ) ? input : "#" + input;
+        // We have a hashtag, time to show the save option in the menu
         invalidateOptionsMenu();
+        // Save the entered query for later search suggestion
         SearchRecentSuggestions suggestions = new SearchRecentSuggestions( this, HashtagSuggestionsProvider.AUTHORITY, HashtagSuggestionsProvider.MODE );
         suggestions.saveRecentQuery( hashtag, null );
         setTitle( hashtag );
@@ -236,5 +246,20 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
     public void onLoaderReset( Loader<Cursor> cursorLoader )
     {
         savedHashtagAdapter.swapCursor( null );
+    }
+
+    @Override
+    public void onItemClick( AdapterView<?> parent, View view, int position, long id )
+    {
+        Cursor cursor = ( Cursor ) parent.getItemAtPosition( position );
+        String selectedHashtag = cursor.getString( cursor.getColumnIndex( SavedHashtagsDBContract.SavedHashtags.COLUMN_HASHTAG ) );
+        // Close the drawer first
+        dlNavDrawer.closeDrawers();
+        // We need to deliver the search intent manually in case a saved hashtag was selected
+        Intent intent = new Intent( Intent.ACTION_SEARCH );
+        intent.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK );
+        intent.putExtra( SearchManager.QUERY, selectedHashtag );
+        intent.setComponent( getComponentName() );
+        startActivity( intent );
     }
 }
