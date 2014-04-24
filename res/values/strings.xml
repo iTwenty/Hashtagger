@@ -29,4 +29,6 @@
     <string name="str_title_activity_facebook_login">Sign in with Facebook</string>
     <string name="str_expand">Expand</string>
     <string name="str_no_saved_hashtags">Your saved hashtags will appear here.</string>
+    <string name="open_drawer_desc">Open Drawer</string>
+    <string name="close_drawer_desc">Close Drawer</string>
 </resources>

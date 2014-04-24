@@ -6,12 +6,12 @@ import android.app.SearchManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
@@ -25,7 +25,6 @@ import android.view.View;
 import android.widget.*;
 import net.thetranquilpsychonaut.hashtagger.HashtagSuggestionsProvider;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsDBContract;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsDBHelper;
@@ -39,13 +38,14 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
 
     ActionBar             actionBar;
     DrawerLayout          dlNavDrawer;
+    ActionBarDrawerToggle drawerToggle;
     ViewPager             vpSitesPager;
     ListView              lvSavedHashtags;
     TextView              tvSavedHashtagsEmpty;
     SitesAdapter          vpSitesPagerAdapter;
     SearchView            svHashtag;
     String                hashtag;
-    SimpleCursorAdapter   savedHashtagAdapter;
+    SavedHashtagsAdapter  savedHashtagsAdapter;
     SavedHashtagsDBHelper savedHashtagsDBHelper;
 
     @Override
@@ -53,7 +53,15 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
     {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_sites );
+
         dlNavDrawer = ( DrawerLayout ) findViewById( R.id.dl_nav_drawer );
+        drawerToggle = new ActionBarDrawerToggle(
+            this,
+            dlNavDrawer,
+            R.drawable.ic_drawer,
+            R.string.open_drawer_desc,
+            R.string.close_drawer_desc );
+        dlNavDrawer.setDrawerListener( drawerToggle );
 
         vpSitesPager = ( ViewPager ) findViewById( R.id.vp_sites_pager );
         SitesAdapter vpSitesPagerAdapter = new SitesAdapter( getSupportFragmentManager() );
@@ -68,19 +76,33 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
         savedHashtagsDBHelper = new SavedHashtagsDBHelper( this );
         getSupportLoaderManager().initLoader( SAVED_HASHTAG_LOADER, null, this );
 
-        String[] from = new String[]{ SavedHashtagsDBContract.SavedHashtags.COLUMN_HASHTAG };
-        int[] to = new int[]{ R.id.tv_saved_hashtag };
-        savedHashtagAdapter = new SimpleCursorAdapter( this, R.layout.saved_hashtags_list_row, null, from, to, 0 );
-        lvSavedHashtags.setAdapter( savedHashtagAdapter );
+        savedHashtagsAdapter = new SavedHashtagsAdapter( this, null );
+        lvSavedHashtags.setAdapter( savedHashtagsAdapter );
         lvSavedHashtags.setOnItemClickListener( this );
 
         actionBar = getActionBar();
         actionBar.setNavigationMode( ActionBar.NAVIGATION_MODE_TABS );
+        actionBar.setDisplayHomeAsUpEnabled( true );
+        actionBar.setHomeButtonEnabled( true );
         actionBar.addTab( actionBar.newTab().setText( HashtaggerApp.SITES.get( 0 ) ).setIcon( getResources().getDrawable( R.drawable.twitter_logo_monochrome ) ).setTabListener( this ) );
         actionBar.addTab( actionBar.newTab().setText( HashtaggerApp.SITES.get( 1 ) ).setIcon( getResources().getDrawable( R.drawable.facebook_logo_monochrome ) ).setTabListener( this ) );
 
         if ( null != getIntent() && getIntent().getAction().equals( Intent.ACTION_SEARCH ) )
             handleIntent( getIntent() );
+    }
+
+    @Override
+    protected void onPostCreate( Bundle savedInstanceState )
+    {
+        super.onPostCreate( savedInstanceState );
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged( Configuration newConfig )
+    {
+        super.onConfigurationChanged( newConfig );
+        drawerToggle.onConfigurationChanged( newConfig );
     }
 
     @Override
@@ -99,6 +121,14 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
         svHashtag = ( SearchView ) menu.findItem( R.id.sv_hashtag ).getActionView();
         svHashtag.setSearchableInfo( searchManager.getSearchableInfo( getComponentName() ) );
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected( MenuItem item )
+    {
+        if ( drawerToggle.onOptionsItemSelected( item ) )
+            return true;
+        return super.onOptionsItemSelected( item );
     }
 
     @Override
@@ -239,13 +269,13 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
     @Override
     public void onLoadFinished( Loader<Cursor> cursorLoader, Cursor cursor )
     {
-        savedHashtagAdapter.swapCursor( cursor );
+        savedHashtagsAdapter.swapCursor( cursor );
     }
 
     @Override
     public void onLoaderReset( Loader<Cursor> cursorLoader )
     {
-        savedHashtagAdapter.swapCursor( null );
+        savedHashtagsAdapter.swapCursor( null );
     }
 
     @Override

@@ -11,8 +11,6 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import java.sql.SQLException;
-
 /**
  * Created by itwenty on 4/23/14.
  */
