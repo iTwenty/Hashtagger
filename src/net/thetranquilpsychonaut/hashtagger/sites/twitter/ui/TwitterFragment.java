@@ -1,5 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
+import android.app.ActionBar;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
@@ -44,6 +45,12 @@ public class TwitterFragment extends SitesFragment
     {
         List<Status> results = new ArrayList<Status>();
         return results;
+    }
+
+    @Override
+    protected ActionBar.Tab getActionBarTab()
+    {
+        return getActivity().getActionBar().getTabAt( HashtaggerApp.TWITTER_POSITION );
     }
 
     @Override

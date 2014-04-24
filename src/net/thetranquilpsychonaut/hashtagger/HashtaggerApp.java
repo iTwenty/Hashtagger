@@ -48,6 +48,10 @@ public class HashtaggerApp extends Application
         SITES.add( getResources().getString( R.string.str_facebook ) );
     }
 
+    // Ensure the numbers reflect the positions in the SITES array.
+    public static final int TWITTER_POSITION = 0;
+    public static final int FACEBOOK_POSITION = 1;
+
     public static boolean isNetworkConnected()
     {
         ConnectivityManager cm = ( ConnectivityManager ) HashtaggerApp.app.getSystemService( Context.CONNECTIVITY_SERVICE );

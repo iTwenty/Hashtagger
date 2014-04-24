@@ -84,8 +84,16 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
         actionBar.setNavigationMode( ActionBar.NAVIGATION_MODE_TABS );
         actionBar.setDisplayHomeAsUpEnabled( true );
         actionBar.setHomeButtonEnabled( true );
-        actionBar.addTab( actionBar.newTab().setText( HashtaggerApp.SITES.get( 0 ) ).setIcon( getResources().getDrawable( R.drawable.twitter_logo_monochrome ) ).setTabListener( this ) );
-        actionBar.addTab( actionBar.newTab().setText( HashtaggerApp.SITES.get( 1 ) ).setIcon( getResources().getDrawable( R.drawable.facebook_logo_monochrome ) ).setTabListener( this ) );
+        actionBar.addTab(
+            actionBar.newTab()
+                .setText( HashtaggerApp.SITES.get( HashtaggerApp.TWITTER_POSITION ) )
+                .setIcon( getResources().getDrawable( R.drawable.twitter_logo_monochrome ) )
+                .setTabListener( this ) );
+        actionBar.addTab(
+            actionBar.newTab()
+                .setText( HashtaggerApp.SITES.get( HashtaggerApp.FACEBOOK_POSITION ) )
+                .setIcon( getResources().getDrawable( R.drawable.facebook_logo_monochrome ) )
+                .setTabListener( this ) );
 
         if ( null != getIntent() && getIntent().getAction().equals( Intent.ACTION_SEARCH ) )
             handleIntent( getIntent() );

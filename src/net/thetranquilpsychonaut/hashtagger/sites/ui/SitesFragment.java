@@ -1,7 +1,10 @@
 package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
+import android.animation.ValueAnimator;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -155,6 +158,8 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     protected abstract SitesListAdapter initSitesListAdapter();
 
     protected abstract List<?> initResultsList();
+
+    protected abstract ActionBar.Tab getActionBarTab();
 
     protected void searchHashtag( String hashtag )
     {
@@ -348,7 +353,6 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         {
             Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_no_older_results ), Toast.LENGTH_LONG ).show();
         }
-
     }
 
     protected abstract void addToEnd( List<?> searchResults );
