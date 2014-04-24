@@ -11,6 +11,8 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import java.sql.SQLException;
+
 /**
  * Created by itwenty on 4/23/14.
  */
@@ -94,9 +96,9 @@ public class SavedHashtagsProvider extends ContentProvider
         {
             rowId = -1;
         }
+        result = ContentUris.withAppendedId( SavedHashtagsProviderContract.SavedHashtags.CONTENT_URI, rowId );
         if ( rowId > 0 )
         {
-            result = ContentUris.withAppendedId( SavedHashtagsProviderContract.SavedHashtags.CONTENT_URI, rowId );
             getContext().getContentResolver().notifyChange( result, null );
         }
         return result;

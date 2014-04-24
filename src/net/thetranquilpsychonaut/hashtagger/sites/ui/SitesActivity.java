@@ -110,7 +110,6 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
         ContentValues values = new ContentValues();
         values.put( SavedHashtagsDBContract.SavedHashtags.COLUMN_HASHTAG, this.hashtag );
         Uri result = getContentResolver().insert( SavedHashtagsProviderContract.SavedHashtags.CONTENT_URI, values );
-        Helper.debug( result.toString() );
     }
 
     @Override
