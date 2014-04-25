@@ -20,6 +20,12 @@ import java.util.List;
 public class FacebookFragment extends SitesFragment
 {
     @Override
+    protected int getLogo()
+    {
+        return R.drawable.facebook_logo_monochrome;
+    }
+
+    @Override
     protected SitesUserHandler initSitesUserHandler()
     {
         FacebookUserHandler facebookUserHandler = new FacebookUserHandler( this );
@@ -48,9 +54,9 @@ public class FacebookFragment extends SitesFragment
     }
 
     @Override
-    protected ActionBar.Tab getActionBarTab()
+    protected int getPosition()
     {
-        return getActivity().getActionBar().getTabAt( HashtaggerApp.FACEBOOK_POSITION );
+        return HashtaggerApp.FACEBOOK_POSITION;
     }
 
     @Override

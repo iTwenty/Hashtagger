@@ -1,7 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
 import android.app.ActionBar;
-import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.ContentValues;
 import android.content.Context;
@@ -32,7 +31,7 @@ import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsProviderC
 
 import java.util.List;
 
-public class SitesActivity extends FragmentActivity implements ActionBar.TabListener, ViewPager.OnPageChangeListener, LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener
+public class SitesActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener
 {
     private static final int SAVED_HASHTAG_LOADER = 0;
 
@@ -66,7 +65,6 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
         vpSitesPager = ( ViewPager ) findViewById( R.id.vp_sites_pager );
         SitesAdapter vpSitesPagerAdapter = new SitesAdapter( getSupportFragmentManager() );
         vpSitesPager.setAdapter( vpSitesPagerAdapter );
-        vpSitesPager.setOnPageChangeListener( this );
         vpSitesPager.setOffscreenPageLimit( HashtaggerApp.SITES.size() );
 
         lvSavedHashtags = ( ListView ) findViewById( R.id.lv_saved_hashtags );
@@ -81,19 +79,8 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
         lvSavedHashtags.setOnItemClickListener( this );
 
         actionBar = getActionBar();
-        actionBar.setNavigationMode( ActionBar.NAVIGATION_MODE_TABS );
         actionBar.setDisplayHomeAsUpEnabled( true );
         actionBar.setHomeButtonEnabled( true );
-        actionBar.addTab(
-            actionBar.newTab()
-                .setText( HashtaggerApp.SITES.get( HashtaggerApp.TWITTER_POSITION ) )
-                .setIcon( getResources().getDrawable( R.drawable.twitter_logo_monochrome ) )
-                .setTabListener( this ) );
-        actionBar.addTab(
-            actionBar.newTab()
-                .setText( HashtaggerApp.SITES.get( HashtaggerApp.FACEBOOK_POSITION ) )
-                .setIcon( getResources().getDrawable( R.drawable.facebook_logo_monochrome ) )
-                .setTabListener( this ) );
 
         if ( null != getIntent() && getIntent().getAction().equals( Intent.ACTION_SEARCH ) )
             handleIntent( getIntent() );
@@ -218,38 +205,6 @@ public class SitesActivity extends FragmentActivity implements ActionBar.TabList
     public String getHashtag()
     {
         return hashtag;
-    }
-
-    @Override
-    public void onTabSelected( ActionBar.Tab tab, FragmentTransaction ft )
-    {
-        vpSitesPager.setCurrentItem( tab.getPosition() );
-    }
-
-    @Override
-    public void onPageSelected( int i )
-    {
-        actionBar.setSelectedNavigationItem( i );
-    }
-
-    @Override
-    public void onTabUnselected( ActionBar.Tab tab, FragmentTransaction ft )
-    {
-    }
-
-    @Override
-    public void onTabReselected( ActionBar.Tab tab, FragmentTransaction ft )
-    {
-    }
-
-    @Override
-    public void onPageScrolled( int i, float v, int i2 )
-    {
-    }
-
-    @Override
-    public void onPageScrollStateChanged( int i )
-    {
     }
 
     @Override

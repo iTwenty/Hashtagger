@@ -20,6 +20,12 @@ import java.util.List;
 public class TwitterFragment extends SitesFragment
 {
     @Override
+    protected int getLogo()
+    {
+        return R.drawable.twitter_logo_monochrome;
+    }
+
+    @Override
     protected SitesUserHandler initSitesUserHandler()
     {
         TwitterUserHandler twitterUserHandler = new TwitterUserHandler( this );
@@ -48,9 +54,9 @@ public class TwitterFragment extends SitesFragment
     }
 
     @Override
-    protected ActionBar.Tab getActionBarTab()
+    protected int getPosition()
     {
-        return getActivity().getActionBar().getTabAt( HashtaggerApp.TWITTER_POSITION );
+        return HashtaggerApp.TWITTER_POSITION;
     }
 
     @Override
