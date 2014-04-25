@@ -1,6 +1,5 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
-import android.app.ActionBar;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;

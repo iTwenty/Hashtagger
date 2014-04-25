@@ -43,7 +43,10 @@ public class FacebookDetailView extends RelativeLayout
 
     public void showDetailsFromPost( Post post )
     {
-        UrlImageViewHelper.setUrlDrawable( imgvPicture, post.getPicture().toString(), getResources().getDrawable( R.drawable.drawable_image_loading ), HashtaggerApp.CACHE_DURATION_MS );
+        if ( null == post.getPicture() )
+            imgvPicture.setImageDrawable( getResources().getDrawable( R.drawable.drawable_image_loading ) );
+        else
+            UrlImageViewHelper.setUrlDrawable( imgvPicture, post.getPicture().toString(), getResources().getDrawable( R.drawable.drawable_image_loading ), HashtaggerApp.CACHE_DURATION_MS );
         tvName.setText( post.getName() );
         tvDescription.setText( post.getDescription() );
         tvCaption.setText( post.getCaption() );

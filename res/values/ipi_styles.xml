@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <style name="Theme.PageIndicatorDefaults" parent="android:Theme">
+        <item name="ipiIconPageIndicatorStyle">@style/Widget.IconPageIndicator</item>
+    </style>
+
+    <style name="Widget"></style>
+
+    <style name="Widget.IconPageIndicator" parent="Widget">
+        <item name="android:layout_marginLeft">6dp</item>
+        <item name="android:layout_marginRight">6dp</item>
+    </style>
+</resources>

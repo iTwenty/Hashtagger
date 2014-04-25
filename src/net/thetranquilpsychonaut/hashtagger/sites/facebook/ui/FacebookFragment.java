@@ -1,6 +1,5 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
-import android.app.ActionBar;
 import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;

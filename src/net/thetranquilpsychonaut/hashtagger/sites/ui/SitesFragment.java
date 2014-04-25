@@ -1,10 +1,7 @@
 package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
-import android.animation.ValueAnimator;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -25,14 +22,14 @@ import java.util.List;
  */
 public abstract class SitesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemClickListener, View.OnClickListener, SitesFooter.SitesFooterListener, SitesSearchHandler.SitesSearchListener, SitesUserHandler.SitesUserListener
 {
-    private static final String ACTIVE_VIEW_KEY         = HashtaggerApp.NAMESPACE + "active_view_key";
-    private static final String RESULTS_LIST_KEY        = HashtaggerApp.NAMESPACE + "results_list_key";
-    private static final String SRL_IS_REFRESHING_KEY   = HashtaggerApp.NAMESPACE + "srl_is_refreshing_key";
-    private static final String ACTION_BAR_ICON_KEY     = HashtaggerApp.NAMESPACE + "action_bar_icon_key";
+    private static final String ACTIVE_VIEW_KEY       = HashtaggerApp.NAMESPACE + "active_view_key";
+    private static final String RESULTS_LIST_KEY      = HashtaggerApp.NAMESPACE + "results_list_key";
+    private static final String SRL_IS_REFRESHING_KEY = HashtaggerApp.NAMESPACE + "srl_is_refreshing_key";
+    private static final String ACTION_BAR_ICON_KEY   = HashtaggerApp.NAMESPACE + "action_bar_icon_key";
 
-    private static final int    ACTION_BAR_ICON_LOADING = 1;
-    private static final int    ACTION_BAR_ICON_ERROR   = 2;
-    private static final int    ACTION_BAR_ICON_LOGO    = 3;
+    private static final int ACTION_BAR_ICON_LOADING = 1;
+    private static final int ACTION_BAR_ICON_ERROR   = 2;
+    private static final int ACTION_BAR_ICON_LOGO    = 3;
 
     public static enum SitesView
     {
@@ -301,11 +298,14 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         switch ( searchType )
         {
             case INITIAL:
-                showView( SitesView.LOADING ); break;
+                showView( SitesView.LOADING );
+                break;
             case OLDER:
-                sitesFooter.showFooterView( SitesFooter.SitesFooterView.LOADING ); break;
+                sitesFooter.showFooterView( SitesFooter.SitesFooterView.LOADING );
+                break;
             case NEWER:
-                readyHolder.srlReady.setRefreshing( true ); break;
+                readyHolder.srlReady.setRefreshing( true );
+                break;
         }
     }
 
@@ -315,11 +315,14 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         switch ( searchType )
         {
             case INITIAL:
-                afterCurrentSearch( searchResults ); break;
+                afterCurrentSearch( searchResults );
+                break;
             case OLDER:
-                afterOlderSearch( searchResults ); break;
+                afterOlderSearch( searchResults );
+                break;
             case NEWER:
-                afterNewerSearch( searchResults ); break;
+                afterNewerSearch( searchResults );
+                break;
         }
     }
 
@@ -382,9 +385,11 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         switch ( searchType )
         {
             case INITIAL:
-                showView( SitesView.ERROR ); break;
+                showView( SitesView.ERROR );
+                break;
             case OLDER:
-                sitesFooter.showFooterView( SitesFooter.SitesFooterView.ERROR ); break;
+                sitesFooter.showFooterView( SitesFooter.SitesFooterView.ERROR );
+                break;
             case NEWER:
                 readyHolder.srlReady.setRefreshing( false );
                 Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_newer_results_error ), Toast.LENGTH_LONG ).show();

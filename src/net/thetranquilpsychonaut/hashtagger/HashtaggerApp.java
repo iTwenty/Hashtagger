@@ -49,7 +49,7 @@ public class HashtaggerApp extends Application
     }
 
     // Ensure the numbers reflect the positions in the SITES array.
-    public static final int TWITTER_POSITION = 0;
+    public static final int TWITTER_POSITION  = 0;
     public static final int FACEBOOK_POSITION = 1;
 
     public static boolean isNetworkConnected()
