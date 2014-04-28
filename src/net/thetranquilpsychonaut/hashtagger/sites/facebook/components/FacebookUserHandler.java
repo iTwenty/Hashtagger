@@ -23,7 +23,9 @@ public class FacebookUserHandler extends SitesUserHandler
     public String getUserName()
     {
         if ( !isUserLoggedIn() )
+        {
             throw new RuntimeException( "Must be logged in to facebook before prodding user name" );
+        }
         return SharedPreferencesHelper.getFacebookUserName();
     }
 

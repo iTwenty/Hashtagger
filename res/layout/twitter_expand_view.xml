@@ -14,12 +14,12 @@
         <net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterLinkView
             android:id="@+id/twitter_link_view"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
 
         <net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterMediaView
             android:id="@+id/twitter_media_view"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
 
     </ViewAnimator>
 
@@ -27,6 +27,6 @@
         android:id="@+id/twitter_buttons"
         android:layout_below="@id/va_twitter_expand_view"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
 
 </merge>

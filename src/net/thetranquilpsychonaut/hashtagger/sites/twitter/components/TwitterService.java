@@ -33,7 +33,9 @@ public class TwitterService extends SitesService
         try
         {
             if ( null == twitter.getOAuthAccessToken() )
+            {
                 throw new TwitterException( "" );
+            }
              /*
             for our initial search we dont need either max or since id.
             Older search retrieves tweets with ids lower than the maxId
@@ -68,13 +70,19 @@ public class TwitterService extends SitesService
                     if our current search is newer, we don't want it to change the maxId for our next older search.
                      */
                 if ( searchType != SearchType.OLDER )
+                {
                     TwitterSearchHandler.sinceId = queryResult.getMaxId();
+                }
                 if ( searchType != SearchType.NEWER )
+                {
                     TwitterSearchHandler.maxId = queryResult.getSinceId() == 0 ? getLowestId( queryResult.getTweets() ) : queryResult.getSinceId();
+                }
                 // In case the search was for older results, we remove the newest one as maxId parameter is inclusive
                 // and causes tweet to repeat.
                 if ( searchType == SearchType.OLDER )
+                {
                     queryResult.getTweets().remove( 0 );
+                }
             }
             resultIntent.putExtra( Result.RESULT_DATA, queryResult );
         }

@@ -5,4 +5,4 @@
     android:label="@string/app_name"
     android:hint="@string/str_hashtag_hint"
     android:searchSuggestAuthority="hashtagger:HashtagSuggestionsProvider"
-    android:searchSuggestSelection=" ?" />
+    android:searchSuggestSelection=" ?"/>

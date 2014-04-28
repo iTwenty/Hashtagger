@@ -8,12 +8,12 @@
         android:icon="@drawable/ic_action_save"
         android:showAsAction="always"
         android:onClick="doSaveHashtag"
-        android:visible="false" />
+        android:visible="false"/>
 
     <item
         android:id="@+id/sv_hashtag"
         android:title="@string/str_hashtag_title"
         android:icon="@drawable/ic_action_search"
         android:showAsAction="always"
-        android:actionViewClass="android.widget.SearchView" />
+        android:actionViewClass="android.widget.SearchView"/>
 </menu>

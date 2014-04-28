@@ -33,13 +33,17 @@ public class TwitterSearchHandler extends SitesSearchHandler
         this.twitter = new TwitterFactory( TwitterConfig.CONFIGURATION ).getInstance();
         // If user was previously logged in, we need to restore hir's credentials from shared prefs
         if ( SharedPreferencesHelper.areTwitterDetailsPresent() )
+        {
             setAccessToken();
+        }
     }
 
     public void setAccessToken() throws RuntimeException
     {
         if ( !SharedPreferencesHelper.areTwitterDetailsPresent() )
+        {
             throw new RuntimeException( "must be logged in before setting access token!" );
+        }
         twitter.setOAuthAccessToken( new AccessToken( SharedPreferencesHelper.getTwitterOauthAccessToken(), SharedPreferencesHelper.getTwitterOauthAccessTokenSecret() ) );
     }
 

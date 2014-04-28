@@ -10,7 +10,9 @@ public final class SavedHashtagsDBContract
     public static final String DB_NAME    = "hashtagger.db";
     public static final int    DB_VERSION = 1;
 
-    public SavedHashtagsDBContract() {}
+    public SavedHashtagsDBContract()
+    {
+    }
 
     public static abstract class SavedHashtags implements BaseColumns
     {

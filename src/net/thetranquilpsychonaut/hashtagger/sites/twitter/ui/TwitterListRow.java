@@ -2,7 +2,6 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
@@ -36,7 +35,7 @@ public class TwitterListRow extends SitesListRow
     public TwitterListRow( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
-        LayoutInflater.from( context ).inflate( R.layout.fragment_twitter_list_row, this );
+        inflate( context, R.layout.twitter_list_row, this );
         imgvProfileImage = ( ImageView ) findViewById( R.id.imgv_profile_image );
         tvScreenName = ( TextView ) findViewById( R.id.tv_screen_name );
         tvCreatedAt = ( TextView ) findViewById( R.id.tv_created_at );

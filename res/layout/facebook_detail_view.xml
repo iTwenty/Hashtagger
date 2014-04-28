@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
+<merge
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,7 +12,7 @@
         android:layout_width="100dp"
         android:layout_height="70dp"
         tools:src="@drawable/twitter_logo_blue"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"/>
 
     <TextView
         android:id="@+id/tv_name"
@@ -21,7 +21,7 @@
         android:layout_toRightOf="@id/imgv_picture"
         android:layout_alignTop="@id/imgv_picture"
         tools:text="title"
-        android:singleLine="true" />
+        android:singleLine="true"/>
 
     <TextView
         android:id="@+id/tv_description"
@@ -33,7 +33,7 @@
         android:layout_below="@id/tv_name"
         android:layout_above="@+id/tv_caption"
         android:maxLines="3"
-        android:ellipsize="end" />
+        android:ellipsize="end"/>
 
     <TextView
         android:id="@id/tv_caption"
@@ -42,6 +42,6 @@
         android:layout_toRightOf="@id/imgv_picture"
         android:layout_alignBottom="@id/imgv_picture"
         tools:text="website"
-        android:singleLine="true" />
+        android:singleLine="true"/>
 
-</RelativeLayout>
+</merge>

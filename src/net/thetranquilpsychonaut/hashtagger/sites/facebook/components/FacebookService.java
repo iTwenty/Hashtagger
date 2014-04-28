@@ -29,7 +29,9 @@ public class FacebookService extends SitesService
         try
         {
             if ( null == facebook.getOAuthAccessToken() )
+            {
                 throw new FacebookException( "" );
+            }
             switch ( searchType )
             {
                 case INITIAL:
@@ -54,9 +56,13 @@ public class FacebookService extends SitesService
             if ( !responseList.isEmpty() )
             {
                 if ( searchType != SearchType.OLDER )
+                {
                     FacebookSearchHandler.newestPage = responseList.getPaging();
+                }
                 if ( searchType != SearchType.NEWER )
+                {
                     FacebookSearchHandler.oldestPage = responseList.getPaging();
+                }
             }
             resultIntent.putExtra( Result.RESULT_DATA, ( Serializable ) responseList );
         }

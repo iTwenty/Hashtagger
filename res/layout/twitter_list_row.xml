@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
+<merge
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,7 +12,7 @@
         android:id="@+id/imgv_profile_image"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:padding="@dimen/content_padding" />
+        android:padding="@dimen/content_padding"/>
 
     <TextView
         tools:text="@screen name"
@@ -22,7 +22,7 @@
         android:layout_toRightOf="@id/imgv_profile_image"
         android:padding="@dimen/content_padding"
         android:layout_toLeftOf="@+id/tv_created_at"
-        android:singleLine="true" />
+        android:singleLine="true"/>
 
     <TextView
         tools:text="dd/mm/yyyy"
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:padding="@dimen/content_padding"
-        android:singleLine="true" />
+        android:singleLine="true"/>
 
     <TextView
         tools:text="tweet tweet tweet\ntweet"
@@ -39,7 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/imgv_profile_image"
-        android:padding="@dimen/content_padding" />
+        android:padding="@dimen/content_padding"/>
 
 
     <TextView
@@ -49,12 +49,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/holo_green_dark"
-        android:padding="@dimen/layout_padding" />
+        android:padding="@dimen/layout_padding"/>
 
     <net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterExpandView
         android:id="@+id/twitter_expand_view"
         android:layout_below="@id/tv_expand"
         android:layout_width="match_parent"
-        android:layout_height="0dp" />
+        android:layout_height="0dp"/>
 
-</RelativeLayout>
+</merge>

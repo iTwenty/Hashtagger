@@ -2,7 +2,6 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.ViewAnimator;
@@ -34,7 +33,7 @@ public class TwitterExpandView extends RelativeLayout
     public TwitterExpandView( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
-        LayoutInflater.from( context ).inflate( R.layout.twitter_expand_view, this, true );
+        inflate( context, R.layout.twitter_expand_view, this );
         vaTwitterExpandView = ( ViewAnimator ) findViewById( R.id.va_twitter_expand_view );
         twitterLinkView = ( TwitterLinkView ) findViewById( R.id.twitter_link_view );
         twitterMediaView = ( TwitterMediaView ) findViewById( R.id.twitter_media_view );
@@ -54,15 +53,18 @@ public class TwitterExpandView extends RelativeLayout
             vaTwitterExpandView.setDisplayedChild( 1 );
             twitterMediaView.showMediaFromStatus( status );
         }
-        else if ( hasLink )
-        {
-            vaTwitterExpandView.setVisibility( View.VISIBLE );
-            vaTwitterExpandView.setDisplayedChild( 0 );
-            twitterLinkView.showLinkFromStatus( status );
-        }
         else
         {
-            vaTwitterExpandView.setVisibility( GONE );
+            if ( hasLink )
+            {
+                vaTwitterExpandView.setVisibility( View.VISIBLE );
+                vaTwitterExpandView.setDisplayedChild( 0 );
+                twitterLinkView.showLinkFromStatus( status );
+            }
+            else
+            {
+                vaTwitterExpandView.setVisibility( GONE );
+            }
         }
         twitterButtons.setVisibility( VISIBLE );
         int widthMeasureSpec = MeasureSpec.makeMeasureSpec( LayoutParams.MATCH_PARENT, MeasureSpec.EXACTLY );

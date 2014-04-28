@@ -88,7 +88,9 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             sitesFooter.showFooterView( sitesFooter.activeFooterView );
         }
         if ( !sitesUserHandler.isUserLoggedIn() )
+        {
             showView( SitesView.LOGIN );
+        }
         return v;
     }
 
@@ -99,9 +101,9 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         readyHolder.srlReady = ( SwipeRefreshLayout ) viewReady.findViewById( R.id.srl_ready );
         readyHolder.srlReady.setOnRefreshListener( this );
         readyHolder.srlReady.setColorScheme( android.R.color.holo_blue_bright,
-            android.R.color.holo_green_light,
-            android.R.color.holo_orange_light,
-            android.R.color.holo_red_light );
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light );
         if ( null != savedInstanceState )
         {
             results = ( List<?> ) savedInstanceState.getSerializable( RESULTS_LIST_KEY );
@@ -204,9 +206,12 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             {
                 onUserLoggedIn();
             }
-            else if ( resultCode == Activity.RESULT_CANCELED )
+            else
             {
-                onLoginFailure();
+                if ( resultCode == Activity.RESULT_CANCELED )
+                {
+                    onLoginFailure();
+                }
             }
         }
     }
@@ -255,7 +260,9 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     public void onClick( View v )
     {
         if ( v.equals( loginHolder.btnLogin ) )
+        {
             doLogin();
+        }
     }
 
     public void doLogin()
@@ -454,7 +461,9 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     protected static class Ready
     {
-        public Ready() { }
+        public Ready()
+        {
+        }
 
         public ListView           lvResultsList;
         public TextView           lvResultsListEmpty;
@@ -463,21 +472,27 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     protected static class Loading
     {
-        public Loading() { }
+        public Loading()
+        {
+        }
 
         public ProgressBar pgbrLoadingResults;
     }
 
     protected static class Login
     {
-        public Login() { }
+        public Login()
+        {
+        }
 
         public Button btnLogin;
     }
 
     protected static class Error
     {
-        public Error() { }
+        public Error()
+        {
+        }
 
         public TextView tvError;
     }

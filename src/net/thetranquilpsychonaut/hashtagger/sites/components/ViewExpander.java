@@ -51,7 +51,9 @@ public class ViewExpander implements ValueAnimator.AnimatorUpdateListener
     private void setHeight( int height )
     {
         if ( height == view.getHeight() )
+        {
             return;
+        }
         ViewGroup.LayoutParams params = view.getLayoutParams();
         params.height = height;
         view.setLayoutParams( params );

@@ -30,7 +30,9 @@ public class FacebookLoginActivity extends LoadingActivity implements FacebookLo
             public boolean shouldOverrideUrlLoading( WebView view, String url )
             {
                 if ( !url.startsWith( HashtaggerApp.FACEBOOK_CALLBACK_URL ) )
+                {
                     return false;
+                }
                 Uri uri = Uri.parse( url );
                 if ( null != uri.getQueryParameter( HashtaggerApp.FACEBOOK_CODE_KEY ) )
                 {
@@ -59,7 +61,7 @@ public class FacebookLoginActivity extends LoadingActivity implements FacebookLo
         else
         {
             wvFacebookLogin.loadUrl( new FacebookFactory( FacebookConfig.CONFIGURATION ).getInstance()
-                .getOAuthAuthorizationURL( HashtaggerApp.FACEBOOK_CALLBACK_URL ) );
+                    .getOAuthAuthorizationURL( HashtaggerApp.FACEBOOK_CALLBACK_URL ) );
         }
     }
 

@@ -26,10 +26,13 @@ public abstract class SitesService extends MyIntentService implements SearchActi
             resultIntent = doSearch( intent );
             resultIntent.setAction( getSearchActionName() );
         }
-        else if ( actionType == ActionType.AUTH )
+        else
         {
-            resultIntent = doAuth( intent );
-            resultIntent.setAction( getLoginActionName() );
+            if ( actionType == ActionType.AUTH )
+            {
+                resultIntent = doAuth( intent );
+                resultIntent.setAction( getLoginActionName() );
+            }
         }
         resultIntent.addCategory( Intent.CATEGORY_DEFAULT );
         sendBroadcast( resultIntent );

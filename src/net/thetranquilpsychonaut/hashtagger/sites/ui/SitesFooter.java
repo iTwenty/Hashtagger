@@ -93,7 +93,9 @@ public class SitesFooter implements View.OnClickListener
     public void onClick( View v )
     {
         if ( null == sitesFooterListener )
+        {
             return;
+        }
         sitesFooterListener.onFooterClicked();
     }
 

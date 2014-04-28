@@ -2,7 +2,6 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import net.thetranquilpsychonaut.hashtagger.R;
@@ -29,7 +28,7 @@ public class FacebookButtons extends LinearLayout
     public FacebookButtons( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
-        LayoutInflater.from( context ).inflate( R.layout.facebook_buttons, this, true );
+        inflate( context, R.layout.facebook_buttons, this );
         btnLike = ( Button ) findViewById( R.id.btn_like );
         btnComment = ( Button ) findViewById( R.id.btn_comment );
         btnShare = ( Button ) findViewById( R.id.btn_share );
@@ -49,4 +48,5 @@ public class FacebookButtons extends LinearLayout
     {
         btnShare.setOnClickListener( listener );
     }
+
 }

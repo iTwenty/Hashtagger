@@ -23,13 +23,13 @@ public class SavedHashtagsProvider extends ContentProvider
     static
     {
         URI_MATCHER.addURI(
-            SavedHashtagsProviderContract.AUTHORITY,
-            SavedHashtagsProviderContract.SavedHashtags.PATH,
-            HASHTAGS );
+                SavedHashtagsProviderContract.AUTHORITY,
+                SavedHashtagsProviderContract.SavedHashtags.PATH,
+                HASHTAGS );
         URI_MATCHER.addURI(
-            SavedHashtagsProviderContract.AUTHORITY,
-            SavedHashtagsProviderContract.SavedHashtags.PATH + "/#",
-            HASHTAG_ID );
+                SavedHashtagsProviderContract.AUTHORITY,
+                SavedHashtagsProviderContract.SavedHashtags.PATH + "/#",
+                HASHTAG_ID );
     }
 
     private SavedHashtagsDBHelper dbHelper;
@@ -51,7 +51,9 @@ public class SavedHashtagsProvider extends ContentProvider
         {
             case HASHTAGS:
                 if ( TextUtils.isEmpty( sortOrder ) )
+                {
                     sortOrder = SavedHashtagsDBContract.SavedHashtags.SORT_ORDER_DEFAULT;
+                }
                 break;
             case HASHTAG_ID:
                 qb.appendWhere( SavedHashtagsDBContract.SavedHashtags._ID + " = " + uri.getLastPathSegment() );
@@ -82,7 +84,9 @@ public class SavedHashtagsProvider extends ContentProvider
     public Uri insert( Uri uri, ContentValues values )
     {
         if ( URI_MATCHER.match( uri ) != HASHTAGS )
+        {
             throw new IllegalArgumentException( "Unsupported URI for insert: " + uri.toString() );
+        }
         Uri result = null;
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         long rowId;

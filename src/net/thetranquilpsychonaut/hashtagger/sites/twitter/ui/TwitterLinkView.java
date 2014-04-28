@@ -2,7 +2,6 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -33,7 +32,7 @@ public class TwitterLinkView extends RelativeLayout
     public TwitterLinkView( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
-        LayoutInflater.from( context ).inflate( R.layout.twitter_link_view, this );
+        inflate( context, R.layout.twitter_link_view, this );
         imgvFavicon = ( ImageView ) findViewById( R.id.imgv_favicon );
         tvDisplayUrl = ( TextView ) findViewById( R.id.tv_display_url );
         tvExpandedUrl = ( TextView ) findViewById( R.id.tv_expanded_url );

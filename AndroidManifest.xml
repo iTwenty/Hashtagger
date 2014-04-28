@@ -5,10 +5,10 @@
     android:versionCode="1"
     android:versionName="1.0">
 
-    <uses-sdk android:minSdkVersion="14" />
+    <uses-sdk android:minSdkVersion="14"/>
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:name="net.thetranquilpsychonaut.hashtagger.HashtaggerApp"
@@ -16,38 +16,38 @@
         android:icon="@drawable/ic_launcher"
         android:theme="@android:style/Theme.Holo.Light">
 
-        <service android:name=".sites.twitter.components.TwitterService" />
-        <service android:name=".sites.facebook.components.FacebookService" />
+        <service android:name=".sites.twitter.components.TwitterService"/>
+        <service android:name=".sites.facebook.components.FacebookService"/>
 
         <activity
             android:name=".sites.ui.SitesActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.SEARCH"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value=".MainActivity" />
+                android:value=".MainActivity"/>
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
+                android:resource="@xml/searchable"/>
         </activity>
 
         <activity
             android:name=".sites.twitter.ui.TwitterLoginActivity"
             android:launchMode="singleTop">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
 
-                <data android:scheme="twitter-login-callback" />
+                <data android:scheme="twitter-login-callback"/>
             </intent-filter>
         </activity>
 
@@ -58,13 +58,13 @@
 
         <provider
             android:authorities="hashtagger:HashtagSuggestionsProvider"
-            android:name=".HashtagSuggestionsProvider" />
+            android:name=".HashtagSuggestionsProvider"/>
 
         <provider
             android:authorities="net.thetranquilpsychonaut.hashtagger.saved_hashtags"
             android:name=".savedhashtags.SavedHashtagsProvider"
             android:exported="false"
-            android:label="SavedHashtagsProvider" />
+            android:label="SavedHashtagsProvider"/>
 
     </application>
 </manifest>

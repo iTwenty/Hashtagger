@@ -2,7 +2,6 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -34,7 +33,7 @@ public class FacebookDetailView extends RelativeLayout
     public FacebookDetailView( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
-        LayoutInflater.from( context ).inflate( R.layout.facebook_detail_view, this );
+        inflate( context, R.layout.facebook_detail_view, this );
         imgvPicture = ( ImageView ) findViewById( R.id.imgv_picture );
         tvName = ( TextView ) findViewById( R.id.tv_name );
         tvDescription = ( TextView ) findViewById( R.id.tv_description );
@@ -44,9 +43,13 @@ public class FacebookDetailView extends RelativeLayout
     public void showDetailsFromPost( Post post )
     {
         if ( null == post.getPicture() )
+        {
             imgvPicture.setImageDrawable( getResources().getDrawable( R.drawable.drawable_image_loading ) );
+        }
         else
+        {
             UrlImageViewHelper.setUrlDrawable( imgvPicture, post.getPicture().toString(), getResources().getDrawable( R.drawable.drawable_image_loading ), HashtaggerApp.CACHE_DURATION_MS );
+        }
         tvName.setText( post.getName() );
         tvDescription.setText( post.getDescription() );
         tvCaption.setText( post.getCaption() );

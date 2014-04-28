@@ -26,10 +26,10 @@ public class SharedPreferencesHelper
     public static void removeTwitterDetails()
     {
         prefs.edit()
-            .remove( TWITTER_OAUTH_ACCESS_TOKEN_KEY )
-            .remove( TWITTER_OAUTH_ACCESS_TOKEN_SECRET_KEY )
-            .remove( TWITTER_USER_NAME_KEY )
-            .commit();
+                .remove( TWITTER_OAUTH_ACCESS_TOKEN_KEY )
+                .remove( TWITTER_OAUTH_ACCESS_TOKEN_SECRET_KEY )
+                .remove( TWITTER_USER_NAME_KEY )
+                .commit();
     }
 
     public static boolean areTwitterDetailsPresent()
@@ -40,10 +40,10 @@ public class SharedPreferencesHelper
     public static void addTwitterDetails( String accessToken, String accessTokenSecret, String userName )
     {
         prefs.edit()
-            .putString( TWITTER_OAUTH_ACCESS_TOKEN_KEY, accessToken )
-            .putString( TWITTER_OAUTH_ACCESS_TOKEN_SECRET_KEY, accessTokenSecret )
-            .putString( TWITTER_USER_NAME_KEY, userName )
-            .commit();
+                .putString( TWITTER_OAUTH_ACCESS_TOKEN_KEY, accessToken )
+                .putString( TWITTER_OAUTH_ACCESS_TOKEN_SECRET_KEY, accessTokenSecret )
+                .putString( TWITTER_USER_NAME_KEY, userName )
+                .commit();
     }
 
     public static String getTwitterOauthAccessToken()
@@ -68,17 +68,17 @@ public class SharedPreferencesHelper
     public static void addFacebookDetails( String accessToken, String userName )
     {
         prefs.edit()
-            .putString( FACEBOOK_OAUTH_ACCESS_TOKEN_KEY, accessToken )
-            .putString( FACEBOOK_USER_NAME_KEY, userName )
-            .commit();
+                .putString( FACEBOOK_OAUTH_ACCESS_TOKEN_KEY, accessToken )
+                .putString( FACEBOOK_USER_NAME_KEY, userName )
+                .commit();
     }
 
     public static void removeFacebookDetails()
     {
         prefs.edit()
-            .remove( FACEBOOK_OAUTH_ACCESS_TOKEN_KEY )
-            .remove( FACEBOOK_USER_NAME_KEY )
-            .commit();
+                .remove( FACEBOOK_OAUTH_ACCESS_TOKEN_KEY )
+                .remove( FACEBOOK_USER_NAME_KEY )
+                .commit();
     }
 
     public static boolean areFacebookDetailsPresent()

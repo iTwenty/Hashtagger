@@ -2,7 +2,7 @@
 
 <resources>
 
-    <style name="Theme.PageIndicatorDefaults" parent="android:Theme">
+    <style name="Theme.PageIndicatorDefaults" parent="android:Theme.Holo.Light">
         <item name="ipiIconPageIndicatorStyle">@style/Widget.IconPageIndicator</item>
     </style>
 

@@ -2,7 +2,6 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
@@ -36,7 +35,7 @@ public class FacebookListRow extends SitesListRow
     protected FacebookListRow( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
-        LayoutInflater.from( context ).inflate( R.layout.fragment_facebook_list_row, this );
+        inflate( context, R.layout.facebook_list_row, this );
         imgvProfileImage = ( ImageView ) findViewById( R.id.imgv_profile_image );
         tvUserNameOrStory = ( TextView ) findViewById( R.id.tv_user_name_or_story );
         tvCreatedTime = ( TextView ) findViewById( R.id.tv_created_time );

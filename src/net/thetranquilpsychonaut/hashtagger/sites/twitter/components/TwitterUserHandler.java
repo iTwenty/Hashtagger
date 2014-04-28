@@ -30,7 +30,9 @@ public class TwitterUserHandler extends SitesUserHandler
     public String getUserName()
     {
         if ( !isUserLoggedIn() )
+        {
             throw new RuntimeException( "User must be logged in before prodding user name." );
+        }
         return SharedPreferencesHelper.getTwitterUserName();
     }
 }

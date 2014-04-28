@@ -25,6 +25,7 @@ import android.widget.*;
 import net.thetranquilpsychonaut.hashtagger.HashtagSuggestionsProvider;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.iconpagerindicator.IconPageIndicator;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsDBContract;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsDBHelper;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsProviderContract;
@@ -39,6 +40,7 @@ public class SitesActivity extends FragmentActivity implements LoaderManager.Loa
     DrawerLayout          dlNavDrawer;
     ActionBarDrawerToggle drawerToggle;
     ViewPager             vpSitesPager;
+    IconPageIndicator     ipiSitesPager;
     ListView              lvSavedHashtags;
     TextView              tvSavedHashtagsEmpty;
     SitesAdapter          vpSitesPagerAdapter;
@@ -55,17 +57,19 @@ public class SitesActivity extends FragmentActivity implements LoaderManager.Loa
 
         dlNavDrawer = ( DrawerLayout ) findViewById( R.id.dl_nav_drawer );
         drawerToggle = new ActionBarDrawerToggle(
-            this,
-            dlNavDrawer,
-            R.drawable.ic_drawer,
-            R.string.open_drawer_desc,
-            R.string.close_drawer_desc );
+                this,
+                dlNavDrawer,
+                R.drawable.ic_drawer,
+                R.string.open_drawer_desc,
+                R.string.close_drawer_desc );
         dlNavDrawer.setDrawerListener( drawerToggle );
 
         vpSitesPager = ( ViewPager ) findViewById( R.id.vp_sites_pager );
+        ipiSitesPager = ( IconPageIndicator ) findViewById( R.id.ipi_sites_pager );
         SitesAdapter vpSitesPagerAdapter = new SitesAdapter( getSupportFragmentManager() );
         vpSitesPager.setAdapter( vpSitesPagerAdapter );
         vpSitesPager.setOffscreenPageLimit( HashtaggerApp.SITES.size() );
+        ipiSitesPager.setViewPager( vpSitesPager );
 
         lvSavedHashtags = ( ListView ) findViewById( R.id.lv_saved_hashtags );
         tvSavedHashtagsEmpty = ( TextView ) findViewById( R.id.tv_saved_hashtags_empty );
@@ -83,7 +87,9 @@ public class SitesActivity extends FragmentActivity implements LoaderManager.Loa
         actionBar.setHomeButtonEnabled( true );
 
         if ( null != getIntent() && getIntent().getAction().equals( Intent.ACTION_SEARCH ) )
+        {
             handleIntent( getIntent() );
+        }
     }
 
     @Override
@@ -122,7 +128,9 @@ public class SitesActivity extends FragmentActivity implements LoaderManager.Loa
     public boolean onOptionsItemSelected( MenuItem item )
     {
         if ( drawerToggle.onOptionsItemSelected( item ) )
+        {
             return true;
+        }
         return super.onOptionsItemSelected( item );
     }
 
@@ -137,7 +145,9 @@ public class SitesActivity extends FragmentActivity implements LoaderManager.Loa
     public void doSaveHashtag( MenuItem item )
     {
         if ( null == this.hashtag || "".equals( this.hashtag ) )
+        {
             return;
+        }
         ContentValues values = new ContentValues();
         values.put( SavedHashtagsDBContract.SavedHashtags.COLUMN_HASHTAG, this.hashtag );
         Uri result = getContentResolver().insert( SavedHashtagsProviderContract.SavedHashtags.CONTENT_URI, values );
@@ -150,7 +160,9 @@ public class SitesActivity extends FragmentActivity implements LoaderManager.Loa
         if ( null != fragments )
         {
             for ( Fragment f : fragments )
+            {
                 f.onActivityResult( requestCode, resultCode, data );
+            }
         }
     }
 
@@ -214,16 +226,16 @@ public class SitesActivity extends FragmentActivity implements LoaderManager.Loa
         {
             case SAVED_HASHTAG_LOADER:
                 String[] projection = new String[]{
-                    SavedHashtagsProviderContract.SavedHashtags._ID,
-                    SavedHashtagsProviderContract.SavedHashtags.COLUMN_HASHTAG };
+                        SavedHashtagsProviderContract.SavedHashtags._ID,
+                        SavedHashtagsProviderContract.SavedHashtags.COLUMN_HASHTAG };
                 Uri savedHashtagsUri = SavedHashtagsProviderContract.SavedHashtags.CONTENT_URI;
                 return new CursorLoader(
-                    this,
-                    savedHashtagsUri,
-                    projection,
-                    null,
-                    null,
-                    null );
+                        this,
+                        savedHashtagsUri,
+                        projection,
+                        null,
+                        null,
+                        null );
             default:
                 return null;
         }

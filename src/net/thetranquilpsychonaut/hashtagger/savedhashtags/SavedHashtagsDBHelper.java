@@ -18,8 +18,8 @@ public class SavedHashtagsDBHelper extends SQLiteOpenHelper
     public void onCreate( SQLiteDatabase db )
     {
         db.execSQL( "CREATE TABLE " + SavedHashtagsDBContract.SavedHashtags.TABLE_NAME + " ( "
-            + SavedHashtagsDBContract.SavedHashtags._ID + " INTEGER PRIMARY KEY, "
-            + SavedHashtagsDBContract.SavedHashtags.COLUMN_HASHTAG + " TEXT NOT NULL UNIQUE );" );
+                + SavedHashtagsDBContract.SavedHashtags._ID + " INTEGER PRIMARY KEY, "
+                + SavedHashtagsDBContract.SavedHashtags.COLUMN_HASHTAG + " TEXT NOT NULL UNIQUE );" );
     }
 
     @Override

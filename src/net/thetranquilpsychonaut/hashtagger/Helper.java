@@ -28,10 +28,10 @@ public class Helper
     public static CharSequence getFuzzyDateTime( long time )
     {
         return DateUtils.getRelativeDateTimeString( HashtaggerApp.app.getApplicationContext(),
-            time,
-            DateUtils.SECOND_IN_MILLIS,
-            DateUtils.WEEK_IN_MILLIS,
-            DateUtils.FORMAT_ABBREV_ALL );
+                time,
+                DateUtils.SECOND_IN_MILLIS,
+                DateUtils.WEEK_IN_MILLIS,
+                DateUtils.FORMAT_ABBREV_ALL );
     }
 
     public static String getStringDate( Date date )

@@ -11,13 +11,13 @@
         android:gravity="center"
         android:text="@string/str_no_network"
         android:layout_centerInParent="true"
-        android:layout_toLeftOf="@+id/btn_footer_retry" />
+        android:layout_toLeftOf="@+id/btn_footer_retry"/>
 
     <Button
         android:id="@id/btn_footer_retry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:text="@string/str_retry" />
+        android:text="@string/str_retry"/>
 
 </RelativeLayout>

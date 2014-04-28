@@ -35,13 +35,17 @@ public class FacebookSearchHandler extends SitesSearchHandler
         this.facebook = new FacebookFactory( FacebookConfig.CONFIGURATION ).getInstance();
         // If user was previously logged in, we need to restore hir's credentials from shared prefs
         if ( SharedPreferencesHelper.areFacebookDetailsPresent() )
+        {
             setAccessToken();
+        }
     }
 
     public void setAccessToken()
     {
         if ( !SharedPreferencesHelper.areFacebookDetailsPresent() )
+        {
             throw new RuntimeException( "must be logged in before setting access token!" );
+        }
         facebook.setOAuthAccessToken( new AccessToken( SharedPreferencesHelper.getFacebookOauthAccessToken() ) );
     }
 

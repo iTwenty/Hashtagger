@@ -2,7 +2,6 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
@@ -30,7 +29,7 @@ public class FacebookObjectView extends RelativeLayout
     public FacebookObjectView( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
-        LayoutInflater.from( context ).inflate( R.layout.facebook_object_view, this );
+        inflate( context, R.layout.facebook_object_view, this );
         imgvPicture = ( ImageView ) findViewById( R.id.imgv_picture );
     }
 

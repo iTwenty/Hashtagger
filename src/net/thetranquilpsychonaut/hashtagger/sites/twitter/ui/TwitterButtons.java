@@ -2,7 +2,6 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import net.thetranquilpsychonaut.hashtagger.R;
@@ -29,7 +28,7 @@ public class TwitterButtons extends LinearLayout
     public TwitterButtons( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
-        LayoutInflater.from( context ).inflate( R.layout.twitter_buttons, this );
+        inflate( context, R.layout.twitter_buttons, this );
         btnReply = ( Button ) findViewById( R.id.btn_reply );
         btnRetweet = ( Button ) findViewById( R.id.btn_retweet );
         btnFavorite = ( Button ) findViewById( R.id.btn_favorite );

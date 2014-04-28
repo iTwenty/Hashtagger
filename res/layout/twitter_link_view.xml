@@ -1,4 +1,4 @@
-<RelativeLayout
+<merge
     android:id="@+id/rl_twitter_entity_link"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,7 +10,7 @@
         android:id="@+id/imgv_favicon"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"/>
 
     <TextView
         tools:text="21st Century Schizoid Man | Google Search"
@@ -19,13 +19,13 @@
         android:layout_width="fill_parent"
         android:maxLines="1"
         android:ellipsize="end"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
 
     <TextView
         tools:text="https://www.google.com/search?q=21st+century+schizoid+man"
         android:id="@+id/tv_expanded_url"
         android:layout_below="@id/imgv_favicon"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
 
-</RelativeLayout>
+</merge>

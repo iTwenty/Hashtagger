@@ -2,7 +2,6 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 import android.widget.ViewAnimator;
 import facebook4j.Post;
@@ -33,7 +32,7 @@ public class FacebookExpandView extends RelativeLayout
     public FacebookExpandView( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
-        LayoutInflater.from( context ).inflate( R.layout.facebook_expand_view, this, true );
+        inflate( context, R.layout.facebook_expand_view, this );
         vaFacebookExpandView = ( ViewAnimator ) findViewById( R.id.va_facebook_expand_view );
         facebookObjectView = ( FacebookObjectView ) findViewById( R.id.facebook_object_view );
         facebookDetailView = ( FacebookDetailView ) findViewById( R.id.facebook_detail_view );
@@ -52,15 +51,18 @@ public class FacebookExpandView extends RelativeLayout
             vaFacebookExpandView.setDisplayedChild( 0 );
             facebookObjectView.showObjectFromPost( post );
         }
-        else if ( hasDetails )
-        {
-            vaFacebookExpandView.setVisibility( VISIBLE );
-            vaFacebookExpandView.setDisplayedChild( 1 );
-            facebookDetailView.showDetailsFromPost( post );
-        }
         else
         {
-            vaFacebookExpandView.setVisibility( GONE );
+            if ( hasDetails )
+            {
+                vaFacebookExpandView.setVisibility( VISIBLE );
+                vaFacebookExpandView.setDisplayedChild( 1 );
+                facebookDetailView.showDetailsFromPost( post );
+            }
+            else
+            {
+                vaFacebookExpandView.setVisibility( GONE );
+            }
         }
         facebookButtons.setVisibility( VISIBLE );
         int widthMeasureSpec = MeasureSpec.makeMeasureSpec( LayoutParams.MATCH_PARENT, MeasureSpec.EXACTLY );

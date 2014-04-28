@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:textSize="20sp"
-        android:layout_toLeftOf="@+id/imgb_delete_saved_hashtag" />
+        android:layout_toLeftOf="@+id/imgb_delete_saved_hashtag"/>
 
     <ImageButton
         android:id="@id/imgb_delete_saved_hashtag"
@@ -21,6 +21,6 @@
         style="?android:attr/borderlessButtonStyle"
         android:src="@drawable/ic_action_remove"
         android:layout_centerVertical="true"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentRight="true"/>
 
 </RelativeLayout>

@@ -13,7 +13,13 @@
         <android.support.v4.view.ViewPager
             android:id="@+id/vp_sites_pager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
+
+        <net.thetranquilpsychonaut.hashtagger.iconpagerindicator.IconPageIndicator
+            android:id="@+id/ipi_sites_pager"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
     </RelativeLayout>
 
@@ -29,13 +35,13 @@
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Saved Hashtags" />
+            android:text="Saved Hashtags"/>
 
         <ListView
             android:layout_below="@id/tv_saved_hashtags_heading"
             android:id="@+id/lv_saved_hashtags"
             android:layout_height="match_parent"
-            android:layout_width="match_parent" />
+            android:layout_width="match_parent"/>
 
         <TextView
             android:id="@+id/tv_saved_hashtags_empty"
@@ -43,7 +49,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="@string/str_no_saved_hashtags" />
+            android:text="@string/str_no_saved_hashtags"/>
 
     </RelativeLayout>
 
