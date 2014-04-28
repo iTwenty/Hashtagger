@@ -12,7 +12,7 @@
         android:id="@+id/imgv_twitter_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/twitter_logo_blue"
+        android:src="@drawable/twitter_logo"
         android:layout_weight="1"
         android:layout_gravity="center"/>
 
@@ -21,7 +21,7 @@
         android:id="@+id/imgv_facebook_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/twitter_logo_blue"
+        android:src="@drawable/facebook_logo"
         android:layout_weight="1"
         android:layout_gravity="center"/>
 

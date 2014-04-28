@@ -20,16 +20,17 @@ import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import net.thetranquilpsychonaut.hashtagger.Helper;
+import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 
 /**
  * This widget implements the dynamic action bar tab behavior that can change
  * across different configurations or circumstances.
  */
-public class IconPageIndicator extends LinearLayout implements OnPageChangeListener
+public class IconPageIndicator extends LinearLayout implements OnPageChangeListener, View.OnClickListener
 {
     private ViewPager mViewPager;
     private ImageView imgvTwitterLogo;
@@ -46,6 +47,8 @@ public class IconPageIndicator extends LinearLayout implements OnPageChangeListe
         inflate( context, R.layout.icon_pager_indicator, this );
         imgvTwitterLogo = ( ImageView ) findViewById( R.id.imgv_twitter_logo );
         imgvFacebookLogo = ( ImageView ) findViewById( R.id.imgv_facebook_logo );
+        imgvTwitterLogo.setOnClickListener( this );
+        imgvFacebookLogo.setOnClickListener( this );
     }
 
     public void setViewPager( ViewPager view )
@@ -60,6 +63,7 @@ public class IconPageIndicator extends LinearLayout implements OnPageChangeListe
         }
         mViewPager = view;
         view.setOnPageChangeListener( this );
+        setSelectedChild( mViewPager.getCurrentItem() );
     }
 
     @Override
@@ -71,10 +75,35 @@ public class IconPageIndicator extends LinearLayout implements OnPageChangeListe
     @Override
     public void onPageSelected( int position )
     {
-        int children = this.getChildCount();
-        for ( int a = 0; a < children; ++a )
+        setSelectedChild( position );
+    }
+
+    public void setSelectedChild( int position )
+    {
+        int childCount = getChildCount();
+        int color;
+        for ( int a = 0; a < childCount; ++a )
         {
-            Helper.debug( this.getChildAt( a ).toString() );
+            if ( a == position )
+            {
+                switch ( a )
+                {
+                    case HashtaggerApp.TWITTER_POSITION:
+                        color = R.color.twitter_logo_blue;
+                        break;
+                    case HashtaggerApp.FACEBOOK_POSITION:
+                        color = R.color.facebook_blue;
+                        break;
+                    default:
+                        color = android.R.color.transparent;
+                        break;
+                }
+                ( ( ImageView ) getChildAt( a ) ).setColorFilter( getResources().getColor( color ) );
+            }
+            else
+            {
+                ( ( ImageView ) getChildAt( a ) ).setColorFilter( null );
+            }
         }
     }
 
@@ -82,5 +111,12 @@ public class IconPageIndicator extends LinearLayout implements OnPageChangeListe
     public void onPageScrollStateChanged( int state )
     {
 
+    }
+
+    @Override
+    public void onClick( View v )
+    {
+        int childPosition = indexOfChild( v );
+        mViewPager.setCurrentItem( childPosition );
     }
 }

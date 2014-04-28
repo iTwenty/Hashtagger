@@ -32,7 +32,7 @@
         tools:text="description\ndescription\ndescription\ndescription"
         android:layout_below="@id/tv_name"
         android:layout_above="@+id/tv_caption"
-        android:maxLines="3"
+        android:maxLines="2"
         android:ellipsize="end"/>
 
     <TextView

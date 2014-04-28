@@ -41,7 +41,7 @@ public abstract class LoadingActivity extends FragmentActivity
 
     private View initLoadingView( Bundle savedInstanceState )
     {
-        return getLayoutInflater().inflate( R.layout.view_loading, null );
+        return getLayoutInflater().inflate( R.layout.sites_view_loading, null );
     }
 
     protected abstract void onViewsCreated( Bundle savedInstanceState );

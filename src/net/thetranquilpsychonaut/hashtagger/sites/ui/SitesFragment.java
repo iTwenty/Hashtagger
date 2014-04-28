@@ -25,11 +25,6 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     private static final String ACTIVE_VIEW_KEY       = HashtaggerApp.NAMESPACE + "active_view_key";
     private static final String RESULTS_LIST_KEY      = HashtaggerApp.NAMESPACE + "results_list_key";
     private static final String SRL_IS_REFRESHING_KEY = HashtaggerApp.NAMESPACE + "srl_is_refreshing_key";
-    private static final String ACTION_BAR_ICON_KEY   = HashtaggerApp.NAMESPACE + "action_bar_icon_key";
-
-    private static final int ACTION_BAR_ICON_LOADING = 1;
-    private static final int ACTION_BAR_ICON_ERROR   = 2;
-    private static final int ACTION_BAR_ICON_LOGO    = 3;
 
     public static enum SitesView
     {
@@ -96,7 +91,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     private View initViewReady( LayoutInflater inflater, Bundle savedInstanceState )
     {
-        View viewReady = inflater.inflate( R.layout.view_ready, null );
+        View viewReady = inflater.inflate( R.layout.sites_view_ready, null );
         readyHolder = new Ready();
         readyHolder.srlReady = ( SwipeRefreshLayout ) viewReady.findViewById( R.id.srl_ready );
         readyHolder.srlReady.setOnRefreshListener( this );
@@ -126,7 +121,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     private View initViewLoading( LayoutInflater inflater, Bundle savedInstanceState )
     {
-        View viewLoading = inflater.inflate( R.layout.view_loading, null );
+        View viewLoading = inflater.inflate( R.layout.sites_view_loading, null );
         loadingHolder = new Loading();
         loadingHolder.pgbrLoadingResults = ( ProgressBar ) viewLoading.findViewById( R.id.pgbr_loading_results );
         return viewLoading;
@@ -134,7 +129,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     private View initViewLogin( LayoutInflater inflater, Bundle savedInstanceState )
     {
-        View viewLogin = inflater.inflate( R.layout.view_login, null );
+        View viewLogin = inflater.inflate( R.layout.sites_view_login, null );
         loginHolder = new Login();
         loginHolder.btnLogin = ( Button ) viewLogin.findViewById( R.id.btn_login );
         loginHolder.btnLogin.setOnClickListener( this );
@@ -143,7 +138,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     private View initViewError( LayoutInflater inflater, Bundle savedInstanceState )
     {
-        View viewError = inflater.inflate( R.layout.view_error, null );
+        View viewError = inflater.inflate( R.layout.sites_view_error, null );
         errorHolder = new Error();
         errorHolder.tvError = ( TextView ) viewError.findViewById( R.id.tv_error );
         return viewError;
@@ -461,10 +456,6 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     protected static class Ready
     {
-        public Ready()
-        {
-        }
-
         public ListView           lvResultsList;
         public TextView           lvResultsListEmpty;
         public SwipeRefreshLayout srlReady;
@@ -472,28 +463,16 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     protected static class Loading
     {
-        public Loading()
-        {
-        }
-
         public ProgressBar pgbrLoadingResults;
     }
 
     protected static class Login
     {
-        public Login()
-        {
-        }
-
         public Button btnLogin;
     }
 
     protected static class Error
     {
-        public Error()
-        {
-        }
-
         public TextView tvError;
     }
 }
