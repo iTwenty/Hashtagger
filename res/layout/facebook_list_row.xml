@@ -37,6 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         tools:text="dd/mm/yyyy"
+        style="@style/DateText"
         android:padding="@dimen/content_padding"/>
 
     <TextView
@@ -50,10 +51,19 @@
         tools:text="line1\nline2\nline3\nline4\nline5\nline6"
         android:padding="@dimen/content_padding"/>
 
+    <TextView
+        android:id="@+id/tv_expand_handle"
+        tools:text="@string/str_expand"
+        android:layout_below="@id/tv_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/HandleText"
+        android:padding="@dimen/layout_padding"/>
+
     <net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookExpandView
         android:id="@+id/facebook_expand_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_below="@id/tv_message"/>
+        android:layout_below="@id/tv_expand_handle"/>
 
 </merge>

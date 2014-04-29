@@ -11,12 +11,13 @@ import java.util.List;
  */
 public class FacebookListAdapter extends SitesListAdapter
 {
-    Context ctx;
+    public static final int POST_TYPE_OBJECT  = 1;
+    public static final int POST_TYPE_DETAILS = 2;
+    public static final int POST_TYPE_NORMAL  = 3;
 
     public FacebookListAdapter( Context context, int textViewResourceId, List<?> posts )
     {
         super( context, textViewResourceId, posts );
-        this.ctx = context;
     }
 
     @Override

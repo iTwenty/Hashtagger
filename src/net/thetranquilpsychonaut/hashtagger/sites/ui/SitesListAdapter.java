@@ -35,7 +35,7 @@ public abstract class SitesListAdapter extends ArrayAdapter
             int expandedPosition = ( Integer ) parent.getTag();
             if ( position == expandedPosition )
             {
-                sitesListRow.expandRow( data, false );
+                sitesListRow.expandRow( false );
             }
             else
             {

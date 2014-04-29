@@ -9,8 +9,8 @@
     <TextView
         android:id="@+id/tv_saved_hashtag"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:textSize="20sp"
         android:layout_toLeftOf="@+id/imgb_delete_saved_hashtag"/>
 
@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="?android:attr/borderlessButtonStyle"
-        android:src="@drawable/ic_action_remove"
+        android:src="@drawable/ic_action_remove_small"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"/>
 

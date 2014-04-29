@@ -21,6 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/imgv_profile_image"
         android:padding="@dimen/content_padding"
+        android:textStyle="bold"
         android:layout_toLeftOf="@+id/tv_created_at"
         android:singleLine="true"/>
 
@@ -31,6 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:padding="@dimen/content_padding"
+        style="@style/DateText"
         android:singleLine="true"/>
 
     <TextView
@@ -41,19 +43,18 @@
         android:layout_below="@id/imgv_profile_image"
         android:padding="@dimen/content_padding"/>
 
-
     <TextView
-        android:id="@+id/tv_expand"
-        android:text="@string/str_expand"
+        android:id="@+id/tv_expand_handle"
+        tools:text="@string/str_expand"
         android:layout_below="@id/tv_tweet_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/holo_green_dark"
+        style="@style/HandleText"
         android:padding="@dimen/layout_padding"/>
 
     <net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterExpandView
         android:id="@+id/twitter_expand_view"
-        android:layout_below="@id/tv_expand"
+        android:layout_below="@id/tv_expand_handle"
         android:layout_width="match_parent"
         android:layout_height="0dp"/>
 

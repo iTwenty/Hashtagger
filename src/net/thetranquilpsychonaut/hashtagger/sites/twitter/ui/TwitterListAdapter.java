@@ -11,6 +11,10 @@ import java.util.List;
  */
 public class TwitterListAdapter extends SitesListAdapter
 {
+    public static final int STATUS_TYPE_NORMAL = 1;
+    public static final int STATUS_TYPE_MEDIA  = 2;
+    public static final int STATUS_TYPE_LINK   = 3;
+
     public TwitterListAdapter( Context context, int textViewResourceId, List<?> results )
     {
         super( context, textViewResourceId, results );

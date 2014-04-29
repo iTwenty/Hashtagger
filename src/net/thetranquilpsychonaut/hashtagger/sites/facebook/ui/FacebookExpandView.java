@@ -41,28 +41,23 @@ public class FacebookExpandView extends RelativeLayout
         expander = new ViewExpander( this );
     }
 
-    public void expandPost( Post post, boolean animate )
+    public void expandPost( Post post, int postType, boolean animate )
     {
-        boolean hasObject = null != post.getObjectId();
-        boolean hasDetails = !( "status".equals( post.getType() ) ) && null == post.getObjectId();
-        if ( hasObject )
+        switch ( postType )
         {
-            vaFacebookExpandView.setVisibility( VISIBLE );
-            vaFacebookExpandView.setDisplayedChild( 0 );
-            facebookObjectView.showObjectFromPost( post );
-        }
-        else
-        {
-            if ( hasDetails )
-            {
+            case FacebookListAdapter.POST_TYPE_OBJECT:
+                vaFacebookExpandView.setVisibility( VISIBLE );
+                vaFacebookExpandView.setDisplayedChild( 0 );
+                facebookObjectView.showObjectFromPost( post );
+                break;
+            case FacebookListAdapter.POST_TYPE_DETAILS:
                 vaFacebookExpandView.setVisibility( VISIBLE );
                 vaFacebookExpandView.setDisplayedChild( 1 );
                 facebookDetailView.showDetailsFromPost( post );
-            }
-            else
-            {
+                break;
+            case FacebookListAdapter.POST_TYPE_NORMAL:
                 vaFacebookExpandView.setVisibility( GONE );
-            }
+                break;
         }
         facebookButtons.setVisibility( VISIBLE );
         int widthMeasureSpec = MeasureSpec.makeMeasureSpec( LayoutParams.MATCH_PARENT, MeasureSpec.EXACTLY );

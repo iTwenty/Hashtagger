@@ -418,13 +418,12 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     public void onItemClick( AdapterView<?> parent, View view, int position, long id )
     {
         // We use the tag of the listview to remember position that was last clicked.
-        Object data = parent.getItemAtPosition( position );
         SitesListRow sitesListRow = ( SitesListRow ) view;
         // If tag is null, no position has been expanded yet.
         // Simply expand the view for currently selected position and set tag
         if ( null == parent.getTag() )
         {
-            sitesListRow.expandRow( data, true );
+            sitesListRow.expandRow( true );
             parent.setTag( position );
         }
         // If tag is not null, it means we have an already expanded a position...
@@ -448,7 +447,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
                     ( ( SitesListRow ) parent.getChildAt( expandedPosition - parent.getFirstVisiblePosition() ) ).collapseRow( true );
                 }
                 // Then expand the current selected position and set the tag
-                sitesListRow.expandRow( data, true );
+                sitesListRow.expandRow( true );
                 parent.setTag( position );
             }
         }

@@ -25,7 +25,7 @@ import android.widget.*;
 import net.thetranquilpsychonaut.hashtagger.HashtagSuggestionsProvider;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.iconpagerindicator.IconPageIndicator;
+import net.thetranquilpsychonaut.hashtagger.iconpagerindicator.IconPagerIndicator;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsDBContract;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsDBHelper;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsProviderContract;
@@ -40,7 +40,7 @@ public class SitesActivity extends FragmentActivity implements LoaderManager.Loa
     DrawerLayout          dlNavDrawer;
     ActionBarDrawerToggle drawerToggle;
     ViewPager             vpSitesPager;
-    IconPageIndicator     ipiSitesPager;
+    IconPagerIndicator    ipiSitesPager;
     ListView              lvSavedHashtags;
     TextView              tvSavedHashtagsEmpty;
     SitesAdapter          vpSitesPagerAdapter;
@@ -65,7 +65,7 @@ public class SitesActivity extends FragmentActivity implements LoaderManager.Loa
         dlNavDrawer.setDrawerListener( drawerToggle );
 
         vpSitesPager = ( ViewPager ) findViewById( R.id.vp_sites_pager );
-        ipiSitesPager = ( IconPageIndicator ) findViewById( R.id.ipi_sites_pager );
+        ipiSitesPager = ( IconPagerIndicator ) findViewById( R.id.ipi_sites_pager );
         SitesAdapter vpSitesPagerAdapter = new SitesAdapter( getSupportFragmentManager() );
         vpSitesPager.setAdapter( vpSitesPagerAdapter );
         vpSitesPager.setOffscreenPageLimit( HashtaggerApp.SITES.size() );

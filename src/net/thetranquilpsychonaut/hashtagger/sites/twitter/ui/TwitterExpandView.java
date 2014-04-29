@@ -43,28 +43,25 @@ public class TwitterExpandView extends RelativeLayout
     }
 
 
-    public void expandStatus( Status status, boolean animate )
+    public void expandStatus( Status status, int statusType, boolean animate )
     {
-        boolean hasMedia = status.getMediaEntities().length > 0;
-        boolean hasLink = status.getURLEntities().length > 0;
-        if ( hasMedia )
+        switch ( statusType )
         {
-            vaTwitterExpandView.setVisibility( View.VISIBLE );
-            vaTwitterExpandView.setDisplayedChild( 1 );
-            twitterMediaView.showMediaFromStatus( status );
-        }
-        else
-        {
-            if ( hasLink )
-            {
+            case TwitterListAdapter.STATUS_TYPE_MEDIA:
+                vaTwitterExpandView.setVisibility( View.VISIBLE );
+                vaTwitterExpandView.setDisplayedChild( 1 );
+                twitterMediaView.showMediaFromStatus( status );
+                break;
+            case TwitterListAdapter.STATUS_TYPE_LINK:
                 vaTwitterExpandView.setVisibility( View.VISIBLE );
                 vaTwitterExpandView.setDisplayedChild( 0 );
                 twitterLinkView.showLinkFromStatus( status );
-            }
-            else
-            {
+                break;
+            case TwitterListAdapter.STATUS_TYPE_NORMAL:
                 vaTwitterExpandView.setVisibility( GONE );
-            }
+                break;
+            default:
+                break;
         }
         twitterButtons.setVisibility( VISIBLE );
         int widthMeasureSpec = MeasureSpec.makeMeasureSpec( LayoutParams.MATCH_PARENT, MeasureSpec.EXACTLY );

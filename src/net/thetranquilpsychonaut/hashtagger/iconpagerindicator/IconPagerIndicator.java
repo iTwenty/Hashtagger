@@ -21,7 +21,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
@@ -30,25 +30,25 @@ import net.thetranquilpsychonaut.hashtagger.R;
  * This widget implements the dynamic action bar tab behavior that can change
  * across different configurations or circumstances.
  */
-public class IconPageIndicator extends LinearLayout implements OnPageChangeListener, View.OnClickListener
+public class IconPagerIndicator extends LinearLayout implements OnPageChangeListener, View.OnClickListener
 {
-    private ViewPager mViewPager;
-    private ImageView imgvTwitterLogo;
-    private ImageView imgvFacebookLogo;
+    private ViewPager   mViewPager;
+    private ImageButton imgbTwitterLogo;
+    private ImageButton imgbFacebookLogo;
 
-    public IconPageIndicator( Context context )
+    public IconPagerIndicator( Context context )
     {
         this( context, null );
     }
 
-    public IconPageIndicator( Context context, AttributeSet attrs )
+    public IconPagerIndicator( Context context, AttributeSet attrs )
     {
         super( context, attrs );
         inflate( context, R.layout.icon_pager_indicator, this );
-        imgvTwitterLogo = ( ImageView ) findViewById( R.id.imgv_twitter_logo );
-        imgvFacebookLogo = ( ImageView ) findViewById( R.id.imgv_facebook_logo );
-        imgvTwitterLogo.setOnClickListener( this );
-        imgvFacebookLogo.setOnClickListener( this );
+        imgbTwitterLogo = ( ImageButton ) findViewById( R.id.imgb_twitter_logo );
+        imgbFacebookLogo = ( ImageButton ) findViewById( R.id.imgb_facebook_logo );
+        imgbTwitterLogo.setOnClickListener( this );
+        imgbFacebookLogo.setOnClickListener( this );
     }
 
     public void setViewPager( ViewPager view )
@@ -98,11 +98,11 @@ public class IconPageIndicator extends LinearLayout implements OnPageChangeListe
                         color = android.R.color.transparent;
                         break;
                 }
-                ( ( ImageView ) getChildAt( a ) ).setColorFilter( getResources().getColor( color ) );
+                ( ( ImageButton ) getChildAt( a ) ).setColorFilter( getResources().getColor( color ) );
             }
             else
             {
-                ( ( ImageView ) getChildAt( a ) ).setColorFilter( null );
+                ( ( ImageButton ) getChildAt( a ) ).setColorFilter( null );
             }
         }
     }
