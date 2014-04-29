@@ -31,4 +31,18 @@
     <string name="str_no_saved_hashtags">Your saved hashtags will appear here.</string>
     <string name="open_drawer_desc">Open Drawer</string>
     <string name="close_drawer_desc">Close Drawer</string>
+    <string name="str_twtr_hide_photo">Hide Photo</string>
+    <string name="str_twtr_show_photo">Show Photo</string>
+    <string name="str_twtr_hide_link">Hide Link</string>
+    <string name="str_twtr_show_link">Show Link</string>
+    <string name="str_twtr_show_less">Show Less</string>
+    <string name="str_twtr_show_more">Show More</string>
+    <string name="str_fb_show_less">Show Less</string>
+    <string name="str_fb_show_more">Show More</string>
+    <string name="str_fb_hide_photo">Hide Photo</string>
+    <string name="str_fb_show_photo">Show Photo</string>
+    <string name="str_fb_hide_video">Hide Video</string>
+    <string name="str_fb_show_video">Show Video</string>
+    <string name="str_fb_hide_link">Hide Link</string>
+    <string name="str_fb_show_link">Show Link</string>
 </resources>

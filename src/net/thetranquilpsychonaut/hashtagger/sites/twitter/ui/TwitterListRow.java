@@ -74,13 +74,13 @@ public class TwitterListRow extends SitesListRow
         switch ( statusType )
         {
             case TwitterListAdapter.STATUS_TYPE_MEDIA:
-                return isExpanded ? "Hide Photo" : "Show Photo";
+                return isExpanded ? getResources().getString( R.string.str_twtr_hide_photo) : getResources().getString( R.string.str_twtr_show_photo );
             case TwitterListAdapter.STATUS_TYPE_LINK:
-                return isExpanded ? "Hide Link" : "Show Link";
+                return isExpanded ? getResources().getString( R.string.str_twtr_hide_link ) : getResources().getString( R.string.str_twtr_show_link );
             case TwitterListAdapter.STATUS_TYPE_NORMAL:
-                return isExpanded ? "Show Less" : "Show More";
+                return isExpanded ? getResources().getString( R.string.str_twtr_show_less ) : getResources().getString( R.string.str_twtr_show_more);
         }
-        return isExpanded ? "Show Less" : "Show More";
+        return isExpanded ? getResources().getString( R.string.str_twtr_show_less ) : getResources().getString( R.string.str_twtr_show_more);
     }
 
 

@@ -63,14 +63,14 @@ public class FacebookListRow extends SitesListRow
     {
         String strPostType = post.getType();
         if ( "status".equals( strPostType ) )
-            return isExpanded ? "Show Less" : "Show More";
+            return isExpanded ? getResources().getString( R.string.str_fb_show_less ) : getResources().getString( R.string.str_fb_show_more);
         else if ( "photo".equals( strPostType ) )
-            return isExpanded ? "Hide Photo" : "Show Photo";
+            return isExpanded ? getResources().getString( R.string.str_fb_hide_photo ) : getResources().getString( R.string.str_fb_show_photo );
         else if ( "video".equals( strPostType ) )
-            return isExpanded ? "Hide Video" : "Show Video";
+            return isExpanded ? getResources().getString( R.string.str_fb_hide_video ) : getResources().getString( R.string.str_fb_show_video );
         else if ( "link".equals( strPostType ) )
-            return isExpanded ? "Hide Link" : "Show Link";
-        return isExpanded ? "Show Less" : "Show More";
+            return isExpanded ? getResources().getString( R.string.str_fb_hide_link ) : getResources().getString( R.string.str_fb_show_link );
+        return isExpanded ? getResources().getString( R.string.str_fb_show_less ) : getResources().getString( R.string.str_fb_show_more);
     }
 
     private int getPostType()
