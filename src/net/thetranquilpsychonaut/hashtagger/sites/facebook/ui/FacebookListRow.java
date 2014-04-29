@@ -27,12 +27,12 @@ public class FacebookListRow extends SitesListRow
 
     protected FacebookListRow( Context context )
     {
-        this( context, null, 0 );
+        this( context, null, R.attr.sitesListRowStyle );
     }
 
     protected FacebookListRow( Context context, AttributeSet attrs )
     {
-        this( context, attrs, 0 );
+        this( context, attrs, R.attr.sitesListRowStyle );
     }
 
     protected FacebookListRow( Context context, AttributeSet attrs, int defStyle )

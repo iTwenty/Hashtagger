@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="AppTheme" parent="android:Theme.Holo.Light">
+        <item name="sitesListRowStyle">@style/SitesListRowStyle</item>
+    </style>
+
     <style name="DateText">
         <item name="android:textSize">10sp</item>
         <item name="android:textColor">@color/text_faded</item>
@@ -9,4 +13,10 @@
         <item name="android:textColor">@android:color/holo_green_dark</item>
         <item name="android:textSize">12sp</item>
     </style>
+
+    <style name="SitesListRowStyle" parent="android:Theme.Holo.Light">
+        <item name="android:background">@drawable/container_dropshadow</item>
+        <item name="android:padding">@dimen/layout_padding</item>
+    </style>
+
 </resources>
