@@ -2,12 +2,7 @@
 
 <merge
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ll_icon_pager_indicator"
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    style="?android:buttonBarStyle"
-    android:weightSum="2">
+    android:id="@+id/ll_icon_pager_indicator">
 
     <ImageButton
         android:id="@+id/imgb_twitter_logo"

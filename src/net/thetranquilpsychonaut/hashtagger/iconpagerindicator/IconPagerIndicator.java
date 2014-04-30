@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
+import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
 
 /**
@@ -38,12 +39,17 @@ public class IconPagerIndicator extends LinearLayout implements OnPageChangeList
 
     public IconPagerIndicator( Context context )
     {
-        this( context, null );
+        this( context, null, 0 );
     }
 
     public IconPagerIndicator( Context context, AttributeSet attrs )
     {
-        super( context, attrs );
+        this( context, attrs, 0 );
+    }
+
+    public IconPagerIndicator( Context context, AttributeSet attrs, int defStyle )
+    {
+        super( context, attrs, defStyle );
         inflate( context, R.layout.icon_pager_indicator, this );
         imgbTwitterLogo = ( ImageButton ) findViewById( R.id.imgb_twitter_logo );
         imgbFacebookLogo = ( ImageButton ) findViewById( R.id.imgb_facebook_logo );

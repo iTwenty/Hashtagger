@@ -19,9 +19,12 @@
         <net.thetranquilpsychonaut.hashtagger.iconpagerindicator.IconPagerIndicator
             android:id="@id/ipi_sites_pager"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/container_dropshadow"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:background="@drawable/card_background_reverse"
+            android:layout_marginLeft="@dimen/card_padding"
+            android:layout_marginRight="@dimen/card_padding"
+            style="?android:buttonBarStyle"/>
 
     </RelativeLayout>
 

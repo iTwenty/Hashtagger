@@ -16,8 +16,7 @@
     </style>
 
     <style name="SitesListRowStyle" parent="android:Theme.Holo.Light">
-        <item name="android:background">@drawable/container_dropshadow</item>
-        <item name="android:padding">@dimen/layout_padding</item>
+        <item name="android:background">@drawable/card_background</item>
+        <item name="android:padding">@dimen/card_padding</item>
     </style>
-
 </resources>

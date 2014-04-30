@@ -15,7 +15,11 @@
             android:id="@+id/lv_results_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@null"/>
+            android:divider="@null"
+            android:dividerHeight="@dimen/card_padding"
+            android:padding="@dimen/card_padding"
+            android:listSelector="@android:color/transparent"
+            android:cacheColorHint="@android:color/transparent"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

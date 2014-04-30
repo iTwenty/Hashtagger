@@ -9,8 +9,8 @@
         android:id="@+id/va_twitter_expand_view"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/container_dropshadow"
-        android:padding="@dimen/layout_padding"
+        android:background="@drawable/selector_container_dropshadow"
+        android:padding="@dimen/content_padding"
         android:measureAllChildren="false">
 
         <net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterLinkView
