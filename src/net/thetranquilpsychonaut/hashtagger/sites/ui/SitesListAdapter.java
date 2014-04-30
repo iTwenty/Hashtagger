@@ -39,7 +39,10 @@ public abstract class SitesListAdapter extends ArrayAdapter
             }
             else
             {
-                sitesListRow.collapseRow( false );
+                if ( sitesListRow.isExpanded )
+                {
+                    sitesListRow.collapseRow( false );
+                }
             }
         }
         return sitesListRow;

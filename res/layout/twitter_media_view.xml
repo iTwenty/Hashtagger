@@ -8,11 +8,11 @@
 
     <ImageView
         android:id="@+id/imgv_media"
-        android:src="@drawable/drawable_image_loading"
         android:layout_gravity="center_horizontal"
-        android:layout_height="100dp"
-        android:layout_width="100dp"
+        android:layout_height="200dp"
+        android:layout_width="match_parent"
         android:layout_centerHorizontal="true"
+        android:background="@drawable/drawable_image_loading"
         android:adjustViewBounds="true"/>
 
 </merge>

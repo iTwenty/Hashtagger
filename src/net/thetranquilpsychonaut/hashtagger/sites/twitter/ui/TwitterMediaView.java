@@ -35,7 +35,7 @@ public class TwitterMediaView extends RelativeLayout
 
     public void showMediaFromStatus( Status status )
     {
-        UrlImageViewHelper.setUrlDrawable( imgvMedia, status.getMediaEntities()[0].getMediaURL(), getResources().getDrawable( R.drawable.drawable_image_loading ), HashtaggerApp.CACHE_DURATION_MS );
+        UrlImageViewHelper.setUrlDrawable( imgvMedia, status.getMediaEntities()[0].getMediaURL(), null, HashtaggerApp.CACHE_DURATION_MS );
     }
 
     public void clearView()

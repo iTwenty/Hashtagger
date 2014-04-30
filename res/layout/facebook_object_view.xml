@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/imgv_picture"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
         android:background="@drawable/drawable_image_loading"
         android:layout_centerHorizontal="true"
         android:adjustViewBounds="true"/>

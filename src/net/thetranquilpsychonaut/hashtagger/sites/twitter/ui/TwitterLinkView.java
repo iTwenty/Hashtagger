@@ -17,7 +17,6 @@ public class TwitterLinkView extends RelativeLayout
 {
     ImageView imgvFavicon;
     TextView  tvDisplayUrl;
-    TextView  tvExpandedUrl;
 
     public TwitterLinkView( Context context )
     {
@@ -35,20 +34,17 @@ public class TwitterLinkView extends RelativeLayout
         inflate( context, R.layout.twitter_link_view, this );
         imgvFavicon = ( ImageView ) findViewById( R.id.imgv_favicon );
         tvDisplayUrl = ( TextView ) findViewById( R.id.tv_display_url );
-        tvExpandedUrl = ( TextView ) findViewById( R.id.tv_expanded_url );
     }
 
     public void showLinkFromStatus( Status status )
     {
         UrlImageViewHelper.setUrlDrawable( imgvFavicon, "http://g.etfv.co/http://" + status.getURLEntities()[0].getDisplayURL(), null, HashtaggerApp.CACHE_DURATION_MS );
         tvDisplayUrl.setText( status.getURLEntities()[0].getDisplayURL() );
-        tvExpandedUrl.setText( status.getURLEntities()[0].getExpandedURL() );
     }
 
     public void clearView()
     {
         imgvFavicon.setImageDrawable( null );
         tvDisplayUrl.setText( "" );
-        tvExpandedUrl.setText( "" );
     }
 }

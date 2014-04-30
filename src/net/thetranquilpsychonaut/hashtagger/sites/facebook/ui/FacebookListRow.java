@@ -2,6 +2,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
@@ -14,7 +15,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 /**
  * Created by itwenty on 4/14/14.
  */
-public class FacebookListRow extends SitesListRow
+public class FacebookListRow extends SitesListRow implements View.OnClickListener
 {
     private ImageView          imgvProfileImage;
     private TextView           tvUserNameOrStory;
@@ -45,6 +46,7 @@ public class FacebookListRow extends SitesListRow
         tvMessage = ( TextView ) findViewById( R.id.tv_message );
         tvExpandHandle = ( TextView ) findViewById( R.id.tv_expand_handle );
         facebookExpandView = ( FacebookExpandView ) findViewById( R.id.facebook_expand_view );
+
     }
 
     @Override
@@ -63,14 +65,22 @@ public class FacebookListRow extends SitesListRow
     {
         String strPostType = post.getType();
         if ( "status".equals( strPostType ) )
-            return isExpanded ? getResources().getString( R.string.str_fb_show_less ) : getResources().getString( R.string.str_fb_show_more);
+        {
+            return isExpanded ? getResources().getString( R.string.str_fb_show_less ) : getResources().getString( R.string.str_fb_show_more );
+        }
         else if ( "photo".equals( strPostType ) )
+        {
             return isExpanded ? getResources().getString( R.string.str_fb_hide_photo ) : getResources().getString( R.string.str_fb_show_photo );
+        }
         else if ( "video".equals( strPostType ) )
+        {
             return isExpanded ? getResources().getString( R.string.str_fb_hide_video ) : getResources().getString( R.string.str_fb_show_video );
+        }
         else if ( "link".equals( strPostType ) )
+        {
             return isExpanded ? getResources().getString( R.string.str_fb_hide_link ) : getResources().getString( R.string.str_fb_show_link );
-        return isExpanded ? getResources().getString( R.string.str_fb_show_less ) : getResources().getString( R.string.str_fb_show_more);
+        }
+        return isExpanded ? getResources().getString( R.string.str_fb_show_less ) : getResources().getString( R.string.str_fb_show_more );
     }
 
     private int getPostType()
@@ -81,16 +91,13 @@ public class FacebookListRow extends SitesListRow
         {
             return FacebookListAdapter.POST_TYPE_OBJECT;
         }
+        else if ( hasDetails )
+        {
+            return FacebookListAdapter.POST_TYPE_DETAILS;
+        }
         else
         {
-            if ( hasDetails )
-            {
-                return FacebookListAdapter.POST_TYPE_DETAILS;
-            }
-            else
-            {
-                return FacebookListAdapter.POST_TYPE_NORMAL;
-            }
+            return FacebookListAdapter.POST_TYPE_NORMAL;
         }
     }
 
@@ -99,6 +106,7 @@ public class FacebookListRow extends SitesListRow
     {
         super.expandRow( animate );
         facebookExpandView.expandPost( post, postType, animate );
+        facebookExpandView.setOnClickListener( this );
         tvExpandHandle.setText( getExpandHandleText() );
     }
 
@@ -106,7 +114,15 @@ public class FacebookListRow extends SitesListRow
     public void collapseRow( boolean animate )
     {
         super.collapseRow( animate );
+        tvMessage.setMaxLines( 10 );
         facebookExpandView.collapsePost( animate );
+        facebookExpandView.setOnClickListener( null );
         tvExpandHandle.setText( getExpandHandleText() );
+    }
+
+    @Override
+    public void onClick( View v )
+    {
+        Helper.debug( post.getLink().toString() );
     }
 }

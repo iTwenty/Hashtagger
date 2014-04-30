@@ -3,6 +3,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
@@ -15,7 +16,7 @@ import twitter4j.Status;
 /**
  * Created by itwenty on 4/15/14.
  */
-public class TwitterListRow extends SitesListRow
+public class TwitterListRow extends SitesListRow implements View.OnClickListener
 {
     private ImageView         imgvProfileImage;
     private TextView          tvScreenName;
@@ -33,7 +34,7 @@ public class TwitterListRow extends SitesListRow
 
     public TwitterListRow( Context context, AttributeSet attrs )
     {
-        this( context, attrs,  R.attr.sitesListRowStyle );
+        this( context, attrs, R.attr.sitesListRowStyle );
     }
 
     public TwitterListRow( Context context, AttributeSet attrs, int defStyle )
@@ -51,9 +52,9 @@ public class TwitterListRow extends SitesListRow
     @Override
     public void expandRow( final boolean animate )
     {
-        Helper.debug( String.valueOf( this.getChildCount() ) );
         super.expandRow( animate );
         twitterExpandView.expandStatus( status, statusType, animate );
+        twitterExpandView.setOnClickListener( this );
         tvExpandHandle.setText( getExpandHandleText() );
     }
 
@@ -74,13 +75,13 @@ public class TwitterListRow extends SitesListRow
         switch ( statusType )
         {
             case TwitterListAdapter.STATUS_TYPE_MEDIA:
-                return isExpanded ? getResources().getString( R.string.str_twtr_hide_photo) : getResources().getString( R.string.str_twtr_show_photo );
+                return isExpanded ? getResources().getString( R.string.str_twtr_hide_photo ) : getResources().getString( R.string.str_twtr_show_photo );
             case TwitterListAdapter.STATUS_TYPE_LINK:
                 return isExpanded ? getResources().getString( R.string.str_twtr_hide_link ) : getResources().getString( R.string.str_twtr_show_link );
             case TwitterListAdapter.STATUS_TYPE_NORMAL:
-                return isExpanded ? getResources().getString( R.string.str_twtr_show_less ) : getResources().getString( R.string.str_twtr_show_more);
+                return isExpanded ? getResources().getString( R.string.str_twtr_show_less ) : getResources().getString( R.string.str_twtr_show_more );
         }
-        return isExpanded ? getResources().getString( R.string.str_twtr_show_less ) : getResources().getString( R.string.str_twtr_show_more);
+        return isExpanded ? getResources().getString( R.string.str_twtr_show_less ) : getResources().getString( R.string.str_twtr_show_more );
     }
 
 
@@ -110,6 +111,13 @@ public class TwitterListRow extends SitesListRow
     {
         super.collapseRow( animate );
         twitterExpandView.collapseStatus( animate );
+        twitterExpandView.setOnClickListener( null );
         tvExpandHandle.setText( getExpandHandleText() );
+    }
+
+    @Override
+    public void onClick( View v )
+    {
+        Helper.debug( status.getText() );
     }
 }

@@ -32,7 +32,7 @@ public abstract class SitesListRow extends RelativeLayout
         isExpanded = true;
     }
 
-    public abstract void updateRow( final Object data );
+    public abstract void updateRow( final Object result );
 
     public void collapseRow( boolean animate )
     {

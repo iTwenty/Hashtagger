@@ -21,13 +21,4 @@
         android:ellipsize="end"
         android:layout_height="wrap_content"/>
 
-    <TextView
-        tools:text="https://www.google.com/search?q=21st+century+schizoid+man"
-        android:id="@+id/tv_expanded_url"
-        android:layout_below="@id/imgv_favicon"
-        android:maxLines="2"
-        android:ellipsize="end"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
-
 </merge>

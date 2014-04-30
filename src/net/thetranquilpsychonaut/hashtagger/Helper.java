@@ -78,4 +78,28 @@ public class Helper
         DisplayMetrics displayMetrics = HashtaggerApp.app.getResources().getDisplayMetrics();
         return ( int ) ( ( dp * displayMetrics.density ) + 0.5 );
     }
+
+    public static int getLineCount( String message )
+    {
+        int lineCount = 0;
+        int length = message.length();
+        char c;
+        for ( int pos = 0; pos < length; ++pos )
+        {
+            c = message.charAt( pos );
+            if ( c == '\r' )
+            {
+                lineCount++;
+                if ( pos + 1 < length && message.charAt( pos + 1 ) == '\n' )
+                {
+                    ++pos;
+                }
+            }
+            else if ( c == '\n' )
+            {
+                lineCount++;
+            }
+        }
+        return lineCount;
+    }
 }

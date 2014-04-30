@@ -2,22 +2,20 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.RelativeLayout;
 import android.widget.ViewAnimator;
 import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.sites.components.ViewExpander;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesExpandView;
 
 /**
  * Created by itwenty on 4/18/14.
  */
-public class FacebookExpandView extends RelativeLayout
+public class FacebookExpandView extends SitesExpandView
 {
     private ViewAnimator       vaFacebookExpandView;
     private FacebookObjectView facebookObjectView;
     private FacebookDetailView facebookDetailView;
     private FacebookButtons    facebookButtons;
-    private ViewExpander       expander;
 
     public FacebookExpandView( Context context )
     {
@@ -38,7 +36,6 @@ public class FacebookExpandView extends RelativeLayout
         facebookDetailView = ( FacebookDetailView ) findViewById( R.id.facebook_detail_view );
         facebookButtons = ( FacebookButtons ) findViewById( R.id.facebook_buttons );
         vaFacebookExpandView.setVisibility( GONE );
-        expander = new ViewExpander( this );
     }
 
     public void expandPost( Post post, int postType, boolean animate )
@@ -63,11 +60,11 @@ public class FacebookExpandView extends RelativeLayout
         int widthMeasureSpec = MeasureSpec.makeMeasureSpec( LayoutParams.MATCH_PARENT, MeasureSpec.EXACTLY );
         int heightMeasureSpec = MeasureSpec.makeMeasureSpec( LayoutParams.WRAP_CONTENT, MeasureSpec.EXACTLY );
         measure( widthMeasureSpec, heightMeasureSpec );
-        expander.expandView( getMeasuredHeight(), animate );
+        expand( getMeasuredHeight(), animate );
     }
 
     public void collapsePost( boolean animate )
     {
-        expander.collapseView( animate );
+        collapse( animate );
     }
 }
