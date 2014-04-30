@@ -2,8 +2,8 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
@@ -12,7 +12,7 @@ import twitter4j.Status;
 /**
  * Created by itwenty on 4/15/14.
  */
-public class TwitterMediaView extends RelativeLayout
+public class TwitterMediaView extends FrameLayout
 {
     ImageView imgvMedia;
 
@@ -35,7 +35,11 @@ public class TwitterMediaView extends RelativeLayout
 
     public void showMediaFromStatus( Status status )
     {
-        UrlImageViewHelper.setUrlDrawable( imgvMedia, status.getMediaEntities()[0].getMediaURL(), null, HashtaggerApp.CACHE_DURATION_MS );
+        UrlImageViewHelper.setUrlDrawable(
+                imgvMedia,
+                status.getMediaEntities()[0].getMediaURL(),
+                null,
+                HashtaggerApp.CACHE_DURATION_MS );
     }
 
     public void clearView()

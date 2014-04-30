@@ -12,6 +12,7 @@
     <style name="HandleText">
         <item name="android:textColor">@android:color/holo_green_dark</item>
         <item name="android:textSize">12sp</item>
+        <item name="android:layout_centerHorizontal">true</item>
     </style>
 
     <style name="SitesListRowStyle" parent="android:Theme.Holo.Light">
