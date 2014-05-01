@@ -66,5 +66,7 @@ public class FacebookExpandView extends SitesExpandView
     public void collapsePost( boolean animate )
     {
         collapse( animate );
+        facebookObjectView.clearView();
+        facebookDetailView.clearView();
     }
 }

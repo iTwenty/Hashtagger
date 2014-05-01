@@ -61,4 +61,10 @@ public class FacebookObjectView extends FrameLayout
                 }
         );
     }
+
+    public void clearView()
+    {
+        imgvPicture.setImageDrawable( null );
+        this.setOnClickListener( null );
+    }
 }

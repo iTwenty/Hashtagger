@@ -1,7 +1,10 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -40,7 +43,7 @@ public class FacebookDetailView extends RelativeLayout
         tvCaption = ( TextView ) findViewById( R.id.tv_caption );
     }
 
-    public void showDetailsFromPost( Post post )
+    public void showDetailsFromPost( final Post post )
     {
         if ( null == post.getPicture() )
         {
@@ -53,5 +56,24 @@ public class FacebookDetailView extends RelativeLayout
         tvName.setText( post.getName() );
         tvDescription.setText( post.getDescription() );
         tvCaption.setText( post.getCaption() );
+        this.setOnClickListener( new OnClickListener()
+        {
+            @Override
+            public void onClick( View v )
+            {
+                Intent intent = new Intent( Intent.ACTION_VIEW );
+                intent.setData( Uri.parse( post.getLink().toString() ) );
+                getContext().startActivity( intent );
+            }
+        } );
+    }
+
+    public void clearView()
+    {
+        imgvPicture.setImageDrawable( null );
+        tvName.setText( "" );
+        tvDescription.setText( "" );
+        tvCaption.setText( "" );
+        this.setOnClickListener( null );
     }
 }

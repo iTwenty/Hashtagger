@@ -105,6 +105,7 @@ public class FacebookListRow extends SitesListRow implements View.OnClickListene
     public void expandRow( boolean animate )
     {
         super.expandRow( animate );
+        tvMessage.setMaxLines( Integer.MAX_VALUE );
         facebookExpandView.expandPost( post, postType, animate );
         facebookExpandView.setOnClickListener( this );
         tvExpandHandle.setText( getExpandHandleText() );

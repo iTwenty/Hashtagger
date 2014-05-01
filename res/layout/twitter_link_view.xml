@@ -14,10 +14,10 @@
 
     <TextView
         tools:text="21st Century Schizoid Man | Google Search"
-        android:id="@+id/tv_display_url"
+        android:id="@+id/tv_expanded_url"
         android:layout_toRightOf="@id/imgv_favicon"
         android:layout_width="fill_parent"
-        android:maxLines="1"
+        android:maxLines="2"
         android:ellipsize="end"
         android:layout_height="wrap_content"/>
 

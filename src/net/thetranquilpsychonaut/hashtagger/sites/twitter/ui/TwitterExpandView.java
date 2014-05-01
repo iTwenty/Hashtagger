@@ -69,5 +69,7 @@ public class TwitterExpandView extends SitesExpandView
     public void collapseStatus( boolean animate )
     {
         collapse( animate );
+        twitterLinkView.clearView();
+        twitterMediaView.clearView();
     }
 }

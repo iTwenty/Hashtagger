@@ -1,7 +1,10 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,7 +19,7 @@ import twitter4j.Status;
 public class TwitterLinkView extends RelativeLayout
 {
     ImageView imgvFavicon;
-    TextView  tvDisplayUrl;
+    TextView  tvExpandedUrl;
 
     public TwitterLinkView( Context context )
     {
@@ -33,18 +36,29 @@ public class TwitterLinkView extends RelativeLayout
         super( context, attrs, defStyle );
         inflate( context, R.layout.twitter_link_view, this );
         imgvFavicon = ( ImageView ) findViewById( R.id.imgv_favicon );
-        tvDisplayUrl = ( TextView ) findViewById( R.id.tv_display_url );
+        tvExpandedUrl = ( TextView ) findViewById( R.id.tv_expanded_url );
     }
 
-    public void showLinkFromStatus( Status status )
+    public void showLinkFromStatus( final Status status )
     {
         UrlImageViewHelper.setUrlDrawable( imgvFavicon, "http://g.etfv.co/http://" + status.getURLEntities()[0].getDisplayURL(), null, HashtaggerApp.CACHE_DURATION_MS );
-        tvDisplayUrl.setText( status.getURLEntities()[0].getDisplayURL() );
+        tvExpandedUrl.setText( status.getURLEntities()[0].getExpandedURL() );
+        this.setOnClickListener( new OnClickListener()
+        {
+            @Override
+            public void onClick( View v )
+            {
+                Intent intent = new Intent( Intent.ACTION_VIEW );
+                intent.setData( Uri.parse( status.getURLEntities()[0].getExpandedURL() ) );
+                getContext().startActivity( intent );
+            }
+        } );
     }
 
     public void clearView()
     {
         imgvFavicon.setImageDrawable( null );
-        tvDisplayUrl.setText( "" );
+        tvExpandedUrl.setText( "" );
+        this.setOnClickListener( null );
     }
 }
