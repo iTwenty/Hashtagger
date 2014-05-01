@@ -1,6 +1,9 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.content.Context;
+import android.view.View;
+import android.view.ViewGroup;
+import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 
@@ -21,8 +24,26 @@ public class FacebookListAdapter extends SitesListAdapter
     }
 
     @Override
-    protected SitesListRow initSitesListRow( Context context )
+    public int getItemViewType( int position )
     {
-        return new FacebookListRow( context );
+        return 1;
+    }
+
+    @Override
+    public int getViewTypeCount()
+    {
+        return 2;
+    }
+
+    @Override
+    protected SitesListRow initSitesListRow( Context context, int position, View convertView, ViewGroup parent )
+    {
+        return null;
+    }
+
+    @Override
+    public void updateTypes( SearchType searchType, List<?> searchResults )
+    {
+
     }
 }

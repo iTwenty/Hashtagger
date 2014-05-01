@@ -113,4 +113,10 @@ public class FacebookFragment extends SitesFragment
     {
         ( ( List<Post> ) results ).addAll( 0, ( List<Post> ) searchResults );
     }
+
+    @Override
+    protected void searchHashtag( String hashtag )
+    {
+
+    }
 }

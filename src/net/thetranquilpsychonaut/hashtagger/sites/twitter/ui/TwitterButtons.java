@@ -3,6 +3,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import net.thetranquilpsychonaut.hashtagger.R;
 
@@ -29,9 +30,9 @@ public class TwitterButtons extends LinearLayout
     {
         super( context, attrs, defStyle );
         inflate( context, R.layout.twitter_buttons, this );
-        btnReply = ( Button ) findViewById( R.id.btn_reply );
-        btnRetweet = ( Button ) findViewById( R.id.btn_retweet );
-        btnFavorite = ( Button ) findViewById( R.id.btn_favorite );
+        btnReply = ( Button ) findViewById( R.id.imgb_reply );
+        btnRetweet = ( Button ) findViewById( R.id.imgb_retweet );
+        btnFavorite = ( Button ) findViewById( R.id.imgb_favorite );
     }
 
     public void setReplyClickListener( OnClickListener listener )

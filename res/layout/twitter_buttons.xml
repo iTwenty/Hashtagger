@@ -1,41 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<merge
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:weightSum="3">
+    android:layout_height="wrap_content">
 
     <Button
-        android:id="@+id/btn_reply"
+        android:id="@+id/imgb_reply"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="Reply"
-        android:drawableLeft="@drawable/twitter_reply"
         android:focusable="false"
+        android:drawableLeft="@drawable/twitter_reply"
         style="?android:attr/borderlessButtonStyle"/>
 
     <Button
-        android:id="@+id/btn_retweet"
+        android:id="@+id/imgb_retweet"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="Retweet"
-        android:drawableLeft="@drawable/twitter_retweet"
         android:focusable="false"
-        style="?android:attr/borderlessButtonStyle"
-        />
+        android:drawableLeft="@drawable/twitter_retweet"
+        style="?android:attr/borderlessButtonStyle"/>
 
     <Button
-        android:id="@+id/btn_favorite"
+        android:id="@+id/imgb_favorite"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="Favorite"
-        android:drawableLeft="@drawable/twitter_favorite"
         android:focusable="false"
+        android:drawableLeft="@drawable/twitter_favorite"
         style="?android:attr/borderlessButtonStyle"/>
 
-</merge>
+</LinearLayout>

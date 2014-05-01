@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
+import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
@@ -337,6 +338,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             // Since we cannot add directly to List<?>, we have to delegate the adding to subclass which
             // casts the list to appropriate type and then does the adding
             addToEnd( searchResults );
+            sitesListAdapter.updateTypes( SearchType.INITIAL, searchResults );
             sitesListAdapter.notifyDataSetChanged();
         }
         else
@@ -353,6 +355,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             // Since we cannot add directly to List<?>, we have to delegate the adding to subclass which
             // casts the list to appropriate type and then does the adding
             addToEnd( searchResults );
+            sitesListAdapter.updateTypes( SearchType.OLDER, searchResults );
             sitesListAdapter.notifyDataSetChanged();
         }
         else
@@ -371,6 +374,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             // Since we cannot add directly to List<?>, we have to delegate the adding to subclass which
             // casts the list to appropriate type and then does the adding
             addToStart( searchResults );
+            sitesListAdapter.updateTypes( SearchType.NEWER, searchResults );
             sitesListAdapter.notifyDataSetChanged();
         }
         else
@@ -417,6 +421,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     @Override
     public void onItemClick( AdapterView<?> parent, View view, int position, long id )
     {
+        Helper.debug( String.valueOf( position ) );
         // We use the tag of the listview to remember position that was last clicked.
         SitesListRow sitesListRow = ( SitesListRow ) view;
         // If tag is null, no position has been expanded yet.

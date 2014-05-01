@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <item name="sitesListRowStyle">@style/SitesListRowStyle</item>
+        <item name="sitesListRowStyle">@style/sitesListRowStyle</item>
     </style>
 
     <style name="DateText">
@@ -15,7 +15,7 @@
         <item name="android:layout_centerHorizontal">true</item>
     </style>
 
-    <style name="SitesListRowStyle" parent="android:Theme.Holo.Light">
+    <style name="sitesListRowStyle" parent="android:Theme.Holo.Light.DarkActionBar">
         <item name="android:background">@drawable/card_background</item>
         <item name="android:padding">@dimen/card_padding</item>
     </style>

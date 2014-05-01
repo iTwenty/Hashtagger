@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 
 import java.util.List;
 
@@ -23,12 +24,8 @@ public abstract class SitesListAdapter extends ArrayAdapter
     @Override
     public View getView( int position, View convertView, ViewGroup parent )
     {
-        SitesListRow sitesListRow = ( SitesListRow ) convertView;
+        SitesListRow sitesListRow = initSitesListRow( context, position, convertView, parent );
         Object data = getItem( position );
-        if ( sitesListRow == null )
-        {
-            sitesListRow = initSitesListRow( context );
-        }
         sitesListRow.updateRow( data );
         if ( null != parent.getTag() )
         {
@@ -48,5 +45,13 @@ public abstract class SitesListAdapter extends ArrayAdapter
         return sitesListRow;
     }
 
-    protected abstract SitesListRow initSitesListRow( Context context );
+    @Override
+    public abstract int getItemViewType( int position );
+
+    @Override
+    public abstract int getViewTypeCount();
+
+    protected abstract SitesListRow initSitesListRow( Context context, int position, View convertView, ViewGroup parent );
+
+    public abstract void updateTypes( SearchType searchType, List<?> searchResults );
 }
