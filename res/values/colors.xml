@@ -11,4 +11,6 @@
     <item name="googlep_red" type="color">#d34836</item>
     <item name="googlep_gray" type="color">#d2d2d2</item>
     <item name="text_faded" type="color">#666666</item>
+    <item name="light_orange" type="color">#ffbb33</item>
+    <item name="orange" type="color">#ff8800</item>
 </resources>

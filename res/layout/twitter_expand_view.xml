@@ -9,7 +9,7 @@
         android:id="@+id/va_twitter_expand_view"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/selector_container_dropshadow"
+        android:background="@drawable/selector_shadow_border"
         android:padding="@dimen/content_padding"
         android:measureAllChildren="false">
 
