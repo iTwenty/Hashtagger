@@ -9,7 +9,6 @@ import android.widget.RelativeLayout;
  */
 public abstract class SitesListRow extends RelativeLayout
 {
-    protected boolean isExpanded;
 
     protected SitesListRow( Context context )
     {
@@ -24,18 +23,24 @@ public abstract class SitesListRow extends RelativeLayout
     protected SitesListRow( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
-        this.isExpanded = false;
     }
+
+    protected abstract SitesButtons getSitesButtons();
 
     public void expandRow( boolean animate )
     {
-        isExpanded = true;
+        getSitesButtons().show( animate );
     }
 
     public abstract void updateRow( final Object result );
 
     public void collapseRow( boolean animate )
     {
-        isExpanded = false;
+        getSitesButtons().hide( animate );
+    }
+
+    public boolean isExpanded()
+    {
+        return getSitesButtons().isVisible;
     }
 }

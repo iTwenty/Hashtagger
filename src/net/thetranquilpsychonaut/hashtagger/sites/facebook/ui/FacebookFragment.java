@@ -41,7 +41,7 @@ public class FacebookFragment extends SitesFragment
     @Override
     protected SitesListAdapter initSitesListAdapter()
     {
-        FacebookListAdapter facebookListAdapter = new FacebookListAdapter( getActivity(), R.layout.twitter_list_row, results );
+        FacebookListAdapter facebookListAdapter = new FacebookListAdapter( getActivity(), 0, results );
         return facebookListAdapter;
     }
 

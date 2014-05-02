@@ -1,6 +1,7 @@
 package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -24,7 +25,7 @@ public abstract class SitesListAdapter extends ArrayAdapter
     @Override
     public View getView( int position, View convertView, ViewGroup parent )
     {
-        SitesListRow sitesListRow = initSitesListRow( context, position, convertView, parent );
+        SitesListRow sitesListRow = getSitesListRow( context, position, convertView, parent );
         Object data = getItem( position );
         sitesListRow.updateRow( data );
         if ( null != parent.getTag() )
@@ -36,7 +37,7 @@ public abstract class SitesListAdapter extends ArrayAdapter
             }
             else
             {
-                if ( sitesListRow.isExpanded )
+                if ( sitesListRow.isExpanded() )
                 {
                     sitesListRow.collapseRow( false );
                 }
@@ -51,7 +52,13 @@ public abstract class SitesListAdapter extends ArrayAdapter
     @Override
     public abstract int getViewTypeCount();
 
-    protected abstract SitesListRow initSitesListRow( Context context, int position, View convertView, ViewGroup parent );
+    protected abstract SitesListRow getSitesListRow( Context context, int position, View convertView, ViewGroup parent );
 
     public abstract void updateTypes( SearchType searchType, List<?> searchResults );
+
+    public abstract void clearTypes();
+
+    public abstract void initTypes( Bundle savedInstanceState );
+
+    public abstract void saveTypes( Bundle outState );
 }

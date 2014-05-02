@@ -8,25 +8,25 @@
 
     <ImageView
         tools:src="@drawable/twitter_logo_blue"
-        android:id="@+id/imgv_profile_image"
+        android:id="@+id/imgv_profile_image_link"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:padding="@dimen/content_padding"/>
 
     <TextView
         tools:text="@screen name"
-        android:id="@+id/tv_screen_name"
+        android:id="@+id/tv_screen_name_link"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/imgv_profile_image"
+        android:layout_toRightOf="@id/imgv_profile_image_link"
         android:padding="@dimen/content_padding"
         android:textStyle="bold"
-        android:layout_toLeftOf="@+id/tv_created_at"
+        android:layout_toLeftOf="@+id/tv_created_at_link"
         android:singleLine="true"/>
 
     <TextView
         tools:text="dd/mm/yyyy"
-        android:id="@id/tv_created_at"
+        android:id="@id/tv_created_at_link"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -36,20 +36,20 @@
 
     <TextView
         tools:text="tweet tweet tweet\ntweet"
-        android:id="@+id/tv_tweet"
+        android:id="@+id/tv_tweet_link"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/imgv_profile_image"
+        android:layout_below="@id/imgv_profile_image_link"
         android:padding="@dimen/content_padding"/>
 
     <TextView
         android:id="@+id/tv_twitter_link"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_tweet"/>
+        android:layout_below="@id/tv_tweet_link"/>
 
-    <net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterNormalExpandRow
-        android:id="@+id/twitter_normal_expand_row"
+    <net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterButtons
+        android:id="@+id/twitter_buttons_link"
         android:layout_below="@id/tv_twitter_link"
         android:layout_width="match_parent"
         android:layout_height="0dp"/>

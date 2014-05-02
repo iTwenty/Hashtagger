@@ -92,7 +92,7 @@ public abstract class SitesExpandView extends RelativeLayout implements ValueAni
         this.requestLayout();
     }
 
-    // If bottom most view is hidden partially after expand/collapse, we scroll the listview to make it fully visible
+    // If bottom most view is hidden partially after show/hide, we scroll the listview to make it fully visible
     private void scrollIfHidden()
     {
         // Get visible bounds of parent view, which is SitesListRow

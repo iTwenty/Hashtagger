@@ -3,14 +3,13 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 
 /**
  * Created by itwenty on 4/16/14.
  */
-public class TwitterButtons extends LinearLayout
+public class TwitterButtons extends SitesButtons
 {
     private Button btnReply;
     private Button btnRetweet;

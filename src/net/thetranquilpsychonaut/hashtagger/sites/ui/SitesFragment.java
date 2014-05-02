@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
@@ -110,6 +109,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             results = initResultsList();
         }
         sitesListAdapter = initSitesListAdapter();
+        sitesListAdapter.initTypes( savedInstanceState );
         readyHolder.lvResultsList = ( ListView ) viewReady.findViewById( R.id.lv_results_list );
         sitesFooter = initSitesFooter( inflater );
         sitesFooter.appendFooterToList( readyHolder.lvResultsList );
@@ -190,6 +190,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         outState.putSerializable( ACTIVE_VIEW_KEY, activeView );
         outState.putSerializable( sitesFooter.ACTIVE_FOOTER_VIEW_KEY, sitesFooter.activeFooterView );
         outState.putSerializable( RESULTS_LIST_KEY, ( java.io.Serializable ) results );
+        sitesListAdapter.saveTypes( outState );
     }
 
 
@@ -333,6 +334,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         showView( SitesView.READY );
         sitesListAdapter.clear();
+        sitesListAdapter.clearTypes();
         if ( !searchResults.isEmpty() )
         {
             // Since we cannot add directly to List<?>, we have to delegate the adding to subclass which
@@ -421,11 +423,10 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     @Override
     public void onItemClick( AdapterView<?> parent, View view, int position, long id )
     {
-        Helper.debug( String.valueOf( position ) );
         // We use the tag of the listview to remember position that was last clicked.
         SitesListRow sitesListRow = ( SitesListRow ) view;
         // If tag is null, no position has been expanded yet.
-        // Simply expand the view for currently selected position and set tag
+        // Simply show the view for currently selected position and set tag
         if ( null == parent.getTag() )
         {
             sitesListRow.expandRow( true );
@@ -436,7 +437,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         {
             int expandedPosition = ( Integer ) parent.getTag();
             // If currently selected position is the same as previously expanded one,
-            // we need to collapse the view and set tag to null
+            // we need to hide the view and set tag to null
             if ( position == expandedPosition )
             {
                 sitesListRow.collapseRow( true );
@@ -445,13 +446,13 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             // Else the previously selected position is different from our current selected position
             else
             {
-                // If the last selected position is visible on screen, then collapse it first.
+                // If the last selected position is visible on screen, then hide it first.
                 // If it's not visible, we don't do anything since adapter's getView method will take care of collapsing
                 if ( expandedPosition >= parent.getFirstVisiblePosition() && expandedPosition <= parent.getLastVisiblePosition() )
                 {
                     ( ( SitesListRow ) parent.getChildAt( expandedPosition - parent.getFirstVisiblePosition() ) ).collapseRow( true );
                 }
-                // Then expand the current selected position and set the tag
+                // Then show the current selected position and set the tag
                 sitesListRow.expandRow( true );
                 parent.setTag( position );
             }

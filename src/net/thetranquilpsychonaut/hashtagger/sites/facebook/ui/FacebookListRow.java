@@ -10,6 +10,7 @@ import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 
 /**
@@ -50,6 +51,12 @@ public class FacebookListRow extends SitesListRow implements View.OnClickListene
     }
 
     @Override
+    protected SitesButtons getSitesButtons()
+    {
+        return null;
+    }
+
+    @Override
     public void updateRow( final Object data )
     {
         this.post = ( Post ) data;
@@ -66,21 +73,21 @@ public class FacebookListRow extends SitesListRow implements View.OnClickListene
         String strPostType = post.getType();
         if ( "status".equals( strPostType ) )
         {
-            return isExpanded ? getResources().getString( R.string.str_fb_show_less ) : getResources().getString( R.string.str_fb_show_more );
+            return isExpanded() ? getResources().getString( R.string.str_fb_show_less ) : getResources().getString( R.string.str_fb_show_more );
         }
         else if ( "photo".equals( strPostType ) )
         {
-            return isExpanded ? getResources().getString( R.string.str_fb_hide_photo ) : getResources().getString( R.string.str_fb_show_photo );
+            return isExpanded() ? getResources().getString( R.string.str_fb_hide_photo ) : getResources().getString( R.string.str_fb_show_photo );
         }
         else if ( "video".equals( strPostType ) )
         {
-            return isExpanded ? getResources().getString( R.string.str_fb_hide_video ) : getResources().getString( R.string.str_fb_show_video );
+            return isExpanded() ? getResources().getString( R.string.str_fb_hide_video ) : getResources().getString( R.string.str_fb_show_video );
         }
         else if ( "link".equals( strPostType ) )
         {
-            return isExpanded ? getResources().getString( R.string.str_fb_hide_link ) : getResources().getString( R.string.str_fb_show_link );
+            return isExpanded() ? getResources().getString( R.string.str_fb_hide_link ) : getResources().getString( R.string.str_fb_show_link );
         }
-        return isExpanded ? getResources().getString( R.string.str_fb_show_less ) : getResources().getString( R.string.str_fb_show_more );
+        return isExpanded() ? getResources().getString( R.string.str_fb_show_less ) : getResources().getString( R.string.str_fb_show_more );
     }
 
     private int getPostType()

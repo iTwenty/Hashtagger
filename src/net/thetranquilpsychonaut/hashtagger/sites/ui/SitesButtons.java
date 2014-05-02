@@ -1,4 +1,4 @@
-package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
+package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -8,44 +8,44 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import net.thetranquilpsychonaut.hashtagger.R;
 
 /**
- * Created by itwenty on 5/1/14.
+ * Created by itwenty on 5/2/14.
  */
-public class TwitterNormalExpandRow extends RelativeLayout
+public abstract class SitesButtons extends LinearLayout
 {
-    TwitterButtons twitterButtons;
+    private static final int TIME_SCALE = 4;
+    protected boolean isVisible;
 
-    public TwitterNormalExpandRow( Context context )
+    public SitesButtons( Context context )
     {
         this( context, null, 0 );
     }
 
-    public TwitterNormalExpandRow( Context context, AttributeSet attrs )
+    public SitesButtons( Context context, AttributeSet attrs )
     {
         this( context, attrs, 0 );
     }
 
-    public TwitterNormalExpandRow( Context context, AttributeSet attrs, int defStyle )
+    public SitesButtons( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
-        inflate( context, R.layout.twitter_buttons, this );
-        twitterButtons = ( TwitterButtons ) findViewById( R.id.twitter_buttons );
+        isVisible = false;
     }
 
-    public void expand( boolean animate )
+    public void show( boolean animate )
     {
-        int widthMeasureSpec = MeasureSpec.makeMeasureSpec( LayoutParams.MATCH_PARENT, MeasureSpec.EXACTLY );
-        int heightMeasureSpec = MeasureSpec.makeMeasureSpec( LayoutParams.WRAP_CONTENT, MeasureSpec.EXACTLY );
+        int widthMeasureSpec = MeasureSpec.makeMeasureSpec( RelativeLayout.LayoutParams.MATCH_PARENT, MeasureSpec.EXACTLY );
+        int heightMeasureSpec = MeasureSpec.makeMeasureSpec( RelativeLayout.LayoutParams.WRAP_CONTENT, MeasureSpec.EXACTLY );
         measure( widthMeasureSpec, heightMeasureSpec );
         int finalHeight = getMeasuredHeight();
         if ( animate )
         {
             final ValueAnimator animator = ValueAnimator.ofInt( 0, finalHeight );
-            animator.setDuration( 2 * finalHeight );
+            animator.setDuration( TIME_SCALE * finalHeight );
             animator.addListener( new AnimatorListenerAdapter()
             {
                 @Override
@@ -68,14 +68,15 @@ public class TwitterNormalExpandRow extends RelativeLayout
         {
             setHeight( finalHeight );
         }
+        isVisible = true;
     }
 
-    public void collapse( boolean animate )
+    public void hide( boolean animate )
     {
         if ( animate )
         {
             final ValueAnimator animator = ValueAnimator.ofInt( getHeight(), 0 );
-            animator.setDuration( 2 * getHeight() );
+            animator.setDuration( TIME_SCALE * getHeight() );
             animator.addUpdateListener( new ValueAnimator.AnimatorUpdateListener()
             {
                 @Override
@@ -90,6 +91,7 @@ public class TwitterNormalExpandRow extends RelativeLayout
         {
             setHeight( 0 );
         }
+        isVisible = false;
     }
 
     private void setHeight( int height )
@@ -104,7 +106,7 @@ public class TwitterNormalExpandRow extends RelativeLayout
         this.requestLayout();
     }
 
-    // If this view is hidden partially after expand, we scroll the listview to make it fully visible
+    // If this view is hidden partially after show, we scroll the listview to make it fully visible
     private void scrollIfHidden()
     {
         // Get visible bounds of parent view, which is SitesListRow

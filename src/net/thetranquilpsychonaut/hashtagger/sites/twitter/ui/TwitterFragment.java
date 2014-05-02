@@ -41,7 +41,7 @@ public class TwitterFragment extends SitesFragment
     @Override
     protected SitesListAdapter initSitesListAdapter()
     {
-        TwitterListAdapter twitterListAdapter = new TwitterListAdapter( getActivity(), R.layout.twitter_list_row, results );
+        TwitterListAdapter twitterListAdapter = new TwitterListAdapter( getActivity(), 0, results );
         return twitterListAdapter;
     }
 

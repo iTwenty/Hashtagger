@@ -8,6 +8,7 @@ import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 import twitter4j.Status;
 
@@ -16,11 +17,11 @@ import twitter4j.Status;
  */
 public class TwitterNormalRow extends SitesListRow
 {
-    ImageView              imgvProfileImage;
-    TextView               tvScreenName;
-    TextView               tvCreatedAt;
-    TextView               tvTweet;
-    TwitterNormalExpandRow twitterNormalExpandRow;
+    ImageView      imgvProfileImage;
+    TextView       tvScreenName;
+    TextView       tvCreatedAt;
+    TextView       tvTweet;
+    TwitterButtons twitterButtons;
 
     protected TwitterNormalRow( Context context )
     {
@@ -36,11 +37,21 @@ public class TwitterNormalRow extends SitesListRow
     {
         super( context, attrs, defStyle );
         inflate( context, R.layout.twitter_normal_row, this );
-        imgvProfileImage = ( ImageView ) findViewById( R.id.imgv_profile_image );
-        tvScreenName = ( TextView ) findViewById( R.id.tv_screen_name );
-        tvCreatedAt = ( TextView ) findViewById( R.id.tv_created_at );
-        tvTweet = ( TextView ) findViewById( R.id.tv_tweet );
-        twitterNormalExpandRow = ( TwitterNormalExpandRow ) findViewById( R.id.twitter_normal_expand_row );
+        imgvProfileImage = ( ImageView ) findViewById( R.id.imgv_profile_image_normal );
+        tvScreenName = ( TextView ) findViewById( R.id.tv_screen_name_normal );
+        tvCreatedAt = ( TextView ) findViewById( R.id.tv_created_at_normal );
+        tvTweet = ( TextView ) findViewById( R.id.tv_tweet_normal );
+        twitterButtons = ( TwitterButtons ) findViewById( R.id.twitter_buttons_normal );
+    }
+
+    @Override
+    protected SitesButtons getSitesButtons()
+    {
+        if ( null == twitterButtons )
+        {
+            throw new RuntimeException( "getSitesButtons called before they are ready." );
+        }
+        return twitterButtons;
     }
 
     @Override
@@ -51,19 +62,5 @@ public class TwitterNormalRow extends SitesListRow
         tvScreenName.setText( "@" + status.getUser().getScreenName() );
         tvCreatedAt.setText( Helper.getFuzzyDateTime( status.getCreatedAt().getTime() ) );
         tvTweet.setText( status.isRetweet() ? status.getRetweetedStatus().getText() : status.getText() );
-    }
-
-    @Override
-    public void expandRow( boolean animate )
-    {
-        super.expandRow( animate );
-        twitterNormalExpandRow.expand( animate );
-    }
-
-    @Override
-    public void collapseRow( boolean animate )
-    {
-        super.collapseRow( animate );
-        twitterNormalExpandRow.collapse( animate );
     }
 }

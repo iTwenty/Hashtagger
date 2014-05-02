@@ -1,14 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
+<merge
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:text="media"
-        android:id="@+id/tv_media"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+    <ImageView
+        tools:src="@drawable/twitter_logo_blue"
+        android:id="@+id/imgv_profile_image_media"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:padding="@dimen/content_padding"/>
 
-</RelativeLayout>
+    <TextView
+        tools:text="@screen name"
+        android:id="@+id/tv_screen_name_media"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/imgv_profile_image_media"
+        android:padding="@dimen/content_padding"
+        android:textStyle="bold"
+        android:layout_toLeftOf="@+id/tv_created_at_media"
+        android:singleLine="true"/>
+
+    <TextView
+        tools:text="dd/mm/yyyy"
+        android:id="@id/tv_created_at_media"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:padding="@dimen/content_padding"
+        style="@style/DateText"
+        android:singleLine="true"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_tweet_thumb_wrapper_media"
+        android:layout_below="@id/imgv_profile_image_media"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            tools:text="tweet"
+            android:id="@+id/tv_tweet_media"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/imgv_media_thumb_media"
+            android:padding="@dimen/content_padding"/>
+
+        <ImageView
+            tools:src="@drawable/twitter_logo_blue"
+            android:id="@id/imgv_media_thumb_media"
+            android:layout_alignParentRight="true"
+            android:scaleType="fitCenter"
+            android:layout_width="75dp"
+            android:layout_height="75dp"/>
+
+    </RelativeLayout>
+
+    <net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterButtons
+        android:id="@+id/twitter_buttons_media"
+        android:layout_below="@id/rl_tweet_thumb_wrapper_media"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+
+</merge>
