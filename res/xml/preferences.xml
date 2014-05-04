@@ -17,10 +17,6 @@
             android:key="pref_service_facebook"
             android:defaultValue="true"/>
 
-        <Preference
-            android:summary="Your current search will be lost if you change active services"
-            android:enabled="false"/>
-
     </PreferenceCategory>
 
 </PreferenceScreen>
