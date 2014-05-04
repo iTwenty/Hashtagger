@@ -17,33 +17,38 @@ import twitter4j.Status;
  */
 public class TwitterLinkRow extends SitesListRow
 {
-    ImageView      imgvProfileImage;
-    TextView       tvScreenName;
-    TextView       tvCreatedAt;
-    TextView       tvTweet;
-    TextView       tvTwitterLink;
-    TwitterButtons twitterButtons;
+    private ImageView      imgvProfileImage;
+    private TextView       tvScreenName;
+    private TextView       tvCreatedAt;
+    private TextView       tvTweet;
+    private TextView       tvTwitterLink;
+    private TwitterButtons twitterButtons;
 
     protected TwitterLinkRow( Context context )
     {
-        this( context, null, R.attr.sitesListRowStyle );
+        super( context );
     }
 
     protected TwitterLinkRow( Context context, AttributeSet attrs )
     {
-        this( context, attrs, R.attr.sitesListRowStyle );
+        super( context, attrs );
     }
 
     protected TwitterLinkRow( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
+    }
+
+    @Override
+    protected void init( Context context )
+    {
         inflate( context, R.layout.twitter_link_row, this );
-        imgvProfileImage = ( ImageView ) findViewById( R.id.imgv_profile_image_link );
-        tvScreenName = ( TextView ) findViewById( R.id.tv_screen_name_link );
-        tvCreatedAt = ( TextView ) findViewById( R.id.tv_created_at_link );
-        tvTweet = ( TextView ) findViewById( R.id.tv_tweet_link );
-        tvTwitterLink = ( TextView ) findViewById( R.id.tv_twitter_link );
-        twitterButtons = ( TwitterButtons ) findViewById( R.id.twitter_buttons_link );
+        imgvProfileImage = ( ImageView ) findViewById( R.id.imgv_profile_image );
+        tvScreenName = ( TextView ) findViewById( R.id.tv_screen_name );
+        tvCreatedAt = ( TextView ) findViewById( R.id.tv_created_at );
+        tvTweet = ( TextView ) findViewById( R.id.tv_tweet );
+        tvTwitterLink = ( TextView ) findViewById( R.id.tv_twitter );
+        twitterButtons = ( TwitterButtons ) findViewById( R.id.twitter_buttons );
     }
 
     @Override

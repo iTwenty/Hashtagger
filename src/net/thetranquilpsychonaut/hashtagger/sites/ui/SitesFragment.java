@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.*;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
@@ -151,6 +149,26 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         return sitesFooter;
     }
 
+    @Override
+    public boolean onOptionsItemSelected( MenuItem item )
+    {
+        if ( item.getItemId() == R.id.it_logout )
+        {
+            sitesUserHandler.logoutUser();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    @Override
+    public void onPrepareOptionsMenu( Menu menu )
+    {
+        menu.findItem( R.id.it_logout ).setVisible( sitesUserHandler.isUserLoggedIn() ? true : false );
+    }
+
     protected abstract SitesUserHandler initSitesUserHandler();
 
     protected abstract SitesSearchHandler initSitesSearchHandler();
@@ -158,8 +176,6 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     protected abstract SitesListAdapter initSitesListAdapter();
 
     protected abstract List<?> initResultsList();
-
-    protected abstract int getPosition();
 
     protected abstract int getLogo();
 
@@ -217,6 +233,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         showView( SitesView.READY );
         Toast.makeText( getActivity(), getResources().getString( getLoggedInToastTextId() ) + sitesUserHandler.getUserName(), Toast.LENGTH_LONG ).show();
+        getActivity().invalidateOptionsMenu();
     }
 
     protected abstract int getLoggedInToastTextId();

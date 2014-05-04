@@ -45,4 +45,6 @@
     <string name="str_fb_show_video">Show Video</string>
     <string name="str_fb_hide_link">Hide Link</string>
     <string name="str_fb_show_link">Show Link</string>
+    <string name="str_pref_category_active_services">Active Services</string>
+    <string name="str_pref_category_logged_in_as">Logged in as...</string>
 </resources>

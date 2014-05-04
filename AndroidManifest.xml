@@ -55,6 +55,7 @@
             android:name=".sites.facebook.ui.FacebookLoginActivity"
             android:launchMode="singleTop">
         </activity>
+        <activity android:name=".sites.ui.SettingsActivity"/>
 
         <provider
             android:authorities="hashtagger:HashtagSuggestionsProvider"

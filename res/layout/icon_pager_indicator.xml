@@ -2,25 +2,24 @@
 
 <merge
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ll_icon_pager_indicator">
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <ImageButton
-        android:id="@+id/imgb_twitter_logo"
-        android:layout_width="wrap_content"
+        android:id="@+id/imgb_twitter_icon"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:src="@drawable/twitter_logo"
-        android:layout_weight="1"
-        style="?android:buttonBarButtonStyle"
-        android:layout_gravity="center"/>
-
+        style="?android:buttonBarButtonStyle"/>
 
     <ImageButton
-        android:id="@+id/imgb_facebook_logo"
-        android:layout_width="wrap_content"
+        android:id="@+id/imgb_facebook_icon"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:src="@drawable/facebook_logo"
         android:layout_weight="1"
-        style="?android:buttonBarButtonStyle"
-        android:layout_gravity="center"/>
+        android:src="@drawable/facebook_logo"
+        style="?android:buttonBarButtonStyle"/>
 
 </merge>

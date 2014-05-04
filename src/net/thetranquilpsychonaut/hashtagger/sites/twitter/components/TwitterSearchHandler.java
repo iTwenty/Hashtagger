@@ -3,6 +3,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.components;
 import android.content.Context;
 import android.content.Intent;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
+import net.thetranquilpsychonaut.hashtagger.SharedPreferencesHelper;
 import net.thetranquilpsychonaut.hashtagger.config.TwitterConfig;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
@@ -31,7 +32,7 @@ public class TwitterSearchHandler extends SitesSearchHandler
     {
         super( listener );
         this.twitter = new TwitterFactory( TwitterConfig.CONFIGURATION ).getInstance();
-        // If user was previously logged in, we need to restore hir's credentials from shared prefs
+        // If user was previously logged in, we need to restore hir's credentials from shared login_prefs
         if ( SharedPreferencesHelper.areTwitterDetailsPresent() )
         {
             setAccessToken();

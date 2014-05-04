@@ -1,5 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.components;
 
+import net.thetranquilpsychonaut.hashtagger.SharedPreferencesHelper;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
 
 /**

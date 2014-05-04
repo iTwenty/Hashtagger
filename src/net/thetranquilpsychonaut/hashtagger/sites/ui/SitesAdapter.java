@@ -1,41 +1,34 @@
 package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
+import net.thetranquilpsychonaut.hashtagger.cwacpager.ArrayPagerAdapter;
+import net.thetranquilpsychonaut.hashtagger.cwacpager.PageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterFragment;
+
+import java.util.ArrayList;
 
 /**
  * Created by itwenty on 2/10/14.
  */
-public class SitesAdapter extends FragmentPagerAdapter
+public class SitesAdapter extends ArrayPagerAdapter<SitesFragment>
 {
-    FragmentManager fm;
-
-    public SitesAdapter( FragmentManager fm )
+    public SitesAdapter( FragmentManager fm, ArrayList<PageDescriptor> descriptors )
     {
-        super( fm );
-        this.fm = fm;
+        super( fm, descriptors );
     }
 
     @Override
-    public Fragment getItem( int i )
+    protected SitesFragment createFragment( PageDescriptor pageDescriptor )
     {
-        switch ( i )
+        if ( pageDescriptor.equals( TwitterFragment.descriptor ) )
         {
-            case 0:
-                return new TwitterFragment();
-            case 1:
-                return new FacebookFragment();
+            return new TwitterFragment();
+        }
+        if ( pageDescriptor.equals( FacebookFragment.descriptor ) )
+        {
+            return new FacebookFragment();
         }
         return null;
-    }
-
-    @Override
-    public int getCount()
-    {
-        return HashtaggerApp.SITES.size();
     }
 }

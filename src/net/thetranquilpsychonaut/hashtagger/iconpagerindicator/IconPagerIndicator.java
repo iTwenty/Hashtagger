@@ -22,8 +22,8 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 
 /**
@@ -32,9 +32,9 @@ import net.thetranquilpsychonaut.hashtagger.R;
  */
 public class IconPagerIndicator extends LinearLayout implements OnPageChangeListener, View.OnClickListener
 {
-    private ViewPager   mViewPager;
-    private ImageButton imgbTwitterLogo;
-    private ImageButton imgbFacebookLogo;
+    private ViewPager vpViewPager;
+    ImageView imgbTwitterIcon;
+    ImageView imgbFacebookIcon;
 
     public IconPagerIndicator( Context context )
     {
@@ -50,31 +50,30 @@ public class IconPagerIndicator extends LinearLayout implements OnPageChangeList
     {
         super( context, attrs, defStyle );
         inflate( context, R.layout.icon_pager_indicator, this );
-        imgbTwitterLogo = ( ImageButton ) findViewById( R.id.imgb_twitter_logo );
-        imgbFacebookLogo = ( ImageButton ) findViewById( R.id.imgb_facebook_logo );
-        imgbTwitterLogo.setOnClickListener( this );
-        imgbFacebookLogo.setOnClickListener( this );
+
+        imgbTwitterIcon = ( ImageView ) findViewById( R.id.imgb_twitter_icon );
+        imgbTwitterIcon.setTag( R.color.twitter_logo_blue );
+        imgbTwitterIcon.setOnClickListener( this );
+
+        imgbFacebookIcon = ( ImageView ) findViewById( R.id.imgb_facebook_icon );
+        imgbFacebookIcon.setTag( R.color.facebook_blue );
+        imgbFacebookIcon.setOnClickListener( this );
     }
 
     public void setViewPager( ViewPager view )
     {
-        if ( mViewPager == view )
+        if ( vpViewPager != null )
         {
-            return;
+            vpViewPager.setOnPageChangeListener( null );
         }
-        if ( mViewPager != null )
-        {
-            mViewPager.setOnPageChangeListener( null );
-        }
-        mViewPager = view;
+        vpViewPager = view;
         view.setOnPageChangeListener( this );
-        setSelectedChild( mViewPager.getCurrentItem() );
+        setSelectedChild( vpViewPager.getCurrentItem() );
     }
 
     @Override
     public void onPageScrolled( int position, float positionOffset, int positionOffsetPixels )
     {
-
     }
 
     @Override
@@ -85,29 +84,18 @@ public class IconPagerIndicator extends LinearLayout implements OnPageChangeList
 
     public void setSelectedChild( int position )
     {
+        ImageButton child;
         int childCount = getChildCount();
-        int color;
         for ( int a = 0; a < childCount; ++a )
         {
+            child = ( ImageButton ) getChildAt( a );
             if ( a == position )
             {
-                switch ( a )
-                {
-                    case HashtaggerApp.TWITTER_POSITION:
-                        color = R.color.twitter_logo_blue;
-                        break;
-                    case HashtaggerApp.FACEBOOK_POSITION:
-                        color = R.color.facebook_blue;
-                        break;
-                    default:
-                        color = android.R.color.transparent;
-                        break;
-                }
-                ( ( ImageButton ) getChildAt( a ) ).setColorFilter( getResources().getColor( color ) );
+                child.setColorFilter( getResources().getColor( ( Integer ) child.getTag() ) );
             }
             else
             {
-                ( ( ImageButton ) getChildAt( a ) ).setColorFilter( null );
+                child.setColorFilter( null );
             }
         }
     }
@@ -122,6 +110,16 @@ public class IconPagerIndicator extends LinearLayout implements OnPageChangeList
     public void onClick( View v )
     {
         int childPosition = indexOfChild( v );
-        mViewPager.setCurrentItem( childPosition );
+        vpViewPager.setCurrentItem( childPosition );
+    }
+
+    public void showIcon( int position )
+    {
+        getChildAt( position ).setVisibility( VISIBLE );
+    }
+
+    public void hideIcon( int position )
+    {
+        getChildAt( position ).setVisibility( GONE );
     }
 }

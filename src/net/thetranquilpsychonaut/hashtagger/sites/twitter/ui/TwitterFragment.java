@@ -2,6 +2,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.cwacpager.SimplePageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterSearchHandler;
@@ -18,6 +19,8 @@ import java.util.List;
  */
 public class TwitterFragment extends SitesFragment
 {
+    public static SimplePageDescriptor descriptor = new SimplePageDescriptor( HashtaggerApp.TWITTER, HashtaggerApp.TWITTER );
+
     @Override
     protected int getLogo()
     {
@@ -50,12 +53,6 @@ public class TwitterFragment extends SitesFragment
     {
         List<Status> results = new ArrayList<Status>();
         return results;
-    }
-
-    @Override
-    protected int getPosition()
-    {
-        return HashtaggerApp.TWITTER_POSITION;
     }
 
     @Override

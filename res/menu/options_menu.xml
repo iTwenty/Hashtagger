@@ -16,4 +16,18 @@
         android:icon="@android:drawable/ic_menu_search"
         android:showAsAction="always"
         android:actionViewClass="android.widget.SearchView"/>
+
+    <item
+        android:id="@+id/it_settings"
+        android:title="Settings"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:showAsAction="never"
+        android:onClick="doLaunchSettings"/>
+
+    <item
+        android:id="@+id/it_logout"
+        android:title="Logout"
+        android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        android:showAsAction="never"/>
+
 </menu>

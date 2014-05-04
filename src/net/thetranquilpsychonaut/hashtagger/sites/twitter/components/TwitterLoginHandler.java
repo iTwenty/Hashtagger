@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
+import net.thetranquilpsychonaut.hashtagger.SharedPreferencesHelper;
 import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
 import net.thetranquilpsychonaut.hashtagger.enums.AuthType;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;

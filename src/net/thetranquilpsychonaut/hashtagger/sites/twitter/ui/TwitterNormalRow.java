@@ -17,31 +17,36 @@ import twitter4j.Status;
  */
 public class TwitterNormalRow extends SitesListRow
 {
-    ImageView      imgvProfileImage;
-    TextView       tvScreenName;
-    TextView       tvCreatedAt;
-    TextView       tvTweet;
-    TwitterButtons twitterButtons;
+    private ImageView      imgvProfileImage;
+    private TextView       tvScreenName;
+    private TextView       tvCreatedAt;
+    private TextView       tvTweet;
+    private TwitterButtons twitterButtons;
 
     protected TwitterNormalRow( Context context )
     {
-        this( context, null, R.attr.sitesListRowStyle );
+        super( context );
     }
 
     protected TwitterNormalRow( Context context, AttributeSet attrs )
     {
-        this( context, attrs, R.attr.sitesListRowStyle );
+        super( context, attrs );
     }
 
     protected TwitterNormalRow( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
+    }
+
+    @Override
+    protected void init( Context context )
+    {
         inflate( context, R.layout.twitter_normal_row, this );
-        imgvProfileImage = ( ImageView ) findViewById( R.id.imgv_profile_image_normal );
-        tvScreenName = ( TextView ) findViewById( R.id.tv_screen_name_normal );
-        tvCreatedAt = ( TextView ) findViewById( R.id.tv_created_at_normal );
-        tvTweet = ( TextView ) findViewById( R.id.tv_tweet_normal );
-        twitterButtons = ( TwitterButtons ) findViewById( R.id.twitter_buttons_normal );
+        imgvProfileImage = ( ImageView ) findViewById( R.id.imgv_profile_image );
+        tvScreenName = ( TextView ) findViewById( R.id.tv_screen_name );
+        tvCreatedAt = ( TextView ) findViewById( R.id.tv_created_at );
+        tvTweet = ( TextView ) findViewById( R.id.tv_tweet );
+        twitterButtons = ( TwitterButtons ) findViewById( R.id.twitter_buttons );
     }
 
     @Override

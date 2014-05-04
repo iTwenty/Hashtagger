@@ -3,13 +3,13 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 
 /**
  * Created by itwenty on 4/18/14.
  */
-public class FacebookButtons extends LinearLayout
+public class FacebookButtons extends SitesButtons
 {
     private Button btnLike;
     private Button btnComment;

@@ -52,21 +52,21 @@ public class TwitterListAdapter extends SitesListAdapter
                 if ( null == convertView || !( convertView instanceof TwitterNormalRow ) )
                 {
                     convertView = new TwitterNormalRow( context );
-                    Helper.debug( "new normal row" );
+                    Helper.debug( "new tr normal row" );
                 }
                 break;
             case STATUS_TYPE_MEDIA:
                 if ( null == convertView || !( convertView instanceof TwitterMediaRow ) )
                 {
                     convertView = new TwitterMediaRow( context );
-                    Helper.debug( "new media row" );
+                    Helper.debug( "new tr media row" );
                 }
                 break;
             case STATUS_TYPE_LINK:
                 if ( null == convertView || !( convertView instanceof TwitterLinkRow ) )
                 {
                     convertView = new TwitterLinkRow( context );
-                    Helper.debug( "new link row" );
+                    Helper.debug( "new tr link row" );
                 }
                 break;
         }

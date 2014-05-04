@@ -25,14 +25,20 @@ import android.widget.*;
 import net.thetranquilpsychonaut.hashtagger.HashtagSuggestionsProvider;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.SharedPreferencesHelper;
+import net.thetranquilpsychonaut.hashtagger.cwacpager.PageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.iconpagerindicator.IconPagerIndicator;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsDBContract;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsDBHelper;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsProviderContract;
+import net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookFragment;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class SitesActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener
+public class SitesActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor>,
+                                                               AdapterView.OnItemClickListener
 {
     private static final int SAVED_HASHTAG_LOADER = 0;
 
@@ -41,9 +47,9 @@ public class SitesActivity extends FragmentActivity implements LoaderManager.Loa
     ActionBarDrawerToggle drawerToggle;
     ViewPager             vpSitesPager;
     IconPagerIndicator    ipiSitesPager;
+    SitesAdapter          vpSitesPagerAdapter;
     ListView              lvSavedHashtags;
     TextView              tvSavedHashtagsEmpty;
-    SitesAdapter          vpSitesPagerAdapter;
     SearchView            svHashtag;
     String                hashtag;
     SavedHashtagsAdapter  savedHashtagsAdapter;
@@ -66,9 +72,8 @@ public class SitesActivity extends FragmentActivity implements LoaderManager.Loa
 
         vpSitesPager = ( ViewPager ) findViewById( R.id.vp_sites_pager );
         ipiSitesPager = ( IconPagerIndicator ) findViewById( R.id.ipi_sites_pager );
-        SitesAdapter vpSitesPagerAdapter = new SitesAdapter( getSupportFragmentManager() );
+        vpSitesPagerAdapter = new SitesAdapter( getSupportFragmentManager(), new ArrayList<PageDescriptor>() );
         vpSitesPager.setAdapter( vpSitesPagerAdapter );
-        vpSitesPager.setOffscreenPageLimit( HashtaggerApp.SITES.size() );
         ipiSitesPager.setViewPager( vpSitesPager );
 
         lvSavedHashtags = ( ListView ) findViewById( R.id.lv_saved_hashtags );
@@ -89,6 +94,41 @@ public class SitesActivity extends FragmentActivity implements LoaderManager.Loa
         if ( null != getIntent() && getIntent().getAction().equals( Intent.ACTION_SEARCH ) )
         {
             handleIntent( getIntent() );
+        }
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        updateActiveSites();
+    }
+
+    public void updateActiveSites()
+    {
+        boolean isTwitterActive = SharedPreferencesHelper.isTwitterServiceActive();
+        boolean isTwitterPresent = vpSitesPagerAdapter.contains( TwitterFragment.descriptor );
+        boolean isFacebookActive = SharedPreferencesHelper.isFacebookServiceActive();
+        boolean isFacebookPresent = vpSitesPagerAdapter.contains( FacebookFragment.descriptor );
+        if ( isTwitterActive && !isTwitterPresent )
+        {
+            vpSitesPagerAdapter.insert( TwitterFragment.descriptor, HashtaggerApp.TWITTER_POSITION );
+            ipiSitesPager.showIcon( HashtaggerApp.TWITTER_POSITION );
+        }
+        else if ( isTwitterPresent && !isTwitterActive )
+        {
+            vpSitesPagerAdapter.remove( HashtaggerApp.TWITTER_POSITION );
+            ipiSitesPager.hideIcon( HashtaggerApp.TWITTER_POSITION );
+        }
+        if ( isFacebookActive && !isFacebookPresent )
+        {
+            vpSitesPagerAdapter.insert( FacebookFragment.descriptor, HashtaggerApp.FACEBOOK_POSITION );
+            ipiSitesPager.showIcon( HashtaggerApp.FACEBOOK_POSITION );
+        }
+        else if ( isFacebookPresent && !isFacebookActive )
+        {
+            vpSitesPagerAdapter.remove( HashtaggerApp.FACEBOOK_POSITION );
+            ipiSitesPager.hideIcon( HashtaggerApp.FACEBOOK_POSITION );
         }
     }
 
@@ -127,9 +167,15 @@ public class SitesActivity extends FragmentActivity implements LoaderManager.Loa
     @Override
     public boolean onOptionsItemSelected( MenuItem item )
     {
+        // Needed for drawer toggle to work properly
         if ( drawerToggle.onOptionsItemSelected( item ) )
         {
             return true;
+        }
+        // We handle logout in SitesFragment, so return false here
+        if ( item.getItemId() == R.id.it_logout )
+        {
+            return false;
         }
         return super.onOptionsItemSelected( item );
     }
@@ -151,6 +197,12 @@ public class SitesActivity extends FragmentActivity implements LoaderManager.Loa
         ContentValues values = new ContentValues();
         values.put( SavedHashtagsDBContract.SavedHashtags.COLUMN_HASHTAG, this.hashtag );
         Uri result = getContentResolver().insert( SavedHashtagsProviderContract.SavedHashtags.CONTENT_URI, values );
+    }
+
+    public void doLaunchSettings( MenuItem item )
+    {
+        Intent intent = new Intent( this, SettingsActivity.class );
+        startActivity( intent );
     }
 
     @Override
@@ -225,17 +277,10 @@ public class SitesActivity extends FragmentActivity implements LoaderManager.Loa
         switch ( loaderId )
         {
             case SAVED_HASHTAG_LOADER:
-                String[] projection = new String[]{
-                        SavedHashtagsProviderContract.SavedHashtags._ID,
-                        SavedHashtagsProviderContract.SavedHashtags.COLUMN_HASHTAG };
+                String[] projection = new String[]{ SavedHashtagsProviderContract.SavedHashtags._ID,
+                                                    SavedHashtagsProviderContract.SavedHashtags.COLUMN_HASHTAG };
                 Uri savedHashtagsUri = SavedHashtagsProviderContract.SavedHashtags.CONTENT_URI;
-                return new CursorLoader(
-                        this,
-                        savedHashtagsUri,
-                        projection,
-                        null,
-                        null,
-                        null );
+                return new CursorLoader( this, savedHashtagsUri, projection, null, null, null );
             default:
                 return null;
         }

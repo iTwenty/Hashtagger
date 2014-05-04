@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/str_pref_category_active_services"
+        android:key="pref_active_services">
+
+        <CheckBoxPreference
+            android:title="Twitter"
+            android:key="pref_service_twitter"
+            android:defaultValue="true"/>
+
+        <CheckBoxPreference
+            android:title="Facebook"
+            android:key="pref_service_facebook"
+            android:defaultValue="true"/>
+
+        <Preference
+            android:summary="Your current search will be lost if you change active services"
+            android:enabled="false"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

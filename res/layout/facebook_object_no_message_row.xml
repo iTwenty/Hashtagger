@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        tools:src="@drawable/facebook_logo"
+        android:id="@+id/imgv_profile_image"
+        android:layout_height="50dp"
+        android:layout_width="50dp"
+        android:scaleType="centerCrop"
+        android:padding="@dimen/content_padding"/>
+
+    <TextView
+        android:id="@+id/tv_user_name_or_story"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@id/imgv_profile_image"
+        android:layout_alignTop="@id/imgv_profile_image"
+        android:layout_toLeftOf="@+id/tv_created_time"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:padding="@dimen/content_padding"
+        tools:text="user name\nstory\nstory\nstory\n"/>
+
+    <TextView
+        android:id="@id/tv_created_time"
+        android:singleLine="true"
+        android:gravity="right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        tools:text="dd/mm/yyyy"
+        style="@style/DateText"
+        android:padding="@dimen/content_padding"/>
+
+    <include
+        layout="@layout/facebook_object"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_below="@id/imgv_profile_image"
+        android:layout_centerHorizontal="true"
+        android:id="@id/fl_picture_play_wrapper"/>
+
+    <net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookButtons
+        android:id="@+id/facebook_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@id/fl_picture_play_wrapper"/>
+
+</merge>

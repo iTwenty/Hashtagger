@@ -17,33 +17,38 @@ import twitter4j.Status;
  */
 public class TwitterMediaRow extends SitesListRow
 {
-    ImageView      imgvProfileImage;
-    TextView       tvScreenName;
-    TextView       tvCreatedAt;
-    TextView       tvTweet;
-    ImageView      imgvMediaThumb;
-    TwitterButtons twitterButtons;
+    private ImageView      imgvProfileImage;
+    private TextView       tvScreenName;
+    private TextView       tvCreatedAt;
+    private TextView       tvTweet;
+    private ImageView      imgvMediaThumb;
+    private TwitterButtons twitterButtons;
 
     protected TwitterMediaRow( Context context )
     {
-        this( context, null, R.attr.sitesListRowStyle );
+        super( context );
     }
 
     protected TwitterMediaRow( Context context, AttributeSet attrs )
     {
-        this( context, attrs, R.attr.sitesListRowStyle );
+        super( context, attrs );
     }
 
     protected TwitterMediaRow( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
+    }
+
+    @Override
+    protected void init( Context context )
+    {
         inflate( context, R.layout.twitter_media_row, this );
-        imgvProfileImage = ( ImageView ) findViewById( R.id.imgv_profile_image_media );
-        tvScreenName = ( TextView ) findViewById( R.id.tv_screen_name_media );
-        tvCreatedAt = ( TextView ) findViewById( R.id.tv_created_at_media );
-        tvTweet = ( TextView ) findViewById( R.id.tv_tweet_media );
-        imgvMediaThumb = ( ImageView ) findViewById( R.id.imgv_media_thumb_media );
-        twitterButtons = ( TwitterButtons ) findViewById( R.id.twitter_buttons_media );
+        imgvProfileImage = ( ImageView ) findViewById( R.id.imgv_profile_image );
+        tvScreenName = ( TextView ) findViewById( R.id.tv_screen_name );
+        tvCreatedAt = ( TextView ) findViewById( R.id.tv_created_at );
+        tvTweet = ( TextView ) findViewById( R.id.tv_tweet );
+        imgvMediaThumb = ( ImageView ) findViewById( R.id.imgv_media_thumb );
+        twitterButtons = ( TwitterButtons ) findViewById( R.id.twitter_buttons );
     }
 
     @Override

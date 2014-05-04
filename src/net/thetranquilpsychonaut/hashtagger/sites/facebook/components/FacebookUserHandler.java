@@ -1,7 +1,7 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.components;
 
+import net.thetranquilpsychonaut.hashtagger.SharedPreferencesHelper;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
-import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.SharedPreferencesHelper;
 
 /**
  * Created by itwenty on 4/4/14.

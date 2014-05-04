@@ -3,6 +3,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.cwacpager.SimplePageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.components.FacebookSearchHandler;
@@ -18,6 +19,8 @@ import java.util.List;
  */
 public class FacebookFragment extends SitesFragment
 {
+    public static SimplePageDescriptor descriptor = new SimplePageDescriptor( HashtaggerApp.FACEBOOK, HashtaggerApp.FACEBOOK );
+
     @Override
     protected int getLogo()
     {
@@ -50,12 +53,6 @@ public class FacebookFragment extends SitesFragment
     {
         List<Post> results = new ArrayList<Post>();
         return results;
-    }
-
-    @Override
-    protected int getPosition()
-    {
-        return HashtaggerApp.FACEBOOK_POSITION;
     }
 
     @Override
@@ -112,11 +109,5 @@ public class FacebookFragment extends SitesFragment
     protected void addToStart( List<?> searchResults )
     {
         ( ( List<Post> ) results ).addAll( 0, ( List<Post> ) searchResults );
-    }
-
-    @Override
-    protected void searchHashtag( String hashtag )
-    {
-
     }
 }

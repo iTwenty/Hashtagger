@@ -8,11 +8,11 @@ import facebook4j.Paging;
 import facebook4j.Post;
 import facebook4j.auth.AccessToken;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
+import net.thetranquilpsychonaut.hashtagger.SharedPreferencesHelper;
 import net.thetranquilpsychonaut.hashtagger.config.FacebookConfig;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
-import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.SharedPreferencesHelper;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class FacebookSearchHandler extends SitesSearchHandler
     {
         super( listener );
         this.facebook = new FacebookFactory( FacebookConfig.CONFIGURATION ).getInstance();
-        // If user was previously logged in, we need to restore hir's credentials from shared prefs
+        // If user was previously logged in, we need to restore hir's credentials from shared login_prefs
         if ( SharedPreferencesHelper.areFacebookDetailsPresent() )
         {
             setAccessToken();
