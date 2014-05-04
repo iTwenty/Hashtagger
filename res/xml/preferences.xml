@@ -19,4 +19,9 @@
 
     </PreferenceCategory>
 
+    <Preference
+        android:title="Clear Recently Searched Hashtags"
+        android:summary="This will not clear your saved hashtags"
+        android:key="pref_clear_search"/>
+
 </PreferenceScreen>

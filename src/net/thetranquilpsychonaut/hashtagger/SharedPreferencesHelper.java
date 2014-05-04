@@ -18,6 +18,7 @@ public class SharedPreferencesHelper
 
     public static final String TWITTER_SERVICE_KEY  = "pref_service_twitter";
     public static final String FACEBOOK_SERVICE_KEY = "pref_service_facebook";
+    public static final String CLEAR_SEARCH_KEY     = "pref_clear_search";
 
     public static SharedPreferences login_prefs   = HashtaggerApp.app.getSharedPreferences( LOGIN_SHARED_PREFS, Context.MODE_PRIVATE );
     public static SharedPreferences default_prefs = PreferenceManager.getDefaultSharedPreferences( HashtaggerApp.app );
