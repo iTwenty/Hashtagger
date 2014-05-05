@@ -215,18 +215,6 @@ public abstract class ArrayPagerAdapter<T extends Fragment> extends PagerAdapter
     {
         validatePageDescriptor( desc );
         int entriesCount = entries.size();
-        if ( entriesCount < 0 )
-        {
-            return;
-        }
-        if ( position > entriesCount )
-        {
-            position = entriesCount;
-        }
-        if ( position < 0 )
-        {
-            position = 0;
-        }
         positionDelta.clear();
         for ( int i = position; i < entriesCount; i++ )
         {
@@ -244,18 +232,6 @@ public abstract class ArrayPagerAdapter<T extends Fragment> extends PagerAdapter
     public void remove( int position )
     {
         int entriesCount = entries.size();
-        if ( entriesCount <= 0 )
-        {
-            return;
-        }
-        if ( position > entriesCount )
-        {
-            position = entriesCount;
-        }
-        if ( position < 0 )
-        {
-            position = 0;
-        }
         positionDelta.clear();
         Fragment f = getExistingFragment( position );
         if ( f != null )
@@ -297,7 +273,7 @@ public abstract class ArrayPagerAdapter<T extends Fragment> extends PagerAdapter
         return false;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public T getExistingFragment( int position )
     {
         return ( T ) ( fm.findFragmentByTag( getFragmentTag( position ) ) );

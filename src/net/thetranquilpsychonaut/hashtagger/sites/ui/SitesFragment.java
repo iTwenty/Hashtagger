@@ -131,9 +131,12 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         View viewLogin = inflater.inflate( R.layout.sites_view_login, null );
         loginHolder = new Login();
         loginHolder.btnLogin = ( Button ) viewLogin.findViewById( R.id.btn_login );
+        loginHolder.btnLogin.setText( getLoginButtonText() );
         loginHolder.btnLogin.setOnClickListener( this );
         return viewLogin;
     }
+
+    protected abstract String getLoginButtonText();
 
     private View initViewError( LayoutInflater inflater, Bundle savedInstanceState )
     {

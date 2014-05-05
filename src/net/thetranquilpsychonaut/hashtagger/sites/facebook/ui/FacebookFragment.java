@@ -28,6 +28,12 @@ public class FacebookFragment extends SitesFragment
     }
 
     @Override
+    protected String getLoginButtonText()
+    {
+        return getResources().getString( R.string.str_facebook_login_button_text );
+    }
+
+    @Override
     protected SitesUserHandler initSitesUserHandler()
     {
         FacebookUserHandler facebookUserHandler = new FacebookUserHandler( this );
@@ -76,7 +82,7 @@ public class FacebookFragment extends SitesFragment
     @Override
     protected int getLoginRequestCode()
     {
-        return HashtaggerApp.FACEBOOK_LOGIN_REQUEST_CODE;
+        return HashtaggerApp.FACEBOOK_VALUE;
     }
 
     @Override

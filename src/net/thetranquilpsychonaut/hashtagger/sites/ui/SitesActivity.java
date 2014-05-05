@@ -32,6 +32,7 @@ import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsDBContrac
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsDBHelper;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsProviderContract;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookFragment;
+import net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterFragment;
 
 import java.util.ArrayList;
@@ -74,7 +75,10 @@ public class SitesActivity extends FragmentActivity implements LoaderManager.Loa
         ipiSitesPager = ( IconPagerIndicator ) findViewById( R.id.ipi_sites_pager );
         vpSitesPagerAdapter = new SitesAdapter( getSupportFragmentManager(), new ArrayList<PageDescriptor>() );
         vpSitesPager.setAdapter( vpSitesPagerAdapter );
+        vpSitesPager.setOffscreenPageLimit( 2 );
+        showActiveSites();
         ipiSitesPager.setViewPager( vpSitesPager );
+        SharedPreferencesHelper.setActivesSitesChanged( false );
 
         lvSavedHashtags = ( ListView ) findViewById( R.id.lv_saved_hashtags );
         tvSavedHashtagsEmpty = ( TextView ) findViewById( R.id.tv_saved_hashtags_empty );
@@ -101,34 +105,40 @@ public class SitesActivity extends FragmentActivity implements LoaderManager.Loa
     protected void onStart()
     {
         super.onStart();
-        updateActiveSites();
+        if ( SharedPreferencesHelper.getActiveSitesChanged() )
+        {
+            updateActiveSites();
+            SharedPreferencesHelper.setActivesSitesChanged( false );
+        }
     }
 
     public void updateActiveSites()
     {
+        vpSitesPagerAdapter = new SitesAdapter( getSupportFragmentManager(), new ArrayList<PageDescriptor>() );
+        vpSitesPager.setAdapter( vpSitesPagerAdapter );
+        ipiSitesPager.removeAllViews();
+        showActiveSites();
+    }
+
+    public void showActiveSites()
+    {
         boolean isTwitterActive = SharedPreferencesHelper.isTwitterServiceActive();
-        boolean isTwitterPresent = vpSitesPagerAdapter.contains( TwitterFragment.descriptor );
         boolean isFacebookActive = SharedPreferencesHelper.isFacebookServiceActive();
-        boolean isFacebookPresent = vpSitesPagerAdapter.contains( FacebookFragment.descriptor );
-        if ( isTwitterActive && !isTwitterPresent )
+        boolean isGPlusActive = SharedPreferencesHelper.isGPlusServiceActive();
+        if ( isTwitterActive )
         {
-            vpSitesPagerAdapter.insert( TwitterFragment.descriptor, HashtaggerApp.TWITTER_POSITION );
-            ipiSitesPager.showIcon( HashtaggerApp.TWITTER_POSITION );
+            vpSitesPagerAdapter.add( TwitterFragment.descriptor );
+            ipiSitesPager.addIcon( HashtaggerApp.TWITTER_VALUE );
         }
-        else if ( isTwitterPresent && !isTwitterActive )
+        if ( isFacebookActive )
         {
-            vpSitesPagerAdapter.remove( HashtaggerApp.TWITTER_POSITION );
-            ipiSitesPager.hideIcon( HashtaggerApp.TWITTER_POSITION );
+            vpSitesPagerAdapter.add( FacebookFragment.descriptor );
+            ipiSitesPager.addIcon( HashtaggerApp.FACEBOOK_VALUE );
         }
-        if ( isFacebookActive && !isFacebookPresent )
+        if ( isGPlusActive )
         {
-            vpSitesPagerAdapter.insert( FacebookFragment.descriptor, HashtaggerApp.FACEBOOK_POSITION );
-            ipiSitesPager.showIcon( HashtaggerApp.FACEBOOK_POSITION );
-        }
-        else if ( isFacebookPresent && !isFacebookActive )
-        {
-            vpSitesPagerAdapter.remove( HashtaggerApp.FACEBOOK_POSITION );
-            ipiSitesPager.hideIcon( HashtaggerApp.FACEBOOK_POSITION );
+            vpSitesPagerAdapter.add( GPlusFragment.descriptor );
+            ipiSitesPager.addIcon( HashtaggerApp.GPLUS_VALUE );
         }
     }
 

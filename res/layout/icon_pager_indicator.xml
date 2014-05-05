@@ -6,20 +6,4 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageButton
-        android:id="@+id/imgb_twitter_icon"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:src="@drawable/twitter_logo"
-        style="?android:buttonBarButtonStyle"/>
-
-    <ImageButton
-        android:id="@+id/imgb_facebook_icon"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:src="@drawable/facebook_logo"
-        style="?android:buttonBarButtonStyle"/>
-
 </merge>

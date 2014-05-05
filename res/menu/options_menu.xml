@@ -28,6 +28,7 @@
         android:id="@+id/it_logout"
         android:title="Logout"
         android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        android:visible="false"
         android:showAsAction="never"/>
 
 </menu>

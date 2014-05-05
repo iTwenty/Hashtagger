@@ -4,6 +4,7 @@ import android.support.v4.app.FragmentManager;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.ArrayPagerAdapter;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.PageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookFragment;
+import net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterFragment;
 
 import java.util.ArrayList;
@@ -28,6 +29,10 @@ public class SitesAdapter extends ArrayPagerAdapter<SitesFragment>
         if ( pageDescriptor.equals( FacebookFragment.descriptor ) )
         {
             return new FacebookFragment();
+        }
+        if ( pageDescriptor.equals( GPlusFragment.descriptor ) )
+        {
+            return new GPlusFragment();
         }
         return null;
     }

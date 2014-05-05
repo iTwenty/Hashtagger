@@ -16,9 +16,11 @@ public class SharedPreferencesHelper
     public static final String FACEBOOK_OAUTH_ACCESS_TOKEN_KEY       = HashtaggerApp.NAMESPACE + "facebook_access_token";
     public static final String FACEBOOK_USER_NAME_KEY                = HashtaggerApp.NAMESPACE + "facebook_user_name";
 
-    public static final String TWITTER_SERVICE_KEY  = "pref_service_twitter";
-    public static final String FACEBOOK_SERVICE_KEY = "pref_service_facebook";
-    public static final String CLEAR_SEARCH_KEY     = "pref_clear_search";
+    public static final String TWITTER_SERVICE_KEY       = "pref_service_twitter";
+    public static final String FACEBOOK_SERVICE_KEY      = "pref_service_facebook";
+    public static final String CLEAR_SEARCH_KEY          = "pref_clear_search";
+    public static final String GPLUS_SERVICE_KEY         = "pref_service_gplus";
+    public static final String ACTIVES_SITES_CHANGED_KEY = "active_sites_changed";
 
     public static SharedPreferences login_prefs   = HashtaggerApp.app.getSharedPreferences( LOGIN_SHARED_PREFS, Context.MODE_PRIVATE );
     public static SharedPreferences default_prefs = PreferenceManager.getDefaultSharedPreferences( HashtaggerApp.app );
@@ -108,5 +110,20 @@ public class SharedPreferencesHelper
     public static boolean isFacebookServiceActive()
     {
         return default_prefs.getBoolean( FACEBOOK_SERVICE_KEY, true );
+    }
+
+    public static boolean isGPlusServiceActive()
+    {
+        return default_prefs.getBoolean( GPLUS_SERVICE_KEY, true );
+    }
+
+    public static void setActivesSitesChanged( boolean value )
+    {
+        default_prefs.edit().putBoolean( ACTIVES_SITES_CHANGED_KEY, value ).commit();
+    }
+
+    public static boolean getActiveSitesChanged()
+    {
+        return default_prefs.getBoolean( ACTIVES_SITES_CHANGED_KEY, false );
     }
 }

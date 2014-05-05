@@ -28,6 +28,12 @@ public class TwitterFragment extends SitesFragment
     }
 
     @Override
+    protected String getLoginButtonText()
+    {
+        return getResources().getString( R.string.str_twitter_login_button_text );
+    }
+
+    @Override
     protected SitesUserHandler initSitesUserHandler()
     {
         TwitterUserHandler twitterUserHandler = new TwitterUserHandler( this );
@@ -76,7 +82,7 @@ public class TwitterFragment extends SitesFragment
     @Override
     protected int getLoginRequestCode()
     {
-        return HashtaggerApp.TWITTER_LOGIN_REQUEST_CODE;
+        return HashtaggerApp.TWITTER_VALUE;
     }
 
     @Override

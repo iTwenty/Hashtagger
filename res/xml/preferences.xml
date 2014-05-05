@@ -17,6 +17,11 @@
             android:key="pref_service_facebook"
             android:defaultValue="true"/>
 
+        <CheckBoxPreference
+            android:title="Google+"
+            android:key="pref_service_gplus"
+            android:defaultValue="true"/>
+
     </PreferenceCategory>
 
     <Preference
