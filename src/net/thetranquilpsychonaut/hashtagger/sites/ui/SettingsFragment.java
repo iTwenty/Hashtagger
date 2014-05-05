@@ -27,11 +27,11 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         cbpFacebook = ( CheckBoxPreference ) findPreference( SharedPreferencesHelper.FACEBOOK_SERVICE_KEY );
         prefClearSearch = findPreference( SharedPreferencesHelper.CLEAR_SEARCH_KEY );
         cbpTwitter.setSummary( SharedPreferencesHelper.areTwitterDetailsPresent() ?
-                               "Logged in as : " + SharedPreferencesHelper.getTwitterUserName() :
-                                "Not logged in." );
+                "Logged in as : " + SharedPreferencesHelper.getTwitterUserName() :
+                "Not logged in." );
         cbpFacebook.setSummary( SharedPreferencesHelper.areFacebookDetailsPresent() ?
-                                "Logged in as : " + SharedPreferencesHelper.getFacebookUserName() :
-                                "Not logged in." );
+                "Logged in as : " + SharedPreferencesHelper.getFacebookUserName() :
+                "Not logged in." );
         prefClearSearch.setOnPreferenceClickListener( this );
     }
 

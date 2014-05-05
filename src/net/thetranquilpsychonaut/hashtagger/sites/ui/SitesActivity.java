@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SitesActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor>,
-                                                               AdapterView.OnItemClickListener
+        AdapterView.OnItemClickListener
 {
     private static final int SAVED_HASHTAG_LOADER = 0;
 
@@ -278,7 +278,7 @@ public class SitesActivity extends FragmentActivity implements LoaderManager.Loa
         {
             case SAVED_HASHTAG_LOADER:
                 String[] projection = new String[]{ SavedHashtagsProviderContract.SavedHashtags._ID,
-                                                    SavedHashtagsProviderContract.SavedHashtags.COLUMN_HASHTAG };
+                        SavedHashtagsProviderContract.SavedHashtags.COLUMN_HASHTAG };
                 Uri savedHashtagsUri = SavedHashtagsProviderContract.SavedHashtags.CONTENT_URI;
                 return new CursorLoader( this, savedHashtagsUri, projection, null, null, null );
             default:

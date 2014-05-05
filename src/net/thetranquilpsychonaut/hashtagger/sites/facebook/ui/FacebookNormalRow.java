@@ -22,6 +22,7 @@ public class FacebookNormalRow extends SitesListRow
     private TextView        tvCreatedTime;
     private TextView        tvMessage;
     private FacebookButtons facebookButtons;
+    private Post            post;
 
     protected FacebookNormalRow( Context context )
     {
@@ -62,7 +63,7 @@ public class FacebookNormalRow extends SitesListRow
     @Override
     public void updateRow( Object result )
     {
-        Post post = ( Post ) result;
+        this.post = ( Post ) result;
         UrlImageViewHelper.setUrlDrawable( imgvProfileImage, Helper.getFacebookPictureUrl( post.getFrom().getId() ), getResources().getDrawable( R.drawable.drawable_image_loading ), HashtaggerApp.CACHE_DURATION_MS );
         tvUserNameOrStory.setText( post.getStory() == null ? post.getFrom().getName() : post.getStory() );
         tvCreatedTime.setText( Helper.getFuzzyDateTime( post.getCreatedTime().getTime() ) );

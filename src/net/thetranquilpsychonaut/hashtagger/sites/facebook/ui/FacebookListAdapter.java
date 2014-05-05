@@ -20,11 +20,11 @@ public class FacebookListAdapter extends SitesListAdapter
 {
     private static final String POST_TYPES_KEY = "post_types_key";
 
-    public static final int POST_TYPE_NORMAL            = 0;
-    public static final int POST_TYPE_OBJECT            = 1;
-    public static final int POST_TYPE_DETAILS           = 2;
-    public static final int POST_TYPE_OBJECT_NO_MESSAGE = 3;
-    public static final int POST_TYPE_COUNT             = 4;
+    public static final int POST_TYPE_NORMAL           = 0;
+    public static final int POST_TYPE_MEDIA            = 1;
+    public static final int POST_TYPE_MEDIA_NO_MESSAGE = 2;
+    public static final int POST_TYPE_LINK             = 3;
+    public static final int POST_TYPE_COUNT            = 4;
 
     private List<Integer> postTypes;
 
@@ -57,25 +57,25 @@ public class FacebookListAdapter extends SitesListAdapter
                     Helper.debug( "new fb normal row" );
                 }
                 break;
-            case POST_TYPE_OBJECT:
-                if ( null == convertView || !( convertView instanceof FacebookObjectRow ) )
+            case POST_TYPE_MEDIA:
+                if ( null == convertView || !( convertView instanceof FacebookMediaRow ) )
                 {
-                    convertView = new FacebookObjectRow( context );
-                    Helper.debug( "new fb object row" );
+                    convertView = new FacebookMediaRow( context );
+                    Helper.debug( "new fb media row" );
                 }
                 break;
-            case POST_TYPE_DETAILS:
-                if ( null == convertView || !( convertView instanceof FacebookDetailsRow ) )
+            case POST_TYPE_MEDIA_NO_MESSAGE:
+                if ( null == convertView || !( convertView instanceof FacebookMediaNoMessageRow ) )
                 {
-                    convertView = new FacebookDetailsRow( context );
-                    Helper.debug( "new fb details row" );
+                    convertView = new FacebookMediaNoMessageRow( context );
+                    Helper.debug( "new fb media no message row" );
                 }
                 break;
-            case POST_TYPE_OBJECT_NO_MESSAGE:
-                if ( null == convertView || !( convertView instanceof FacebookObjectNoMessageRow ) )
+            case POST_TYPE_LINK:
+                if ( null == convertView || !( convertView instanceof FacebookLinkRow ) )
                 {
-                    convertView = new FacebookObjectNoMessageRow( context );
-                    Helper.debug( "new fb object no message row" );
+                    convertView = new FacebookLinkRow( context );
+                    Helper.debug( "new fb link row" );
                 }
                 break;
         }
@@ -86,25 +86,27 @@ public class FacebookListAdapter extends SitesListAdapter
     public void updateTypes( SearchType searchType, List<?> searchResults )
     {
         List<Integer> newTypes = new ArrayList<Integer>( searchResults.size() );
-        boolean hasObjectId;
-        boolean isMessageEmpty;
-        boolean isTypeStatus;
+        boolean hasMessage;
+        boolean hasMedia;
+        boolean hasLink;
+        String postType;
         for ( Post post : ( List<Post> ) searchResults )
         {
-            hasObjectId = null != post.getObjectId();
-            isMessageEmpty = null == post.getMessage();
-            isTypeStatus = "status".equals( post.getType() );
-            if ( hasObjectId && isMessageEmpty )
+            hasMessage = null == post.getMessage();
+            postType = post.getType();
+            hasMedia = ( "video".equals( postType ) || "photo".equals( postType ) );
+            hasLink = "link".equals( postType );
+            if ( hasMedia && hasMessage )
             {
-                newTypes.add( POST_TYPE_OBJECT_NO_MESSAGE );
+                newTypes.add( POST_TYPE_MEDIA );
             }
-            else if ( hasObjectId )
+            else if ( hasMedia && !hasMessage )
             {
-                newTypes.add( POST_TYPE_OBJECT );
+                newTypes.add( POST_TYPE_MEDIA_NO_MESSAGE );
             }
-            else if ( !isTypeStatus )
+            else if ( hasLink )
             {
-                newTypes.add( POST_TYPE_DETAILS );
+                newTypes.add( POST_TYPE_LINK );
             }
             else
             {

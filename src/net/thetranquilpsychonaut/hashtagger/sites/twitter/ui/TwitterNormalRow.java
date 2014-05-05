@@ -22,6 +22,7 @@ public class TwitterNormalRow extends SitesListRow
     private TextView       tvCreatedAt;
     private TextView       tvTweet;
     private TwitterButtons twitterButtons;
+    private Status         status;
 
     protected TwitterNormalRow( Context context )
     {
@@ -62,7 +63,7 @@ public class TwitterNormalRow extends SitesListRow
     @Override
     public void updateRow( Object result )
     {
-        Status status = ( Status ) result;
+        this.status = ( Status ) result;
         UrlImageViewHelper.setUrlDrawable( imgvProfileImage, status.getUser().getProfileImageURL(), R.drawable.drawable_image_loading, HashtaggerApp.CACHE_DURATION_MS );
         tvScreenName.setText( "@" + status.getUser().getScreenName() );
         tvCreatedAt.setText( Helper.getFuzzyDateTime( status.getCreatedAt().getTime() ) );

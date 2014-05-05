@@ -43,14 +43,18 @@
         android:padding="@dimen/content_padding"/>
 
     <TextView
-        android:id="@+id/tv_twitter"
+        android:id="@+id/tv_twitter_link"
+        android:text="link"
+        android:background="@drawable/selector_shadow_border"
+        android:textStyle="bold"
+        android:textSize="18sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_tweet"/>
 
     <net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterButtons
         android:id="@+id/twitter_buttons"
-        android:layout_below="@id/tv_twitter"
+        android:layout_below="@id/tv_twitter_link"
         android:layout_width="match_parent"
         android:layout_height="0dp"/>
 

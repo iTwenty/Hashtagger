@@ -38,18 +38,35 @@
         style="@style/DateText"
         android:padding="@dimen/content_padding"/>
 
-    <include
-        layout="@layout/facebook_object"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+    <RelativeLayout
+        android:id="@+id/rl_message_picture_wrapper"
         android:layout_below="@id/imgv_profile_image"
-        android:layout_centerHorizontal="true"
-        android:id="@id/fl_picture_play_wrapper"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_message"
+            android:ellipsize="end"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="10"
+            android:layout_toLeftOf="@+id/fl_picture_play_wrapper"
+            tools:text="line1\nline2\nline3\nline4\nline5\nline6"
+            android:padding="@dimen/content_padding"/>
+
+        <include
+            layout="@layout/facebook_media"
+            android:layout_alignParentRight="true"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:id="@id/fl_picture_play_wrapper"/>
+
+    </RelativeLayout>
 
     <net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookButtons
         android:id="@+id/facebook_buttons"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_below="@id/fl_picture_play_wrapper"/>
+        android:layout_below="@id/rl_message_picture_wrapper"/>
 
 </merge>

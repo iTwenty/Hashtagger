@@ -1,7 +1,10 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
@@ -15,7 +18,7 @@ import twitter4j.Status;
 /**
  * Created by itwenty on 5/1/14.
  */
-public class TwitterMediaRow extends SitesListRow
+public class TwitterMediaRow extends SitesListRow implements View.OnClickListener
 {
     private ImageView      imgvProfileImage;
     private TextView       tvScreenName;
@@ -23,6 +26,7 @@ public class TwitterMediaRow extends SitesListRow
     private TextView       tvTweet;
     private ImageView      imgvMediaThumb;
     private TwitterButtons twitterButtons;
+    private Status         status;
 
     protected TwitterMediaRow( Context context )
     {
@@ -49,6 +53,7 @@ public class TwitterMediaRow extends SitesListRow
         tvTweet = ( TextView ) findViewById( R.id.tv_tweet );
         imgvMediaThumb = ( ImageView ) findViewById( R.id.imgv_media_thumb );
         twitterButtons = ( TwitterButtons ) findViewById( R.id.twitter_buttons );
+        imgvMediaThumb.setOnClickListener( this );
     }
 
     @Override
@@ -64,11 +69,19 @@ public class TwitterMediaRow extends SitesListRow
     @Override
     public void updateRow( Object result )
     {
-        Status status = ( Status ) result;
+        this.status = ( Status ) result;
         UrlImageViewHelper.setUrlDrawable( imgvProfileImage, status.getUser().getProfileImageURL(), R.drawable.drawable_image_loading, HashtaggerApp.CACHE_DURATION_MS );
         tvScreenName.setText( "@" + status.getUser().getScreenName() );
         tvCreatedAt.setText( Helper.getFuzzyDateTime( status.getCreatedAt().getTime() ) );
         tvTweet.setText( status.isRetweet() ? status.getRetweetedStatus().getText() : status.getText() );
         UrlImageViewHelper.setUrlDrawable( imgvMediaThumb, status.getMediaEntities()[0].getMediaURL() + ":thumb", R.drawable.drawable_image_loading, HashtaggerApp.CACHE_DURATION_MS );
+    }
+
+    @Override
+    public void onClick( View v )
+    {
+        Intent intent = new Intent( Intent.ACTION_VIEW );
+        intent.setData( Uri.parse( status.getMediaEntities()[0].getMediaURL() + ":large" ) );
+        getContext().startActivity( intent );
     }
 }
