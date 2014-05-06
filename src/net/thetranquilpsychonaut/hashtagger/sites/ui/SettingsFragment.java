@@ -6,7 +6,6 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.provider.SearchRecentSuggestions;
 import net.thetranquilpsychonaut.hashtagger.HashtagSuggestionsProvider;
-import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.SharedPreferencesHelper;
 
@@ -25,9 +24,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     {
         super.onCreate( savedInstanceState );
         addPreferencesFromResource( R.xml.preferences );
-        cbpTwitter = ( CheckBoxPreference ) findPreference( SharedPreferencesHelper.TWITTER_SERVICE_KEY );
-        cbpFacebook = ( CheckBoxPreference ) findPreference( SharedPreferencesHelper.FACEBOOK_SERVICE_KEY );
-        cbpGPlus = ( CheckBoxPreference ) findPreference( SharedPreferencesHelper.GPLUS_SERVICE_KEY );
+        cbpTwitter = ( CheckBoxPreference ) findPreference( SharedPreferencesHelper.TWITTER_SITE_KEY );
+        cbpFacebook = ( CheckBoxPreference ) findPreference( SharedPreferencesHelper.FACEBOOK_SITE_KEY );
+        cbpGPlus = ( CheckBoxPreference ) findPreference( SharedPreferencesHelper.GPLUS_SITE_KEY );
         prefClearSearch = findPreference( SharedPreferencesHelper.CLEAR_SEARCH_KEY );
         cbpTwitter.setSummary( SharedPreferencesHelper.areTwitterDetailsPresent() ?
                 "Logged in as : " + SharedPreferencesHelper.getTwitterUserName() :
@@ -35,7 +34,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         cbpFacebook.setSummary( SharedPreferencesHelper.areFacebookDetailsPresent() ?
                 "Logged in as : " + SharedPreferencesHelper.getFacebookUserName() :
                 "Not logged in." );
-        cbpGPlus.setSummary( "Not logged in." );
+        cbpGPlus.setSummary( SharedPreferencesHelper.areGPlusDetailsPresent() ?
+                "Logged in as : " + SharedPreferencesHelper.getGPlusUserName() :
+                "Not logged in" );
         prefClearSearch.setOnPreferenceClickListener( this );
         cbpTwitter.setOnPreferenceChangeListener( this );
         cbpFacebook.setOnPreferenceChangeListener( this );
@@ -60,7 +61,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     public boolean onPreferenceChange( Preference preference, Object newValue )
     {
         SharedPreferencesHelper.setActivesSitesChanged( true );
-        Helper.debug( String.valueOf( SharedPreferencesHelper.getActiveSitesChanged() ) );
         return true;
     }
 }

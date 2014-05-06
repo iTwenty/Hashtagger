@@ -1,10 +1,9 @@
-package net.thetranquilpsychonaut.hashtagger.sites.facebook.components;
+package net.thetranquilpsychonaut.hashtagger.sites.gplus.components;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import facebook4j.auth.AccessToken;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.SharedPreferencesHelper;
 import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
@@ -12,11 +11,14 @@ import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.sites.components.LoginActionName;
 
 /**
- * Created by itwenty on 4/7/14.
+ * Created by itwenty on 5/6/14.
  */
-public class FacebookLoginHandler extends BroadcastReceiver implements LoginActionName
+public class GPlusLoginHandler extends BroadcastReceiver implements LoginActionName
 {
-    public interface FacebookLoginListener
+    IntentFilter       filter;
+    GPlusLoginListener gPlusLoginListener;
+
+    public interface GPlusLoginListener
     {
         public void whileObtainingAccessToken();
 
@@ -25,24 +27,21 @@ public class FacebookLoginHandler extends BroadcastReceiver implements LoginActi
         public void onUserLoggedIn();
     }
 
-    IntentFilter          filter;
-    FacebookLoginListener facebookLoginListener;
-
-    public FacebookLoginHandler( FacebookLoginListener listener )
+    public GPlusLoginHandler( GPlusLoginListener listener )
     {
         filter = new IntentFilter( getLoginActionName() );
         filter.addCategory( Intent.CATEGORY_DEFAULT );
         HashtaggerApp.app.getApplicationContext().registerReceiver( this, filter );
-        facebookLoginListener = listener;
+        this.gPlusLoginListener = listener;
     }
 
     public void fetchAccessToken( String code )
     {
-        Intent accessIntent = new Intent( HashtaggerApp.app.getApplicationContext(), FacebookService.class );
+        Intent accessIntent = new Intent( HashtaggerApp.app.getApplicationContext(), GPlusService.class );
         accessIntent.putExtra( ActionType.ACTION_TYPE_KEY, ActionType.AUTH );
-        accessIntent.putExtra( HashtaggerApp.FACEBOOK_CODE_KEY, code );
+        accessIntent.putExtra( HashtaggerApp.GPLUS_CODE_KEY, code );
         HashtaggerApp.app.getApplicationContext().startService( accessIntent );
-        facebookLoginListener.whileObtainingAccessToken();
+        gPlusLoginListener.whileObtainingAccessToken();
     }
 
     @Override
@@ -51,18 +50,18 @@ public class FacebookLoginHandler extends BroadcastReceiver implements LoginActi
         Result result = ( Result ) intent.getSerializableExtra( Result.RESULT_KEY );
         if ( result == Result.FAILURE )
         {
-            facebookLoginListener.onError();
+            gPlusLoginListener.onError();
             return;
         }
-        AccessToken accessToken = ( AccessToken ) intent.getSerializableExtra( Result.RESULT_DATA );
+        GPlusSerializableTokenResponse tokenResponse = ( GPlusSerializableTokenResponse ) intent.getSerializableExtra( Result.RESULT_DATA );
         String userName = intent.getStringExtra( Result.RESULT_EXTRAS );
-        SharedPreferencesHelper.addFacebookDetails( accessToken.getToken(), userName );
-        facebookLoginListener.onUserLoggedIn();
+        SharedPreferencesHelper.addGPlusDetails( tokenResponse.getAccessToken(), tokenResponse.getRefreshToken(), userName );
+        gPlusLoginListener.onUserLoggedIn();
     }
 
     @Override
     public String getLoginActionName()
     {
-        return HashtaggerApp.FACEBOOK_LOGIN_ACTION;
+        return HashtaggerApp.GPLUS_LOGIN_ACTION;
     }
 }

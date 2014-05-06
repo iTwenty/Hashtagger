@@ -46,7 +46,7 @@ public class FacebookSearchHandler extends SitesSearchHandler
         {
             throw new RuntimeException( "must be logged in before setting access token!" );
         }
-        facebook.setOAuthAccessToken( new AccessToken( SharedPreferencesHelper.getFacebookOauthAccessToken() ) );
+        facebook.setOAuthAccessToken( new AccessToken( SharedPreferencesHelper.getFacebookAccessToken() ) );
     }
 
     public void clearAccessToken()

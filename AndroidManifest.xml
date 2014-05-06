@@ -20,6 +20,7 @@
 
         <service android:name=".sites.twitter.components.TwitterService"/>
         <service android:name=".sites.facebook.components.FacebookService"/>
+        <service android:name=".sites.gplus.components.GPlusService"/>
 
         <activity
             android:name=".sites.ui.SitesActivity"

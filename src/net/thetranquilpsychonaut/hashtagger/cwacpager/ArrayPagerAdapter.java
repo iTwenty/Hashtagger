@@ -273,7 +273,7 @@ public abstract class ArrayPagerAdapter<T extends Fragment> extends PagerAdapter
         return false;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public T getExistingFragment( int position )
     {
         return ( T ) ( fm.findFragmentByTag( getFragmentTag( position ) ) );

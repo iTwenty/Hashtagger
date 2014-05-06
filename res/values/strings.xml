@@ -31,21 +31,7 @@
     <string name="str_no_saved_hashtags">Your saved hashtags will appear here.</string>
     <string name="open_drawer_desc">Open Drawer</string>
     <string name="close_drawer_desc">Close Drawer</string>
-    <string name="str_twtr_hide_photo">Hide Photo</string>
-    <string name="str_twtr_show_photo">Show Photo</string>
-    <string name="str_twtr_hide_link">Hide Link</string>
-    <string name="str_twtr_show_link">Show Link</string>
-    <string name="str_twtr_show_less">Show Less</string>
-    <string name="str_twtr_show_more">Show More</string>
-    <string name="str_fb_show_less">Show Less</string>
-    <string name="str_fb_show_more">Show More</string>
-    <string name="str_fb_hide_photo">Hide Photo</string>
-    <string name="str_fb_show_photo">Show Photo</string>
-    <string name="str_fb_hide_video">Hide Video</string>
-    <string name="str_fb_show_video">Show Video</string>
-    <string name="str_fb_hide_link">Hide Link</string>
-    <string name="str_fb_show_link">Show Link</string>
-    <string name="str_pref_category_active_services">Active Services</string>
+    <string name="str_pref_category_active_sites">Active Sites</string>
     <string name="str_pref_category_logged_in_as">Logged in as...</string>
     <string name="str_toast_gplus_not_logged_in">Not logged in to Google+</string>
     <string name="str_toast_gplus_logged_in_as">Logged in to Google+ as :</string>
@@ -53,4 +39,5 @@
     <string name="str_twitter_login_button_text">Sign in with Twitter</string>
     <string name="str_facebook_login_button_text">Sign in with Facebook</string>
     <string name="str_gplus_login_button_text">Sign in with Google+</string>
+    <string name="str_title_login_activity_gplus">Sign in with Google</string>
 </resources>

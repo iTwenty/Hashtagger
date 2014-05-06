@@ -4,22 +4,22 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:title="@string/str_pref_category_active_services"
-        android:key="pref_active_services">
+        android:title="@string/str_pref_category_active_sites"
+        android:key="pref_active_sites">
 
         <CheckBoxPreference
             android:title="Twitter"
-            android:key="pref_service_twitter"
+            android:key="pref_site_twitter"
             android:defaultValue="true"/>
 
         <CheckBoxPreference
             android:title="Facebook"
-            android:key="pref_service_facebook"
+            android:key="pref_site_facebook"
             android:defaultValue="true"/>
 
         <CheckBoxPreference
             android:title="Google+"
-            android:key="pref_service_gplus"
+            android:key="pref_site_gplus"
             android:defaultValue="true"/>
 
     </PreferenceCategory>

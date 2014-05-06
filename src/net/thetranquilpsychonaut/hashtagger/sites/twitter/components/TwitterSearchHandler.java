@@ -45,7 +45,7 @@ public class TwitterSearchHandler extends SitesSearchHandler
         {
             throw new RuntimeException( "must be logged in before setting access token!" );
         }
-        twitter.setOAuthAccessToken( new AccessToken( SharedPreferencesHelper.getTwitterOauthAccessToken(), SharedPreferencesHelper.getTwitterOauthAccessTokenSecret() ) );
+        twitter.setOAuthAccessToken( new AccessToken( SharedPreferencesHelper.getTwitterAccessToken(), SharedPreferencesHelper.getTwitterAccessTokenSecret() ) );
     }
 
     public void clearAccessToken()

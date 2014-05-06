@@ -122,9 +122,9 @@ public class SitesActivity extends FragmentActivity implements LoaderManager.Loa
 
     public void showActiveSites()
     {
-        boolean isTwitterActive = SharedPreferencesHelper.isTwitterServiceActive();
-        boolean isFacebookActive = SharedPreferencesHelper.isFacebookServiceActive();
-        boolean isGPlusActive = SharedPreferencesHelper.isGPlusServiceActive();
+        boolean isTwitterActive = SharedPreferencesHelper.isTwitterActive();
+        boolean isFacebookActive = SharedPreferencesHelper.isFacebookActive();
+        boolean isGPlusActive = SharedPreferencesHelper.isGPlusActive();
         if ( isTwitterActive )
         {
             vpSitesPagerAdapter.add( TwitterFragment.descriptor );
