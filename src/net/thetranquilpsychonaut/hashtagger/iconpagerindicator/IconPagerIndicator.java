@@ -25,7 +25,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
 
 /**
@@ -102,7 +101,6 @@ public class IconPagerIndicator extends LinearLayout implements OnPageChangeList
     public void onClick( View v )
     {
         int childPosition = indexOfChild( v );
-        Helper.debug( String.valueOf( childPosition ) );
         vpViewPager.setCurrentItem( childPosition );
     }
 

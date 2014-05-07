@@ -9,15 +9,19 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.services.plus.Plus;
+import com.google.api.services.plus.model.Activity;
 import com.google.api.services.plus.model.Person;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.Helper;
+import net.thetranquilpsychonaut.hashtagger.SharedPreferencesHelper;
 import net.thetranquilpsychonaut.hashtagger.config.GPlusConfig;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
+import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesService;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by itwenty on 5/6/14.
@@ -25,15 +29,50 @@ import java.util.Arrays;
 public class GPlusService extends SitesService
 {
     @Override
-    protected Intent doSearch( Intent intent )
+    protected Intent doSearch( Intent searchIntent )
     {
-        return null;
+        final SearchType searchType = ( SearchType ) searchIntent.getSerializableExtra( SearchType.SEARCH_TYPE_KEY );
+        final String hashtag = searchIntent.getStringExtra( HashtaggerApp.HASHTAG_KEY );
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra( SearchType.SEARCH_TYPE_KEY, searchType );
+        List<Activity> results = null;
+        try
+        {
+            HttpTransport httpTransport = new NetHttpTransport();
+            JsonFactory jsonFactory = new AndroidJsonFactory();
+            if ( !SharedPreferencesHelper.areGPlusDetailsPresent() )
+            {
+                throw new IOException( "Google+ access token not found" );
+            }
+            GoogleCredential credential = new GoogleCredential.Builder()
+                    .setJsonFactory( jsonFactory )
+                    .setTransport( httpTransport )
+                    .setClientSecrets( GPlusConfig.SECRETS )
+                    .build();
+            credential.setAccessToken( SharedPreferencesHelper.getGPlusAccessToken() );
+            credential.setRefreshToken( SharedPreferencesHelper.getGPlusRefreshToken() );
+            Plus plus = new Plus.Builder( httpTransport, jsonFactory, credential )
+                    .build();
+            Plus.Activities.Search searchActivities = plus.activities().search( hashtag );
+            searchActivities.setMaxResults( 20L );
+            results = searchActivities.execute().getItems();
+        }
+        catch ( IOException e )
+        {
+            Helper.debug( "Error while searching Google+ for " + hashtag + " : " + e.getMessage() );
+        }
+        Result searchResult = null == results ? Result.FAILURE : Result.SUCCESS;
+        if ( searchResult == Result.SUCCESS )
+        {
+            GPlusServiceData.SearchData.pushSearchResults( results );
+        }
+        return resultIntent;
     }
 
     @Override
-    protected Intent doAuth( Intent intent )
+    protected Intent doAuth( Intent authIntent )
     {
-        final String code = intent.getStringExtra( HashtaggerApp.GPLUS_CODE_KEY );
+        final String code = authIntent.getStringExtra( HashtaggerApp.GPLUS_CODE_KEY );
         Intent resultIntent = new Intent();
         GoogleTokenResponse tokenResponse = null;
         String userName = null;
@@ -67,7 +106,8 @@ public class GPlusService extends SitesService
         resultIntent.putExtra( Result.RESULT_KEY, accessResult );
         if ( accessResult == Result.SUCCESS )
         {
-            resultIntent.putExtra( Result.RESULT_DATA, new GPlusSerializableTokenResponse( tokenResponse ) );
+            // As token response is not serializable, we use a static class to store it which our BroacastReceiver later reads from
+            GPlusServiceData.AuthData.pushTokenResponse( tokenResponse );
             resultIntent.putExtra( Result.RESULT_EXTRAS, userName );
         }
         return resultIntent;

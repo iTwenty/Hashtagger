@@ -1,13 +1,14 @@
 package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import com.google.api.services.plus.model.Activity;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,6 +16,9 @@ import java.util.List;
  */
 public class GPlusListAdapter extends SitesListAdapter
 {
+    private static final int ACTIVITY_TYPE_NORMAL = 0;
+    private static final int ACTIVITY_TYPE_COUNT  = 1;
+
     public GPlusListAdapter( Context context, int textViewResourceId, List<?> objects )
     {
         super( context, textViewResourceId, objects );
@@ -23,42 +27,45 @@ public class GPlusListAdapter extends SitesListAdapter
     @Override
     public int getItemViewType( int position )
     {
-        return 0;
+        return resultTypes.get( position );
     }
 
     @Override
     public int getViewTypeCount()
     {
-        return 1;
+        return ACTIVITY_TYPE_COUNT;
     }
 
     @Override
     protected SitesListRow getSitesListRow( Context context, int position, View convertView, ViewGroup parent )
     {
-        return null;
+        switch ( getItemViewType( position ) )
+        {
+            case ACTIVITY_TYPE_NORMAL:
+                if ( null == convertView || !( convertView instanceof GPlusNormalRow ) )
+                {
+                    convertView = new GPlusNormalRow( context );
+                }
+                break;
+        }
+        return ( SitesListRow ) convertView;
     }
 
     @Override
     public void updateTypes( SearchType searchType, List<?> searchResults )
     {
-
-    }
-
-    @Override
-    public void clearTypes()
-    {
-
-    }
-
-    @Override
-    public void initTypes( Bundle savedInstanceState )
-    {
-
-    }
-
-    @Override
-    public void saveTypes( Bundle outState )
-    {
-
+        List<Integer> newTypes = new ArrayList<Integer>( searchResults.size() );
+        for ( Activity activity : ( List<Activity> ) searchResults )
+        {
+            newTypes.add( ACTIVITY_TYPE_NORMAL );
+        }
+        if ( searchType == SearchType.NEWER )
+        {
+            resultTypes.addAll( 0, newTypes );
+        }
+        else
+        {
+            resultTypes.addAll( newTypes );
+        }
     }
 }

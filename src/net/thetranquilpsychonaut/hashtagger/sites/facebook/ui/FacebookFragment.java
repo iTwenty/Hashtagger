@@ -92,20 +92,6 @@ public class FacebookFragment extends SitesFragment
     }
 
     @Override
-    public void onUserLoggedIn()
-    {
-        ( ( FacebookSearchHandler ) sitesSearchHandler ).setAccessToken();
-        super.onUserLoggedIn();
-    }
-
-    @Override
-    public void onUserLoggedOut()
-    {
-        ( ( FacebookSearchHandler ) sitesSearchHandler ).clearAccessToken();
-        super.onUserLoggedOut();
-    }
-
-    @Override
     protected void addToEnd( List<?> searchResults )
     {
         ( ( List<Post> ) results ).addAll( ( List<Post> ) searchResults );

@@ -6,6 +6,7 @@ import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.SimplePageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.GPlusSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.GPlusUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
@@ -30,7 +31,8 @@ public class GPlusFragment extends SitesFragment
     @Override
     protected SitesSearchHandler initSitesSearchHandler()
     {
-        return null;
+        GPlusSearchHandler gPlusSearchHandler = new GPlusSearchHandler( this );
+        return gPlusSearchHandler;
     }
 
     @Override
@@ -92,18 +94,12 @@ public class GPlusFragment extends SitesFragment
     @Override
     protected void addToEnd( List<?> searchResults )
     {
-
+        ( ( List<Activity> ) results ).addAll( ( List<Activity> ) searchResults );
     }
 
     @Override
     protected void addToStart( List<?> searchResults )
     {
-
-    }
-
-    @Override
-    protected void searchHashtag( String hashtag )
-    {
-
+        ( ( List<Activity> ) results ).addAll( 0, ( List<Activity> ) searchResults );
     }
 }

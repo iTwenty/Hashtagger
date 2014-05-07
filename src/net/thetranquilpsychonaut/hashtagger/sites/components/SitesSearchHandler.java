@@ -23,14 +23,10 @@ public abstract class SitesSearchHandler extends BroadcastReceiver implements Se
         public void onError( SearchType searchType );
     }
 
-    protected IntentFilter        filter;
     protected SitesSearchListener sitesSearchListener;
 
     public SitesSearchHandler( SitesSearchListener listener )
     {
-        filter = new IntentFilter( getSearchActionName() );
-        filter.addCategory( Intent.CATEGORY_DEFAULT );
-        HashtaggerApp.app.getApplicationContext().registerReceiver( this, filter );
         sitesSearchListener = listener;
     }
 
@@ -45,9 +41,20 @@ public abstract class SitesSearchHandler extends BroadcastReceiver implements Se
         sitesSearchListener.whileSearching( searchType );
     }
 
-    protected abstract Intent addExtraParameters( Intent searchIntent );
+    protected Intent addExtraParameters( Intent searchIntent )
+    {
+        return searchIntent;
+    }
 
     protected abstract Class<?> getServiceClass();
+
+    public void registerReceiver()
+    {
+        IntentFilter filter;
+        filter = new IntentFilter( getSearchActionName() );
+        filter.addCategory( Intent.CATEGORY_DEFAULT );
+        HashtaggerApp.app.getApplicationContext().registerReceiver( this, filter );
+    }
 
     public void unregisterReceiver()
     {

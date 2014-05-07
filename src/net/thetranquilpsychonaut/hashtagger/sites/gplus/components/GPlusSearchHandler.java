@@ -1,27 +1,22 @@
-package net.thetranquilpsychonaut.hashtagger.sites.twitter.components;
+package net.thetranquilpsychonaut.hashtagger.sites.gplus.components;
 
 import android.content.Context;
 import android.content.Intent;
+import com.google.api.services.plus.model.Activity;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
+import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
-import twitter4j.QueryResult;
+
+import java.util.List;
 
 /**
- * Created by itwenty on 3/13/14.
+ * Created by itwenty on 5/7/14.
  */
-public class TwitterSearchHandler extends SitesSearchHandler
+public class GPlusSearchHandler extends SitesSearchHandler
 {
-    /*
-    max and since ids are used to navigate through the tweets timeline.
-    tweet ids are time based i.e later tweets have higher ids than older tweets.
-    */
-
-    static long maxId;
-    static long sinceId;
-
-    public TwitterSearchHandler( SitesSearchListener listener )
+    public GPlusSearchHandler( SitesSearchListener listener )
     {
         super( listener );
     }
@@ -29,12 +24,13 @@ public class TwitterSearchHandler extends SitesSearchHandler
     @Override
     protected Class<?> getServiceClass()
     {
-        return TwitterService.class;
+        return GPlusService.class;
     }
 
     @Override
     public void onReceive( Context context, Intent intent )
     {
+        Helper.debug( "onReceive" );
         SearchType searchType = ( SearchType ) intent.getSerializableExtra( SearchType.SEARCH_TYPE_KEY );
         Result resultType = ( Result ) intent.getSerializableExtra( Result.RESULT_KEY );
         if ( resultType == Result.FAILURE )
@@ -42,13 +38,13 @@ public class TwitterSearchHandler extends SitesSearchHandler
             sitesSearchListener.onError( searchType );
             return;
         }
-        QueryResult result = ( QueryResult ) intent.getSerializableExtra( Result.RESULT_DATA );
-        sitesSearchListener.afterSearching( searchType, result.getTweets() );
+        List<Activity> results = GPlusServiceData.SearchData.popSearchResults();
+        sitesSearchListener.afterSearching( searchType, results );
     }
 
     @Override
     public String getSearchActionName()
     {
-        return HashtaggerApp.TWITTER_SEARCH_ACTION;
+        return HashtaggerApp.GPLUS_SEARCH_ACTION;
     }
 }

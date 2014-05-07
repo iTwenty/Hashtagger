@@ -33,6 +33,10 @@ public abstract class SitesListRow extends RelativeLayout
 
     public void expandRow( boolean animate )
     {
+        if ( null == getSitesButtons() )
+        {
+            return;
+        }
         getSitesButtons().show( animate );
     }
 
@@ -40,6 +44,10 @@ public abstract class SitesListRow extends RelativeLayout
 
     public void collapseRow( boolean animate )
     {
+        if ( null == getSitesButtons() )
+        {
+            return;
+        }
         getSitesButtons().hide( animate );
     }
 

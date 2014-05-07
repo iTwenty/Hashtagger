@@ -1,10 +1,8 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
@@ -18,13 +16,11 @@ import java.util.List;
  */
 public class TwitterListAdapter extends SitesListAdapter
 {
-    private static final String STATUS_TYPES_KEY = "status_types_key";
 
-    public static final  int STATUS_TYPE_NORMAL = 0;
-    public static final  int STATUS_TYPE_MEDIA  = 1;
-    public static final  int STATUS_TYPE_LINK   = 2;
+    private static final int STATUS_TYPE_NORMAL = 0;
+    private static final int STATUS_TYPE_MEDIA  = 1;
+    private static final int STATUS_TYPE_LINK   = 2;
     private static final int STATUS_TYPE_COUNT  = 3;
-    private List<Integer> statusTypes;
 
     public TwitterListAdapter( Context context, int textViewResourceId, List<?> results )
     {
@@ -34,7 +30,7 @@ public class TwitterListAdapter extends SitesListAdapter
     @Override
     public int getItemViewType( int position )
     {
-        return statusTypes.get( position );
+        return resultTypes.get( position );
     }
 
     @Override
@@ -52,21 +48,18 @@ public class TwitterListAdapter extends SitesListAdapter
                 if ( null == convertView || !( convertView instanceof TwitterNormalRow ) )
                 {
                     convertView = new TwitterNormalRow( context );
-                    Helper.debug( "new tr normal row" );
                 }
                 break;
             case STATUS_TYPE_MEDIA:
                 if ( null == convertView || !( convertView instanceof TwitterMediaRow ) )
                 {
                     convertView = new TwitterMediaRow( context );
-                    Helper.debug( "new tr media row" );
                 }
                 break;
             case STATUS_TYPE_LINK:
                 if ( null == convertView || !( convertView instanceof TwitterLinkRow ) )
                 {
                     convertView = new TwitterLinkRow( context );
-                    Helper.debug( "new tr link row" );
                 }
                 break;
         }
@@ -94,36 +87,11 @@ public class TwitterListAdapter extends SitesListAdapter
         }
         if ( searchType == SearchType.NEWER )
         {
-            statusTypes.addAll( 0, newTypes );
+            resultTypes.addAll( 0, newTypes );
         }
         else
         {
-            statusTypes.addAll( newTypes );
+            resultTypes.addAll( newTypes );
         }
-    }
-
-    @Override
-    public void clearTypes()
-    {
-        statusTypes.clear();
-    }
-
-    @Override
-    public void initTypes( Bundle savedInstanceState )
-    {
-        if ( null != savedInstanceState )
-        {
-            statusTypes = ( List<Integer> ) savedInstanceState.getSerializable( STATUS_TYPES_KEY );
-        }
-        else
-        {
-            statusTypes = new ArrayList<Integer>();
-        }
-    }
-
-    @Override
-    public void saveTypes( Bundle outState )
-    {
-        outState.putSerializable( STATUS_TYPES_KEY, ( java.io.Serializable ) statusTypes );
     }
 }

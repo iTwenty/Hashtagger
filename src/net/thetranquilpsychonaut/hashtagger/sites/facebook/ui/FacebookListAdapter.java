@@ -1,11 +1,9 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import facebook4j.Post;
-import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
@@ -18,15 +16,11 @@ import java.util.List;
  */
 public class FacebookListAdapter extends SitesListAdapter
 {
-    private static final String POST_TYPES_KEY = "post_types_key";
-
-    public static final int POST_TYPE_NORMAL           = 0;
-    public static final int POST_TYPE_MEDIA            = 1;
-    public static final int POST_TYPE_MEDIA_NO_MESSAGE = 2;
-    public static final int POST_TYPE_LINK             = 3;
-    public static final int POST_TYPE_COUNT            = 4;
-
-    private List<Integer> postTypes;
+    private static final int POST_TYPE_NORMAL           = 0;
+    private static final int POST_TYPE_MEDIA            = 1;
+    private static final int POST_TYPE_MEDIA_NO_MESSAGE = 2;
+    private static final int POST_TYPE_LINK             = 3;
+    private static final int POST_TYPE_COUNT            = 4;
 
     public FacebookListAdapter( Context context, int textViewResourceId, List<?> posts )
     {
@@ -36,7 +30,7 @@ public class FacebookListAdapter extends SitesListAdapter
     @Override
     public int getItemViewType( int position )
     {
-        return postTypes.get( position );
+        return resultTypes.get( position );
     }
 
     @Override
@@ -54,28 +48,24 @@ public class FacebookListAdapter extends SitesListAdapter
                 if ( null == convertView || !( convertView instanceof FacebookNormalRow ) )
                 {
                     convertView = new FacebookNormalRow( context );
-                    Helper.debug( "new fb normal row" );
                 }
                 break;
             case POST_TYPE_MEDIA:
                 if ( null == convertView || !( convertView instanceof FacebookMediaRow ) )
                 {
                     convertView = new FacebookMediaRow( context );
-                    Helper.debug( "new fb media row" );
                 }
                 break;
             case POST_TYPE_MEDIA_NO_MESSAGE:
                 if ( null == convertView || !( convertView instanceof FacebookMediaNoMessageRow ) )
                 {
                     convertView = new FacebookMediaNoMessageRow( context );
-                    Helper.debug( "new fb media no message row" );
                 }
                 break;
             case POST_TYPE_LINK:
                 if ( null == convertView || !( convertView instanceof FacebookLinkRow ) )
                 {
                     convertView = new FacebookLinkRow( context );
-                    Helper.debug( "new fb link row" );
                 }
                 break;
         }
@@ -92,7 +82,7 @@ public class FacebookListAdapter extends SitesListAdapter
         String postType;
         for ( Post post : ( List<Post> ) searchResults )
         {
-            hasMessage = null == post.getMessage();
+            hasMessage = null != post.getMessage();
             postType = post.getType();
             hasMedia = ( "video".equals( postType ) || "photo".equals( postType ) );
             hasLink = "link".equals( postType );
@@ -115,36 +105,11 @@ public class FacebookListAdapter extends SitesListAdapter
         }
         if ( searchType == SearchType.NEWER )
         {
-            postTypes.addAll( 0, newTypes );
+            resultTypes.addAll( 0, newTypes );
         }
         else
         {
-            postTypes.addAll( newTypes );
+            resultTypes.addAll( newTypes );
         }
-    }
-
-    @Override
-    public void clearTypes()
-    {
-        postTypes.clear();
-    }
-
-    @Override
-    public void initTypes( Bundle savedInstanceState )
-    {
-        if ( null != savedInstanceState )
-        {
-            postTypes = ( List<Integer> ) savedInstanceState.getSerializable( POST_TYPES_KEY );
-        }
-        else
-        {
-            postTypes = new ArrayList<Integer>();
-        }
-    }
-
-    @Override
-    public void saveTypes( Bundle outState )
-    {
-        outState.putSerializable( POST_TYPES_KEY, ( java.io.Serializable ) postTypes );
     }
 }

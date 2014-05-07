@@ -3,6 +3,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.components;
 import android.content.Intent;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.Helper;
+import net.thetranquilpsychonaut.hashtagger.SharedPreferencesHelper;
 import net.thetranquilpsychonaut.hashtagger.config.TwitterConfig;
 import net.thetranquilpsychonaut.hashtagger.enums.AuthType;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
@@ -23,7 +24,6 @@ public class TwitterService extends SitesService
     protected Intent doSearch( Intent searchIntent )
     {
         final SearchType searchType = ( SearchType ) searchIntent.getSerializableExtra( SearchType.SEARCH_TYPE_KEY );
-        final Twitter twitter = ( Twitter ) searchIntent.getSerializableExtra( HashtaggerApp.TWITTER_KEY );
         final String hashtag = searchIntent.getStringExtra( HashtaggerApp.HASHTAG_KEY );
         Intent resultIntent = new Intent();
         resultIntent.putExtra( SearchType.SEARCH_TYPE_KEY, searchType );
@@ -32,15 +32,19 @@ public class TwitterService extends SitesService
         query.setCount( HashtaggerApp.TWITTER_SEARCH_LIMIT );
         try
         {
-            if ( null == twitter.getOAuthAccessToken() )
+            if ( !SharedPreferencesHelper.areTwitterDetailsPresent() )
             {
-                throw new TwitterException( "" );
+                throw new TwitterException( "Twitter access token not found" );
             }
+            Twitter twitter = new TwitterFactory( TwitterConfig.CONFIGURATION ).getInstance();
+            twitter.setOAuthAccessToken( new AccessToken( SharedPreferencesHelper.getTwitterAccessToken(), SharedPreferencesHelper.getTwitterAccessTokenSecret() ) );
+
              /*
             for our initial search we dont need either max or since id.
             Older search retrieves tweets with ids lower than the maxId
             Newer search retrieves tweets with ids higher than the sinceId
              */
+
             switch ( searchType )
             {
                 case INITIAL:
@@ -56,7 +60,7 @@ public class TwitterService extends SitesService
         }
         catch ( TwitterException e )
         {
-            Helper.debug( "Error while searching for " + hashtag );
+            Helper.debug( "Error while searching Twitter for " + hashtag + " : " + e.getMessage() );
         }
         Result searchResult = null == queryResult ? Result.FAILURE : Result.SUCCESS;
         resultIntent.putExtra( Result.RESULT_KEY, searchResult );
@@ -64,11 +68,11 @@ public class TwitterService extends SitesService
         {
             if ( !queryResult.getTweets().isEmpty() )
             {
-                    /*
-                    if our current search is the initial one, we set both the max and since ids for subsquent searches.
-                    if our current search is older, we don't want it to change the sinceId for our next newer search.
-                    if our current search is newer, we don't want it to change the maxId for our next older search.
-                     */
+                /*
+                if our current search is the initial one, we set both the max and since ids for subsquent searches.
+                if our current search is older, we don't want it to change the sinceId for our next newer search.
+                if our current search is newer, we don't want it to change the maxId for our next older search.
+                 */
                 if ( searchType != SearchType.OLDER )
                 {
                     TwitterSearchHandler.sinceId = queryResult.getMaxId();
@@ -126,7 +130,7 @@ public class TwitterService extends SitesService
         }
         catch ( TwitterException e )
         {
-            Helper.debug( "Error while obtaining request token" );
+            Helper.debug( "Error while obtaining twitter request token : " + e.getMessage() );
         }
         Result requestResult = null == requestToken ? Result.FAILURE : Result.SUCCESS;
         resultIntent.putExtra( Result.RESULT_KEY, requestResult );
@@ -150,7 +154,7 @@ public class TwitterService extends SitesService
         }
         catch ( TwitterException e )
         {
-            Helper.debug( "Error while obtaining access token" );
+            Helper.debug( "Error while obtaining twitter access token : " + e.getMessage() );
         }
         Result accessResult = null == accessToken ? Result.FAILURE : Result.SUCCESS;
         resultIntent.putExtra( Result.RESULT_KEY, accessResult );

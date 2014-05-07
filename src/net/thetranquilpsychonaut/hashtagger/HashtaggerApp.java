@@ -48,7 +48,7 @@ public class HashtaggerApp extends Application
     public static final int    GPLUS_VALUE         = 2;
     public static final String GPLUS_CALLBACK_URL  = "http://localhost/";
     public static final String GPLUS_CODE_KEY      = "code";
-    public static final String GPLUS_ACCESS_SCOPE  = "profile";
+    public static final String GPLUS_ACCESS_SCOPE  = "https://www.googleapis.com/auth/plus.login";
     public static final String GPLUS_LOGIN_ACTION  = NAMESPACE + "gplus_login_action";
     public static final String GPLUS_SEARCH_ACTION = NAMESPACE + "gplus_search_action";
 

@@ -7,11 +7,11 @@
     android:layout_height="wrap_content">
 
     <Button
-        android:id="@+id/btn_like"
+        android:id="@+id/btn_plusone"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:text="Like"
+        android:text="+1"
         android:focusable="false"
         style="?android:attr/borderlessButtonStyle"/>
 

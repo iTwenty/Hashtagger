@@ -7,7 +7,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.config.GPlusConfig;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.GPlusLoginHandler;
@@ -33,7 +32,6 @@ public class GPlusLoginActivity extends LoadingActivity implements GPlusLoginHan
             @Override
             public boolean shouldOverrideUrlLoading( WebView view, String url )
             {
-                Helper.debug( url );
                 if ( !url.startsWith( HashtaggerApp.GPLUS_CALLBACK_URL ) )
                 {
                     wvGPlusLogin.loadUrl( url );
@@ -70,7 +68,6 @@ public class GPlusLoginActivity extends LoadingActivity implements GPlusLoginHan
                     GPlusConfig.SECRETS,
                     HashtaggerApp.GPLUS_CALLBACK_URL,
                     Arrays.asList( HashtaggerApp.GPLUS_ACCESS_SCOPE ) ).build();
-            Helper.debug( authUrl );
             wvGPlusLogin.loadUrl( authUrl );
         }
     }

@@ -2,14 +2,9 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.components;
 
 import android.content.Context;
 import android.content.Intent;
-import facebook4j.Facebook;
-import facebook4j.FacebookFactory;
 import facebook4j.Paging;
 import facebook4j.Post;
-import facebook4j.auth.AccessToken;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import net.thetranquilpsychonaut.hashtagger.SharedPreferencesHelper;
-import net.thetranquilpsychonaut.hashtagger.config.FacebookConfig;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
@@ -21,7 +16,6 @@ import java.util.List;
  */
 public class FacebookSearchHandler extends SitesSearchHandler
 {
-    Facebook facebook;
 
     /*
     * Facebook post search results are navigated using pages.
@@ -29,36 +23,10 @@ public class FacebookSearchHandler extends SitesSearchHandler
     static Paging<Post> newestPage;
     static Paging<Post> oldestPage;
 
+
     public FacebookSearchHandler( SitesSearchListener listener )
     {
         super( listener );
-        this.facebook = new FacebookFactory( FacebookConfig.CONFIGURATION ).getInstance();
-        // If user was previously logged in, we need to restore hir's credentials from shared login_prefs
-        if ( SharedPreferencesHelper.areFacebookDetailsPresent() )
-        {
-            setAccessToken();
-        }
-    }
-
-    public void setAccessToken()
-    {
-        if ( !SharedPreferencesHelper.areFacebookDetailsPresent() )
-        {
-            throw new RuntimeException( "must be logged in before setting access token!" );
-        }
-        facebook.setOAuthAccessToken( new AccessToken( SharedPreferencesHelper.getFacebookAccessToken() ) );
-    }
-
-    public void clearAccessToken()
-    {
-        facebook.setOAuthAccessToken( null );
-    }
-
-    @Override
-    protected Intent addExtraParameters( Intent searchIntent )
-    {
-        searchIntent.putExtra( HashtaggerApp.FACEBOOK_KEY, facebook );
-        return searchIntent;
     }
 
     @Override
@@ -78,7 +46,31 @@ public class FacebookSearchHandler extends SitesSearchHandler
             return;
         }
         List<Post> results = ( List<Post> ) intent.getSerializableExtra( Result.RESULT_DATA );
+//        for ( Post post : results )
+//        {
+//            if ( !isDisplayablePost( post ) )
+//                results.remove( post );
+//        }
         sitesSearchListener.afterSearching( searchType, results );
+    }
+
+    private boolean isDisplayablePost( Post post )
+    {
+        String statustType = post.getStatusType();
+        if ( null == statustType )
+        {
+            return true;
+        }
+        if ( "created_note".equals( statustType )
+                || "created_group".equals( statustType )
+                || "created_event".equals( statustType )
+                || "app_created_story".equals( statustType )
+                || "tagged_in_photo".equals( statustType )
+                || "approved_friend".equals( statustType ) )
+        {
+            return false;
+        }
+        return true;
     }
 
     @Override

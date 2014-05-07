@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.SharedPreferencesHelper;
 import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
@@ -53,7 +54,7 @@ public class GPlusLoginHandler extends BroadcastReceiver implements LoginActionN
             gPlusLoginListener.onError();
             return;
         }
-        GPlusSerializableTokenResponse tokenResponse = ( GPlusSerializableTokenResponse ) intent.getSerializableExtra( Result.RESULT_DATA );
+        GoogleTokenResponse tokenResponse = GPlusServiceData.AuthData.popTokenResponse();
         String userName = intent.getStringExtra( Result.RESULT_EXTRAS );
         SharedPreferencesHelper.addGPlusDetails( tokenResponse.getAccessToken(), tokenResponse.getRefreshToken(), userName );
         gPlusLoginListener.onUserLoggedIn();

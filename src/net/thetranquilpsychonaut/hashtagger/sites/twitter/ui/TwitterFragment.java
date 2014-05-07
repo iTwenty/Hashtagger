@@ -86,30 +86,9 @@ public class TwitterFragment extends SitesFragment
     }
 
     @Override
-    public void onUserLoggedIn()
-    {
-        ( ( TwitterSearchHandler ) sitesSearchHandler ).setAccessToken();
-        super.onUserLoggedIn();
-    }
-
-    @Override
-    public void onUserLoggedOut()
-    {
-        ( ( TwitterSearchHandler ) sitesSearchHandler ).clearAccessToken();
-        super.onUserLoggedOut();
-    }
-
-    @Override
     protected Class<?> getLoginActivityClassName()
     {
         return TwitterLoginActivity.class;
-    }
-
-    @Override
-    public void onDestroy()
-    {
-        sitesSearchHandler.unregisterReceiver();
-        super.onDestroy();
     }
 
     @Override

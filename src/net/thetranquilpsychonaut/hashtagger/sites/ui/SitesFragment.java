@@ -60,6 +60,20 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     }
 
     @Override
+    public void onResume()
+    {
+        super.onResume();
+        sitesSearchHandler.registerReceiver();
+    }
+
+    @Override
+    public void onPause()
+    {
+        sitesSearchHandler.unregisterReceiver();
+        super.onPause();
+    }
+
+    @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
     {
         sitesUserHandler = initSitesUserHandler();
@@ -266,6 +280,11 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_no_network ), Toast.LENGTH_LONG ).show();
             return;
         }
+        if ( !sitesUserHandler.isUserLoggedIn() )
+        {
+            Toast.makeText( getActivity(), getResources().getString( getNotLoggedInToastTextId() ), Toast.LENGTH_LONG ).show();
+            return;
+        }
         sitesSearchHandler.beginSearch( SearchType.NEWER, ( ( SitesActivity ) getActivity() ).getHashtag() );
     }
 
@@ -307,6 +326,11 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         if ( !HashtaggerApp.isNetworkConnected() )
         {
             Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_no_network ), Toast.LENGTH_LONG ).show();
+            return;
+        }
+        if ( !sitesUserHandler.isUserLoggedIn() )
+        {
+            Toast.makeText( getActivity(), getResources().getString( getNotLoggedInToastTextId() ), Toast.LENGTH_LONG ).show();
             return;
         }
         sitesSearchHandler.beginSearch( SearchType.OLDER, ( ( SitesActivity ) getActivity() ).getHashtag() );

@@ -5,6 +5,7 @@ import facebook4j.*;
 import facebook4j.auth.AccessToken;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.Helper;
+import net.thetranquilpsychonaut.hashtagger.SharedPreferencesHelper;
 import net.thetranquilpsychonaut.hashtagger.config.FacebookConfig;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
@@ -21,21 +22,22 @@ public class FacebookService extends SitesService
     protected Intent doSearch( Intent searchIntent )
     {
         final SearchType searchType = ( SearchType ) searchIntent.getSerializableExtra( SearchType.SEARCH_TYPE_KEY );
-        final Facebook facebook = ( Facebook ) searchIntent.getSerializableExtra( HashtaggerApp.FACEBOOK_KEY );
         final String hashtag = searchIntent.getStringExtra( HashtaggerApp.HASHTAG_KEY );
         Intent resultIntent = new Intent();
         resultIntent.putExtra( SearchType.SEARCH_TYPE_KEY, searchType );
         ResponseList<Post> responseList = null;
         try
         {
-            if ( null == facebook.getOAuthAccessToken() )
+            if ( !SharedPreferencesHelper.areFacebookDetailsPresent() )
             {
-                throw new FacebookException( "" );
+                throw new FacebookException( "Facebook access token nor found" );
             }
+            Facebook facebook = new FacebookFactory( FacebookConfig.CONFIGURATION ).getInstance();
+            facebook.setOAuthAccessToken( new AccessToken( SharedPreferencesHelper.getFacebookAccessToken() ) );
             switch ( searchType )
             {
                 case INITIAL:
-                    responseList = facebook.searchPosts( hashtag );
+                    responseList = facebook.searchPosts( hashtag.replace( "#", "" ) );
                     break;
                 case OLDER:
                     responseList = facebook.fetchNext( FacebookSearchHandler.oldestPage );
@@ -47,7 +49,7 @@ public class FacebookService extends SitesService
         }
         catch ( FacebookException e )
         {
-            Helper.debug( "Error while searching for " + hashtag );
+            Helper.debug( "Error while searching Facebook for " + hashtag + " : " + e.getMessage() );
         }
         Result searchResult = null == responseList ? Result.FAILURE : Result.SUCCESS;
         resultIntent.putExtra( Result.RESULT_KEY, searchResult );

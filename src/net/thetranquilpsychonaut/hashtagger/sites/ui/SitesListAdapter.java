@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,7 +15,9 @@ import java.util.List;
  */
 public abstract class SitesListAdapter extends ArrayAdapter
 {
+    private static final String RESULT_TYPES_KEY = "result_types";
     Context context;
+    protected List<Integer> resultTypes;
 
     protected SitesListAdapter( Context context, int textViewResourceId, List<?> objects )
     {
@@ -56,9 +59,26 @@ public abstract class SitesListAdapter extends ArrayAdapter
 
     public abstract void updateTypes( SearchType searchType, List<?> searchResults );
 
-    public abstract void clearTypes();
+    public void clearTypes()
+    {
+        resultTypes.clear();
+    }
 
-    public abstract void initTypes( Bundle savedInstanceState );
+    public void initTypes( Bundle savedInstanceState )
+    {
 
-    public abstract void saveTypes( Bundle outState );
+        if ( null != savedInstanceState )
+        {
+            resultTypes = ( List<Integer> ) savedInstanceState.getSerializable( RESULT_TYPES_KEY );
+        }
+        else
+        {
+            resultTypes = new ArrayList<Integer>();
+        }
+    }
+
+    public void saveTypes( Bundle outState )
+    {
+        outState.putSerializable( RESULT_TYPES_KEY, ( java.io.Serializable ) resultTypes );
+    }
 }
