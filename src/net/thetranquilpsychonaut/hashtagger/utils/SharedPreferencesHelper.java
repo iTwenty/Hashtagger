@@ -1,8 +1,9 @@
-package net.thetranquilpsychonaut.hashtagger;
+package net.thetranquilpsychonaut.hashtagger.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 
 /**
  * Created by itwenty on 4/4/14.

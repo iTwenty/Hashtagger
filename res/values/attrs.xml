@@ -3,4 +3,8 @@
     <declare-styleable name="SitesListRow">
         <attr name="sitesListRowStyle" format="reference"/>
     </declare-styleable>
+
+    <declare-styleable name="CenterContentButton">
+        <attr name="drawableCenter" format="reference"/>
+    </declare-styleable>
 </resources>

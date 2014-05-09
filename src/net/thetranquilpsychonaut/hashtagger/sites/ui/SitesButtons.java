@@ -36,7 +36,7 @@ public abstract class SitesButtons extends LinearLayout
         isVisible = false;
     }
 
-    public void show( boolean animate )
+    public void show( Object result, boolean animate )
     {
         int widthMeasureSpec = MeasureSpec.makeMeasureSpec( RelativeLayout.LayoutParams.MATCH_PARENT, MeasureSpec.EXACTLY );
         int heightMeasureSpec = MeasureSpec.makeMeasureSpec( RelativeLayout.LayoutParams.WRAP_CONTENT, MeasureSpec.EXACTLY );
@@ -69,7 +69,10 @@ public abstract class SitesButtons extends LinearLayout
             setHeight( finalHeight );
         }
         isVisible = true;
+        updateButtons( result );
     }
+
+    protected abstract void updateButtons( Object result );
 
     public void hide( boolean animate )
     {
@@ -92,7 +95,11 @@ public abstract class SitesButtons extends LinearLayout
             setHeight( 0 );
         }
         isVisible = false;
+        clearButtons();
+
     }
+
+    protected abstract void clearButtons();
 
     private void setHeight( int height )
     {

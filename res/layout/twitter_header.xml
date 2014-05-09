@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imgv_profile_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:scaleType="fitCenter"
+        tools:src="@drawable/drawable_image_loading"/>
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:textStyle="bold"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/imgv_profile_image"
+        android:layout_toLeftOf="@+id/tv_created_at"
+        android:paddingLeft="@dimen/content_padding"
+        android:paddingRight="@dimen/content_padding"
+        tools:text="name"
+        android:singleLine="true"/>
+
+    <TextView
+        android:id="@+id/tv_screen_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/imgv_profile_image"
+        android:layout_toLeftOf="@id/tv_created_at"
+        android:layout_below="@id/tv_name"
+        android:padding="@dimen/content_padding"
+        tools:text="@screenname"
+        style="@style/TwitterScreenNameText"
+        android:singleLine="true"/>
+
+    <TextView
+        android:id="@id/tv_created_at"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        tools:text="dd/mm/yyyy"
+        android:paddingLeft="@dimen/content_padding"
+        android:paddingRight="@dimen/content_padding"
+        style="@style/DateText"
+        android:singleLine="true"/>
+
+</RelativeLayout>

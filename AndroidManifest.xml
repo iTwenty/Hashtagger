@@ -67,6 +67,7 @@
         <activity
             android:name=".sites.ui.SettingsActivity">
         </activity>
+        <activity android:name=".sites.twitter.ui.ViewImageActivity"/>
 
         <provider
             android:authorities="hashtagger:HashtagSuggestionsProvider"

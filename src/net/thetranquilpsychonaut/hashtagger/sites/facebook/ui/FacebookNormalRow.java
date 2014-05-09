@@ -7,22 +7,21 @@ import android.widget.TextView;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
 /**
  * Created by itwenty on 5/2/14.
  */
 public class FacebookNormalRow extends SitesListRow
 {
-    private ImageView       imgvProfileImage;
-    private TextView        tvUserNameOrStory;
-    private TextView        tvCreatedTime;
-    private TextView        tvMessage;
-    private FacebookButtons facebookButtons;
-    private Post            post;
+    private ImageView imgvProfileImage;
+    private TextView  tvUserNameOrStory;
+    private TextView  tvCreatedTime;
+    private TextView  tvMessage;
+    private Post      post;
 
     protected FacebookNormalRow( Context context )
     {
@@ -47,17 +46,13 @@ public class FacebookNormalRow extends SitesListRow
         tvUserNameOrStory = ( TextView ) findViewById( R.id.tv_user_name_or_story );
         tvCreatedTime = ( TextView ) findViewById( R.id.tv_created_time );
         tvMessage = ( TextView ) findViewById( R.id.tv_message );
-        facebookButtons = ( FacebookButtons ) findViewById( R.id.facebook_buttons );
+        super.init( context );
     }
 
     @Override
-    protected SitesButtons getSitesButtons()
+    protected SitesButtons initSitesButtons()
     {
-        if ( null == facebookButtons )
-        {
-            throw new RuntimeException( "getSitesButtons called before they are ready." );
-        }
-        return facebookButtons;
+        return ( SitesButtons ) findViewById( R.id.facebook_buttons );
     }
 
     @Override

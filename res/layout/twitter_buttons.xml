@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<merge
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
@@ -11,29 +11,36 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Reply"
         android:focusable="false"
+        android:layout_gravity="center"
         android:drawableLeft="@drawable/twitter_reply"
-        style="?android:attr/borderlessButtonStyle"/>
+        style="@style/sitesButtonStyle"/>
 
     <Button
         android:id="@+id/imgb_retweet"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Retweet"
         android:focusable="false"
         android:drawableLeft="@drawable/twitter_retweet"
-        style="?android:attr/borderlessButtonStyle"/>
+        style="@style/sitesButtonStyle"/>
 
     <Button
         android:id="@+id/imgb_favorite"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Favorite"
         android:focusable="false"
         android:drawableLeft="@drawable/twitter_favorite"
-        style="?android:attr/borderlessButtonStyle"/>
+        style="@style/sitesButtonStyle"/>
 
-</merge>
+    <Button
+        android:id="@+id/btn_view_details"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:focusable="false"
+        android:drawableLeft="@drawable/ic_action_full_screen"
+        style="@style/sitesButtonStyle"/>
+
+</LinearLayout>

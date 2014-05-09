@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.thetranquilpsychonaut.hashtagger.iconpagerindicator;
+package net.thetranquilpsychonaut.hashtagger.widgets;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;

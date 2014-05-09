@@ -10,6 +10,7 @@ import net.thetranquilpsychonaut.hashtagger.R;
  */
 public abstract class SitesListRow extends RelativeLayout
 {
+    protected SitesButtons sitesButtons;
 
     protected SitesListRow( Context context )
     {
@@ -27,32 +28,39 @@ public abstract class SitesListRow extends RelativeLayout
         init( context );
     }
 
-    protected abstract void init( Context context );
-
-    protected abstract SitesButtons getSitesButtons();
-
-    public void expandRow( boolean animate )
+    protected void init( Context context )
     {
-        if ( null == getSitesButtons() )
+        sitesButtons = initSitesButtons();
+    }
+
+    protected abstract SitesButtons initSitesButtons();
+
+    public void expandRow( final Object result, boolean animate )
+    {
+        if ( null == sitesButtons )
         {
             return;
         }
-        getSitesButtons().show( animate );
+        sitesButtons.show( result, animate );
     }
 
     public abstract void updateRow( final Object result );
 
     public void collapseRow( boolean animate )
     {
-        if ( null == getSitesButtons() )
+        if ( null == sitesButtons )
         {
             return;
         }
-        getSitesButtons().hide( animate );
+        sitesButtons.hide( animate );
     }
 
     public boolean isExpanded()
     {
-        return getSitesButtons().isVisible;
+        if ( null == sitesButtons )
+        {
+            return false;
+        }
+        return sitesButtons.isVisible;
     }
 }

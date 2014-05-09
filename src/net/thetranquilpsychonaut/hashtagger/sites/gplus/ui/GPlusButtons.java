@@ -34,18 +34,15 @@ public class GPlusButtons extends SitesButtons
         btnShare = ( Button ) findViewById( R.id.btn_share );
     }
 
-    public void setPlusOneClickListener( OnClickListener listener )
+    @Override
+    protected void updateButtons( Object result )
     {
-        btnPlusOne.setOnClickListener( listener );
+
     }
 
-    public void setCommentClickListener( OnClickListener listener )
+    @Override
+    protected void clearButtons()
     {
-        btnComment.setOnClickListener( listener );
-    }
 
-    public void setShareClickListener( OnClickListener listener )
-    {
-        btnShare.setOnClickListener( listener );
     }
 }

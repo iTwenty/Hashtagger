@@ -52,7 +52,7 @@
     <RelativeLayout
         android:id="@+id/rl_link_wrapper"
         android:layout_below="@id/tv_message"
-        android:background="@drawable/selector_shadow_border"
+        android:background="@android:drawable/picture_frame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

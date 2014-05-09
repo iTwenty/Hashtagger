@@ -6,10 +6,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import net.thetranquilpsychonaut.hashtagger.SharedPreferencesHelper;
 import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.sites.components.LoginActionName;
+import net.thetranquilpsychonaut.hashtagger.utils.SharedPreferencesHelper;
 
 /**
  * Created by itwenty on 5/6/14.

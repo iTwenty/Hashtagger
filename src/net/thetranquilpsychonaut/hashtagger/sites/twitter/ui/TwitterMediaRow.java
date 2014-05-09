@@ -2,14 +2,12 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
@@ -20,13 +18,10 @@ import twitter4j.Status;
  */
 public class TwitterMediaRow extends SitesListRow implements View.OnClickListener
 {
-    private ImageView      imgvProfileImage;
-    private TextView       tvScreenName;
-    private TextView       tvCreatedAt;
-    private TextView       tvTweet;
-    private ImageView      imgvMediaThumb;
-    private TwitterButtons twitterButtons;
-    private Status         status;
+    private TwitterHeader twitterHeader;
+    private TextView      tvTweet;
+    private ImageView     imgvMediaThumb;
+    private Status        status;
 
     protected TwitterMediaRow( Context context )
     {
@@ -47,32 +42,24 @@ public class TwitterMediaRow extends SitesListRow implements View.OnClickListene
     protected void init( Context context )
     {
         inflate( context, R.layout.twitter_media_row, this );
-        imgvProfileImage = ( ImageView ) findViewById( R.id.imgv_profile_image );
-        tvScreenName = ( TextView ) findViewById( R.id.tv_screen_name );
-        tvCreatedAt = ( TextView ) findViewById( R.id.tv_created_at );
+        twitterHeader = ( TwitterHeader ) findViewById( R.id.twitter_header );
         tvTweet = ( TextView ) findViewById( R.id.tv_tweet );
         imgvMediaThumb = ( ImageView ) findViewById( R.id.imgv_media_thumb );
-        twitterButtons = ( TwitterButtons ) findViewById( R.id.twitter_buttons );
         imgvMediaThumb.setOnClickListener( this );
+        super.init( context );
     }
 
     @Override
-    protected SitesButtons getSitesButtons()
+    protected SitesButtons initSitesButtons()
     {
-        if ( null == twitterButtons )
-        {
-            throw new RuntimeException( "getSitesButtons called before they are ready." );
-        }
-        return twitterButtons;
+        return ( SitesButtons ) findViewById( R.id.twitter_buttons );
     }
 
     @Override
     public void updateRow( Object result )
     {
         this.status = ( Status ) result;
-        UrlImageViewHelper.setUrlDrawable( imgvProfileImage, status.getUser().getProfileImageURL(), R.drawable.drawable_image_loading, HashtaggerApp.CACHE_DURATION_MS );
-        tvScreenName.setText( "@" + status.getUser().getScreenName() );
-        tvCreatedAt.setText( Helper.getFuzzyDateTime( status.getCreatedAt().getTime() ) );
+        twitterHeader.updateHeader( status );
         tvTweet.setText( status.isRetweet() ? status.getRetweetedStatus().getText() : status.getText() );
         UrlImageViewHelper.setUrlDrawable( imgvMediaThumb, status.getMediaEntities()[0].getMediaURL() + ":thumb", R.drawable.drawable_image_loading, HashtaggerApp.CACHE_DURATION_MS );
     }
@@ -80,8 +67,8 @@ public class TwitterMediaRow extends SitesListRow implements View.OnClickListene
     @Override
     public void onClick( View v )
     {
-        Intent intent = new Intent( Intent.ACTION_VIEW );
-        intent.setData( Uri.parse( status.getMediaEntities()[0].getMediaURL() + ":large" ) );
+        Intent intent = new Intent( getContext(), ViewImageActivity.class );
+        intent.putExtra( "image", status.getMediaEntities()[0].getMediaURL() + ":large" );
         getContext().startActivity( intent );
     }
 }

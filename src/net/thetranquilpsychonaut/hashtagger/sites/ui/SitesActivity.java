@@ -25,15 +25,15 @@ import android.widget.*;
 import net.thetranquilpsychonaut.hashtagger.HashtagSuggestionsProvider;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.SharedPreferencesHelper;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.PageDescriptor;
-import net.thetranquilpsychonaut.hashtagger.iconpagerindicator.IconPagerIndicator;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsDBContract;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsDBHelper;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsProviderContract;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterFragment;
+import net.thetranquilpsychonaut.hashtagger.utils.SharedPreferencesHelper;
+import net.thetranquilpsychonaut.hashtagger.widgets.IconPagerIndicator;
 
 import java.util.ArrayList;
 import java.util.List;

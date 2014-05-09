@@ -34,19 +34,15 @@ public class FacebookButtons extends SitesButtons
         btnShare = ( Button ) findViewById( R.id.btn_share );
     }
 
-    public void setLikeClickListener( OnClickListener listener )
+    @Override
+    protected void updateButtons( Object result )
     {
-        btnLike.setOnClickListener( listener );
+
     }
 
-    public void setCommentClickListener( OnClickListener listener )
+    @Override
+    protected void clearButtons()
     {
-        btnComment.setOnClickListener( listener );
-    }
 
-    public void setShareClickListener( OnClickListener listener )
-    {
-        btnShare.setOnClickListener( listener );
     }
-
 }

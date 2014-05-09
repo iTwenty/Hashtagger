@@ -1,7 +1,7 @@
 package net.thetranquilpsychonaut.hashtagger.sites.gplus.components;
 
-import net.thetranquilpsychonaut.hashtagger.SharedPreferencesHelper;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
+import net.thetranquilpsychonaut.hashtagger.utils.SharedPreferencesHelper;
 
 /**
  * Created by itwenty on 5/5/14.

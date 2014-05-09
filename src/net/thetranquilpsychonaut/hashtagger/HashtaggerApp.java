@@ -12,8 +12,6 @@ public class HashtaggerApp extends Application
 {
     public static HashtaggerApp app;
 
-    public static final boolean DEBUG = true;
-
     public static final String PACKAGE_NAMESPACE = "net.thetranquilpsychonaut.hashtagger";
     public static final String NAMESPACE         = "hashtagger:";
 
@@ -34,14 +32,13 @@ public class HashtaggerApp extends Application
     public static final String TWITTER_REQUEST_TOKEN_KEY  = NAMESPACE + "twitter_request_token_key";
 
 
-    public static final String FACEBOOK                     = "Facebook";
-    public static final int    FACEBOOK_VALUE               = 1;
-    public static final String FACEBOOK_CALLBACK_URL        = "http://localhost/";
-    public static final String FACEBOOK_KEY                 = NAMESPACE + "facebook";
-    public static final String FACEBOOK_CODE_KEY            = "code";
-    public static final String FACEBOOK_LOGIN_ACTION        = NAMESPACE + "facebook_login_action";
-    public static final String FACEBOOK_SEARCH_ACTION       = NAMESPACE + "facebook_search_action";
-    public static final String FACEBOOK_PROFILE_PICTURE_URL = "http://graph.facebook.com/%s/picture?type=square";
+    public static final String FACEBOOK               = "Facebook";
+    public static final int    FACEBOOK_VALUE         = 1;
+    public static final String FACEBOOK_CALLBACK_URL  = "http://localhost/";
+    public static final String FACEBOOK_KEY           = NAMESPACE + "facebook";
+    public static final String FACEBOOK_CODE_KEY      = "code";
+    public static final String FACEBOOK_LOGIN_ACTION  = NAMESPACE + "facebook_login_action";
+    public static final String FACEBOOK_SEARCH_ACTION = NAMESPACE + "facebook_search_action";
 
 
     public static final String GPLUS               = "GPlus";

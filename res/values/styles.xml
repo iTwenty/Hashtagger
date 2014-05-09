@@ -9,14 +9,16 @@
         <item name="android:textColor">@color/text_faded</item>
     </style>
 
-    <style name="HandleText">
-        <item name="android:textColor">@android:color/holo_green_dark</item>
+    <style name="TwitterScreenNameText" parent="DateText">
         <item name="android:textSize">12sp</item>
-        <item name="android:layout_centerHorizontal">true</item>
     </style>
 
     <style name="sitesListRowStyle" parent="android:Theme.Holo.Light.DarkActionBar">
         <item name="android:background">@drawable/card_background</item>
         <item name="android:padding">@dimen/card_padding</item>
+    </style>
+
+    <style name="sitesButtonStyle" parent="android:Widget.Holo.Light.Button.Borderless.Small">
+        <item name="android:textSize">10sp</item>
     </style>
 </resources>

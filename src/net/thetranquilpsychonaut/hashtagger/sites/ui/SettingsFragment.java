@@ -7,7 +7,7 @@ import android.preference.PreferenceFragment;
 import android.provider.SearchRecentSuggestions;
 import net.thetranquilpsychonaut.hashtagger.HashtagSuggestionsProvider;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.SharedPreferencesHelper;
+import net.thetranquilpsychonaut.hashtagger.utils.SharedPreferencesHelper;
 
 /**
  * Created by itwenty on 5/3/14.

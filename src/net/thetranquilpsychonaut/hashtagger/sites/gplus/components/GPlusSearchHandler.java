@@ -4,10 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import com.google.api.services.plus.model.Activity;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import net.thetranquilpsychonaut.hashtagger.Helper;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
 import java.util.List;
 
