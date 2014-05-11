@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dl_nav_drawer"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <!--
+    Subclasses of this activity should use addView( View, 0 )
+    to add their main view here
+    -->
+
+    <RelativeLayout
+        android:layout_width="240dp"
+        android:layout_gravity="start"
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
+
+        <TextView
+            android:id="@+id/tv_saved_hashtags_heading"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Saved Hashtags"/>
+
+        <ListView
+            android:layout_below="@id/tv_saved_hashtags_heading"
+            android:id="@+id/lv_saved_hashtags"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"/>
+
+        <TextView
+            android:id="@+id/tv_saved_hashtags_empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/str_no_saved_hashtags"/>
+
+    </RelativeLayout>
+
+</android.support.v4.widget.DrawerLayout>

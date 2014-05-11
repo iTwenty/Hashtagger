@@ -130,7 +130,7 @@ public abstract class ArrayPagerAdapter<T extends Fragment> extends PagerAdapter
         retentionStrategy.detach( ( Fragment ) object, currTransaction );
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     @Override
     public void setPrimaryItem( ViewGroup container, int position, Object object )
     {
@@ -251,6 +251,24 @@ public abstract class ArrayPagerAdapter<T extends Fragment> extends PagerAdapter
         notifyDataSetChanged();
     }
 
+    public void remove( PageDescriptor descriptor )
+    {
+        int position = -1;
+        int entriesCount = entries.size();
+        for ( int a = 0; a < entriesCount; ++a )
+        {
+            if ( descriptor.equals( entries.get( a ).getDescriptor() ) )
+            {
+                position = a;
+                break;
+            }
+        }
+        if ( position != -1 )
+        {
+            remove( position );
+        }
+    }
+
     public void move( int oldPosition, int newPosition )
     {
         if ( oldPosition != newPosition )
@@ -258,6 +276,24 @@ public abstract class ArrayPagerAdapter<T extends Fragment> extends PagerAdapter
             PageDescriptor desc = entries.get( oldPosition ).getDescriptor();
             remove( oldPosition );
             insert( desc, newPosition );
+        }
+    }
+
+    public void move( PageDescriptor descriptor, int newPosition )
+    {
+        int oldPosition = -1;
+        int entriesCount = entries.size();
+        for ( int a = 0; a < entriesCount; ++a )
+        {
+            if ( descriptor.equals( entries.get( a ).getDescriptor() ) )
+            {
+                oldPosition = a;
+                break;
+            }
+        }
+        if ( oldPosition != -1 )
+        {
+            move( oldPosition, newPosition );
         }
     }
 
@@ -273,7 +309,7 @@ public abstract class ArrayPagerAdapter<T extends Fragment> extends PagerAdapter
         return false;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public T getExistingFragment( int position )
     {
         return ( T ) ( fm.findFragmentByTag( getFragmentTag( position ) ) );

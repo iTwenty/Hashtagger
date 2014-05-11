@@ -2,26 +2,20 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 import android.widget.TextView;
-import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 import facebook4j.Post;
-import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
-import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
 /**
  * Created by itwenty on 5/2/14.
  */
 public class FacebookNormalRow extends SitesListRow
 {
-    private ImageView imgvProfileImage;
-    private TextView  tvUserNameOrStory;
-    private TextView  tvCreatedTime;
-    private TextView  tvMessage;
-    private Post      post;
+    private FacebookHeader facebookHeader;
+    private TextView       tvMessage;
+    private Post           post;
 
     protected FacebookNormalRow( Context context )
     {
@@ -42,9 +36,7 @@ public class FacebookNormalRow extends SitesListRow
     protected void init( Context context )
     {
         inflate( context, R.layout.facebook_normal_row, this );
-        imgvProfileImage = ( ImageView ) findViewById( R.id.imgv_profile_image );
-        tvUserNameOrStory = ( TextView ) findViewById( R.id.tv_user_name_or_story );
-        tvCreatedTime = ( TextView ) findViewById( R.id.tv_created_time );
+        facebookHeader = ( FacebookHeader ) findViewById( R.id.facebook_header );
         tvMessage = ( TextView ) findViewById( R.id.tv_message );
         super.init( context );
     }
@@ -59,9 +51,7 @@ public class FacebookNormalRow extends SitesListRow
     public void updateRow( Object result )
     {
         this.post = ( Post ) result;
-        UrlImageViewHelper.setUrlDrawable( imgvProfileImage, Helper.getFacebookPictureUrl( post.getFrom().getId() ), getResources().getDrawable( R.drawable.drawable_image_loading ), HashtaggerApp.CACHE_DURATION_MS );
-        tvUserNameOrStory.setText( post.getStory() == null ? post.getFrom().getName() : post.getStory() );
-        tvCreatedTime.setText( Helper.getFuzzyDateTime( post.getCreatedTime().getTime() ) );
+        facebookHeader.updateHeader( post );
         tvMessage.setText( post.getMessage() );
     }
 }

@@ -1,12 +1,14 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.support.v4.app.FragmentActivity;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.Button;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
-import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton;
 import twitter4j.Status;
 
 /**
@@ -14,11 +16,11 @@ import twitter4j.Status;
  */
 public class TwitterButtons extends SitesButtons implements View.OnClickListener
 {
-    private Button btnReply;
-    private Button btnRetweet;
-    private Button btnFavorite;
-    private Button btnViewDetails;
-    private Status status;
+    private CenterContentButton ccbReply;
+    private CenterContentButton ccbRetweet;
+    private CenterContentButton ccbOpenInBrowser;
+    private CenterContentButton ccbViewDetails;
+    private Status              status;
 
     public TwitterButtons( Context context )
     {
@@ -34,29 +36,24 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
     {
         super( context, attrs, defStyle );
         inflate( context, R.layout.twitter_buttons, this );
-        btnReply = ( Button ) findViewById( R.id.imgb_reply );
-        btnRetweet = ( Button ) findViewById( R.id.imgb_retweet );
-        btnFavorite = ( Button ) findViewById( R.id.imgb_favorite );
-        btnViewDetails = ( Button ) findViewById( R.id.btn_view_details );
+        ccbReply = ( CenterContentButton ) findViewById( R.id.ccb_reply );
+        ccbRetweet = ( CenterContentButton ) findViewById( R.id.ccb_retweet );
+        ccbOpenInBrowser = ( CenterContentButton ) findViewById( R.id.ccb_open_in_browser );
+        ccbViewDetails = ( CenterContentButton ) findViewById( R.id.ccb_view_details );
     }
 
     @Override
     protected void updateButtons( Object result )
     {
         this.status = ( Status ) result;
-        btnReply.setOnClickListener( this );
-        btnRetweet.setOnClickListener( this );
-        btnFavorite.setOnClickListener( this );
-        btnViewDetails.setOnClickListener( this );
+        ccbReply.setOnClickListener( this );
+        ccbRetweet.setOnClickListener( this );
+        ccbOpenInBrowser.setOnClickListener( this );
+        ccbViewDetails.setOnClickListener( this );
         if ( status.getRetweetCount() != 0 )
         {
-            btnRetweet.setText( String.valueOf( status.getRetweetCount() ) );
+            ccbRetweet.setText( String.valueOf( status.getRetweetCount() ) );
         }
-        if ( status.getFavoriteCount() != 0 )
-        {
-            btnFavorite.setText( String.valueOf( status.getFavoriteCount() ) );
-        }
-        setFavorited( status.isFavorited() );
         setRetweeted( status.isRetweetedByMe() );
     }
 
@@ -64,27 +61,13 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
     {
         if ( isRetweetedByMe )
         {
-            btnRetweet.setCompoundDrawablesWithIntrinsicBounds(
+            ccbRetweet.setCompoundDrawablesWithIntrinsicBounds(
                     getResources().getDrawable( R.drawable.twitter_retweet_on ), null, null, null );
         }
         else
         {
-            btnRetweet.setCompoundDrawablesWithIntrinsicBounds(
+            ccbRetweet.setCompoundDrawablesWithIntrinsicBounds(
                     getResources().getDrawable( R.drawable.twitter_retweet ), null, null, null );
-        }
-    }
-
-    private void setFavorited( boolean isFavorited )
-    {
-        if ( isFavorited )
-        {
-            btnFavorite.setCompoundDrawablesWithIntrinsicBounds(
-                    getResources().getDrawable( R.drawable.twitter_favorite_on ), null, null, null );
-        }
-        else
-        {
-            btnFavorite.setCompoundDrawablesWithIntrinsicBounds(
-                    getResources().getDrawable( R.drawable.twitter_favorite ), null, null, null );
         }
     }
 
@@ -92,30 +75,36 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
     protected void clearButtons()
     {
         this.status = null;
-        btnReply.setOnClickListener( null );
-        btnRetweet.setOnClickListener( null );
-        btnFavorite.setOnClickListener( null );
-        btnViewDetails.setOnClickListener( null );
+        ccbReply.setOnClickListener( null );
+        ccbRetweet.setOnClickListener( null );
+        ccbOpenInBrowser.setOnClickListener( null );
+        ccbViewDetails.setOnClickListener( null );
     }
 
     @Override
     public void onClick( View v )
     {
-        if ( v.equals( btnReply ) )
+        if ( v.equals( ccbReply ) )
         {
-            Helper.debug( "Reply clicked " + status.getUser().getName() );
+            TwitterReplyDialog dialog = TwitterReplyDialog.newInstance( status.getUser().getScreenName(), status.getId() );
+            dialog.show( ( ( FragmentActivity ) getContext() ).getFragmentManager(), TwitterReplyDialog.TAG );
         }
-        if ( v.equals( btnRetweet ) )
+        if ( v.equals( ccbRetweet ) )
         {
-            Helper.debug( "Rwtweet clicked " + status.getUser().getName() );
+            TwitterRetweetDialog dialog = TwitterRetweetDialog.newIntance( status.getId() );
+            dialog.show( ( ( FragmentActivity ) getContext() ).getFragmentManager(), TwitterRetweetDialog.TAG );
         }
-        if ( v.equals( btnFavorite ) )
+        if ( v.equals( ccbOpenInBrowser ) )
         {
-            Helper.debug( "Favorite clicked " + status.getUser().getName() );
+            Intent i = new Intent( Intent.ACTION_VIEW );
+            i.setData( Uri.parse( "http://twitter.com/" + status.getUser().getId() + "/status/" + status.getId() ) );
+            getContext().startActivity( i );
         }
-        if ( v.equals( btnViewDetails ) )
+        if ( v.equals( ccbViewDetails ) )
         {
-            Helper.debug( "Details clicked " + status.getUser().getName() );
+            Intent i = new Intent( getContext(), StatusDetailActivity.class );
+            i.putExtra( StatusDetailActivity.STATUS_KEY, status );
+            getContext().startActivity( i );
         }
     }
 }

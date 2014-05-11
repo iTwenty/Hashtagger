@@ -12,7 +12,7 @@ import net.thetranquilpsychonaut.hashtagger.utils.SharedPreferencesHelper;
 /**
  * Created by itwenty on 5/3/14.
  */
-public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener
+public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener
 {
     CheckBoxPreference cbpTwitter;
     CheckBoxPreference cbpFacebook;
@@ -38,9 +38,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                 "Logged in as : " + SharedPreferencesHelper.getGPlusUserName() :
                 "Not logged in" );
         prefClearSearch.setOnPreferenceClickListener( this );
-        cbpTwitter.setOnPreferenceChangeListener( this );
-        cbpFacebook.setOnPreferenceChangeListener( this );
-        cbpGPlus.setOnPreferenceChangeListener( this );
     }
 
     @Override
@@ -54,13 +51,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                     HashtagSuggestionsProvider.MODE );
             suggestions.clearHistory();
         }
-        return true;
-    }
-
-    @Override
-    public boolean onPreferenceChange( Preference preference, Object newValue )
-    {
-        SharedPreferencesHelper.setActivesSitesChanged( true );
         return true;
     }
 }

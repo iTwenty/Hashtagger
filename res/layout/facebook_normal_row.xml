@@ -6,38 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/imgv_profile_image"
-        android:background="@drawable/drawable_image_loading"
-        android:layout_height="50dp"
-        android:layout_width="50dp"
-        android:scaleType="centerCrop"
-        android:padding="@dimen/content_padding"/>
-
-    <TextView
-        android:id="@+id/tv_user_name_or_story"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_toRightOf="@id/imgv_profile_image"
-        android:layout_alignTop="@id/imgv_profile_image"
-        android:layout_above="@+id/tv_message"
-        android:layout_toLeftOf="@+id/tv_created_time"
-        android:layout_height="wrap_content"
-        android:maxLines="2"
-        android:ellipsize="end"
-        android:padding="@dimen/content_padding"
-        tools:text="user name\nstory\nstory\nstory\n"/>
-
-    <TextView
-        android:id="@id/tv_created_time"
-        android:singleLine="true"
-        android:gravity="right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        tools:text="dd/mm/yyyy"
-        style="@style/DateText"
-        android:padding="@dimen/content_padding"/>
+    <net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookHeader
+        android:id="@+id/facebook_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@id/tv_message"
@@ -45,7 +17,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:maxLines="10"
-        android:layout_below="@id/imgv_profile_image"
+        android:layout_below="@id/facebook_header"
         tools:text="line1\nline2\nline3\nline4\nline5\nline6"
         android:padding="@dimen/content_padding"/>
 

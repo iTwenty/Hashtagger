@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/imgb_reply"
+    <net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton
+        android:id="@+id/ccb_reply"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -16,8 +16,8 @@
         android:drawableLeft="@drawable/twitter_reply"
         style="@style/sitesButtonStyle"/>
 
-    <Button
-        android:id="@+id/imgb_retweet"
+    <net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton
+        android:id="@+id/ccb_retweet"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -25,17 +25,17 @@
         android:drawableLeft="@drawable/twitter_retweet"
         style="@style/sitesButtonStyle"/>
 
-    <Button
-        android:id="@+id/imgb_favorite"
+    <net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton
+        android:id="@+id/ccb_open_in_browser"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:focusable="false"
-        android:drawableLeft="@drawable/twitter_favorite"
+        android:drawableLeft="@drawable/ic_action_web_site"
         style="@style/sitesButtonStyle"/>
 
-    <Button
-        android:id="@+id/btn_view_details"
+    <net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton
+        android:id="@+id/ccb_view_details"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"

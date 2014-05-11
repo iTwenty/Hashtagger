@@ -40,4 +40,6 @@
     <string name="str_facebook_login_button_text">Sign in with Facebook</string>
     <string name="str_gplus_login_button_text">Sign in with Google+</string>
     <string name="str_title_login_activity_gplus">Sign in with Google</string>
+    <string name="str_reply">Reply</string>
+    <string name="str_cancel">Cancel</string>
 </resources>

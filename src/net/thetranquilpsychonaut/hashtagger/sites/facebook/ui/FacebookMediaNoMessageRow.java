@@ -2,33 +2,26 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
-import com.koushikdutta.urlimageviewhelper.UrlImageViewCallback;
-import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 import facebook4j.Post;
-import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
-import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
 /**
  * Created by itwenty on 5/2/14.
  */
 public class FacebookMediaNoMessageRow extends SitesListRow implements View.OnClickListener
 {
-
-    private ImageView imgvProfileImage;
-    private TextView  tvUserNameOrStory;
-    private TextView  tvCreatedTime;
-    private ImageView imgvPicture;
-    private ImageView imgvPlayButton;
-    private Post      post;
+    private FacebookHeader facebookHeader;
+    private ImageView      imgvPicture;
+    private ImageView      imgvPlayButton;
+    private Post           post;
 
     protected FacebookMediaNoMessageRow( Context context )
     {
@@ -49,9 +42,7 @@ public class FacebookMediaNoMessageRow extends SitesListRow implements View.OnCl
     protected void init( Context context )
     {
         inflate( context, R.layout.facebook_media_no_message_row, this );
-        imgvProfileImage = ( ImageView ) findViewById( R.id.imgv_profile_image );
-        tvUserNameOrStory = ( TextView ) findViewById( R.id.tv_user_name_or_story );
-        tvCreatedTime = ( TextView ) findViewById( R.id.tv_created_time );
+        facebookHeader = ( FacebookHeader ) findViewById( R.id.facebook_header );
         imgvPicture = ( ImageView ) findViewById( R.id.imgv_picture );
         imgvPlayButton = ( ImageView ) findViewById( R.id.imgv_play_button );
         imgvPicture.setOnClickListener( this );
@@ -68,30 +59,24 @@ public class FacebookMediaNoMessageRow extends SitesListRow implements View.OnCl
     public void updateRow( Object result )
     {
         this.post = ( Post ) result;
-        UrlImageViewHelper.setUrlDrawable( imgvProfileImage, Helper.getFacebookPictureUrl( post.getFrom().getId() ), getResources().getDrawable( R.drawable.drawable_image_loading ), HashtaggerApp.CACHE_DURATION_MS );
-        tvUserNameOrStory.setText( post.getStory() == null ? post.getFrom().getName() : post.getStory() );
-        tvCreatedTime.setText( Helper.getFuzzyDateTime( post.getCreatedTime().getTime() ) );
-        UrlImageViewHelper.setUrlDrawable(
-                imgvPicture,
-                post.getPicture().toString(),
-                null,
-                HashtaggerApp.CACHE_DURATION_MS,
-                new UrlImageViewCallback()
+        facebookHeader.updateHeader( post );
+        Picasso.with( getContext() )
+                .load( post.getPicture().toString() )
+                .error( R.drawable.drawable_image_loading )
+                .into( imgvPicture, new Callback()
                 {
                     @Override
-                    public void onLoaded( ImageView imageView, Bitmap bitmap, String s, boolean b )
+                    public void onSuccess()
                     {
-                        if ( "video".equals( post.getType() ) )
-                        {
-                            imgvPlayButton.setVisibility( VISIBLE );
-                        }
-                        else
-                        {
-                            imgvPlayButton.setVisibility( GONE );
-                        }
+                        imgvPlayButton.setVisibility( "video".equals( post.getType() ) ? VISIBLE : GONE );
                     }
-                }
-        );
+
+                    @Override
+                    public void onError()
+                    {
+
+                    }
+                } );
     }
 
     @Override

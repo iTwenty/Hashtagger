@@ -8,22 +8,19 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 import facebook4j.Post;
-import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
-import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
 /**
  * Created by itwenty on 5/2/14.
  */
 public class FacebookLinkRow extends SitesListRow implements View.OnClickListener
 {
-    private ImageView      imgvProfileImage;
-    private TextView       tvUserNameOrStory;
-    private TextView       tvCreatedTime;
+    private FacebookHeader facebookHeader;
     private TextView       tvMessage;
     private RelativeLayout rlLinkWrapper;
     private ImageView      imgvPicture;
@@ -52,9 +49,7 @@ public class FacebookLinkRow extends SitesListRow implements View.OnClickListene
     protected void init( Context context )
     {
         inflate( context, R.layout.facebook_link_row, this );
-        imgvProfileImage = ( ImageView ) findViewById( R.id.imgv_profile_image );
-        tvUserNameOrStory = ( TextView ) findViewById( R.id.tv_user_name_or_story );
-        tvCreatedTime = ( TextView ) findViewById( R.id.tv_created_time );
+        facebookHeader = ( FacebookHeader ) findViewById( R.id.facebook_header );
         tvMessage = ( TextView ) findViewById( R.id.tv_message );
         rlLinkWrapper = ( RelativeLayout ) findViewById( R.id.rl_link_wrapper );
         imgvPicture = ( ImageView ) findViewById( R.id.imgv_picture );
@@ -76,9 +71,7 @@ public class FacebookLinkRow extends SitesListRow implements View.OnClickListene
     public void updateRow( Object result )
     {
         this.post = ( Post ) result;
-        UrlImageViewHelper.setUrlDrawable( imgvProfileImage, Helper.getFacebookPictureUrl( post.getFrom().getId() ), getResources().getDrawable( R.drawable.drawable_image_loading ), HashtaggerApp.CACHE_DURATION_MS );
-        tvUserNameOrStory.setText( post.getStory() == null ? post.getFrom().getName() : post.getStory() );
-        tvCreatedTime.setText( Helper.getFuzzyDateTime( post.getCreatedTime().getTime() ) );
+        facebookHeader.updateHeader( post );
         tvMessage.setText( post.getMessage() );
         if ( null == post.getPicture() )
         {
@@ -86,7 +79,23 @@ public class FacebookLinkRow extends SitesListRow implements View.OnClickListene
         }
         else
         {
-            UrlImageViewHelper.setUrlDrawable( imgvPicture, post.getPicture().toString(), null, HashtaggerApp.CACHE_DURATION_MS );
+            Picasso.with( getContext() )
+                    .load( post.getPicture().toString() )
+                    .error( R.drawable.drawable_image_loading )
+                    .into( imgvPicture, new Callback()
+                    {
+                        @Override
+                        public void onSuccess()
+                        {
+                            imgvPlayButton.setVisibility( "video".equals( post.getType() ) ? VISIBLE : GONE );
+                        }
+
+                        @Override
+                        public void onError()
+                        {
+
+                        }
+                    } );
         }
         tvName.setText( post.getName() );
         tvDescription.setText( post.getDescription() );

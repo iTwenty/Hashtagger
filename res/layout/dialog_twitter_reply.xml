@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <EditText
+        android:id="@+id/edt_reply_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLength="140"/>
+
+    <TextView
+        android:id="@+id/tv_char_counter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edt_reply_text"
+        android:text="0/140"/>
+
+    <TextView
+        android:id="@+id/tv_reply_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edt_reply_text"
+        android:layout_alignParentRight="true"
+        android:visibility="gone"/>
+
+</RelativeLayout>

@@ -1,61 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v4.widget.DrawerLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/dl_nav_drawer"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <RelativeLayout
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_sites_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/vp_sites_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/ipi_sites_pager"/>
-
-        <net.thetranquilpsychonaut.hashtagger.widgets.IconPagerIndicator
-            android:id="@id/ipi_sites_pager"
-            android:layout_alignParentBottom="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/card_padding"
-            android:layout_marginRight="@dimen/card_padding"
-            android:background="@android:color/transparent"
-            style="?android:buttonBarStyle"/>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="240dp"
-        android:layout_gravity="start"
         android:layout_height="match_parent"
-        android:background="@android:color/white">
+        android:layout_above="@+id/ipi_sites_pager"/>
 
-        <TextView
-            android:id="@+id/tv_saved_hashtags_heading"
-            style="?android:attr/listSeparatorTextViewStyle"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Saved Hashtags"/>
+    <net.thetranquilpsychonaut.hashtagger.widgets.IconPagerIndicator
+        android:id="@id/ipi_sites_pager"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/card_padding"
+        android:layout_marginRight="@dimen/card_padding"
+        android:background="@android:color/transparent"
+        style="?android:buttonBarStyle"/>
 
-        <ListView
-            android:layout_below="@id/tv_saved_hashtags_heading"
-            android:id="@+id/lv_saved_hashtags"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"/>
-
-        <TextView
-            android:id="@+id/tv_saved_hashtags_empty"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="@string/str_no_saved_hashtags"/>
-
-    </RelativeLayout>
-
-</android.support.v4.widget.DrawerLayout>
+</RelativeLayout>

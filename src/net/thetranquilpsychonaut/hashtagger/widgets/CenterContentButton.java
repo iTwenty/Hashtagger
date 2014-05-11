@@ -1,18 +1,13 @@
 package net.thetranquilpsychonaut.hashtagger.widgets;
 
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Canvas;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.ImageSpan;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.Button;
-import net.thetranquilpsychonaut.hashtagger.R;
 
 public class CenterContentButton extends Button
 {
-    private ImageSpan centerSpan;
+    int leftPadding = -1;
 
     public CenterContentButton( Context context )
     {
@@ -27,18 +22,28 @@ public class CenterContentButton extends Button
     public CenterContentButton( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
-        TypedArray ta = context.obtainStyledAttributes( attrs, R.styleable.CenterContentButton );
-        centerSpan = new ImageSpan( ta.getDrawable( R.styleable.CenterContentButton_drawableCenter ) );
-        ta.recycle();
     }
 
     @Override
-    protected void onDraw( Canvas canvas )
+    protected void onLayout( boolean changed, int left, int top, int right, int bottom )
     {
-        super.onDraw( canvas );
-        SpannableStringBuilder ssb = new SpannableStringBuilder( getText() );
-        ssb.insert( 0, " " );
-        ssb.setSpan( centerSpan, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE );
-        setText( ssb );
+        super.onLayout( changed, left, top, right, bottom );
+        setPadding( calculateLeftPadding(), getPaddingTop(), getPaddingRight(), getPaddingBottom() );
+
+    }
+
+    private int calculateLeftPadding()
+    {
+        if ( leftPadding == -1 )
+        {
+            int textWidth = 0;
+            if ( !TextUtils.isEmpty( getText() ) )
+            {
+                textWidth = ( int ) getPaint().measureText( getText().toString() );
+            }
+            int drawableWidth = getCompoundDrawables()[0].getIntrinsicWidth();
+            leftPadding = ( getWidth() - ( drawableWidth + textWidth ) ) / 2 - getPaddingLeft();
+        }
+        return leftPadding;
     }
 }

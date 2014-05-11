@@ -20,11 +20,10 @@ public class SharedPreferencesHelper
     public static final String GPLUS_REFRESH_TOKEN_KEY         = "gplus_refresh_token";
     public static final String GPLUS_USER_NAME_KEY             = "gplus_user_name";
 
-    public static final String TWITTER_SITE_KEY          = "pref_site_twitter";
-    public static final String FACEBOOK_SITE_KEY         = "pref_site_facebook";
-    public static final String GPLUS_SITE_KEY            = "pref_site_gplus";
-    public static final String CLEAR_SEARCH_KEY          = "pref_clear_search";
-    public static final String ACTIVES_SITES_CHANGED_KEY = "active_sites_changed";
+    public static final String TWITTER_SITE_KEY  = "pref_site_twitter";
+    public static final String FACEBOOK_SITE_KEY = "pref_site_facebook";
+    public static final String GPLUS_SITE_KEY    = "pref_site_gplus";
+    public static final String CLEAR_SEARCH_KEY  = "pref_clear_search";
 
     public static SharedPreferences login_prefs   = HashtaggerApp.app.getSharedPreferences( LOGIN_SHARED_PREFS, Context.MODE_PRIVATE );
     public static SharedPreferences default_prefs = PreferenceManager.getDefaultSharedPreferences( HashtaggerApp.app );
@@ -171,15 +170,5 @@ public class SharedPreferencesHelper
     public static boolean isGPlusActive()
     {
         return default_prefs.getBoolean( GPLUS_SITE_KEY, true );
-    }
-
-    public static void setActivesSitesChanged( boolean value )
-    {
-        default_prefs.edit().putBoolean( ACTIVES_SITES_CHANGED_KEY, value ).commit();
-    }
-
-    public static boolean getActiveSitesChanged()
-    {
-        return default_prefs.getBoolean( ACTIVES_SITES_CHANGED_KEY, false );
     }
 }

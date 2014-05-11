@@ -5,8 +5,7 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
-import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
+import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import twitter4j.Status;
@@ -21,6 +20,7 @@ public class TwitterHeader extends RelativeLayout
     private TextView  tvName;
     private TextView  tvScreenName;
     private TextView  tvCreatedAt;
+    private TextView  tvRetweetName;
 
     public TwitterHeader( Context context )
     {
@@ -40,14 +40,24 @@ public class TwitterHeader extends RelativeLayout
         tvName = ( TextView ) findViewById( R.id.tv_name );
         tvScreenName = ( TextView ) findViewById( R.id.tv_screen_name );
         tvCreatedAt = ( TextView ) findViewById( R.id.tv_created_at );
+        tvRetweetName = ( TextView ) findViewById( R.id.tv_retweet_name );
     }
 
     public void updateHeader( Status status )
     {
         User user = status.getUser();
-        UrlImageViewHelper.setUrlDrawable( imgvProfileImage, user.getProfileImageURL(), R.drawable.drawable_image_loading, HashtaggerApp.CACHE_DURATION_MS );
+        if ( status.isRetweet() )
+        {
+            tvRetweetName.setText( " of @" + status.getRetweetedStatus().getUser().getScreenName() );
+            tvRetweetName.setVisibility( VISIBLE );
+        }
+        else
+        {
+            tvRetweetName.setVisibility( GONE );
+        }
+        Picasso.with( getContext() ).load( user.getProfileImageURL() ).error( R.drawable.drawable_image_loading ).into( imgvProfileImage );
         tvName.setText( user.getName() );
-        tvScreenName.setText( "@" + user.getScreenName() );
+        tvScreenName.setText( null == status.getInReplyToScreenName() ? "@" + user.getScreenName() : "@" + user.getScreenName() + " in reply to @" + status.getInReplyToScreenName() );
         tvCreatedAt.setText( Helper.getFuzzyDateTime( status.getCreatedAt().getTime() ) );
     }
 }

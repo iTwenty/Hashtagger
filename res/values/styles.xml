@@ -20,5 +20,6 @@
 
     <style name="sitesButtonStyle" parent="android:Widget.Holo.Light.Button.Borderless.Small">
         <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/text_faded</item>
     </style>
 </resources>

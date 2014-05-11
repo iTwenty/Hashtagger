@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
+<merge
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -38,6 +38,19 @@
         android:singleLine="true"/>
 
     <TextView
+        android:id="@+id/tv_retweet_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/imgv_profile_image"
+        android:layout_toLeftOf="@id/tv_created_at"
+        android:layout_below="@id/tv_screen_name"
+        android:padding="@dimen/content_padding"
+        android:drawableLeft="@drawable/twitter_retweet_on"
+        tools:text=" of @screenname"
+        style="@style/TwitterScreenNameText"
+        android:singleLine="true"/>
+
+    <TextView
         android:id="@id/tv_created_at"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -48,4 +61,4 @@
         style="@style/DateText"
         android:singleLine="true"/>
 
-</RelativeLayout>
+</merge>
