@@ -5,10 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusHeader
+        android:id="@+id/gplus_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <TextView
         android:id="@+id/tv_message"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@id/gplus_header"
+        android:maxLines="10"
+        android:ellipsize="end"/>
 
     <net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusButtons
         android:id="@+id/gplus_buttons"

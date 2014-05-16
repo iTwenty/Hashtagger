@@ -1,5 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
@@ -35,13 +36,13 @@ public abstract class SitesListRow extends RelativeLayout
 
     protected abstract SitesButtons initSitesButtons();
 
-    public void expandRow( final Object result, boolean animate )
+    public void expandRow( final Object result, boolean animate, AnimatorListenerAdapter adapter )
     {
         if ( null == sitesButtons )
         {
             return;
         }
-        sitesButtons.show( result, animate );
+        sitesButtons.show( result, animate, adapter );
     }
 
     public abstract void updateRow( final Object result );

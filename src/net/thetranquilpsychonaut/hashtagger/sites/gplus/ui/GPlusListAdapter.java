@@ -17,7 +17,8 @@ import java.util.List;
 public class GPlusListAdapter extends SitesListAdapter
 {
     private static final int ACTIVITY_TYPE_NORMAL = 0;
-    private static final int ACTIVITY_TYPE_COUNT  = 1;
+    private static final int ACTIVITY_TYPE_MEDIA  = 1;
+    private static final int ACTIVITY_TYPE_COUNT  = 2;
 
     public GPlusListAdapter( Context context, int textViewResourceId, List<?> objects )
     {
@@ -47,6 +48,12 @@ public class GPlusListAdapter extends SitesListAdapter
                     convertView = new GPlusNormalRow( context );
                 }
                 break;
+            case ACTIVITY_TYPE_MEDIA:
+                if ( null == convertView || !( convertView instanceof GPlusMediaRow ) )
+                {
+                    convertView = new GPlusMediaRow( context );
+                }
+                break;
         }
         return ( SitesListRow ) convertView;
     }
@@ -55,9 +62,21 @@ public class GPlusListAdapter extends SitesListAdapter
     public void updateTypes( SearchType searchType, List<?> searchResults )
     {
         List<Integer> newTypes = new ArrayList<Integer>( searchResults.size() );
+        boolean hasMedia;
         for ( Activity activity : ( List<Activity> ) searchResults )
         {
-            newTypes.add( ACTIVITY_TYPE_NORMAL );
+            hasMedia = null != activity.getObject().getAttachments()
+                    && ( "photo".equals( activity.getObject().getAttachments().get( 0 ).getObjectType() )
+                    || "video".equals( activity.getObject().getAttachments().get( 0 ).getObjectType() ) );
+
+            if ( hasMedia )
+            {
+                newTypes.add( ACTIVITY_TYPE_MEDIA );
+            }
+            else
+            {
+                newTypes.add( ACTIVITY_TYPE_NORMAL );
+            }
         }
         if ( searchType == SearchType.NEWER )
         {

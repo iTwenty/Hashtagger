@@ -6,31 +6,44 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/btn_plusone"
+    <net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton
+        android:id="@+id/ccb_plusone"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:text="+1"
+        android:layout_gravity="center"
         android:focusable="false"
-        style="?android:attr/borderlessButtonStyle"/>
+        android:drawableLeft="@drawable/gplus_one"
+        style="@style/sitesButtonStyle"/>
 
-    <Button
-        android:id="@+id/btn_comment"
+    <net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton
+        android:id="@+id/ccb_comment"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:text="Comment"
+        android:layout_gravity="center"
         android:focusable="false"
-        style="?android:attr/borderlessButtonStyle"/>
+        android:drawableLeft="@drawable/facebook_comment"
+        style="@style/sitesButtonStyle"/>
 
-    <Button
-        android:id="@+id/btn_share"
+    <net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton
+        android:id="@+id/ccb_share"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:text="Share"
+        android:layout_gravity="center"
         android:focusable="false"
-        style="?android:attr/borderlessButtonStyle"/>
+        android:drawableLeft="@drawable/facebook_share"
+        style="@style/sitesButtonStyle"/>
+
+    <net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton
+        android:id="@+id/ccb_view_details"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:focusable="false"
+        android:drawableLeft="@drawable/ic_action_full_screen"
+        style="@style/sitesButtonStyle"/>
 
 </merge>

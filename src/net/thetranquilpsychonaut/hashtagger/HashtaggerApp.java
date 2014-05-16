@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import com.squareup.otto.Bus;
+import com.squareup.otto.ThreadEnforcer;
 
 /**
  * Created by itwenty on 2/7/14.
@@ -11,6 +13,7 @@ import android.net.NetworkInfo;
 public class HashtaggerApp extends Application
 {
     public static HashtaggerApp app;
+    public static Bus           bus;
 
     public static final String PACKAGE_NAMESPACE = "net.thetranquilpsychonaut.hashtagger";
     public static final String NAMESPACE         = "hashtagger:";
@@ -54,6 +57,7 @@ public class HashtaggerApp extends Application
     {
         super.onCreate();
         app = this;
+        bus = new Bus( ThreadEnforcer.ANY );
     }
 
     public static boolean isNetworkConnected()

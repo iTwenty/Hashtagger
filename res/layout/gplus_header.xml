@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imgv_actor_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        tools:src="@drawable/gplus_logo"
+        android:padding="@dimen/content_padding"/>
+
+    <TextView
+        android:id="@+id/imgv_display_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="display name"
+        android:layout_toRightOf="@id/imgv_actor_image"
+        android:layout_toLeftOf="@+id/tv_published_time"
+        android:padding="@dimen/content_padding"/>
+
+    <TextView
+        android:id="@id/tv_published_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="dd/mm/yyyy"
+        style="@style/DateText"
+        android:padding="@dimen/content_padding"/>
+
+</merge>

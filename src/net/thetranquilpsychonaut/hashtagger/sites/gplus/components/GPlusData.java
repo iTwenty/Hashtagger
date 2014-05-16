@@ -12,7 +12,7 @@ import java.util.Stack;
  * making it impossible to pass them around in Intents and Bundles. So we use this class to hold such objects
  * statically.
  */
-public class GPlusServiceData
+public class GPlusData
 {
     public static class AuthData
     {
@@ -20,20 +20,19 @@ public class GPlusServiceData
 
         public static void pushTokenResponse( GoogleTokenResponse tokenResponse )
         {
-            if ( authData.size() != 0 )
-            {
-                throw new RuntimeException( "Auth Data is already set" );
-            }
+            authData.clear();
             authData.push( tokenResponse );
         }
 
         public static GoogleTokenResponse popTokenResponse()
         {
-            if ( authData.size() <= 0 || authData.size() > 1 )
+            if ( authData.isEmpty() )
             {
-                throw new RuntimeException( "Auth data either empty or has more than one element" );
+                throw new RuntimeException( "No GoogleTokenResponse to pop!" );
             }
-            return authData.pop();
+            GoogleTokenResponse response = authData.pop();
+            authData.clear();
+            return response;
         }
     }
 
@@ -43,20 +42,41 @@ public class GPlusServiceData
 
         public static void pushSearchResults( List<Activity> results )
         {
-            if ( searchData.size() != 0 )
-            {
-                throw new RuntimeException( "Search Data is already set" );
-            }
+            searchData.clear();
             searchData.push( results );
         }
 
         public static List<Activity> popSearchResults()
         {
-            if ( searchData.size() <= 0 || searchData.size() > 1 )
+            if ( searchData.isEmpty() )
             {
-                throw new RuntimeException( "Search data either empty or has more than one element" );
+                throw new RuntimeException( "No Activity list to pop!" );
             }
-            return searchData.pop();
+            List<Activity> activities = searchData.pop();
+            searchData.clear();
+            return activities;
+        }
+    }
+
+    public static class ActivityData
+    {
+        private static Stack<Activity> activityData = new Stack<Activity>();
+
+        public static void pushActivity( Activity activity )
+        {
+            activityData.clear();
+            activityData.push( activity );
+        }
+
+        public static Activity popActivity()
+        {
+            if ( activityData.isEmpty() )
+            {
+                throw new RuntimeException( "No activity to pop!" );
+            }
+            Activity activity = activityData.pop();
+            activityData.clear();
+            return activity;
         }
     }
 }

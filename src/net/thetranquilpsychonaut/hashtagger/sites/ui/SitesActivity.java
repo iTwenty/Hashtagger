@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
-import android.widget.Toast;
 import net.thetranquilpsychonaut.hashtagger.HashtagSuggestionsProvider;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
@@ -26,6 +25,7 @@ import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsProviderC
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterFragment;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.utils.SharedPreferencesHelper;
 import net.thetranquilpsychonaut.hashtagger.widgets.IconPagerIndicator;
 
@@ -224,7 +224,7 @@ public class SitesActivity extends SavedHashtagsActivity
         // No point continuing is network is not available
         if ( !HashtaggerApp.isNetworkConnected() )
         {
-            Toast.makeText( this, getResources().getString( R.string.str_toast_no_network ), Toast.LENGTH_LONG ).show();
+            Helper.showNoNetworkToast( this );
             return;
         }
         String input = intent.getStringExtra( SearchManager.QUERY );

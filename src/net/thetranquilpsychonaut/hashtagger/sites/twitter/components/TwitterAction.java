@@ -1,12 +1,10 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.components;
 
 import android.os.AsyncTask;
+import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.config.TwitterConfig;
 import net.thetranquilpsychonaut.hashtagger.utils.SharedPreferencesHelper;
-import twitter4j.StatusUpdate;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
+import twitter4j.*;
 import twitter4j.auth.AccessToken;
 
 /**
@@ -14,35 +12,26 @@ import twitter4j.auth.AccessToken;
  */
 public class TwitterAction
 {
-    public static interface TwitterActionListener
-    {
-        void onPerforming();
-
-        void onPerformed();
-
-        void onError();
-    }
-
-    private TwitterActionListener listener;
-    private TwitterReplyTask      twitterReplyTask;
-    private TwitterRetweetTask    twitterRetweetTask;
-
-    public TwitterAction( TwitterActionListener listener )
-    {
-        this.listener = listener;
-    }
+    private TwitterReplyTask    twitterReplyTask;
+    private TwitterRetweetTask  twitterRetweetTask;
+    private TwitterFavoriteTask twitterFavoriteTask;
 
     public void executeReplyAction( String reply, long inReplyToUserId )
     {
         new TwitterReplyTask( reply, inReplyToUserId ).execute();
     }
 
-    public void executeRetweetAction( long retweetId )
+    public void executeRetweetAction( long retweetId, int position )
     {
-        new TwitterRetweetTask( retweetId ).execute();
+        new TwitterRetweetTask( retweetId, position ).execute();
     }
 
-    private class TwitterReplyTask extends AsyncTask<Void, Void, Void>
+    public void executeFavoriteAction( long tweetId, boolean isFavorited, int position )
+    {
+        new TwitterFavoriteTask( tweetId, isFavorited, position ).execute();
+    }
+
+    private static class TwitterReplyTask extends AsyncTask<Void, Void, Void>
     {
         Twitter twitter;
         String  reply;
@@ -55,15 +44,6 @@ public class TwitterAction
             twitter.setOAuthAccessToken( new AccessToken( SharedPreferencesHelper.getTwitterAccessToken(), SharedPreferencesHelper.getTwitterAccessTokenSecret() ) );
             this.reply = reply;
             this.inReplyToUserId = inReplyToUserId;
-        }
-
-        @Override
-        protected void onPreExecute()
-        {
-            if ( null != listener )
-            {
-                listener.onPerforming();
-            }
         }
 
         @Override
@@ -83,40 +63,25 @@ public class TwitterAction
         @Override
         protected void onPostExecute( Void aVoid )
         {
-            if ( null != listener )
-            {
-                if ( !success )
-                {
-                    listener.onError();
-                }
-                else
-                {
-                    listener.onPerformed();
-                }
-            }
+            // This event is handled in TwitterFragment in onReplyDone method
+            HashtaggerApp.bus.post( new TwitterReplyEvent( success ) );
         }
     }
 
-    private class TwitterRetweetTask extends AsyncTask<Void, Void, Void>
+    private static class TwitterRetweetTask extends AsyncTask<Void, Void, Void>
     {
-        Twitter twitter;
-        long    retweetId;
+        Twitter          twitter;
+        long             retweetId;
+        int              position;
+        twitter4j.Status status;
         boolean success = false;
 
-        public TwitterRetweetTask( long retweetId )
+        public TwitterRetweetTask( long retweetId, int position )
         {
             twitter = new TwitterFactory( TwitterConfig.CONFIGURATION ).getInstance();
             twitter.setOAuthAccessToken( new AccessToken( SharedPreferencesHelper.getTwitterAccessToken(), SharedPreferencesHelper.getTwitterAccessTokenSecret() ) );
             this.retweetId = retweetId;
-        }
-
-        @Override
-        protected void onPreExecute()
-        {
-            if ( null != listener )
-            {
-                listener.onPerforming();
-            }
+            this.position = position;
         }
 
         @Override
@@ -124,7 +89,7 @@ public class TwitterAction
         {
             try
             {
-                twitter.retweetStatus( retweetId );
+                status = twitter.retweetStatus( retweetId );
                 success = true;
             }
             catch ( TwitterException e )
@@ -136,17 +101,120 @@ public class TwitterAction
         @Override
         protected void onPostExecute( Void aVoid )
         {
-            if ( null != listener )
+            // This event is handled in TwitterFragment in onRetweetDone method
+            HashtaggerApp.bus.post( new TwitterRetweetEvent( success, position, status ) );
+        }
+    }
+
+    private static class TwitterFavoriteTask extends AsyncTask<Void, Void, Void>
+    {
+        private long             tweetId;
+        private int              position;
+        private twitter4j.Status status;
+        private Twitter          twitter;
+        private boolean          isFavorited;
+        private boolean success = false;
+
+        public TwitterFavoriteTask( long tweetId, boolean isFavorited, int position )
+        {
+            this.tweetId = tweetId;
+            this.position = position;
+            this.isFavorited = isFavorited;
+            twitter = new TwitterFactory( TwitterConfig.CONFIGURATION ).getInstance();
+            twitter.setOAuthAccessToken( new AccessToken( SharedPreferencesHelper.getTwitterAccessToken(), SharedPreferencesHelper.getTwitterAccessTokenSecret() ) );
+        }
+
+        @Override
+        protected Void doInBackground( Void... params )
+        {
+            try
             {
-                if ( !success )
-                {
-                    listener.onError();
-                }
-                else
-                {
-                    listener.onPerformed();
-                }
+                status = isFavorited ? twitter.destroyFavorite( tweetId ) : twitter.createFavorite( tweetId );
+                success = true;
             }
+            catch ( TwitterException e )
+            {
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute( Void aVoid )
+        {
+            // This event is handled in TwitterFragment in onFavoritedDone method
+            HashtaggerApp.bus.post( new TwitterFavoriteEvent( success, position, status ) );
+        }
+    }
+
+    public static class TwitterFavoriteEvent
+    {
+        int     position;
+        Status  status;
+        boolean success;
+
+        public TwitterFavoriteEvent( boolean success, int position, twitter4j.Status status )
+        {
+            this.position = position;
+            this.status = status;
+            this.success = success;
+        }
+
+        public int getPosition()
+        {
+            return position;
+        }
+
+        public Status getStatus()
+        {
+            return status;
+        }
+
+        public boolean getSuccess()
+        {
+            return success;
+        }
+    }
+
+    public static class TwitterRetweetEvent
+    {
+        int     position;
+        Status  status;
+        boolean success;
+
+        public TwitterRetweetEvent( boolean success, int position, Status status )
+        {
+            this.position = position;
+            this.status = status;
+        }
+
+        public int getPosition()
+        {
+            return position;
+        }
+
+        public Status getStatus()
+        {
+            return status;
+        }
+
+        public boolean getSuccess()
+        {
+            return success;
+        }
+    }
+
+    public static class TwitterReplyEvent
+    {
+        boolean success;
+
+        public TwitterReplyEvent( boolean success )
+        {
+            this.success = success;
+        }
+
+        public boolean getSuccess()
+        {
+            return this.success;
         }
     }
 }

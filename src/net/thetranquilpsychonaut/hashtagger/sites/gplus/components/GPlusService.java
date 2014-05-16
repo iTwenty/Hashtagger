@@ -9,7 +9,7 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.services.plus.Plus;
-import com.google.api.services.plus.model.Activity;
+import com.google.api.services.plus.model.ActivityFeed;
 import com.google.api.services.plus.model.Person;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.config.GPlusConfig;
@@ -21,7 +21,6 @@ import net.thetranquilpsychonaut.hashtagger.utils.SharedPreferencesHelper;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by itwenty on 5/6/14.
@@ -35,7 +34,7 @@ public class GPlusService extends SitesService
         final String hashtag = searchIntent.getStringExtra( HashtaggerApp.HASHTAG_KEY );
         Intent resultIntent = new Intent();
         resultIntent.putExtra( SearchType.SEARCH_TYPE_KEY, searchType );
-        List<Activity> results = null;
+        ActivityFeed results = null;
         try
         {
             HttpTransport httpTransport = new NetHttpTransport();
@@ -51,11 +50,16 @@ public class GPlusService extends SitesService
                     .build();
             credential.setAccessToken( SharedPreferencesHelper.getGPlusAccessToken() );
             credential.setRefreshToken( SharedPreferencesHelper.getGPlusRefreshToken() );
+            Helper.debug( String.valueOf( credential.getExpiresInSeconds() ) );
             Plus plus = new Plus.Builder( httpTransport, jsonFactory, credential )
                     .build();
             Plus.Activities.Search searchActivities = plus.activities().search( hashtag );
             searchActivities.setMaxResults( 20L );
-            results = searchActivities.execute().getItems();
+            if ( searchType == SearchType.OLDER )
+            {
+                searchActivities.setPageToken( GPlusSearchHandler.nextPageToken );
+            }
+            results = searchActivities.execute();
         }
         catch ( IOException e )
         {
@@ -64,7 +68,11 @@ public class GPlusService extends SitesService
         Result searchResult = null == results ? Result.FAILURE : Result.SUCCESS;
         if ( searchResult == Result.SUCCESS )
         {
-            GPlusServiceData.SearchData.pushSearchResults( results );
+            if ( searchType != SearchType.NEWER )
+            {
+                GPlusSearchHandler.nextPageToken = results.getNextPageToken();
+            }
+            GPlusData.SearchData.pushSearchResults( results.getItems() );
         }
         return resultIntent;
     }
@@ -107,7 +115,7 @@ public class GPlusService extends SitesService
         if ( accessResult == Result.SUCCESS )
         {
             // As token response is not serializable, we use a static class to store it which our BroacastReceiver later reads from
-            GPlusServiceData.AuthData.pushTokenResponse( tokenResponse );
+            GPlusData.AuthData.pushTokenResponse( tokenResponse );
             resultIntent.putExtra( Result.RESULT_EXTRAS, userName );
         }
         return resultIntent;

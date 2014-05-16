@@ -10,8 +10,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterAction;
 
@@ -52,7 +50,7 @@ public class TwitterReplyDialog extends DialogFragment implements TextWatcher
                     @Override
                     public void onClick( DialogInterface dialog, int which )
                     {
-                        // Implemented in onStart() method
+                        doReply();
                     }
                 } )
                 .setNegativeButton( getResources().getString( R.string.str_cancel ), new DialogInterface.OnClickListener()
@@ -74,49 +72,9 @@ public class TwitterReplyDialog extends DialogFragment implements TextWatcher
         return dialog;
     }
 
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-        AlertDialog ad = ( AlertDialog ) getDialog();
-        ad.getButton( Dialog.BUTTON_POSITIVE ).setOnClickListener( new View.OnClickListener()
-        {
-            @Override
-            public void onClick( View v )
-            {
-                doReply();
-            }
-        } );
-    }
-
     public void doReply()
     {
-        new TwitterAction( new TwitterAction.TwitterActionListener()
-        {
-            @Override
-            public void onPerforming()
-            {
-                ( ( AlertDialog ) getDialog() ).getButton( DialogInterface.BUTTON_POSITIVE ).setEnabled( false );
-                tvReplyProgress.setText( "Replying..." );
-                tvReplyProgress.setVisibility( View.VISIBLE );
-                tvReplyProgress.setTextColor( getResources().getColor( android.R.color.black ) );
-            }
-
-            @Override
-            public void onPerformed()
-            {
-                Toast.makeText( HashtaggerApp.app, "Replied like a pro!", Toast.LENGTH_SHORT ).show();
-                dismiss();
-            }
-
-            @Override
-            public void onError()
-            {
-                ( ( AlertDialog ) getDialog() ).getButton( DialogInterface.BUTTON_POSITIVE ).setEnabled( true );
-                tvReplyProgress.setText( "Failed to reply." );
-                tvReplyProgress.setTextColor( getResources().getColor( android.R.color.holo_red_light ) );
-            }
-        } ).executeReplyAction( edtReplyText.getText().toString(), inReplyToStatusId );
+        new TwitterAction().executeReplyAction( edtReplyText.getText().toString(), this.inReplyToStatusId );
     }
 
     @Override

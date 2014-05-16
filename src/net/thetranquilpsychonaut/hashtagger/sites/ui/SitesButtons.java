@@ -1,15 +1,11 @@
 package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
-import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 /**
@@ -36,7 +32,7 @@ public abstract class SitesButtons extends LinearLayout
         isVisible = false;
     }
 
-    public void show( Object result, boolean animate )
+    public void show( Object result, boolean animate, AnimatorListenerAdapter adapter )
     {
         int widthMeasureSpec = MeasureSpec.makeMeasureSpec( RelativeLayout.LayoutParams.MATCH_PARENT, MeasureSpec.EXACTLY );
         int heightMeasureSpec = MeasureSpec.makeMeasureSpec( RelativeLayout.LayoutParams.WRAP_CONTENT, MeasureSpec.EXACTLY );
@@ -46,14 +42,10 @@ public abstract class SitesButtons extends LinearLayout
         {
             final ValueAnimator animator = ValueAnimator.ofInt( 0, finalHeight );
             animator.setDuration( TIME_SCALE * finalHeight );
-            animator.addListener( new AnimatorListenerAdapter()
+            if ( null != adapter )
             {
-                @Override
-                public void onAnimationEnd( Animator animation )
-                {
-                    scrollIfHidden();
-                }
-            } );
+                animator.addListener( adapter );
+            }
             animator.addUpdateListener( new ValueAnimator.AnimatorUpdateListener()
             {
                 @Override
@@ -111,28 +103,5 @@ public abstract class SitesButtons extends LinearLayout
         params.height = height;
         this.setLayoutParams( params );
         this.requestLayout();
-    }
-
-    // If this view is hidden partially after show, we scroll the listview to make it fully visible
-    private void scrollIfHidden()
-    {
-        // Get visible bounds of parent view, which is SitesListRow
-        View parent = ( View ) getParent();
-        Rect r = new Rect();
-        parent.getLocalVisibleRect( r );
-        int hiddenHeight = parent.getHeight() - r.height();
-        // If view's height exceeds the visible bounds height, our view is partially hidden
-        if ( hiddenHeight > 0 )
-        {
-            // Get reference to listview
-            ListView lv = ( ListView ) parent.getParent();
-            boolean isHiddenAtBottom = lv.getLastVisiblePosition() == lv.getPositionForView( parent );
-            // We don't need to scroll is the view is hidden at the top
-            // This suits us because smoothScrollBy method cannot scroll up anyway :P
-            if ( isHiddenAtBottom )
-            {
-                lv.smoothScrollBy( hiddenHeight, 2 * hiddenHeight );
-            }
-        }
     }
 }

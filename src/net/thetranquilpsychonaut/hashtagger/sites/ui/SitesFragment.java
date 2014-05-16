@@ -1,7 +1,10 @@
 package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,6 +15,7 @@ import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
 import java.util.List;
 
@@ -277,7 +281,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         if ( !HashtaggerApp.isNetworkConnected() )
         {
-            Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_no_network ), Toast.LENGTH_LONG ).show();
+            Helper.showNoNetworkToast( getActivity() );
             return;
         }
         if ( !sitesUserHandler.isUserLoggedIn() )
@@ -305,7 +309,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         if ( !HashtaggerApp.isNetworkConnected() )
         {
-            Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_no_network ), Toast.LENGTH_LONG ).show();
+            Helper.showNoNetworkToast( getActivity() );
             return;
         }
         Intent i = new Intent( getActivity(), getLoginActivityClassName() );
@@ -325,7 +329,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         if ( !HashtaggerApp.isNetworkConnected() )
         {
-            Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_no_network ), Toast.LENGTH_LONG ).show();
+            Helper.showNoNetworkToast( getActivity() );
             return;
         }
         if ( !sitesUserHandler.isUserLoggedIn() )
@@ -465,16 +469,24 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     */
 
     @Override
-    public void onItemClick( AdapterView<?> parent, View view, int position, long id )
+    public void onItemClick( AdapterView<?> parent, final View view, int position, long id )
     {
         Object result = parent.getItemAtPosition( position );
         // We use the tag of the listview to remember position that was last clicked.
         SitesListRow sitesListRow = ( SitesListRow ) view;
+        AnimatorListenerAdapter adapter = new AnimatorListenerAdapter()
+        {
+            @Override
+            public void onAnimationEnd( Animator animation )
+            {
+                scrollIfHidden( view );
+            }
+        };
         // If tag is null, no position has been expanded yet.
         // Simply show the view for currently selected position and set tag
         if ( null == parent.getTag() )
         {
-            sitesListRow.expandRow( result, true );
+            sitesListRow.expandRow( result, true, adapter );
             parent.setTag( position );
         }
         // If tag is not null, it means we have an already expanded a position...
@@ -498,8 +510,23 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
                     ( ( SitesListRow ) parent.getChildAt( expandedPosition - parent.getFirstVisiblePosition() ) ).collapseRow( true );
                 }
                 // Then show the current selected position and set the tag
-                sitesListRow.expandRow( result, true );
+                sitesListRow.expandRow( result, true, adapter );
                 parent.setTag( position );
+            }
+        }
+    }
+
+    private void scrollIfHidden( View view )
+    {
+        Rect r = new Rect();
+        view.getLocalVisibleRect( r );
+        int hiddenHeight = view.getHeight() - r.height();
+        if ( hiddenHeight > 0 )
+        {
+            boolean isHiddenAtBottom = readyHolder.lvResultsList.getLastVisiblePosition() == readyHolder.lvResultsList.getPositionForView( view );
+            if ( isHiddenAtBottom )
+            {
+                readyHolder.lvResultsList.smoothScrollBy( hiddenHeight, 2 * hiddenHeight );
             }
         }
     }

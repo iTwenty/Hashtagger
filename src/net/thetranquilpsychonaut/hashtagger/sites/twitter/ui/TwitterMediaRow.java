@@ -10,6 +10,7 @@ import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewImageActivity;
 import twitter4j.Status;
 
 /**
@@ -67,7 +68,7 @@ public class TwitterMediaRow extends SitesListRow implements View.OnClickListene
     public void onClick( View v )
     {
         Intent intent = new Intent( getContext(), ViewImageActivity.class );
-        intent.putExtra( "image", status.getMediaEntities()[0].getMediaURL() + ":large" );
+        intent.putExtra( ViewImageActivity.IMAGE_URL_KEY, status.getMediaEntities()[0].getMediaURL() + ":large" );
         getContext().startActivity( intent );
     }
 }

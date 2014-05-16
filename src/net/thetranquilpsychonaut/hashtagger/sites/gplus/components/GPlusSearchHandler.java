@@ -2,6 +2,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.gplus.components;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.Html;
 import com.google.api.services.plus.model.Activity;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
@@ -16,6 +17,8 @@ import java.util.List;
  */
 public class GPlusSearchHandler extends SitesSearchHandler
 {
+    public static String nextPageToken;
+
     public GPlusSearchHandler( SitesSearchListener listener )
     {
         super( listener );
@@ -38,7 +41,12 @@ public class GPlusSearchHandler extends SitesSearchHandler
             sitesSearchListener.onError( searchType );
             return;
         }
-        List<Activity> results = GPlusServiceData.SearchData.popSearchResults();
+        List<Activity> results = GPlusData.SearchData.popSearchResults();
+        // We strip all HTML formatting tags from the text of the activity since parsing HTML in getView causes awful lag in scrolling
+        for ( Activity activity : results )
+        {
+            activity.getObject().setOriginalContent( Html.fromHtml( activity.getObject().getContent() ).toString() );
+        }
         sitesSearchListener.afterSearching( searchType, results );
     }
 

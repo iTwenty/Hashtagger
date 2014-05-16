@@ -1,14 +1,18 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
+import android.widget.Toast;
+import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.SimplePageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterAction;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import twitter4j.Status;
 
 import java.util.ArrayList;
@@ -101,5 +105,62 @@ public class TwitterFragment extends SitesFragment
     protected void addToStart( List<?> searchResults )
     {
         ( ( List<Status> ) results ).addAll( 0, ( List<Status> ) searchResults );
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        HashtaggerApp.bus.register( this );
+    }
+
+    @Override
+    public void onPause()
+    {
+        HashtaggerApp.bus.unregister( this );
+        super.onPause();
+    }
+
+    @Subscribe
+    public void onRetweetDone( TwitterAction.TwitterRetweetEvent event )
+    {
+        if ( event.getSuccess() )
+        {
+            ( ( List<Status> ) results ).set( event.getPosition(), event.getStatus() );
+            sitesListAdapter.notifyDataSetChanged();
+            Toast.makeText( getActivity(), "Retweeted like a champ!", Toast.LENGTH_SHORT ).show();
+        }
+        else
+        {
+            Toast.makeText( getActivity(), "Failed to retweet", Toast.LENGTH_SHORT ).show();
+        }
+    }
+
+    @Subscribe
+    public void onFavoriteDone( TwitterAction.TwitterFavoriteEvent event )
+    {
+        if ( event.getSuccess() )
+        {
+            ( ( List<Status> ) results ).set( event.getPosition(), event.getStatus() );
+            sitesListAdapter.notifyDataSetChanged();
+        }
+        else
+        {
+            Toast.makeText( getActivity(), "Failed to favorite", Toast.LENGTH_SHORT ).show();
+        }
+    }
+
+    @Subscribe
+    public void onReplyDone( TwitterAction.TwitterReplyEvent event )
+    {
+        Helper.debug( "onReply" );
+        if ( event.getSuccess() )
+        {
+            Toast.makeText( getActivity(), "Replied like a champ!", Toast.LENGTH_SHORT ).show();
+        }
+        else
+        {
+            Toast.makeText( getActivity(), "Failed to reply", Toast.LENGTH_SHORT ).show();
+        }
     }
 }

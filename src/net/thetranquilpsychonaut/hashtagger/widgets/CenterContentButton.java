@@ -7,7 +7,7 @@ import android.widget.Button;
 
 public class CenterContentButton extends Button
 {
-    int leftPadding = -1;
+    private int leftPadding = -1;
 
     public CenterContentButton( Context context )
     {
@@ -41,7 +41,11 @@ public class CenterContentButton extends Button
             {
                 textWidth = ( int ) getPaint().measureText( getText().toString() );
             }
-            int drawableWidth = getCompoundDrawables()[0].getIntrinsicWidth();
+            int drawableWidth = 0;
+            if ( null != getCompoundDrawables()[0] )
+            {
+                drawableWidth = getCompoundDrawables()[0].getIntrinsicWidth();
+            }
             leftPadding = ( getWidth() - ( drawableWidth + textWidth ) ) / 2 - getPaddingLeft();
         }
         return leftPadding;

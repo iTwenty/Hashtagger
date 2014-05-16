@@ -1,4 +1,4 @@
-package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
+package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -13,12 +13,14 @@ import net.thetranquilpsychonaut.hashtagger.widgets.TouchImageView;
  */
 public class ViewImageActivity extends Activity
 {
+    public static final String IMAGE_URL_KEY = "image_url";
+
     public void onCreate( Bundle savedInstanceState )
     {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_view_image );
         final TouchImageView touchImageView = ( TouchImageView ) findViewById( R.id.touch_image_view );
-        Picasso.with( this ).load( getIntent().getStringExtra( "image" ) ).into( touchImageView, new Callback()
+        Picasso.with( this ).load( getIntent().getStringExtra( IMAGE_URL_KEY ) ).into( touchImageView, new Callback()
         {
             @Override
             public void onSuccess()

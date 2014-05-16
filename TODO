@@ -6,11 +6,11 @@ Fix footer not showing loading view
 Better error screen
 Custom loading icon
 Actionbar icon indicators
-Better expand view ( make extra network call if necessary to display better content )
+*Better expand view ( make extra network call if necessary to display better content )
 Tweet/Post actions (like, comment, retweet, reply etc.)
 Auto load newer results
-Settings screen
-Google+ addition
+*Settings screen
+*Google+ addition
 Instagram addition
 Fix random crashes
 

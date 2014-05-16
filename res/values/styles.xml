@@ -13,7 +13,7 @@
         <item name="android:textSize">12sp</item>
     </style>
 
-    <style name="sitesListRowStyle" parent="android:Theme.Holo.Light.DarkActionBar">
+    <style name="sitesListRowStyle" parent="AppTheme">
         <item name="android:background">@drawable/card_background</item>
         <item name="android:padding">@dimen/card_padding</item>
     </style>

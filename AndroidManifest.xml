@@ -69,11 +69,15 @@
         </activity>
 
         <activity
-            android:name=".sites.twitter.ui.ViewImageActivity">
+            android:name=".sites.ui.ViewImageActivity">
         </activity>
 
         <activity
-            android:name=".sites.twitter.ui.StatusDetailActivity">
+            android:name=".sites.twitter.ui.TwitterDetailActivity">
+        </activity>
+
+        <activity
+            android:name=".sites.gplus.ui.GPlusDetailActivity">
         </activity>
 
         <provider

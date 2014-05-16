@@ -31,12 +31,13 @@ public abstract class SitesListAdapter extends ArrayAdapter
         SitesListRow sitesListRow = getSitesListRow( context, position, convertView, parent );
         Object data = getItem( position );
         sitesListRow.updateRow( data );
+        sitesListRow.sitesButtons.setTag( position );
         if ( null != parent.getTag() )
         {
             int expandedPosition = ( Integer ) parent.getTag();
             if ( position == expandedPosition )
             {
-                sitesListRow.expandRow( data, false );
+                sitesListRow.expandRow( data, false, null );
             }
             else
             {

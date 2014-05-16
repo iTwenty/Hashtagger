@@ -14,7 +14,6 @@
     <RelativeLayout
         android:id="@+id/rl_tweet_thumb_wrapper"
         android:layout_below="@id/twitter_header"
-        android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 

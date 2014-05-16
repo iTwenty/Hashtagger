@@ -1,11 +1,13 @@
 package net.thetranquilpsychonaut.hashtagger.utils;
 
+import android.content.Context;
 import android.text.TextPaint;
 import android.text.format.DateUtils;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.widget.Toast;
 import com.twitter.Autolink;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 
@@ -131,6 +133,11 @@ public class Helper
             }
         }
         return lineCount;
+    }
+
+    public static void showNoNetworkToast( Context context )
+    {
+        Toast.makeText( context, "Connect to a network first", Toast.LENGTH_SHORT ).show();
     }
 
     private static class URLSpanNoUnderline extends URLSpan

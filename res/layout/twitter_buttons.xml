@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<merge
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
@@ -26,12 +26,12 @@
         style="@style/sitesButtonStyle"/>
 
     <net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton
-        android:id="@+id/ccb_open_in_browser"
+        android:id="@+id/ccb_favorite"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:focusable="false"
-        android:drawableLeft="@drawable/ic_action_web_site"
+        android:drawableLeft="@drawable/twitter_favorite"
         style="@style/sitesButtonStyle"/>
 
     <net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton
@@ -43,4 +43,4 @@
         android:drawableLeft="@drawable/ic_action_full_screen"
         style="@style/sitesButtonStyle"/>
 
-</LinearLayout>
+</merge>

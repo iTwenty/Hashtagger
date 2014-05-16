@@ -54,7 +54,7 @@ public class GPlusLoginHandler extends BroadcastReceiver implements LoginActionN
             gPlusLoginListener.onError();
             return;
         }
-        GoogleTokenResponse tokenResponse = GPlusServiceData.AuthData.popTokenResponse();
+        GoogleTokenResponse tokenResponse = GPlusData.AuthData.popTokenResponse();
         String userName = intent.getStringExtra( Result.RESULT_EXTRAS );
         SharedPreferencesHelper.addGPlusDetails( tokenResponse.getAccessToken(), tokenResponse.getRefreshToken(), userName );
         gPlusLoginListener.onUserLoggedIn();

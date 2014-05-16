@@ -130,7 +130,7 @@ public abstract class ArrayPagerAdapter<T extends Fragment> extends PagerAdapter
         retentionStrategy.detach( ( Fragment ) object, currTransaction );
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     @Override
     public void setPrimaryItem( ViewGroup container, int position, Object object )
     {
@@ -309,7 +309,7 @@ public abstract class ArrayPagerAdapter<T extends Fragment> extends PagerAdapter
         return false;
     }
 
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public T getExistingFragment( int position )
     {
         return ( T ) ( fm.findFragmentByTag( getFragmentTag( position ) ) );

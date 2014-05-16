@@ -1,19 +1,25 @@
 package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
-import android.widget.Button;
+import android.view.View;
+import com.google.api.services.plus.model.Activity;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.GPlusData;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
+import net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton;
 
 /**
  * Created by itwenty on 5/7/14.
  */
-public class GPlusButtons extends SitesButtons
+public class GPlusButtons extends SitesButtons implements View.OnClickListener
 {
-    private Button btnPlusOne;
-    private Button btnComment;
-    private Button btnShare;
+    private CenterContentButton ccbPlusOne;
+    private CenterContentButton ccbComment;
+    private CenterContentButton ccbShare;
+    private CenterContentButton ccbViewDetails;
+    private Activity            activity;
 
     public GPlusButtons( Context context )
     {
@@ -29,19 +35,80 @@ public class GPlusButtons extends SitesButtons
     {
         super( context, attrs, defStyle );
         inflate( context, R.layout.gplus_buttons, this );
-        btnPlusOne = ( Button ) findViewById( R.id.btn_plusone );
-        btnComment = ( Button ) findViewById( R.id.btn_comment );
-        btnShare = ( Button ) findViewById( R.id.btn_share );
+        ccbPlusOne = ( CenterContentButton ) findViewById( R.id.ccb_plusone );
+        ccbComment = ( CenterContentButton ) findViewById( R.id.ccb_comment );
+        ccbShare = ( CenterContentButton ) findViewById( R.id.ccb_share );
+        ccbViewDetails = ( CenterContentButton ) findViewById( R.id.ccb_view_details );
     }
 
     @Override
     protected void updateButtons( Object result )
     {
-
+        this.activity = ( Activity ) result;
+        ccbPlusOne.setOnClickListener( this );
+        ccbComment.setOnClickListener( this );
+        ccbShare.setOnClickListener( this );
+        ccbViewDetails.setOnClickListener( this );
+        ccbPlusOne.setText( String.valueOf( activity.getObject().getPlusoners().getTotalItems() ) );
+        if ( activity.getObject().getReplies().getTotalItems() != 0 )
+        {
+            ccbComment.setText( String.valueOf( activity.getObject().getReplies().getTotalItems() ) );
+        }
+        if ( activity.getObject().getResharers().getTotalItems() != 0 )
+        {
+            ccbShare.setText( String.valueOf( activity.getObject().getResharers().getTotalItems() ) );
+        }
     }
 
     @Override
     protected void clearButtons()
+    {
+        this.activity = null;
+        ccbPlusOne.setOnClickListener( null );
+        ccbComment.setOnClickListener( null );
+        ccbShare.setOnClickListener( null );
+        ccbViewDetails.setOnClickListener( null );
+    }
+
+    @Override
+    public void onClick( View v )
+    {
+        if ( v.equals( ccbPlusOne ) )
+        {
+            doPlusOne();
+        }
+        if ( v.equals( ccbComment ) )
+        {
+            doComment();
+        }
+        if ( v.equals( ccbShare ) )
+        {
+            doShare();
+        }
+        if ( v.equals( ccbViewDetails ) )
+        {
+            doViewDetails();
+        }
+    }
+
+    private void doViewDetails()
+    {
+        Intent i = new Intent( getContext(), GPlusDetailActivity.class );
+        GPlusData.ActivityData.pushActivity( this.activity );
+        getContext().startActivity( i );
+    }
+
+    private void doShare()
+    {
+
+    }
+
+    private void doComment()
+    {
+
+    }
+
+    private void doPlusOne()
     {
 
     }
