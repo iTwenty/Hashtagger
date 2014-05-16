@@ -3,6 +3,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.components;
 import android.os.AsyncTask;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.config.TwitterConfig;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.utils.SharedPreferencesHelper;
 import twitter4j.*;
 import twitter4j.auth.AccessToken;
@@ -94,6 +95,7 @@ public class TwitterAction
             }
             catch ( TwitterException e )
             {
+                Helper.debug( e.getMessage() );
             }
             return null;
         }
@@ -185,6 +187,7 @@ public class TwitterAction
         {
             this.position = position;
             this.status = status;
+            this.success = success;
         }
 
         public int getPosition()

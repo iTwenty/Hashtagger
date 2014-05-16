@@ -9,18 +9,18 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeReque
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.config.GPlusConfig;
+import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.GPlusLoginHandler;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.LoadingActivity;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesLoginActivity;
 
 import java.util.Arrays;
 
 /**
  * Created by itwenty on 5/5/14.
  */
-public class GPlusLoginActivity extends LoadingActivity implements GPlusLoginHandler.GPlusLoginListener
+public class GPlusLoginActivity extends SitesLoginActivity implements GPlusLoginHandler.GPlusLoginListener
 {
-    WebView           wvGPlusLogin;
-    GPlusLoginHandler gPlusLoginHandler;
+    WebView wvGPlusLogin;
 
     @Override
     protected View initMainView( Bundle savedInstanceState )
@@ -40,7 +40,7 @@ public class GPlusLoginActivity extends LoadingActivity implements GPlusLoginHan
                 Uri uri = Uri.parse( url );
                 if ( null != uri.getQueryParameter( HashtaggerApp.GPLUS_CODE_KEY ) )
                 {
-                    gPlusLoginHandler.fetchAccessToken( uri.getQueryParameter( HashtaggerApp.GPLUS_CODE_KEY ) );
+                    ( ( GPlusLoginHandler ) sitesLoginHandler ).fetchAccessToken( uri.getQueryParameter( HashtaggerApp.GPLUS_CODE_KEY ) );
                 }
                 else
                 {
@@ -57,7 +57,6 @@ public class GPlusLoginActivity extends LoadingActivity implements GPlusLoginHan
     protected void onViewsCreated( Bundle savedInstanceState )
     {
         setTitle( getString( R.string.str_title_login_activity_gplus ) );
-        gPlusLoginHandler = new GPlusLoginHandler( this );
         if ( null != savedInstanceState )
         {
             wvGPlusLogin.restoreState( savedInstanceState );
@@ -70,6 +69,12 @@ public class GPlusLoginActivity extends LoadingActivity implements GPlusLoginHan
                     Arrays.asList( HashtaggerApp.GPLUS_ACCESS_SCOPE ) ).build();
             wvGPlusLogin.loadUrl( authUrl );
         }
+    }
+
+    @Override
+    protected SitesLoginHandler initSitesLoginHandler()
+    {
+        return new GPlusLoginHandler( this );
     }
 
     @Override

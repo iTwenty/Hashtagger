@@ -230,7 +230,6 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         sitesListAdapter.saveTypes( outState );
     }
 
-
     @Override
     public void onActivityResult( int requestCode, int resultCode, Intent data )
     {
@@ -240,12 +239,9 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             {
                 onUserLoggedIn();
             }
-            else
+            else if ( resultCode == Activity.RESULT_CANCELED )
             {
-                if ( resultCode == Activity.RESULT_CANCELED )
-                {
-                    onLoginFailure();
-                }
+                onLoginFailure();
             }
         }
     }

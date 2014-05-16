@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/it_save_image"
+        android:icon="@android:drawable/ic_menu_save"
+        android:title="Save Image"
+        android:showAsAction="always"
+        android:onClick="doSaveImage"
+        android:visible="false"/>
+
+</menu>

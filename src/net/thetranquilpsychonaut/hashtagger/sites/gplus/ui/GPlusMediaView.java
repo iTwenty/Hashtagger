@@ -7,6 +7,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import com.google.api.services.plus.model.Activity;
 import com.squareup.picasso.Picasso;
+import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 
 /**
@@ -37,7 +38,12 @@ public class GPlusMediaView extends FrameLayout
 
     public void updateMedia( Activity activity )
     {
-        Picasso.with( getContext() ).load( activity.getObject().getAttachments().get( 0 ).getImage().getUrl() ).error( R.drawable.drawable_image_loading ).into( imgvAttachment );
+        Picasso.with( HashtaggerApp.app )
+                .load( activity.getObject().getAttachments().get( 0 ).getImage().getUrl() )
+                .error( R.drawable.drawable_image_loading )
+                .fit()
+                .centerCrop()
+                .into( imgvAttachment );
         if ( "video".equals( activity.getObject().getAttachments().get( 0 ).getObjectType() ) )
         {
             imgvPlay.setVisibility( VISIBLE );

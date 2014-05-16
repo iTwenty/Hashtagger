@@ -9,14 +9,15 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.sites.components.LoginActionName;
+import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.utils.SharedPreferencesHelper;
 
 /**
  * Created by itwenty on 5/6/14.
  */
-public class GPlusLoginHandler extends BroadcastReceiver implements LoginActionName
+public class GPlusLoginHandler extends SitesLoginHandler
 {
-    IntentFilter       filter;
     GPlusLoginListener gPlusLoginListener;
 
     public interface GPlusLoginListener
@@ -30,24 +31,22 @@ public class GPlusLoginHandler extends BroadcastReceiver implements LoginActionN
 
     public GPlusLoginHandler( GPlusLoginListener listener )
     {
-        filter = new IntentFilter( getLoginActionName() );
-        filter.addCategory( Intent.CATEGORY_DEFAULT );
-        HashtaggerApp.app.getApplicationContext().registerReceiver( this, filter );
         this.gPlusLoginListener = listener;
     }
 
     public void fetchAccessToken( String code )
     {
-        Intent accessIntent = new Intent( HashtaggerApp.app.getApplicationContext(), GPlusService.class );
+        Intent accessIntent = new Intent( HashtaggerApp.app, GPlusService.class );
         accessIntent.putExtra( ActionType.ACTION_TYPE_KEY, ActionType.AUTH );
         accessIntent.putExtra( HashtaggerApp.GPLUS_CODE_KEY, code );
-        HashtaggerApp.app.getApplicationContext().startService( accessIntent );
+        HashtaggerApp.app.startService( accessIntent );
         gPlusLoginListener.whileObtainingAccessToken();
     }
 
     @Override
     public void onReceive( Context context, Intent intent )
     {
+        Helper.debug( "GPlusLoginHandler onReceive" );
         Result result = ( Result ) intent.getSerializableExtra( Result.RESULT_KEY );
         if ( result == Result.FAILURE )
         {

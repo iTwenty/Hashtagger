@@ -9,16 +9,16 @@ import facebook4j.FacebookFactory;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.config.FacebookConfig;
+import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.components.FacebookLoginHandler;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.LoadingActivity;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesLoginActivity;
 
 /**
  * Created by itwenty on 4/4/14.
  */
-public class FacebookLoginActivity extends LoadingActivity implements FacebookLoginHandler.FacebookLoginListener
+public class FacebookLoginActivity extends SitesLoginActivity implements FacebookLoginHandler.FacebookLoginListener
 {
-    WebView              wvFacebookLogin;
-    FacebookLoginHandler facebookLoginHandler;
+    WebView wvFacebookLogin;
 
     @Override
     protected View initMainView( Bundle savedInstanceState )
@@ -36,7 +36,7 @@ public class FacebookLoginActivity extends LoadingActivity implements FacebookLo
                 Uri uri = Uri.parse( url );
                 if ( null != uri.getQueryParameter( HashtaggerApp.FACEBOOK_CODE_KEY ) )
                 {
-                    facebookLoginHandler.fetchAccessToken( uri.getQueryParameter( HashtaggerApp.FACEBOOK_CODE_KEY ) );
+                    ( ( FacebookLoginHandler ) sitesLoginHandler ).fetchAccessToken( uri.getQueryParameter( HashtaggerApp.FACEBOOK_CODE_KEY ) );
                 }
                 else
                 {
@@ -53,7 +53,6 @@ public class FacebookLoginActivity extends LoadingActivity implements FacebookLo
     protected void onViewsCreated( Bundle savedInstanceState )
     {
         setTitle( getString( R.string.str_title_activity_facebook_login ) );
-        facebookLoginHandler = new FacebookLoginHandler( this );
         if ( null != savedInstanceState )
         {
             wvFacebookLogin.restoreState( savedInstanceState );
@@ -64,6 +63,13 @@ public class FacebookLoginActivity extends LoadingActivity implements FacebookLo
                     .getOAuthAuthorizationURL( HashtaggerApp.FACEBOOK_CALLBACK_URL ) );
         }
     }
+
+    @Override
+    protected SitesLoginHandler initSitesLoginHandler()
+    {
+        return new FacebookLoginHandler( this );
+    }
+
 
     @Override
     protected void onSaveInstanceState( Bundle outState )

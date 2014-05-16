@@ -7,8 +7,9 @@ import android.view.View;
 import android.webkit.WebView;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterLoginHandler;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.LoadingActivity;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesLoginActivity;
 import twitter4j.auth.RequestToken;
 
 /**
@@ -19,13 +20,12 @@ import twitter4j.auth.RequestToken;
  * to the user. After getting user auth, we let the webpage redirect to our login activity with an oauth code
  * which, alongwith the request token, is used to fetch the access token.
  */
-public class TwitterLoginActivity extends LoadingActivity implements TwitterLoginHandler.TwitterLoginListener
+public class TwitterLoginActivity extends SitesLoginActivity implements TwitterLoginHandler.TwitterLoginListener
 {
-    WebView             wvTwitterLogin;
-    TwitterLoginHandler twitterLoginHandler;
+    WebView      wvTwitterLogin;
     // We need to persist this request token throughout the entire login procedure. So make sure it
     // does not get destroyed anytime during activity lifecycle!
-    RequestToken        requestToken;
+    RequestToken requestToken;
 
     @Override
     protected View initMainView( Bundle savedInstanceState )
@@ -39,7 +39,6 @@ public class TwitterLoginActivity extends LoadingActivity implements TwitterLogi
     protected void onViewsCreated( Bundle savedInstanceState )
     {
         setTitle( getString( R.string.str_title_activity_twitter_login ) );
-        twitterLoginHandler = new TwitterLoginHandler( this );
         // On first start we need to fetch the request token. On subsequent starts, we need to
         // ensure that fetched request token is not lost.
         if ( null != savedInstanceState )
@@ -49,8 +48,14 @@ public class TwitterLoginActivity extends LoadingActivity implements TwitterLogi
         }
         else
         {
-            twitterLoginHandler.fetchRequestToken();
+            ( ( TwitterLoginHandler ) sitesLoginHandler ).fetchRequestToken();
         }
+    }
+
+    @Override
+    protected SitesLoginHandler initSitesLoginHandler()
+    {
+        return new TwitterLoginHandler( this );
     }
 
     // This method is invoked by the callback URL after user has logged in and authorized the app
@@ -70,7 +75,7 @@ public class TwitterLoginActivity extends LoadingActivity implements TwitterLogi
         Uri uri = intent.getData();
         if ( null != uri && uri.toString().startsWith( HashtaggerApp.TWITTER_CALLBACK_URL ) && null != uri.getQueryParameter( HashtaggerApp.TWITTER_OAUTH_VERIFIER_KEY ) )
         {
-            twitterLoginHandler.fetchAccessToken( this.requestToken, uri.getQueryParameter( HashtaggerApp.TWITTER_OAUTH_VERIFIER_KEY ) );
+            ( ( TwitterLoginHandler ) sitesLoginHandler ).fetchAccessToken( this.requestToken, uri.getQueryParameter( HashtaggerApp.TWITTER_OAUTH_VERIFIER_KEY ) );
         }
         else
         {

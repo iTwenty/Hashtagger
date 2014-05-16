@@ -14,13 +14,26 @@
         android:padding="@dimen/content_padding"/>
 
     <TextView
-        android:id="@+id/imgv_display_name"
+        android:id="@+id/tv_display_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="display name"
         android:layout_toRightOf="@id/imgv_actor_image"
         android:layout_toLeftOf="@+id/tv_published_time"
         android:padding="@dimen/content_padding"/>
+
+    <TextView
+        android:id="@+id/tv_shared_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/imgv_actor_image"
+        android:layout_toLeftOf="@id/tv_published_time"
+        android:layout_below="@id/tv_display_name"
+        android:padding="@dimen/content_padding"
+        android:drawableLeft="@drawable/facebook_share_on"
+        tools:text=" of +screenname"
+        style="@style/TwitterScreenNameText"
+        android:singleLine="true"/>
 
     <TextView
         android:id="@id/tv_published_time"

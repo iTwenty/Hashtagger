@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import facebook4j.Post;
+import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
@@ -79,7 +80,7 @@ public class FacebookLinkRow extends SitesListRow implements View.OnClickListene
         }
         else
         {
-            Picasso.with( getContext() )
+            Picasso.with( HashtaggerApp.app )
                     .load( post.getPicture().toString() )
                     .error( R.drawable.drawable_image_loading )
                     .into( imgvPicture, new Callback()

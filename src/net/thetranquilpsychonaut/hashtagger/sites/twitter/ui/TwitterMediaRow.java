@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
+import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
@@ -61,7 +62,7 @@ public class TwitterMediaRow extends SitesListRow implements View.OnClickListene
         this.status = ( Status ) result;
         twitterHeader.updateHeader( status );
         tvTweet.setText( status.isRetweet() ? status.getRetweetedStatus().getText() : status.getText() );
-        Picasso.with( getContext() ).load( status.getMediaEntities()[0].getMediaURL() + ":thumb" ).error( R.drawable.drawable_image_loading ).into( imgvMediaThumb );
+        Picasso.with( HashtaggerApp.app ).load( status.getMediaEntities()[0].getMediaURL() + ":thumb" ).error( R.drawable.drawable_image_loading ).into( imgvMediaThumb );
     }
 
     @Override

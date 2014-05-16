@@ -26,6 +26,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
 /**
  * This widget implements the dynamic action bar tab behavior that can change
@@ -60,6 +61,7 @@ public class IconPagerIndicator extends LinearLayout implements OnPageChangeList
         vpViewPager = view;
         view.setOnPageChangeListener( this );
         setSelectedChild( vpViewPager.getCurrentItem() );
+        Helper.debug( String.valueOf( vpViewPager.getCurrentItem() ) );
     }
 
     @Override

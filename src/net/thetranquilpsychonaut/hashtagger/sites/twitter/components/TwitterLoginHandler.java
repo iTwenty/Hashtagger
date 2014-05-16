@@ -9,6 +9,7 @@ import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
 import net.thetranquilpsychonaut.hashtagger.enums.AuthType;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.sites.components.LoginActionName;
+import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
 import net.thetranquilpsychonaut.hashtagger.utils.SharedPreferencesHelper;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
@@ -16,7 +17,7 @@ import twitter4j.auth.RequestToken;
 /**
  * Created by itwenty on 3/15/14.
  */
-public class TwitterLoginHandler extends BroadcastReceiver implements LoginActionName
+public class TwitterLoginHandler extends SitesLoginHandler
 {
     public interface TwitterLoginListener
     {
@@ -32,13 +33,9 @@ public class TwitterLoginHandler extends BroadcastReceiver implements LoginActio
     }
 
     TwitterLoginListener twitterLoginListener;
-    IntentFilter         filter;
 
     public TwitterLoginHandler( TwitterLoginListener listener )
     {
-        filter = new IntentFilter( getLoginActionName() );
-        filter.addCategory( Intent.CATEGORY_DEFAULT );
-        HashtaggerApp.app.getApplicationContext().registerReceiver( this, filter );
         twitterLoginListener = listener;
     }
 

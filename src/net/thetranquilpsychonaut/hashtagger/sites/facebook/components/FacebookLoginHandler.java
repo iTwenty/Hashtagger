@@ -9,12 +9,13 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.sites.components.LoginActionName;
+import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
 import net.thetranquilpsychonaut.hashtagger.utils.SharedPreferencesHelper;
 
 /**
  * Created by itwenty on 4/7/14.
  */
-public class FacebookLoginHandler extends BroadcastReceiver implements LoginActionName
+public class FacebookLoginHandler extends SitesLoginHandler
 {
     public interface FacebookLoginListener
     {
@@ -25,23 +26,19 @@ public class FacebookLoginHandler extends BroadcastReceiver implements LoginActi
         public void onUserLoggedIn();
     }
 
-    IntentFilter          filter;
     FacebookLoginListener facebookLoginListener;
 
     public FacebookLoginHandler( FacebookLoginListener listener )
     {
-        filter = new IntentFilter( getLoginActionName() );
-        filter.addCategory( Intent.CATEGORY_DEFAULT );
-        HashtaggerApp.app.getApplicationContext().registerReceiver( this, filter );
         facebookLoginListener = listener;
     }
 
     public void fetchAccessToken( String code )
     {
-        Intent accessIntent = new Intent( HashtaggerApp.app.getApplicationContext(), FacebookService.class );
+        Intent accessIntent = new Intent( HashtaggerApp.app, FacebookService.class );
         accessIntent.putExtra( ActionType.ACTION_TYPE_KEY, ActionType.AUTH );
         accessIntent.putExtra( HashtaggerApp.FACEBOOK_CODE_KEY, code );
-        HashtaggerApp.app.getApplicationContext().startService( accessIntent );
+        HashtaggerApp.app.startService( accessIntent );
         facebookLoginListener.whileObtainingAccessToken();
     }
 

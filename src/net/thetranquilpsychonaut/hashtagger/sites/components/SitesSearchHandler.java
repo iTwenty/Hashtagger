@@ -50,14 +50,13 @@ public abstract class SitesSearchHandler extends BroadcastReceiver implements Se
 
     public void registerReceiver()
     {
-        IntentFilter filter;
-        filter = new IntentFilter( getSearchActionName() );
+        IntentFilter filter = new IntentFilter( getSearchActionName() );
         filter.addCategory( Intent.CATEGORY_DEFAULT );
-        HashtaggerApp.app.getApplicationContext().registerReceiver( this, filter );
+        HashtaggerApp.app.registerReceiver( this, filter );
     }
 
     public void unregisterReceiver()
     {
-        HashtaggerApp.app.getApplicationContext().unregisterReceiver( this );
+        HashtaggerApp.app.unregisterReceiver( this );
     }
 }

@@ -2,13 +2,21 @@ package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import com.google.api.services.plus.model.Activity;
+import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.GPlusData;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton;
+
+import java.util.List;
 
 /**
  * Created by itwenty on 5/7/14.
@@ -73,22 +81,21 @@ public class GPlusButtons extends SitesButtons implements View.OnClickListener
     @Override
     public void onClick( View v )
     {
-        if ( v.equals( ccbPlusOne ) )
-        {
-            doPlusOne();
-        }
-        if ( v.equals( ccbComment ) )
-        {
-            doComment();
-        }
-        if ( v.equals( ccbShare ) )
-        {
-            doShare();
-        }
         if ( v.equals( ccbViewDetails ) )
         {
             doViewDetails();
         }
+        else
+        {
+            doOpenInBrowser();
+        }
+    }
+
+    private void doOpenInBrowser()
+    {
+        Intent i = new Intent( Intent.ACTION_VIEW );
+        i.setData( Uri.parse( activity.getObject().getUrl() ) );
+        getContext().startActivity( i );
     }
 
     private void doViewDetails()
@@ -96,20 +103,5 @@ public class GPlusButtons extends SitesButtons implements View.OnClickListener
         Intent i = new Intent( getContext(), GPlusDetailActivity.class );
         GPlusData.ActivityData.pushActivity( this.activity );
         getContext().startActivity( i );
-    }
-
-    private void doShare()
-    {
-
-    }
-
-    private void doComment()
-    {
-
-    }
-
-    private void doPlusOne()
-    {
-
     }
 }

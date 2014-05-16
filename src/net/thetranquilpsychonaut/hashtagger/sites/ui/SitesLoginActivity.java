@@ -6,24 +6,29 @@ import android.view.View;
 import android.widget.ViewAnimator;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
 
 /**
  * Created by itwenty on 4/5/14.
  */
-public abstract class LoadingActivity extends FragmentActivity
+public abstract class SitesLoginActivity extends FragmentActivity
 {
     private static final int    MAIN_VIEW       = 0;
     private static final int    LOADING_VIEW    = 1;
     private static       int    ACTIVE_VIEW     = 0;
     private static final String ACTIVE_VIEW_KEY = HashtaggerApp.NAMESPACE + "active_view_key";
     private ViewAnimator vaLoadingView;
-    View mainView;
-    View loadingView;
+    private View mainView;
+    private View loadingView;
+
+    protected SitesLoginHandler sitesLoginHandler;
+
 
     public void onCreate( Bundle savedInstanceState )
     {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_loading );
+        sitesLoginHandler = initSitesLoginHandler();
         vaLoadingView = ( ViewAnimator ) findViewById( R.id.va_loading_view );
         mainView = initMainView( savedInstanceState );
         loadingView = initLoadingView( savedInstanceState );
@@ -36,6 +41,22 @@ public abstract class LoadingActivity extends FragmentActivity
         }
         onViewsCreated( savedInstanceState );
     }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        sitesLoginHandler.registerReceiver();
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        sitesLoginHandler.unregisterReceiver();
+    }
+
+    protected abstract SitesLoginHandler initSitesLoginHandler();
 
     protected abstract View initMainView( Bundle savedInstanceState );
 

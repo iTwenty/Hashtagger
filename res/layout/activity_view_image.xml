@@ -10,7 +10,8 @@
         android:id="@+id/touch_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:alpha="0"/>
 
     <ProgressBar
         android:id="@+id/pgbr_touch_image_view_loading"

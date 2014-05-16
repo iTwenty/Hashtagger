@@ -5,21 +5,21 @@
 
     <PreferenceCategory
         android:title="@string/str_pref_category_active_sites"
-        android:key="pref_active_sites">
+        android:key="active_sites">
 
         <CheckBoxPreference
             android:title="Twitter"
-            android:key="pref_site_twitter"
+            android:key="site_twitter"
             android:defaultValue="true"/>
 
         <CheckBoxPreference
             android:title="Facebook"
-            android:key="pref_site_facebook"
+            android:key="site_facebook"
             android:defaultValue="true"/>
 
         <CheckBoxPreference
             android:title="Google+"
-            android:key="pref_site_gplus"
+            android:key="site_gplus"
             android:defaultValue="true"/>
 
     </PreferenceCategory>
@@ -27,6 +27,6 @@
     <Preference
         android:title="Clear recently searched hashtags"
         android:summary="This will not clear your saved hashtags"
-        android:key="pref_clear_search"/>
+        android:key="clear_search"/>
 
 </PreferenceScreen>

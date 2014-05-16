@@ -52,6 +52,9 @@ public class SitesActivity extends SavedHashtagsActivity
         vpSitesPagerAdapter = new SitesAdapter( getSupportFragmentManager(), new ArrayList<PageDescriptor>() );
         vpSitesPager.setAdapter( vpSitesPagerAdapter );
         vpSitesPager.setOffscreenPageLimit( 2 );
+
+        showActiveSites();
+
         ipiSitesPager.setViewPager( vpSitesPager );
 
         if ( null != getIntent() && getIntent().getAction().equals( Intent.ACTION_SEARCH ) )
@@ -64,7 +67,11 @@ public class SitesActivity extends SavedHashtagsActivity
     protected void onStart()
     {
         super.onStart();
-        showActiveSites();
+        if ( SharedPreferencesHelper.getActiveSitesChanged() )
+        {
+            showActiveSites();
+            SharedPreferencesHelper.setActiveSitesChanged( false );
+        }
     }
 
     public void showActiveSites()
@@ -122,6 +129,7 @@ public class SitesActivity extends SavedHashtagsActivity
                 vpSitesPagerAdapter.insert( GPlusFragment.descriptor, gPlusPosition );
             }
         }
+        ipiSitesPager.setSelectedChild( vpSitesPager.getCurrentItem() );
     }
 
     private int[] getSavedSitePositions()
@@ -145,7 +153,7 @@ public class SitesActivity extends SavedHashtagsActivity
     @Override
     public boolean onCreateOptionsMenu( Menu menu )
     {
-        getMenuInflater().inflate( R.menu.options_menu, menu );
+        getMenuInflater().inflate( R.menu.activity_sites_menu, menu );
         SearchManager searchManager = ( SearchManager ) getSystemService( Context.SEARCH_SERVICE );
         svHashtag = ( SearchView ) menu.findItem( R.id.sv_hashtag ).getActionView();
         svHashtag.setSearchableInfo( searchManager.getSearchableInfo( getComponentName() ) );
