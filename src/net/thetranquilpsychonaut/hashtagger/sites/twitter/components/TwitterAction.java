@@ -3,9 +3,15 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.components;
 import android.os.AsyncTask;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.config.TwitterConfig;
+import net.thetranquilpsychonaut.hashtagger.events.TwitterFavoriteEvent;
+import net.thetranquilpsychonaut.hashtagger.events.TwitterReplyEvent;
+import net.thetranquilpsychonaut.hashtagger.events.TwitterRetweetEvent;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.utils.SharedPreferencesHelper;
-import twitter4j.*;
+import twitter4j.StatusUpdate;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 
 /**
@@ -13,10 +19,6 @@ import twitter4j.auth.AccessToken;
  */
 public class TwitterAction
 {
-    private TwitterReplyTask    twitterReplyTask;
-    private TwitterRetweetTask  twitterRetweetTask;
-    private TwitterFavoriteTask twitterFavoriteTask;
-
     public void executeReplyAction( String reply, long inReplyToUserId )
     {
         new TwitterReplyTask( reply, inReplyToUserId ).execute();
@@ -145,79 +147,6 @@ public class TwitterAction
         {
             // This event is handled in TwitterFragment in onFavoritedDone method
             HashtaggerApp.bus.post( new TwitterFavoriteEvent( success, position, status ) );
-        }
-    }
-
-    public static class TwitterFavoriteEvent
-    {
-        int     position;
-        Status  status;
-        boolean success;
-
-        public TwitterFavoriteEvent( boolean success, int position, twitter4j.Status status )
-        {
-            this.position = position;
-            this.status = status;
-            this.success = success;
-        }
-
-        public int getPosition()
-        {
-            return position;
-        }
-
-        public Status getStatus()
-        {
-            return status;
-        }
-
-        public boolean getSuccess()
-        {
-            return success;
-        }
-    }
-
-    public static class TwitterRetweetEvent
-    {
-        int     position;
-        Status  status;
-        boolean success;
-
-        public TwitterRetweetEvent( boolean success, int position, Status status )
-        {
-            this.position = position;
-            this.status = status;
-            this.success = success;
-        }
-
-        public int getPosition()
-        {
-            return position;
-        }
-
-        public Status getStatus()
-        {
-            return status;
-        }
-
-        public boolean getSuccess()
-        {
-            return success;
-        }
-    }
-
-    public static class TwitterReplyEvent
-    {
-        boolean success;
-
-        public TwitterReplyEvent( boolean success )
-        {
-            this.success = success;
-        }
-
-        public boolean getSuccess()
-        {
-            return this.success;
         }
     }
 }

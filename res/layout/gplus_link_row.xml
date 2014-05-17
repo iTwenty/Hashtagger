@@ -2,23 +2,19 @@
 
 <merge
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-    <net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookHeader
-        android:id="@+id/facebook_header"
+    <net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusHeader
+        android:id="@+id/gplus_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
     <TextView
-        android:id="@+id/tv_message"
-        android:ellipsize="end"
-        android:layout_width="fill_parent"
+        android:id="@id/tv_message"
+        android:layout_below="@id/gplus_header"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxLines="10"
-        android:layout_below="@id/facebook_header"
-        tools:text="line1\nline2\nline3\nline4\nline5\nline6"
         android:padding="@dimen/content_padding"/>
 
     <TextView
@@ -28,8 +24,8 @@
         android:layout_below="@id/tv_message"
         style="@style/LinkStyle"/>
 
-    <net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookButtons
-        android:id="@+id/facebook_buttons"
+    <net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusButtons
+        android:id="@+id/gplus_buttons"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_below="@id/tv_link"/>

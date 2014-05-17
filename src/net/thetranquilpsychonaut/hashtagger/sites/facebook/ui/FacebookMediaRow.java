@@ -5,26 +5,22 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 import facebook4j.Post;
-import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewImageActivity;
 
 /**
  * Created by itwenty on 5/2/14.
  */
 public class FacebookMediaRow extends SitesListRow implements View.OnClickListener
 {
-    private FacebookHeader facebookHeader;
-    private TextView       tvMessage;
-    private ImageView      imgvPicture;
-    private ImageView      imgvPlayButton;
-    private Post           post;
+    private FacebookHeader    facebookHeader;
+    private TextView          tvMessage;
+    private FacebookMediaView facebookMediaView;
+    private Post              post;
 
     protected FacebookMediaRow( Context context )
     {
@@ -47,9 +43,8 @@ public class FacebookMediaRow extends SitesListRow implements View.OnClickListen
         inflate( context, R.layout.facebook_media_row, this );
         facebookHeader = ( FacebookHeader ) findViewById( R.id.facebook_header );
         tvMessage = ( TextView ) findViewById( R.id.tv_message );
-        imgvPicture = ( ImageView ) findViewById( R.id.imgv_picture );
-        imgvPlayButton = ( ImageView ) findViewById( R.id.imgv_play_button );
-        imgvPicture.setOnClickListener( this );
+        facebookMediaView = ( FacebookMediaView ) findViewById( R.id.facebook_media_view );
+        facebookMediaView.setOnClickListener( this );
         super.init( context );
     }
 
@@ -65,29 +60,13 @@ public class FacebookMediaRow extends SitesListRow implements View.OnClickListen
         this.post = ( Post ) result;
         facebookHeader.updateHeader( post );
         tvMessage.setText( post.getMessage() );
-        Picasso.with( HashtaggerApp.app )
-                .load( post.getPicture().toString() )
-                .error( R.drawable.drawable_image_loading )
-                .into( imgvPicture, new Callback()
-                {
-                    @Override
-                    public void onSuccess()
-                    {
-                        imgvPlayButton.setVisibility( "video".equals( post.getType() ) ? VISIBLE : GONE );
-                    }
-
-                    @Override
-                    public void onError()
-                    {
-
-                    }
-                } );
+        facebookMediaView.updateMedia( post );
     }
 
     @Override
     public void onClick( View v )
     {
-        if ( v.equals( imgvPicture ) )
+        if ( v.equals( facebookMediaView ) )
         {
             if ( "video".equals( post.getType() ) )
             {
@@ -97,8 +76,8 @@ public class FacebookMediaRow extends SitesListRow implements View.OnClickListen
             }
             else if ( "photo".equals( post.getType() ) )
             {
-                Intent intent = new Intent( Intent.ACTION_VIEW );
-                intent.setData( Uri.parse( post.getPicture().toString().replace( "_s.", "_o." ) ) );
+                Intent intent = new Intent( getContext(), ViewImageActivity.class );
+                intent.putExtra( ViewImageActivity.IMAGE_URL_KEY, post.getPicture().toString().replace( "_s.", "_o." ) );
                 getContext().startActivity( intent );
             }
         }

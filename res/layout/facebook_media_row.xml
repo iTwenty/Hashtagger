@@ -23,16 +23,15 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:maxLines="10"
-            android:layout_toLeftOf="@+id/fl_picture_play_wrapper"
+            android:layout_toLeftOf="@+id/facebook_media_view"
             tools:text="line1\nline2\nline3\nline4\nline5\nline6"
             android:padding="@dimen/content_padding"/>
 
-        <include
-            layout="@layout/facebook_media"
+        <net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookMediaView
+            android:id="@id/facebook_media_view"
             android:layout_alignParentRight="true"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:id="@id/fl_picture_play_wrapper"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
     </RelativeLayout>
 

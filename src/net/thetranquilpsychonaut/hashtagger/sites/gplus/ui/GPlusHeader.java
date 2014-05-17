@@ -1,7 +1,10 @@
 package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -14,12 +17,13 @@ import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 /**
  * Created by itwenty on 5/14/14.
  */
-public class GPlusHeader extends RelativeLayout
+public class GPlusHeader extends RelativeLayout implements View.OnClickListener
 {
     private ImageView imgvActorImage;
     private TextView  tvDisplayName;
     private TextView  tvSharedName;
     private TextView  tvPublishedTime;
+    private Activity  activity;
 
     public GPlusHeader( Context context )
     {
@@ -39,10 +43,12 @@ public class GPlusHeader extends RelativeLayout
         tvDisplayName = ( TextView ) findViewById( R.id.tv_display_name );
         tvPublishedTime = ( TextView ) findViewById( R.id.tv_published_time );
         tvSharedName = ( TextView ) findViewById( R.id.tv_shared_name );
+        imgvActorImage.setOnClickListener( this );
     }
 
     public void updateHeader( Activity activity )
     {
+        this.activity = activity;
         Picasso.with( HashtaggerApp.app ).load( activity.getActor().getImage().getUrl() ).into( imgvActorImage );
         tvDisplayName.setText( activity.getActor().getDisplayName() );
         tvPublishedTime.setText( Helper.getFuzzyDateTime( activity.getPublished().getValue() ) );
@@ -54,6 +60,17 @@ public class GPlusHeader extends RelativeLayout
         else
         {
             tvSharedName.setVisibility( GONE );
+        }
+    }
+
+    @Override
+    public void onClick( View v )
+    {
+        if ( v.equals( imgvActorImage ) )
+        {
+            Intent i = new Intent( Intent.ACTION_VIEW );
+            i.setData( Uri.parse( activity.getActor().getUrl() ) );
+            getContext().startActivity( i );
         }
     }
 }

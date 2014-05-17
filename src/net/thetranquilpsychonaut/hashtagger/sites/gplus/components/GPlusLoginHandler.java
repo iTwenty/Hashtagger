@@ -1,14 +1,11 @@
 package net.thetranquilpsychonaut.hashtagger.sites.gplus.components;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
-import net.thetranquilpsychonaut.hashtagger.sites.components.LoginActionName;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.utils.SharedPreferencesHelper;

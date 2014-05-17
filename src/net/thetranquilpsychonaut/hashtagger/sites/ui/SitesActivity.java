@@ -10,16 +10,20 @@ import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
+import android.widget.Toast;
+import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtagSuggestionsProvider;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.PageDescriptor;
+import net.thetranquilpsychonaut.hashtagger.events.SavedHashtagDeletedEvent;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsDBContract;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsProviderContract;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookFragment;
@@ -181,13 +185,14 @@ public class SitesActivity extends SavedHashtagsActivity
 
     public void doSaveHashtag( MenuItem item )
     {
-        if ( null == this.hashtag || "".equals( this.hashtag ) )
+        if ( TextUtils.isEmpty( this.hashtag ) )
         {
             return;
         }
         ContentValues values = new ContentValues();
         values.put( SavedHashtagsDBContract.SavedHashtags.COLUMN_HASHTAG, this.hashtag );
         Uri result = getContentResolver().insert( SavedHashtagsProviderContract.SavedHashtags.CONTENT_URI, values );
+        Toast.makeText( this, result == null ? "Failed to save hashtag " + this.hashtag : "Saved hashtag " + this.hashtag, Toast.LENGTH_SHORT ).show();
     }
 
     public void doLaunchSettings( MenuItem item )
@@ -275,5 +280,11 @@ public class SitesActivity extends SavedHashtagsActivity
         intent.putExtra( SearchManager.QUERY, selectedHashtag );
         intent.setComponent( getComponentName() );
         startActivity( intent );
+    }
+
+    @Subscribe
+    public void onSavedHashtagDeleted( SavedHashtagDeletedEvent event )
+    {
+        super.onSavedHashtagDeleted( event );
     }
 }

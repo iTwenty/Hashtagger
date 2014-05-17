@@ -70,7 +70,16 @@ public class GPlusMediaRow extends SitesListRow implements View.OnClickListener
         if ( "photo".equals( objectType ) )
         {
             Intent i = new Intent( getContext(), ViewImageActivity.class );
-            i.putExtra( ViewImageActivity.IMAGE_URL_KEY, activity.getObject().getAttachments().get( 0 ).getImage().getUrl() );
+            String imageUrl;
+            if ( null != activity.getObject().getAttachments().get( 0 ).getFullImage() )
+            {
+                imageUrl = activity.getObject().getAttachments().get( 0 ).getFullImage().getUrl();
+            }
+            else
+            {
+                imageUrl = activity.getObject().getAttachments().get( 0 ).getImage().getUrl();
+            }
+            i.putExtra( ViewImageActivity.IMAGE_URL_KEY, imageUrl );
             getContext().startActivity( i );
         }
         else if ( "video".equals( objectType ) )

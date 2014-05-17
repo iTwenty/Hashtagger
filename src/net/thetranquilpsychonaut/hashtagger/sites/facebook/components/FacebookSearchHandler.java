@@ -2,6 +2,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.components;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import facebook4j.Paging;
 import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
@@ -9,6 +10,7 @@ import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -46,31 +48,17 @@ public class FacebookSearchHandler extends SitesSearchHandler
             return;
         }
         List<Post> results = ( List<Post> ) intent.getSerializableExtra( Result.RESULT_DATA );
-//        for ( Post post : results )
-//        {
-//            if ( !isDisplayablePost( post ) )
-//                results.remove( post );
-//        }
+        Iterator<Post> iterator = results.iterator();
+        Post post;
+        while ( iterator.hasNext() )
+        {
+            post = iterator.next();
+            if ( TextUtils.isEmpty( post.getMessage() ) )
+            {
+                iterator.remove();
+            }
+        }
         sitesSearchListener.afterSearching( searchType, results );
-    }
-
-    private boolean isDisplayablePost( Post post )
-    {
-        String statustType = post.getStatusType();
-        if ( null == statustType )
-        {
-            return true;
-        }
-        if ( "created_note".equals( statustType )
-                || "created_group".equals( statustType )
-                || "created_event".equals( statustType )
-                || "app_created_story".equals( statustType )
-                || "tagged_in_photo".equals( statustType )
-                || "approved_friend".equals( statustType ) )
-        {
-            return false;
-        }
-        return true;
     }
 
     @Override

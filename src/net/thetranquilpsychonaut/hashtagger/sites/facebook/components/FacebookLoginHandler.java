@@ -1,14 +1,11 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.components;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import facebook4j.auth.AccessToken;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
-import net.thetranquilpsychonaut.hashtagger.sites.components.LoginActionName;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
 import net.thetranquilpsychonaut.hashtagger.utils.SharedPreferencesHelper;
 

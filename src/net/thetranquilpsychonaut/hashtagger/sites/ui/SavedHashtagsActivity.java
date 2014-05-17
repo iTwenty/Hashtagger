@@ -1,10 +1,12 @@
 package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
 import android.app.ActionBar;
+import android.content.ContentValues;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
@@ -16,11 +18,17 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.squareup.otto.Subscribe;
+import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.events.SavedHashtagDeletedEvent;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsDBContract;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsDBHelper;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsProviderContract;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.widgets.superactivitytoast.Listeners;
+import net.thetranquilpsychonaut.hashtagger.widgets.superactivitytoast.OnClickWrapper;
+import net.thetranquilpsychonaut.hashtagger.widgets.superactivitytoast.SuperActivityToast;
 
 /**
  * Created by itwenty on 5/10/14.
@@ -72,6 +80,20 @@ public class SavedHashtagsActivity extends FragmentActivity implements LoaderMan
     {
         super.onPostCreate( savedInstanceState );
         drawerToggle.syncState();
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        HashtaggerApp.bus.register( this );
+    }
+
+    @Override
+    protected void onPause()
+    {
+        HashtaggerApp.bus.unregister( this );
+        super.onPause();
     }
 
     @Override
@@ -133,5 +155,32 @@ public class SavedHashtagsActivity extends FragmentActivity implements LoaderMan
 //        intent.putExtra( SearchManager.QUERY, selectedHashtag );
 //        intent.setComponent( getComponentName() );
 //        startActivity( intent );
+    }
+
+    @Subscribe
+    public void onSavedHashtagDeleted( final SavedHashtagDeletedEvent event )
+    {
+        dlNavDrawer.closeDrawers();
+        SuperActivityToast toast = new SuperActivityToast( this );
+        toast.setIndeterminate( true );
+        toast.setTouchToDismiss( true );
+        toast.setText( "Hashtag " + event.getDeletedHashtag() + " deleted" );
+        toast.setOnClickWrapper( new OnClickWrapper( "DELETED_HASHTAG", new Listeners.OnClickListener()
+        {
+            @Override
+            public void onClick( View view, Parcelable token )
+            {
+                restoreHashtag( event.getDeletedHashtag() );
+            }
+        } ) );
+        toast.show();
+    }
+
+    protected boolean restoreHashtag( String hashtag )
+    {
+        ContentValues values = new ContentValues();
+        values.put( SavedHashtagsDBContract.SavedHashtags.COLUMN_HASHTAG, hashtag );
+        Uri result = getContentResolver().insert( SavedHashtagsProviderContract.SavedHashtags.CONTENT_URI, values );
+        return result == null ? false : true;
     }
 }

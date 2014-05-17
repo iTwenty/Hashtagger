@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import net.thetranquilpsychonaut.hashtagger.R;
@@ -16,7 +17,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterActi
 /**
  * Created by itwenty on 5/11/14.
  */
-public class TwitterReplyDialog extends DialogFragment implements TextWatcher
+public class TwitterReplyDialog extends DialogFragment implements TextWatcher, View.OnFocusChangeListener
 {
     public static final String TAG = "twitter_reply_dialog";
     String   inReplyToScreenName;
@@ -69,6 +70,7 @@ public class TwitterReplyDialog extends DialogFragment implements TextWatcher
         edtReplyText.addTextChangedListener( this );
         edtReplyText.setText( "@" + this.inReplyToScreenName + " " );
         edtReplyText.setSelection( edtReplyText.getText().length() );
+        edtReplyText.setOnFocusChangeListener( this );
         return dialog;
     }
 
@@ -93,5 +95,14 @@ public class TwitterReplyDialog extends DialogFragment implements TextWatcher
     public void afterTextChanged( Editable s )
     {
         tvCharCounter.setText( s.length() + "/140" );
+    }
+
+    @Override
+    public void onFocusChange( View v, boolean hasFocus )
+    {
+        if ( v.equals( edtReplyText ) && hasFocus )
+        {
+            getDialog().getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE );
+        }
     }
 }

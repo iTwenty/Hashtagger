@@ -21,11 +21,11 @@
 
     <TextView
         android:id="@+id/tv_twitter_link"
-        android:text="link"
-        android:textColor="@color/twitter_dark_blue"
+        tools:text="link"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_tweet"/>
+        android:layout_below="@id/tv_tweet"
+        style="@style/LinkStyle"/>
 
     <net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterButtons
         android:id="@+id/twitter_buttons"

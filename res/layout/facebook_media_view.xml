@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/imgv_picture"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:background="@android:drawable/picture_frame"
+        android:scaleType="fitCenter"/>
+
+    <ImageView
+        android:id="@+id/imgv_play"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:src="@drawable/play_button"/>
+
+</merge>

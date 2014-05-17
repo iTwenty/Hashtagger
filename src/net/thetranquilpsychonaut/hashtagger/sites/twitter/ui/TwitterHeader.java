@@ -1,7 +1,10 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,13 +18,14 @@ import twitter4j.User;
 /**
  * Created by itwenty on 5/8/14.
  */
-public class TwitterHeader extends RelativeLayout
+public class TwitterHeader extends RelativeLayout implements View.OnClickListener
 {
     private ImageView imgvProfileImage;
     private TextView  tvName;
     private TextView  tvScreenName;
     private TextView  tvCreatedAt;
     private TextView  tvRetweetName;
+    private Status    status;
 
     public TwitterHeader( Context context )
     {
@@ -42,10 +46,12 @@ public class TwitterHeader extends RelativeLayout
         tvScreenName = ( TextView ) findViewById( R.id.tv_screen_name );
         tvCreatedAt = ( TextView ) findViewById( R.id.tv_created_at );
         tvRetweetName = ( TextView ) findViewById( R.id.tv_retweet_name );
+        imgvProfileImage.setOnClickListener( this );
     }
 
     public void updateHeader( Status status )
     {
+        this.status = status;
         User user = status.getUser();
         if ( status.isRetweet() )
         {
@@ -60,5 +66,16 @@ public class TwitterHeader extends RelativeLayout
         tvName.setText( user.getName() );
         tvScreenName.setText( null == status.getInReplyToScreenName() ? "@" + user.getScreenName() : "@" + user.getScreenName() + " in reply to @" + status.getInReplyToScreenName() );
         tvCreatedAt.setText( Helper.getFuzzyDateTime( status.getCreatedAt().getTime() ) );
+    }
+
+    @Override
+    public void onClick( View v )
+    {
+        if ( v.equals( imgvProfileImage ) )
+        {
+            Intent i = new Intent( Intent.ACTION_VIEW );
+            i.setData( Uri.parse( "http://twitter.com/" + status.getUser().getScreenName() ) );
+            getContext().startActivity( i );
+        }
     }
 }

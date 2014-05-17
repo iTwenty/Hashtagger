@@ -18,8 +18,8 @@ public abstract class SitesLoginActivity extends FragmentActivity
     private static       int    ACTIVE_VIEW     = 0;
     private static final String ACTIVE_VIEW_KEY = HashtaggerApp.NAMESPACE + "active_view_key";
     private ViewAnimator vaLoadingView;
-    private View mainView;
-    private View loadingView;
+    private View         mainView;
+    private View         loadingView;
 
     protected SitesLoginHandler sitesLoginHandler;
 

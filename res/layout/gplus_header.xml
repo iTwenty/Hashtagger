@@ -20,6 +20,7 @@
         tools:text="display name"
         android:layout_toRightOf="@id/imgv_actor_image"
         android:layout_toLeftOf="@+id/tv_published_time"
+        android:textStyle="bold"
         android:padding="@dimen/content_padding"/>
 
     <TextView

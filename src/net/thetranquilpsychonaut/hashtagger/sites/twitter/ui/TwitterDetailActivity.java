@@ -3,7 +3,9 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 import android.os.Bundle;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.events.SavedHashtagDeletedEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SavedHashtagsActivity;
 import twitter4j.Status;
 
@@ -25,5 +27,11 @@ public class TwitterDetailActivity extends SavedHashtagsActivity
         tvStatus = ( TextView ) findViewById( R.id.tv_status );
         status = ( Status ) getIntent().getSerializableExtra( STATUS_KEY );
         tvStatus.setText( status.getText() );
+    }
+
+    @Subscribe
+    public void onSavedHashtagDeleted( SavedHashtagDeletedEvent event )
+    {
+        super.onSavedHashtagDeleted( event );
     }
 }

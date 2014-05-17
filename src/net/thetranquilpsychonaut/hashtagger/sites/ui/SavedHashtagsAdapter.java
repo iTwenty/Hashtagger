@@ -9,7 +9,9 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.events.SavedHashtagDeletedEvent;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsProviderContract;
 
 /**
@@ -17,12 +19,9 @@ import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsProviderC
  */
 public class SavedHashtagsAdapter extends CursorAdapter implements View.OnClickListener
 {
-    Context context;
-
     public SavedHashtagsAdapter( Context context, Cursor cursor )
     {
         super( context, cursor, 0 );
-        this.context = context;
     }
 
     private static class ViewHolder
@@ -55,6 +54,24 @@ public class SavedHashtagsAdapter extends CursorAdapter implements View.OnClickL
     @Override
     public void onClick( View v )
     {
-        context.getContentResolver().delete( Uri.parse( SavedHashtagsProviderContract.SavedHashtags.CONTENT_URI + "/" + v.getTag() ), null, null );
+        String deletedHashtag;
+
+        Cursor c = HashtaggerApp.app.getContentResolver().query(
+                Uri.parse( SavedHashtagsProviderContract.SavedHashtags.CONTENT_URI + "/" + v.getTag() ),
+                new String[]{ SavedHashtagsProviderContract.SavedHashtags.COLUMN_HASHTAG },
+                null,
+                null,
+                null );
+
+        c.moveToFirst();
+
+        deletedHashtag = c.getString( c.getColumnIndex( SavedHashtagsProviderContract.SavedHashtags.COLUMN_HASHTAG ) );
+
+        HashtaggerApp.app.getContentResolver().delete(
+                Uri.parse( SavedHashtagsProviderContract.SavedHashtags.CONTENT_URI + "/" + v.getTag() ),
+                null,
+                null );
+
+        HashtaggerApp.bus.post( new SavedHashtagDeletedEvent( deletedHashtag ) );
     }
 }

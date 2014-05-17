@@ -5,9 +5,11 @@ import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.SimplePageDescriptor;
+import net.thetranquilpsychonaut.hashtagger.events.TwitterFavoriteEvent;
+import net.thetranquilpsychonaut.hashtagger.events.TwitterReplyEvent;
+import net.thetranquilpsychonaut.hashtagger.events.TwitterRetweetEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
-import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterAction;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
@@ -122,7 +124,7 @@ public class TwitterFragment extends SitesFragment
     }
 
     @Subscribe
-    public void onRetweetDone( TwitterAction.TwitterRetweetEvent event )
+    public void onRetweetDone( TwitterRetweetEvent event )
     {
         if ( event.getSuccess() )
         {
@@ -137,7 +139,7 @@ public class TwitterFragment extends SitesFragment
     }
 
     @Subscribe
-    public void onFavoriteDone( TwitterAction.TwitterFavoriteEvent event )
+    public void onFavoriteDone( TwitterFavoriteEvent event )
     {
         if ( event.getSuccess() )
         {
@@ -151,7 +153,7 @@ public class TwitterFragment extends SitesFragment
     }
 
     @Subscribe
-    public void onReplyDone( TwitterAction.TwitterReplyEvent event )
+    public void onReplyDone( TwitterReplyEvent event )
     {
         Helper.debug( "onReply" );
         if ( event.getSuccess() )

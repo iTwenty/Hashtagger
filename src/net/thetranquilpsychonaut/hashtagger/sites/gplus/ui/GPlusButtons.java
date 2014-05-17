@@ -2,21 +2,14 @@ package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import com.google.api.services.plus.model.Activity;
-import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.GPlusData;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
-import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton;
-
-import java.util.List;
 
 /**
  * Created by itwenty on 5/7/14.
@@ -57,7 +50,7 @@ public class GPlusButtons extends SitesButtons implements View.OnClickListener
         ccbComment.setOnClickListener( this );
         ccbShare.setOnClickListener( this );
         ccbViewDetails.setOnClickListener( this );
-        ccbPlusOne.setText( String.valueOf( activity.getObject().getPlusoners().getTotalItems() ) );
+        ccbPlusOne.setText( String.valueOf( activity.getObject().getPlusoners().getTotalItems() == 0 ? 1 : activity.getObject().getPlusoners().getTotalItems() ) );
         if ( activity.getObject().getReplies().getTotalItems() != 0 )
         {
             ccbComment.setText( String.valueOf( activity.getObject().getReplies().getTotalItems() ) );
@@ -94,7 +87,7 @@ public class GPlusButtons extends SitesButtons implements View.OnClickListener
     private void doOpenInBrowser()
     {
         Intent i = new Intent( Intent.ACTION_VIEW );
-        i.setData( Uri.parse( activity.getObject().getUrl() ) );
+        i.setData( Uri.parse( activity.getUrl() ) );
         getContext().startActivity( i );
     }
 

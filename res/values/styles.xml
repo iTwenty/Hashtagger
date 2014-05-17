@@ -21,5 +21,57 @@
     <style name="sitesButtonStyle" parent="android:Widget.Holo.Light.Button.Borderless.Small">
         <item name="android:textSize">10sp</item>
         <item name="android:textColor">@color/text_faded</item>
+        <item name="android:background">@drawable/selector_sites_buttons</item>
     </style>
+
+    <style name="LinkStyle">
+        <item name="android:textColor">@android:color/holo_blue_dark</item>
+        <item name="android:background">@drawable/selector_link_background</item>
+    </style>
+
+    <!--For SuperActivity Toast-->
+
+    <style name="DefaultText">
+        <item name="android:text">Default</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:drawablePadding">4dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+    </style>
+
+    <!-- Styles for BUTTON type SuperActivityToasts -->
+
+    <style name="DefaultRootLayout">
+        <item name="android:background">@android:color/black</item>
+    </style>
+
+    <style name="SuperActivityToast_Button_RootLayout" parent="DefaultRootLayout">
+        <item name="android:layout_marginBottom">@dimen/content_padding</item>
+        <item name="android:layout_marginLeft">@dimen/content_padding</item>
+        <item name="android:layout_marginRight">@dimen/content_padding</item>
+    </style>
+
+    <style name="SuperActivityToast_Button_TextView" parent="DefaultText">
+        <item name="android:textSize">16sp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:paddingTop">12dp</item>
+    </style>
+
+    <style name="SuperActivityToast_Button_Divider">
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+    </style>
+
+    <style name="SuperActivityToast_Button_Button">
+        <item name="android:background">@drawable/selector_sites_buttons</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:drawablePadding">8dp</item>
+    </style>
+
 </resources>

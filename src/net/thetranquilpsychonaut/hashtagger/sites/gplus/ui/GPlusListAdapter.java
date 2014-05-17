@@ -18,7 +18,8 @@ public class GPlusListAdapter extends SitesListAdapter
 {
     private static final int ACTIVITY_TYPE_NORMAL = 0;
     private static final int ACTIVITY_TYPE_MEDIA  = 1;
-    private static final int ACTIVITY_TYPE_COUNT  = 2;
+    private static final int ACTIVITY_TYPE_LINK   = 2;
+    private static final int ACTIVITY_TYPE_COUNT  = 3;
 
     public GPlusListAdapter( Context context, int textViewResourceId, List<?> objects )
     {
@@ -54,6 +55,11 @@ public class GPlusListAdapter extends SitesListAdapter
                     convertView = new GPlusMediaRow( context );
                 }
                 break;
+            case ACTIVITY_TYPE_LINK:
+                if ( null == convertView || !( convertView instanceof GPlusLinkRow ) )
+                {
+                    convertView = new GPlusLinkRow( context );
+                }
         }
         return ( SitesListRow ) convertView;
     }
@@ -63,15 +69,21 @@ public class GPlusListAdapter extends SitesListAdapter
     {
         List<Integer> newTypes = new ArrayList<Integer>( searchResults.size() );
         boolean hasMedia;
+        boolean hasLink;
+        String objectType;
         for ( Activity activity : ( List<Activity> ) searchResults )
         {
-            hasMedia = null != activity.getObject().getAttachments()
-                    && ( "photo".equals( activity.getObject().getAttachments().get( 0 ).getObjectType() )
-                    || "video".equals( activity.getObject().getAttachments().get( 0 ).getObjectType() ) );
+            objectType = null == activity.getObject().getAttachments() ? "" : activity.getObject().getAttachments().get( 0 ).getObjectType();
+            hasMedia = ( "photo".equals( objectType ) || "video".equals( objectType ) );
+            hasLink = "article".equals( objectType );
 
             if ( hasMedia )
             {
                 newTypes.add( ACTIVITY_TYPE_MEDIA );
+            }
+            else if ( hasLink )
+            {
+                newTypes.add( ACTIVITY_TYPE_LINK );
             }
             else
             {

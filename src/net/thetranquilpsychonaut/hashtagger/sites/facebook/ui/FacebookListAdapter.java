@@ -16,11 +16,10 @@ import java.util.List;
  */
 public class FacebookListAdapter extends SitesListAdapter
 {
-    private static final int POST_TYPE_NORMAL           = 0;
-    private static final int POST_TYPE_MEDIA            = 1;
-    private static final int POST_TYPE_MEDIA_NO_MESSAGE = 2;
-    private static final int POST_TYPE_LINK             = 3;
-    private static final int POST_TYPE_COUNT            = 4;
+    private static final int POST_TYPE_NORMAL = 0;
+    private static final int POST_TYPE_MEDIA  = 1;
+    private static final int POST_TYPE_LINK   = 2;
+    private static final int POST_TYPE_COUNT  = 3;
 
     public FacebookListAdapter( Context context, int textViewResourceId, List<?> posts )
     {
@@ -56,12 +55,6 @@ public class FacebookListAdapter extends SitesListAdapter
                     convertView = new FacebookMediaRow( context );
                 }
                 break;
-            case POST_TYPE_MEDIA_NO_MESSAGE:
-                if ( null == convertView || !( convertView instanceof FacebookMediaNoMessageRow ) )
-                {
-                    convertView = new FacebookMediaNoMessageRow( context );
-                }
-                break;
             case POST_TYPE_LINK:
                 if ( null == convertView || !( convertView instanceof FacebookLinkRow ) )
                 {
@@ -76,23 +69,17 @@ public class FacebookListAdapter extends SitesListAdapter
     public void updateTypes( SearchType searchType, List<?> searchResults )
     {
         List<Integer> newTypes = new ArrayList<Integer>( searchResults.size() );
-        boolean hasMessage;
         boolean hasMedia;
         boolean hasLink;
         String postType;
         for ( Post post : ( List<Post> ) searchResults )
         {
-            hasMessage = null != post.getMessage();
             postType = post.getType();
             hasMedia = ( "video".equals( postType ) || "photo".equals( postType ) );
             hasLink = "link".equals( postType );
-            if ( hasMedia && hasMessage )
+            if ( hasMedia )
             {
                 newTypes.add( POST_TYPE_MEDIA );
-            }
-            else if ( hasMedia && !hasMessage )
-            {
-                newTypes.add( POST_TYPE_MEDIA_NO_MESSAGE );
             }
             else if ( hasLink )
             {
