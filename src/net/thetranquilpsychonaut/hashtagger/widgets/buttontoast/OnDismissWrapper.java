@@ -1,4 +1,4 @@
-package net.thetranquilpsychonaut.hashtagger.widgets.superactivitytoast;
+package net.thetranquilpsychonaut.hashtagger.widgets.buttontoast;
 
 /**
  *  Copyright 2014 John Persano

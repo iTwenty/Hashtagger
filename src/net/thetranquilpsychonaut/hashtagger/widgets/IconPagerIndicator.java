@@ -49,7 +49,6 @@ public class IconPagerIndicator extends LinearLayout implements OnPageChangeList
     public IconPagerIndicator( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
-        inflate( context, R.layout.icon_pager_indicator, this );
     }
 
     public void setViewPager( ViewPager view )
@@ -61,7 +60,6 @@ public class IconPagerIndicator extends LinearLayout implements OnPageChangeList
         vpViewPager = view;
         view.setOnPageChangeListener( this );
         setSelectedChild( vpViewPager.getCurrentItem() );
-        Helper.debug( String.valueOf( vpViewPager.getCurrentItem() ) );
     }
 
     @Override

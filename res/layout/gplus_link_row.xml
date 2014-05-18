@@ -15,14 +15,13 @@
         android:layout_below="@id/gplus_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/content_padding"/>
+        style="@style/MainMessage"/>
 
     <TextView
         android:id="@+id/tv_link"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_below="@id/tv_message"
-        style="@style/LinkStyle"/>
+        android:layout_centerHorizontal="true"
+        style="@style/Link"/>
 
     <net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusButtons
         android:id="@+id/gplus_buttons"

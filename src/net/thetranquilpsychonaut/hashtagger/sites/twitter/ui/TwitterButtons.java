@@ -53,22 +53,8 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
         ccbRetweet.setOnClickListener( this );
         ccbFavorite.setOnClickListener( this );
         ccbViewDetails.setOnClickListener( this );
-        if ( status.getRetweetCount() != 0 )
-        {
-            ccbRetweet.setText( String.valueOf( status.getRetweetCount() ) );
-        }
-        else
-        {
-            ccbRetweet.setText( "" );
-        }
-        if ( status.getFavoriteCount() != 0 )
-        {
-            ccbFavorite.setText( String.valueOf( status.getFavoriteCount() ) );
-        }
-        else
-        {
-            ccbFavorite.setText( "" );
-        }
+        ccbRetweet.setText( status.getRetweetCount() != 0 ? String.valueOf( status.getRetweetCount() ) : "" );
+        ccbFavorite.setText( status.getFavoriteCount() != 0 ? String.valueOf( status.getFavoriteCount() ) : "" );
         setRetweeted( status.isRetweeted() );
         setFavorited( status.isFavorited() );
     }

@@ -8,10 +8,8 @@
 
     <ImageView
         android:id="@+id/imgv_actor_image"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
         tools:src="@drawable/gplus_logo"
-        android:padding="@dimen/content_padding"/>
+        style="@style/ProfileImage"/>
 
     <TextView
         android:id="@+id/tv_display_name"
@@ -20,21 +18,17 @@
         tools:text="display name"
         android:layout_toRightOf="@id/imgv_actor_image"
         android:layout_toLeftOf="@+id/tv_published_time"
-        android:textStyle="bold"
-        android:padding="@dimen/content_padding"/>
+        style="@style/ProfileName"/>
 
     <TextView
         android:id="@+id/tv_shared_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/imgv_actor_image"
-        android:layout_toLeftOf="@id/tv_published_time"
+        android:layout_alignParentRight="true"
         android:layout_below="@id/tv_display_name"
-        android:padding="@dimen/content_padding"
         android:drawableLeft="@drawable/facebook_share_on"
         tools:text=" of +screenname"
-        style="@style/TwitterScreenNameText"
-        android:singleLine="true"/>
+        style="@style/TwitterScreenName"/>
 
     <TextView
         android:id="@id/tv_published_time"
@@ -42,7 +36,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:text="dd/mm/yyyy"
-        style="@style/DateText"
-        android:padding="@dimen/content_padding"/>
+        style="@style/DateText"/>
 
 </merge>

@@ -20,7 +20,7 @@ import java.util.Calendar;
 /**
  * Created by itwenty on 5/8/14.
  */
-public class ViewImageActivity extends Activity
+public class ViewImageActivity extends BaseActivity
 {
     public static final String IMAGE_URL_KEY = "image_url";
 

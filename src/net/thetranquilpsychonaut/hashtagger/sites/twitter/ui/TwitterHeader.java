@@ -64,7 +64,7 @@ public class TwitterHeader extends RelativeLayout implements View.OnClickListene
         }
         Picasso.with( HashtaggerApp.app ).load( user.getProfileImageURL() ).error( R.drawable.drawable_image_loading ).into( imgvProfileImage );
         tvName.setText( user.getName() );
-        tvScreenName.setText( null == status.getInReplyToScreenName() ? "@" + user.getScreenName() : "@" + user.getScreenName() + " in reply to @" + status.getInReplyToScreenName() );
+        tvScreenName.setText( "@" + user.getScreenName() );
         tvCreatedAt.setText( Helper.getFuzzyDateTime( status.getCreatedAt().getTime() ) );
     }
 

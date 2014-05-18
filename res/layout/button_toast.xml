@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom|center_horizontal"
-    style="@style/SuperActivityToast_Button_RootLayout">
+    style="@style/ButtonToast_RootLayout">
 
     <TextView
         android:id="@+id/message_textview"
@@ -15,14 +15,14 @@
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        style="@style/SuperActivityToast_Button_TextView"/>
+        style="@style/ButtonToast_TextView"/>
 
     <View
         android:id="@+id/divider"
         android:layout_width="1dp"
         android:layout_height="match_parent"
         android:background="@android:color/darker_gray"
-        style="@style/SuperActivityToast_Button_Divider"/>
+        style="@style/ButtonToast_Divider"/>
 
     <Button
         android:id="@+id/button"
@@ -34,6 +34,6 @@
         android:textStyle="bold"
         android:textColor="@android:color/white"
         tools:ignore="HardcodedText"
-        style="@style/SuperActivityToast_Button_Button"/>
+        style="@style/ButtonToast_Button"/>
 
 </LinearLayout>

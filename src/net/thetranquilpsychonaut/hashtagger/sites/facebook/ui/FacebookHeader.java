@@ -20,7 +20,7 @@ import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 public class FacebookHeader extends RelativeLayout implements View.OnClickListener
 {
     private ImageView imgvProfileImage;
-    private TextView  tvUserNameOrStory;
+    private TextView  tvUserName;
     private TextView  tvCreatedTime;
     private Post      post;
 
@@ -39,7 +39,7 @@ public class FacebookHeader extends RelativeLayout implements View.OnClickListen
         super( context, attrs, defStyle );
         inflate( context, R.layout.facebook_header, this );
         imgvProfileImage = ( ImageView ) findViewById( R.id.imgv_profile_image );
-        tvUserNameOrStory = ( TextView ) findViewById( R.id.tv_user_name_or_story );
+        tvUserName = ( TextView ) findViewById( R.id.tv_user_name );
         tvCreatedTime = ( TextView ) findViewById( R.id.tv_created_time );
         imgvProfileImage.setOnClickListener( this );
     }
@@ -48,7 +48,7 @@ public class FacebookHeader extends RelativeLayout implements View.OnClickListen
     {
         this.post = post;
         Picasso.with( HashtaggerApp.app ).load( Helper.getFacebookPictureUrl( post.getFrom().getId() ) ).error( R.drawable.drawable_image_loading ).into( imgvProfileImage );
-        tvUserNameOrStory.setText( post.getStory() == null ? post.getFrom().getName() : post.getStory() );
+        tvUserName.setText( post.getFrom().getName() );
         tvCreatedTime.setText( Helper.getFuzzyDateTime( post.getCreatedTime().getTime() ) );
     }
 

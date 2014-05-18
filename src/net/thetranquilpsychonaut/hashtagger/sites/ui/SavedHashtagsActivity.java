@@ -26,9 +26,9 @@ import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsDBContrac
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsDBHelper;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsProviderContract;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
-import net.thetranquilpsychonaut.hashtagger.widgets.superactivitytoast.Listeners;
-import net.thetranquilpsychonaut.hashtagger.widgets.superactivitytoast.OnClickWrapper;
-import net.thetranquilpsychonaut.hashtagger.widgets.superactivitytoast.SuperActivityToast;
+import net.thetranquilpsychonaut.hashtagger.widgets.buttontoast.Listeners;
+import net.thetranquilpsychonaut.hashtagger.widgets.buttontoast.OnClickWrapper;
+import net.thetranquilpsychonaut.hashtagger.widgets.buttontoast.ButtonToast;
 
 /**
  * Created by itwenty on 5/10/14.
@@ -161,7 +161,7 @@ public class SavedHashtagsActivity extends FragmentActivity implements LoaderMan
     public void onSavedHashtagDeleted( final SavedHashtagDeletedEvent event )
     {
         dlNavDrawer.closeDrawers();
-        SuperActivityToast toast = new SuperActivityToast( this );
+        ButtonToast toast = new ButtonToast( this );
         toast.setIndeterminate( true );
         toast.setTouchToDismiss( true );
         toast.setText( "Hashtag " + event.getDeletedHashtag() + " deleted" );

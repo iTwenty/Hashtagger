@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.view.*;
 import android.widget.*;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
@@ -152,6 +153,30 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         loginHolder.btnLogin.setText( getLoginButtonText() );
         loginHolder.btnLogin.setOnClickListener( this );
         return viewLogin;
+    }
+
+    @Override
+    public void onActivityCreated( Bundle savedInstanceState )
+    {
+        super.onActivityCreated( savedInstanceState );
+        final String hashtag = ( ( SitesActivity ) getActivity() ).getHashtag();
+        if ( !TextUtils.isEmpty( hashtag ) )
+        {
+            readyHolder.lvResultsListEmpty.setText( "Click to search for " + hashtag );
+            readyHolder.lvResultsListEmpty.setOnClickListener( new View.OnClickListener()
+            {
+                @Override
+                public void onClick( View v )
+                {
+                    SitesFragment.this.searchHashtag( hashtag );
+                }
+            } );
+        }
+        else
+        {
+            readyHolder.lvResultsListEmpty.setText( getString( R.string.str_enter_hashtag ) );
+            readyHolder.lvResultsListEmpty.setOnClickListener( null );
+        }
     }
 
     protected abstract String getLoginButtonText();
@@ -390,6 +415,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         else
         {
             readyHolder.lvResultsListEmpty.setText( getResources().getString( R.string.str_toast_no_results ) );
+            readyHolder.lvResultsListEmpty.setOnClickListener( null );
         }
     }
 
@@ -517,13 +543,10 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         Rect r = new Rect();
         view.getLocalVisibleRect( r );
         int hiddenHeight = view.getHeight() - r.height();
-        if ( hiddenHeight > 0 )
+        if ( ( hiddenHeight > 0 ) &&
+             ( readyHolder.lvResultsList.getLastVisiblePosition() == readyHolder.lvResultsList.getPositionForView( view ) ) )
         {
-            boolean isHiddenAtBottom = readyHolder.lvResultsList.getLastVisiblePosition() == readyHolder.lvResultsList.getPositionForView( view );
-            if ( isHiddenAtBottom )
-            {
-                readyHolder.lvResultsList.smoothScrollBy( hiddenHeight, 2 * hiddenHeight );
-            }
+            readyHolder.lvResultsList.smoothScrollBy( hiddenHeight, 2 * hiddenHeight );
         }
     }
 

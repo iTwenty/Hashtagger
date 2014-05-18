@@ -16,7 +16,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/gplus_header"
         android:maxLines="10"
-        android:ellipsize="end"/>
+        android:ellipsize="end"
+        style="@style/MainMessage"/>
 
     <net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusButtons
         android:id="@+id/gplus_buttons"

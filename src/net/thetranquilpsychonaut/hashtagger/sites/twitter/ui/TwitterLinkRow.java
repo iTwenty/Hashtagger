@@ -42,7 +42,7 @@ public class TwitterLinkRow extends SitesListRow implements View.OnClickListener
         inflate( context, R.layout.twitter_link_row, this );
         twitterHeader = ( TwitterHeader ) findViewById( R.id.twitter_header );
         tvTweet = ( TextView ) findViewById( R.id.tv_tweet );
-        tvTwitterLink = ( TextView ) findViewById( R.id.tv_twitter_link );
+        tvTwitterLink = ( TextView ) findViewById( R.id.tv_link );
         tvTwitterLink.setOnClickListener( this );
         super.init( context );
     }

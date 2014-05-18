@@ -23,12 +23,13 @@
             android:layout_toLeftOf="@+id/gplus_media_view"
             android:maxLines="10"
             android:ellipsize="end"
-            android:padding="@dimen/content_padding"/>
+            style="@style/MainMessage"/>
 
         <net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusMediaView
             android:id="@id/gplus_media_view"
             android:layout_width="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_height="wrap_content"/>
 
     </RelativeLayout>

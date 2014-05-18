@@ -67,6 +67,9 @@ public class GPlusListAdapter extends SitesListAdapter
     @Override
     public void updateTypes( SearchType searchType, List<?> searchResults )
     {
+        if ( searchResults.isEmpty() )
+            return;
+
         List<Integer> newTypes = new ArrayList<Integer>( searchResults.size() );
         boolean hasMedia;
         boolean hasLink;

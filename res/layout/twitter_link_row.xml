@@ -17,19 +17,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/twitter_header"
-        android:padding="@dimen/content_padding"/>
+        style="@style/MainMessage"/>
 
     <TextView
-        android:id="@+id/tv_twitter_link"
+        android:id="@+id/tv_link"
         tools:text="link"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_below="@id/tv_tweet"
-        style="@style/LinkStyle"/>
+        android:layout_centerHorizontal="true"
+        style="@style/Link"/>
 
     <net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterButtons
         android:id="@+id/twitter_buttons"
-        android:layout_below="@id/tv_twitter_link"
+        android:layout_below="@id/tv_link"
         android:layout_width="match_parent"
         android:layout_height="0dp"/>
 

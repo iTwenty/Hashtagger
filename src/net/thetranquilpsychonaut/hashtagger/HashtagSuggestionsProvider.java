@@ -14,5 +14,4 @@ public class HashtagSuggestionsProvider extends SearchRecentSuggestionsProvider
     {
         setupSuggestions( AUTHORITY, MODE );
     }
-
 }

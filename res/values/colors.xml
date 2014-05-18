@@ -13,4 +13,6 @@
     <item name="text_faded" type="color">#666666</item>
     <item name="light_orange" type="color">#ffbb33</item>
     <item name="orange" type="color">#ff8800</item>
+    <color name="link_background_pressed">#99999999</color>
+    <color name="sites_button_pressed">#99999999</color>
 </resources>

@@ -19,7 +19,7 @@
         android:maxLines="10"
         android:layout_below="@id/facebook_header"
         tools:text="line1\nline2\nline3\nline4\nline5\nline6"
-        android:padding="@dimen/content_padding"/>
+        style="@style/MainMessage"/>
 
     <net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookButtons
         android:id="@+id/facebook_buttons"

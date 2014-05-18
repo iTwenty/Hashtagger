@@ -16,9 +16,7 @@
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/card_padding"
-        android:layout_marginRight="@dimen/card_padding"
-        android:background="@android:color/transparent"
+        android:background="@drawable/shadow_border"
         style="?android:buttonBarStyle"/>
 
 </RelativeLayout>

@@ -67,7 +67,6 @@ public abstract class SitesListAdapter extends ArrayAdapter
 
     public void initTypes( Bundle savedInstanceState )
     {
-
         if ( null != savedInstanceState )
         {
             resultTypes = ( List<Integer> ) savedInstanceState.getSerializable( RESULT_TYPES_KEY );

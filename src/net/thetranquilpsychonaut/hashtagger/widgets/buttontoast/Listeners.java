@@ -1,4 +1,4 @@
-package net.thetranquilpsychonaut.hashtagger.widgets.superactivitytoast;
+package net.thetranquilpsychonaut.hashtagger.widgets.buttontoast;
 
 import android.os.Parcelable;
 import android.view.View;

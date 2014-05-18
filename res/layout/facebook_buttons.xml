@@ -1,36 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<merge
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/btn_like"
+    <net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton
+        android:id="@+id/ccb_like"
         android:layout_width="0dp"
-        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:text="Like"
+        android:layout_weight="1"
         android:focusable="false"
-        style="?android:attr/borderlessButtonStyle"/>
+        android:layout_gravity="center"
+        android:drawableLeft="@drawable/facebook_like"
+        style="@style/sitesButtonStyle"/>
 
-    <Button
-        android:id="@+id/btn_comment"
+    <net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton
+        android:id="@+id/ccb_comment"
         android:layout_width="0dp"
-        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:text="Comment"
+        android:layout_weight="1"
         android:focusable="false"
-        style="?android:attr/borderlessButtonStyle"/>
+        android:drawableLeft="@drawable/facebook_comment"
+        style="@style/sitesButtonStyle"/>
 
-    <Button
-        android:id="@+id/btn_share"
+    <net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton
+        android:id="@+id/ccb_share"
         android:layout_width="0dp"
-        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:text="Share"
+        android:layout_weight="1"
         android:focusable="false"
-        style="?android:attr/borderlessButtonStyle"/>
+        android:drawableLeft="@drawable/facebook_share"
+        style="@style/sitesButtonStyle"/>
 
-</merge>
+    <net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton
+        android:id="@+id/ccb_view_details"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:focusable="false"
+        android:drawableLeft="@drawable/ic_action_full_screen"
+        style="@style/sitesButtonStyle"/>
+
+</LinearLayout>

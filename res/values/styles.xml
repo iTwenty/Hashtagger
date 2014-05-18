@@ -4,13 +4,22 @@
         <item name="sitesListRowStyle">@style/sitesListRowStyle</item>
     </style>
 
-    <style name="DateText">
-        <item name="android:textSize">10sp</item>
-        <item name="android:textColor">@color/text_faded</item>
+    <style name="TextView_Default">
+        <item name="android:padding">@dimen/default_text_padding</item>
     </style>
 
-    <style name="TwitterScreenNameText" parent="DateText">
-        <item name="android:textSize">12sp</item>
+    <style name="MainMessage">
+        <item name="android:lineSpacingMultiplier">1.2</item>
+    </style>
+
+    <style name="DateText" parent="TextView_Default">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/text_faded</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="TwitterScreenName" parent="DateText">
+
     </style>
 
     <style name="sitesListRowStyle" parent="AppTheme">
@@ -24,12 +33,37 @@
         <item name="android:background">@drawable/selector_sites_buttons</item>
     </style>
 
-    <style name="LinkStyle">
-        <item name="android:textColor">@android:color/holo_blue_dark</item>
-        <item name="android:background">@drawable/selector_link_background</item>
+    <style name="ProfileImage">
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:background">@drawable/selector_shadow_border</item>
     </style>
 
-    <!--For SuperActivity Toast-->
+    <style name="MediaImage">
+        <item name="android:background">@android:drawable/picture_frame</item>
+        <item name="android:layout_width">75dp</item>
+        <item name="android:layout_height">75dp</item>
+        <item name="android:scaleType">fitCenter</item>
+    </style>
+
+    <style name="ProfileName" parent="TextView_Default">
+        <item name="android:textStyle">bold</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="Link">
+        <item name="android:textColor">@android:color/holo_blue_dark</item>
+        <item name="android:background">@drawable/selector_link_background</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:padding">@dimen/link_padding</item>
+    </style>
+
+    <!-- Styles for ButtonToast -->
 
     <style name="DefaultText">
         <item name="android:text">Default</item>
@@ -42,19 +76,17 @@
         <item name="android:paddingRight">16dp</item>
     </style>
 
-    <!-- Styles for BUTTON type SuperActivityToasts -->
-
     <style name="DefaultRootLayout">
-        <item name="android:background">@android:color/black</item>
+        <item name="android:background">#cc000000</item>
     </style>
 
-    <style name="SuperActivityToast_Button_RootLayout" parent="DefaultRootLayout">
+    <style name="ButtonToast_RootLayout" parent="DefaultRootLayout">
         <item name="android:layout_marginBottom">@dimen/content_padding</item>
         <item name="android:layout_marginLeft">@dimen/content_padding</item>
         <item name="android:layout_marginRight">@dimen/content_padding</item>
     </style>
 
-    <style name="SuperActivityToast_Button_TextView" parent="DefaultText">
+    <style name="ButtonToast_TextView" parent="DefaultText">
         <item name="android:textSize">16sp</item>
         <item name="android:paddingLeft">16dp</item>
         <item name="android:paddingRight">16dp</item>
@@ -62,16 +94,17 @@
         <item name="android:paddingTop">12dp</item>
     </style>
 
-    <style name="SuperActivityToast_Button_Divider">
+    <style name="ButtonToast_Divider">
         <item name="android:layout_marginBottom">8dp</item>
         <item name="android:layout_marginTop">8dp</item>
     </style>
 
-    <style name="SuperActivityToast_Button_Button">
-        <item name="android:background">@drawable/selector_sites_buttons</item>
+    <style name="ButtonToast_Button">
+        <item name="android:background">@drawable/selector_undobar</item>
         <item name="android:paddingLeft">16dp</item>
         <item name="android:paddingRight">12dp</item>
         <item name="android:drawablePadding">8dp</item>
     </style>
 
+    <dimen name="default_text_padding">5dp</dimen>
 </resources>

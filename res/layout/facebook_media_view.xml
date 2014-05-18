@@ -7,10 +7,7 @@
 
     <ImageView
         android:id="@+id/imgv_picture"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:background="@android:drawable/picture_frame"
-        android:scaleType="fitCenter"/>
+        style="@style/MediaImage"/>
 
     <ImageView
         android:id="@+id/imgv_play"
