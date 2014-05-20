@@ -31,6 +31,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     private static final String RESULTS_LIST_KEY      = HashtaggerApp.NAMESPACE + "results_list_key";
     private static final String SRL_IS_REFRESHING_KEY = HashtaggerApp.NAMESPACE + "srl_is_refreshing_key";
     private static final String FOOTER_MODE_KEY       = HashtaggerApp.NAMESPACE + "footer_mode";
+    private static final String BAR_VISIBILITY_KEY    = HashtaggerApp.NAMESPACE + "bar_visibility";
 
     public static enum SitesView
     {
@@ -147,7 +148,11 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         readyHolder.lvResultsListEmpty = ( TextView ) viewReady.findViewById( R.id.tv_results_list_empty );
         readyHolder.lvResultsList.setEmptyView( readyHolder.lvResultsListEmpty );
 
+        readyHolder.newResultsBar = ( NewResultsBar ) viewReady.findViewById( R.id.new_results_bar );
+        readyHolder.newResultsBar.setVisibility( null == savedInstanceState ? View.GONE : savedInstanceState.getInt( BAR_VISIBILITY_KEY ) );
+
         readyHolder.lvResultsList.setOnItemClickListener( this );
+        readyHolder.lvResultsList.setOnScrollListener( readyHolder.newResultsBar );
         return viewReady;
 
     }
@@ -275,6 +280,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         outState.putSerializable( ACTIVE_VIEW_KEY, activeView );
         outState.putSerializable( RESULTS_LIST_KEY, ( java.io.Serializable ) results );
         outState.putInt( FOOTER_MODE_KEY, readyHolder.sitesFooterView.getMode() );
+        outState.putInt( BAR_VISIBILITY_KEY, readyHolder.newResultsBar.getVisibility() );
         sitesListAdapter.saveTypes( outState );
     }
 
@@ -481,6 +487,23 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             addToStart( searchResults );
             sitesListAdapter.updateTypes( SearchType.NEWER, searchResults );
             sitesListAdapter.notifyDataSetChanged();
+            readyHolder.newResultsBar.setVisibility( View.VISIBLE );
+            readyHolder.newResultsBar.setResultsCount( searchResults.size() );
+            readyHolder.newResultsBar.setOnScrollToNewClickListener( new NewResultsBar.OnScrollToNewClickListener()
+            {
+                @Override
+                public void onScrollToNewClicked( NewResultsBar bar, int resultsCount )
+                {
+                    if ( readyHolder.lvResultsList.getFirstVisiblePosition() <= resultsCount )
+                    {
+                        readyHolder.lvResultsList.smoothScrollToPosition( 0 );
+                    }
+                    else
+                    {
+                        readyHolder.lvResultsList.smoothScrollToPosition( resultsCount );
+                    }
+                }
+            } );
         }
         else
         {
@@ -589,6 +612,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         public TextView           lvResultsListEmpty;
         public SitesFooterView    sitesFooterView;
         public SwipeRefreshLayout srlReady;
+        public NewResultsBar      newResultsBar;
     }
 
     protected static class Loading
