@@ -67,13 +67,21 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
     public void onClick( View v )
     {
         if ( v.equals( ccbLike ) )
+        {
             doLike();
+        }
         else if ( v.equals( ccbComment ) )
+        {
             doComment();
+        }
         else if ( v.equals( ccbShare ) )
+        {
             doShare();
+        }
         else if ( v.equals( ccbViewDetails ) )
+        {
             doViewDetails();
+        }
     }
 
     private void doViewDetails()

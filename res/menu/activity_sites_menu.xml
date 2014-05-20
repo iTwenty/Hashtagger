@@ -6,7 +6,7 @@
         android:id="@+id/it_save_hashtag"
         android:title="Save hashtag"
         android:icon="@android:drawable/ic_menu_save"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:onClick="doSaveHashtag"
         android:visible="false"/>
 

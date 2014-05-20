@@ -26,9 +26,9 @@ import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsDBContrac
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsDBHelper;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsProviderContract;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.widgets.buttontoast.ButtonToast;
 import net.thetranquilpsychonaut.hashtagger.widgets.buttontoast.Listeners;
 import net.thetranquilpsychonaut.hashtagger.widgets.buttontoast.OnClickWrapper;
-import net.thetranquilpsychonaut.hashtagger.widgets.buttontoast.ButtonToast;
 
 /**
  * Created by itwenty on 5/10/14.

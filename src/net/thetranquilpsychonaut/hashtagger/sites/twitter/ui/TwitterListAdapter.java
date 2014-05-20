@@ -9,7 +9,6 @@ import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 import twitter4j.Status;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -71,7 +70,9 @@ public class TwitterListAdapter extends SitesListAdapter
     public void updateTypes( SearchType searchType, List<?> searchResults )
     {
         if ( searchResults.isEmpty() )
+        {
             return;
+        }
 
         List<Integer> newTypes = new ArrayList<Integer>( searchResults.size() );
         for ( Status status : ( List<Status> ) searchResults )

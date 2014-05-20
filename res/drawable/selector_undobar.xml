@@ -5,13 +5,13 @@
 
     <item
         android:drawable="@drawable/shape_undobar_pressed"
-        android:state_pressed="true" />
+        android:state_pressed="true"/>
 
     <item
         android:drawable="@drawable/shape_undobar_focused"
-        android:state_focused="true" />
+        android:state_focused="true"/>
 
     <item
-        android:drawable="@android:color/transparent" />
+        android:drawable="@android:color/transparent"/>
 
 </selector>

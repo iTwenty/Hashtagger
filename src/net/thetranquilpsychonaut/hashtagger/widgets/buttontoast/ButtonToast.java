@@ -63,7 +63,7 @@ public class ButtonToast
         this.mActivity = activity;
         mLayoutInflater = ( LayoutInflater ) activity.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
         mViewGroup = ( ViewGroup ) activity.findViewById( android.R.id.content );
-        mToastView = mLayoutInflater.inflate(R.layout.button_toast, mViewGroup, false );
+        mToastView = mLayoutInflater.inflate( R.layout.button_toast, mViewGroup, false );
         mButton = ( Button ) mToastView.findViewById( R.id.button );
         mDividerView = mToastView.findViewById( R.id.divider );
         mButton.setOnClickListener( mButtonListener );
@@ -662,6 +662,7 @@ public class ButtonToast
             {
                 return new ReferenceHolder( parcel );
             }
+
             public ReferenceHolder[] newArray( int size )
             {
                 return new ReferenceHolder[size];

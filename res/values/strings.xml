@@ -11,7 +11,7 @@
     <string name="str_retry">Retry</string>
     <string name="str_username">Username</string>
     <string name="str_password">Password</string>
-    <string name="str_error">Something went horribly wrong :(</string>
+    <string name="str_error">Something went wrong :(</string>
     <string name="str_toast_no_results">No results found.</string>
     <string name="str_logout_twitter">Logout</string>
     <string name="str_title_activity_twitter_login">Sign In With Twitter</string>
@@ -42,4 +42,5 @@
     <string name="str_title_login_activity_gplus">Sign in with Google</string>
     <string name="str_reply">Reply</string>
     <string name="str_cancel">Cancel</string>
+    <string name="str_footer_error">Failed to load. Try again?</string>
 </resources>

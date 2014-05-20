@@ -4,7 +4,7 @@
         <attr name="sitesListRowStyle" format="reference"/>
     </declare-styleable>
 
-    <declare-styleable name="CenterContentButton">
-        <attr name="drawableCenter" format="reference"/>
+    <declare-styleable name="SitesFooterView">
+        <attr name="sitesFooterStyle" format="reference"/>
     </declare-styleable>
 </resources>

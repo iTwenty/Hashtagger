@@ -1,6 +1,5 @@
 package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;

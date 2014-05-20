@@ -1,14 +1,9 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.events.SavedHashtagDeletedEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.BaseActivity;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SavedHashtagsActivity;
 import twitter4j.Status;
 
 /**
