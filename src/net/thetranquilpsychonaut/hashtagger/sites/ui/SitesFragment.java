@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
@@ -33,6 +35,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     private static final String SRL_IS_REFRESHING_KEY = HashtaggerApp.NAMESPACE + "srl_is_refreshing_key";
     private static final String FOOTER_MODE_KEY       = HashtaggerApp.NAMESPACE + "footer_mode";
     private static final String BAR_VISIBILITY_KEY    = HashtaggerApp.NAMESPACE + "bar_visibility";
+    private static final int UPDATE_DELAY = 1000 * 20;
 
     private static final int READY   = 0;
     private static final int LOADING = 1;
@@ -46,15 +49,29 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     protected Error              errorHolder;
     protected SitesSearchHandler sitesSearchHandler;
     protected SitesUserHandler   sitesUserHandler;
+    protected List<?>            results;
+    protected SitesListAdapter   sitesListAdapter;
+    protected Handler            timedSearchHandler;
+    protected TimedSearchRunner  timedSearchRunner;
+
     protected int activeView = READY;
-    protected List<?>          results;
-    protected SitesListAdapter sitesListAdapter;
+
+    private class TimedSearchRunner implements Runnable
+    {
+        @Override
+        public void run()
+        {
+            sitesSearchHandler.beginSearch( SearchType.TIMED, ( ( SitesActivity ) getActivity() ).getHashtag() );
+        }
+    }
 
     @Override
     public void onCreate( Bundle savedInstanceState )
     {
         super.onCreate( savedInstanceState );
         setHasOptionsMenu( true );
+        timedSearchHandler = new Handler( Looper.getMainLooper() );
+        timedSearchRunner = new TimedSearchRunner();
     }
 
     @Override
@@ -62,11 +79,14 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         super.onResume();
         sitesSearchHandler.registerReceiver();
+        if ( !TextUtils.isEmpty ( ( ( SitesActivity ) getActivity() ).getHashtag() ) && !results.isEmpty() )
+            timedSearchHandler.postDelayed( timedSearchRunner, UPDATE_DELAY );
     }
 
     @Override
     public void onPause()
     {
+        timedSearchHandler.removeCallbacks( timedSearchRunner );
         sitesSearchHandler.unregisterReceiver();
         super.onPause();
     }
@@ -155,7 +175,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             @Override
             public void onClick( View v )
             {
-                searhHashtagIfAlreadyEntered();
+                searchHashtagIfAlreadyEntered();
             }
         } );
     }
@@ -246,7 +266,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         readyHolder.lvResultsListEmpty.setText( "Click to search for " + hashtag );
     }
 
-    private void searhHashtagIfAlreadyEntered()
+    private void searchHashtagIfAlreadyEntered()
     {
         if ( null == getActivity() )
         {
@@ -323,6 +343,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             Toast.makeText( getActivity(), getResources().getString( getNotLoggedInToastTextId() ), Toast.LENGTH_LONG ).show();
             return;
         }
+        timedSearchHandler.removeCallbacks( timedSearchRunner );
         // We use the listview tag to keep track of selected position. On a new search, we clear this tag.
         readyHolder.lvResultsList.setTag( null );
         sitesSearchHandler.beginSearch( SearchType.INITIAL, hashtag );
@@ -460,6 +481,8 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             case NEWER:
                 readyHolder.srlReady.setRefreshing( true );
                 break;
+            case TIMED:
+                break;
         }
     }
 
@@ -476,6 +499,9 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
                 break;
             case NEWER:
                 afterNewerSearch( searchResults );
+                break;
+            case TIMED:
+                afterTimedSearch( searchResults );
                 break;
         }
     }
@@ -498,6 +524,8 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             readyHolder.lvResultsListEmpty.setText( getResources().getString( R.string.str_toast_no_results ) );
             readyHolder.lvResultsListEmpty.setOnClickListener( null );
         }
+        timedSearchHandler.removeCallbacks( timedSearchRunner );
+        timedSearchHandler.postDelayed( timedSearchRunner, UPDATE_DELAY );
     }
 
     public void afterOlderSearch( List<?> searchResults )
@@ -530,7 +558,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             sitesListAdapter.updateTypes( SearchType.NEWER, searchResults );
             sitesListAdapter.notifyDataSetChanged();
             readyHolder.newResultsBar.setVisibility( View.VISIBLE );
-            readyHolder.newResultsBar.setResultsCount( searchResults.size() );
+            readyHolder.newResultsBar.setResultsCount( readyHolder.newResultsBar.getResultsCount() + searchResults.size() );
         }
         else
         {
@@ -539,6 +567,13 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     }
 
     protected abstract void addToStart( List<?> searchResults );
+
+    public void afterTimedSearch( List<?> searchResults )
+    {
+        afterNewerSearch( searchResults );
+        timedSearchHandler.removeCallbacks( timedSearchRunner );
+        timedSearchHandler.postDelayed( timedSearchRunner, UPDATE_DELAY );
+    }
 
     @Override
     public void onError( SearchType searchType )
@@ -554,6 +589,8 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             case NEWER:
                 readyHolder.srlReady.setRefreshing( false );
                 Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_newer_results_error ), Toast.LENGTH_LONG ).show();
+                break;
+            case TIMED:
                 break;
         }
     }

@@ -68,7 +68,7 @@ public class GPlusService extends SitesService
         Result searchResult = null == results ? Result.FAILURE : Result.SUCCESS;
         if ( searchResult == Result.SUCCESS )
         {
-            if ( searchType != SearchType.NEWER )
+            if ( searchType != SearchType.NEWER && searchType != SearchType.TIMED )
             {
                 GPlusSearchHandler.nextPageToken = results.getNextPageToken();
             }

@@ -45,6 +45,9 @@ public class FacebookService extends SitesService
                 case NEWER:
                     responseList = facebook.fetchPrevious( FacebookSearchHandler.newestPage );
                     break;
+                case TIMED:
+                    responseList = facebook.fetchPrevious( FacebookSearchHandler.newestPage );
+                    break;
             }
         }
         catch ( FacebookException e )
@@ -61,7 +64,7 @@ public class FacebookService extends SitesService
                 {
                     FacebookSearchHandler.newestPage = responseList.getPaging();
                 }
-                if ( searchType != SearchType.NEWER )
+                if ( searchType != SearchType.NEWER && searchType != SearchType.TIMED )
                 {
                     FacebookSearchHandler.oldestPage = responseList.getPaging();
                 }

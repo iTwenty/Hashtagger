@@ -3,6 +3,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.components;
 import android.app.Service;
 import android.content.Intent;
 import android.os.*;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
 public abstract class MyIntentService extends Service
 {
@@ -21,6 +22,7 @@ public abstract class MyIntentService extends Service
         @Override
         public void handleMessage( Message msg )
         {
+            Helper.debug( "handleMessage" );
             onHandleIntent( ( Intent ) msg.obj );
             stopSelf( msg.arg1 );
         }

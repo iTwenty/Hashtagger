@@ -55,6 +55,8 @@ public class TwitterService extends SitesService
                 case NEWER:
                     query.setSinceId( TwitterSearchHandler.sinceId );
                     break;
+                case TIMED:
+                    query.setSinceId( TwitterSearchHandler.sinceId );
             }
             queryResult = twitter.search( query );
         }
@@ -77,7 +79,7 @@ public class TwitterService extends SitesService
                 {
                     TwitterSearchHandler.sinceId = queryResult.getMaxId();
                 }
-                if ( searchType != SearchType.NEWER )
+                if ( searchType != SearchType.NEWER && searchType != SearchType.TIMED )
                 {
                     TwitterSearchHandler.maxId = queryResult.getSinceId() == 0 ? getLowestId( queryResult.getTweets() ) : queryResult.getSinceId();
                 }

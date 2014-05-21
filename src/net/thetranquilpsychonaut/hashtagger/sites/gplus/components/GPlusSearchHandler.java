@@ -33,7 +33,6 @@ public class GPlusSearchHandler extends SitesSearchHandler
     @Override
     public void onReceive( Context context, Intent intent )
     {
-        Helper.debug( "onReceive" );
         SearchType searchType = ( SearchType ) intent.getSerializableExtra( SearchType.SEARCH_TYPE_KEY );
         Result resultType = ( Result ) intent.getSerializableExtra( Result.RESULT_KEY );
         if ( resultType == Result.FAILURE )

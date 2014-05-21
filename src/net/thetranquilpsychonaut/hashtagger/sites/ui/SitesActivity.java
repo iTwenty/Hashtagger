@@ -234,13 +234,16 @@ public class SitesActivity extends SavedHashtagsActivity
         // Collapse the searchView, supposed to happen automatically, but doesn't :(
         svHashtag.setIconified( true );
         svHashtag.onActionViewCollapsed();
+        String input = intent.getStringExtra( SearchManager.QUERY );
+        if ( TextUtils.isEmpty( input ) )
+            return;
         // No point continuing is network is not available
         if ( !HashtaggerApp.isNetworkConnected() )
         {
             Helper.showNoNetworkToast( this );
             return;
         }
-        String input = intent.getStringExtra( SearchManager.QUERY );
+
         hashtag = input.startsWith( "#" ) ? input : "#" + input;
         // We have a hashtag, time to show the save option in the menu
         invalidateOptionsMenu();
