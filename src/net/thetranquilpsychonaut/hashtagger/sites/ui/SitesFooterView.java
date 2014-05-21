@@ -13,11 +13,11 @@ import net.thetranquilpsychonaut.hashtagger.utils.Helper;
  */
 public class SitesFooterView extends FrameLayout
 {
-    public static final int NORMAL  = 1;
-    public static final int LOADING = 2;
-    public static final int ERROR   = 3;
+    public static final int NORMAL  = 0;
+    public static final int LOADING = 1;
+    public static final int ERROR   = 2;
 
-    private int         mode;
+    private int mode = NORMAL;
     private TextView    tvFooter;
     private ProgressBar pgbrFooter;
 

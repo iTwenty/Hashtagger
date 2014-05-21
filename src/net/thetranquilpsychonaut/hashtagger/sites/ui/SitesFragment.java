@@ -33,21 +33,10 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     private static final String FOOTER_MODE_KEY       = HashtaggerApp.NAMESPACE + "footer_mode";
     private static final String BAR_VISIBILITY_KEY    = HashtaggerApp.NAMESPACE + "bar_visibility";
 
-    public static enum SitesView
-    {
-        READY( 0 ), LOADING( 1 ), LOGIN( 2 ), ERROR( 3 );
-        private int index;
-
-        SitesView( int index )
-        {
-            this.index = index;
-        }
-
-        public int getIndex()
-        {
-            return index;
-        }
-    }
+    private static final int READY   = 0;
+    private static final int LOADING = 1;
+    private static final int LOGIN   = 2;
+    private static final int ERROR   = 3;
 
     private   ViewAnimator       vaSitesView;
     protected Ready              readyHolder;
@@ -56,9 +45,9 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     protected Error              errorHolder;
     protected SitesSearchHandler sitesSearchHandler;
     protected SitesUserHandler   sitesUserHandler;
-    protected SitesView          activeView;
-    protected List<?>            results;
-    protected SitesListAdapter   sitesListAdapter;
+    protected int activeView = READY;
+    protected List<?>          results;
+    protected SitesListAdapter sitesListAdapter;
 
     @Override
     public void onCreate( Bundle savedInstanceState )
@@ -88,19 +77,14 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         sitesSearchHandler = initSitesSearchHandler();
         View v = inflater.inflate( R.layout.fragment_sites, container, false );
         vaSitesView = ( ViewAnimator ) v.findViewById( R.id.va_sites_view );
-        vaSitesView.addView( initViewReady( inflater, savedInstanceState ), SitesView.READY.getIndex() );
-        vaSitesView.addView( initViewLoading( inflater, savedInstanceState ), SitesView.LOADING.getIndex() );
-        vaSitesView.addView( initViewLogin( inflater, savedInstanceState ), SitesView.LOGIN.getIndex() );
-        vaSitesView.addView( initViewError( inflater, savedInstanceState ), SitesView.ERROR.getIndex() );
-        activeView = SitesView.READY;
-        if ( null != savedInstanceState )
-        {
-            activeView = ( SitesView ) savedInstanceState.getSerializable( ACTIVE_VIEW_KEY );
-            showView( activeView );
-        }
+        vaSitesView.addView( initViewReady( inflater, savedInstanceState ), READY );
+        vaSitesView.addView( initViewLoading( inflater, savedInstanceState ), LOADING );
+        vaSitesView.addView( initViewLogin( inflater, savedInstanceState ), LOGIN );
+        vaSitesView.addView( initViewError( inflater, savedInstanceState ), ERROR );
+        showView( null == savedInstanceState ? READY : savedInstanceState.getInt( ACTIVE_VIEW_KEY ) );
         if ( !sitesUserHandler.isUserLoggedIn() )
         {
-            showView( SitesView.LOGIN );
+            showView( LOGIN );
         }
         return v;
     }
@@ -108,31 +92,48 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     private View initViewReady( LayoutInflater inflater, Bundle savedInstanceState )
     {
         View viewReady = inflater.inflate( R.layout.sites_view_ready, null );
-        int footerMode = SitesFooterView.NORMAL;
         readyHolder = new Ready();
+
+        // Non view members whose state needs to be saved
+        initResultsList( savedInstanceState );
+        initSitesListAdapter( savedInstanceState );
+
+        // View members whose state needs to be saved are restored in restoreViewStates()
+        initSwipeRefreshLayout( viewReady );
+        initSitesFooterView( viewReady );
+        initResultListEmptyView( viewReady );
+        initNewResultsBar( viewReady );
+        initResultsListView( viewReady );
+        if ( null != savedInstanceState )
+            restoreViewStates( savedInstanceState );
+        return viewReady;
+
+    }
+
+    private void initResultsList( Bundle savedInstanceState )
+    {
+        results = null == savedInstanceState ? initResultsList() : ( List<?> ) savedInstanceState.getSerializable( RESULTS_LIST_KEY );
+    }
+
+    private void initSitesListAdapter( Bundle savedInstanceState )
+    {
+        sitesListAdapter = initSitesListAdapter();
+        sitesListAdapter.initTypes( savedInstanceState );
+    }
+
+    private void initSwipeRefreshLayout( View viewReady )
+    {
         readyHolder.srlReady = ( SwipeRefreshLayout ) viewReady.findViewById( R.id.srl_ready );
         readyHolder.srlReady.setOnRefreshListener( this );
         readyHolder.srlReady.setColorScheme( android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light );
-        if ( null != savedInstanceState )
-        {
-            results = ( List<?> ) savedInstanceState.getSerializable( RESULTS_LIST_KEY );
-            readyHolder.srlReady.setRefreshing( savedInstanceState.getBoolean( SRL_IS_REFRESHING_KEY ) );
-            footerMode = savedInstanceState.getInt( FOOTER_MODE_KEY );
-        }
-        else
-        {
-            results = initResultsList();
-        }
-        sitesListAdapter = initSitesListAdapter();
-        sitesListAdapter.initTypes( savedInstanceState );
+    }
 
-        readyHolder.lvResultsList = ( ListView ) viewReady.findViewById( R.id.lv_results_list );
-
+    private void initSitesFooterView( View viewReady )
+    {
         readyHolder.sitesFooterView = new SitesFooterView( viewReady.getContext() );
-        readyHolder.sitesFooterView.setMode( footerMode );
         readyHolder.sitesFooterView.setOnClickListener( new View.OnClickListener()
         {
             @Override
@@ -141,20 +142,44 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
                 doLoadOlderResults();
             }
         } );
-        readyHolder.lvResultsList.addFooterView( readyHolder.sitesFooterView, null, false );
+    }
 
-        readyHolder.lvResultsList.setAdapter( sitesListAdapter );
-
+    private void initResultListEmptyView( View viewReady )
+    {
         readyHolder.lvResultsListEmpty = ( TextView ) viewReady.findViewById( R.id.tv_results_list_empty );
-        readyHolder.lvResultsList.setEmptyView( readyHolder.lvResultsListEmpty );
+        readyHolder.lvResultsListEmpty.setOnClickListener( new View.OnClickListener()
+        {
+            @Override
+            public void onClick( View v )
+            {
+                searhHashtagIfAlreadyEntered();
+            }
+        } );
+    }
 
+    private void initNewResultsBar( View viewReady )
+    {
         readyHolder.newResultsBar = ( NewResultsBar ) viewReady.findViewById( R.id.new_results_bar );
-        readyHolder.newResultsBar.setVisibility( null == savedInstanceState ? View.GONE : savedInstanceState.getInt( BAR_VISIBILITY_KEY ) );
+        readyHolder.newResultsBar.setOnScrollToNewClickListener( new NewResultsBar.OnScrollToNewClickListener()
+        {
+            @Override
+            public void onScrollToNewClicked( NewResultsBar bar, int resultCount )
+            {
+                if ( null != readyHolder.lvResultsList )
+                    readyHolder.lvResultsList.smoothScrollToPosition( 0 );
+                bar.setOnScrollToNewClickListener( null );
+            }
+        } );
+    }
 
+    private void initResultsListView( View viewReady )
+    {
+        readyHolder.lvResultsList = ( ListView ) viewReady.findViewById( R.id.lv_results_list );
+        readyHolder.lvResultsList.addFooterView( readyHolder.sitesFooterView, null, false );
+        readyHolder.lvResultsList.setAdapter( sitesListAdapter );
+        readyHolder.lvResultsList.setEmptyView( readyHolder.lvResultsListEmpty );
         readyHolder.lvResultsList.setOnItemClickListener( this );
         readyHolder.lvResultsList.setOnScrollListener( readyHolder.newResultsBar );
-        return viewReady;
-
     }
 
     private View initViewLoading( LayoutInflater inflater, Bundle savedInstanceState )
@@ -163,6 +188,14 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         loadingHolder = new Loading();
         loadingHolder.pgbrLoadingResults = ( ProgressBar ) viewLoading.findViewById( R.id.pgbr_loading_results );
         return viewLoading;
+    }
+
+    private void restoreViewStates( Bundle savedInstanceState )
+    {
+        readyHolder.srlReady.setRefreshing( savedInstanceState.getBoolean( SRL_IS_REFRESHING_KEY ) );
+        readyHolder.sitesFooterView.setMode( savedInstanceState.getInt( FOOTER_MODE_KEY ) );
+        Helper.debug( String.valueOf( savedInstanceState.getInt( BAR_VISIBILITY_KEY ) ) );
+        readyHolder.newResultsBar.setVisibility( savedInstanceState.getInt( BAR_VISIBILITY_KEY ) );
     }
 
     private View initViewLogin( LayoutInflater inflater, Bundle savedInstanceState )
@@ -195,6 +228,24 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         super.onActivityCreated( savedInstanceState );
         showClickHashtagIfAlreadyEntered();
+    }
+
+    private void showClickHashtagIfAlreadyEntered()
+    {
+        final String hashtag = ( ( SitesActivity ) getActivity() ).getHashtag();
+        if ( TextUtils.isEmpty( hashtag ) )
+            return;
+        readyHolder.lvResultsListEmpty.setText( "Click to search for " + hashtag );
+    }
+
+    private void searhHashtagIfAlreadyEntered()
+    {
+        if ( null == getActivity() )
+            return;
+        String hashtag = ( ( SitesActivity ) getActivity() ).getHashtag();
+        if ( TextUtils.isEmpty( hashtag ) )
+            return;
+        searchHashtag( hashtag );
     }
 
     protected abstract String getLoginButtonText();
@@ -267,18 +318,19 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     protected abstract int getNotLoggedInToastTextId();
 
-    public void showView( SitesView sitesView )
+    public void showView( int activeView )
     {
-        vaSitesView.setDisplayedChild( sitesView.index );
-        activeView = sitesView;
+        vaSitesView.setDisplayedChild( activeView );
+        this.activeView = activeView;
     }
 
     @Override
     public void onSaveInstanceState( Bundle outState )
     {
         super.onSaveInstanceState( outState );
-        outState.putSerializable( ACTIVE_VIEW_KEY, activeView );
         outState.putSerializable( RESULTS_LIST_KEY, ( java.io.Serializable ) results );
+        outState.putInt( ACTIVE_VIEW_KEY, activeView );
+        outState.putBoolean( SRL_IS_REFRESHING_KEY, readyHolder.srlReady.isRefreshing() );
         outState.putInt( FOOTER_MODE_KEY, readyHolder.sitesFooterView.getMode() );
         outState.putInt( BAR_VISIBILITY_KEY, readyHolder.newResultsBar.getVisibility() );
         sitesListAdapter.saveTypes( outState );
@@ -302,40 +354,18 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     public void onUserLoggedIn()
     {
-        showView( SitesView.READY );
+        showView( READY );
         Toast.makeText( getActivity(), getResources().getString( getLoggedInToastTextId() ) + sitesUserHandler.getUserName(), Toast.LENGTH_LONG ).show();
         getActivity().invalidateOptionsMenu();
         showClickHashtagIfAlreadyEntered();
     }
 
-    private void showClickHashtagIfAlreadyEntered()
-    {
-        final String hashtag = ( ( SitesActivity ) getActivity() ).getHashtag();
-        if ( !TextUtils.isEmpty( hashtag ) )
-        {
-            readyHolder.lvResultsListEmpty.setText( "Click to search for " + hashtag );
-            readyHolder.lvResultsListEmpty.setOnClickListener( new View.OnClickListener()
-            {
-                @Override
-                public void onClick( View v )
-                {
-                    SitesFragment.this.searchHashtag( hashtag );
-                }
-            } );
-        }
-        else
-        {
-            readyHolder.lvResultsListEmpty.setText( getString( R.string.str_enter_hashtag ) );
-            readyHolder.lvResultsListEmpty.setOnClickListener( null );
-        }
-
-    }
 
     protected abstract int getLoggedInToastTextId();
 
     public void onLoginFailure()
     {
-        showView( SitesView.LOGIN );
+        showView( LOGIN );
         Toast.makeText( getActivity(), getResources().getString( getLoginFailureToastTextId() ), Toast.LENGTH_LONG ).show();
     }
 
@@ -410,7 +440,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         switch ( searchType )
         {
             case INITIAL:
-                showView( SitesView.LOADING );
+                showView( LOADING );
                 break;
             case OLDER:
                 readyHolder.sitesFooterView.setMode( SitesFooterView.LOADING );
@@ -440,7 +470,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     public void afterCurrentSearch( List<?> searchResults )
     {
-        showView( SitesView.READY );
+        showView( READY );
         sitesListAdapter.clear();
         sitesListAdapter.clearTypes();
         if ( !searchResults.isEmpty() )
@@ -489,21 +519,6 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             sitesListAdapter.notifyDataSetChanged();
             readyHolder.newResultsBar.setVisibility( View.VISIBLE );
             readyHolder.newResultsBar.setResultsCount( searchResults.size() );
-            readyHolder.newResultsBar.setOnScrollToNewClickListener( new NewResultsBar.OnScrollToNewClickListener()
-            {
-                @Override
-                public void onScrollToNewClicked( NewResultsBar bar, int resultsCount )
-                {
-                    if ( readyHolder.lvResultsList.getFirstVisiblePosition() <= resultsCount )
-                    {
-                        readyHolder.lvResultsList.smoothScrollToPosition( 0 );
-                    }
-                    else
-                    {
-                        readyHolder.lvResultsList.smoothScrollToPosition( resultsCount );
-                    }
-                }
-            } );
         }
         else
         {
@@ -519,7 +534,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         switch ( searchType )
         {
             case INITIAL:
-                showView( SitesView.ERROR );
+                showView( ERROR );
                 break;
             case OLDER:
                 readyHolder.sitesFooterView.setMode( SitesFooterView.ERROR );
@@ -538,7 +553,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         sitesListAdapter.clear();
         sitesListAdapter.notifyDataSetChanged();
-        showView( SitesView.LOGIN );
+        showView( LOGIN );
         getActivity().invalidateOptionsMenu();
     }
 

@@ -92,16 +92,13 @@ public class NewResultsBar extends LinearLayout implements AbsListView.OnScrollL
     public void onScroll( AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount )
     {
         if ( getVisibility() != VISIBLE )
-        {
             return;
-        }
         if ( firstVisibleItem <= this.count )
         {
             setResultsCount( firstVisibleItem );
         }
         if ( firstVisibleItem == 0 )
         {
-            view.setOnScrollListener( null );
             this.dismissBar();
         }
     }
@@ -110,6 +107,7 @@ public class NewResultsBar extends LinearLayout implements AbsListView.OnScrollL
     {
         this.setVisibility( GONE );
         this.setResultsCount( 0 );
+        this.setOnScrollToNewClickListener( null );
     }
 
     @Override
