@@ -27,7 +27,6 @@
         android:id="@+id/new_results_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#99000000"
         android:visibility="gone"/>
 
     <TextView

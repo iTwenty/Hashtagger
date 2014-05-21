@@ -4,11 +4,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:drawable="@drawable/shape_undobar_pressed"
+        android:drawable="@drawable/shape_barbutton_pressed"
         android:state_pressed="true"/>
 
     <item
-        android:drawable="@drawable/shape_undobar_focused"
+        android:drawable="@drawable/shape_barbutton_focused"
         android:state_focused="true"/>
 
     <item

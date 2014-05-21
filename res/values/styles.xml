@@ -3,6 +3,7 @@
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
         <item name="sitesListRowStyle">@style/sitesListRowStyle</item>
         <item name="sitesFooterStyle">@style/sitesFooterStyle</item>
+        <item name="newResultsBarStyle">@style/newResultsBarStyle</item>
     </style>
 
     <style name="TextView_Default">
@@ -37,6 +38,10 @@
     <style name="sitesFooterStyle" parent="AppTheme">
         <item name="android:background">@drawable/selector_card</item>
         <item name="android:padding">@dimen/card_padding</item>
+    </style>
+
+    <style name="newResultsBarStyle" parent="AppTheme">
+        <item name="android:background">#cc000000</item>
     </style>
 
     <style name="sitesButtonStyle" parent="android:Widget.Holo.Light.Button.Borderless.Small">
@@ -112,7 +117,7 @@
     </style>
 
     <style name="ButtonToast_Button">
-        <item name="android:background">@drawable/selector_undobar</item>
+        <item name="android:background">@drawable/selector_barbutton</item>
         <item name="android:paddingLeft">16dp</item>
         <item name="android:paddingRight">12dp</item>
         <item name="android:drawablePadding">8dp</item>

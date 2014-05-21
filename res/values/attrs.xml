@@ -7,4 +7,8 @@
     <declare-styleable name="SitesFooterView">
         <attr name="sitesFooterStyle" format="reference"/>
     </declare-styleable>
+
+    <declare-styleable name="NewResultsBar">
+        <attr name="newResultsBarStyle" format="reference"/>
+    </declare-styleable>
 </resources>

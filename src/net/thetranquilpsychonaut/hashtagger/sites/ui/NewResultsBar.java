@@ -30,12 +30,12 @@ public class NewResultsBar extends LinearLayout implements AbsListView.OnScrollL
 
     public NewResultsBar( Context context )
     {
-        this( context, null, 0 );
+        this( context, null, R.attr.newResultsBarStyle );
     }
 
     public NewResultsBar( Context context, AttributeSet attrs )
     {
-        this( context, attrs, 0 );
+        this( context, attrs, R.attr.newResultsBarStyle );
     }
 
     public NewResultsBar( Context context, AttributeSet attrs, int defStyle )
