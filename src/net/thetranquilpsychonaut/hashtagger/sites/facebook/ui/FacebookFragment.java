@@ -1,5 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
+import android.net.Uri;
 import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
@@ -10,6 +11,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.facebook.components.FacebookSe
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.components.FacebookUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,5 +103,11 @@ public class FacebookFragment extends SitesFragment
     protected void addToStart( List<?> searchResults )
     {
         ( ( List<Post> ) results ).addAll( 0, ( List<Post> ) searchResults );
+    }
+
+    @Override
+    protected Uri getResultUrl( Object result )
+    {
+        return Helper.getFacebookPostUrl( ( Post ) result );
     }
 }

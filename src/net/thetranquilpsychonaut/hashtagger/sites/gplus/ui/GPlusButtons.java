@@ -2,13 +2,13 @@ package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
 import com.google.api.services.plus.model.Activity;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.GPlusData;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton;
 
 /**
@@ -84,10 +84,11 @@ public class GPlusButtons extends SitesButtons implements View.OnClickListener
         }
     }
 
-    private void doOpenInBrowser()
+    @Override
+    public void doOpenInBrowser()
     {
         Intent i = new Intent( Intent.ACTION_VIEW );
-        i.setData( Uri.parse( activity.getUrl() ) );
+        i.setData( Helper.getGPlusActivityUrl( activity ) );
         getContext().startActivity( i );
     }
 

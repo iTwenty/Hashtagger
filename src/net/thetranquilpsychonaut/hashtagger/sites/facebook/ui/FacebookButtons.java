@@ -2,12 +2,12 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
 import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton;
 
 /**
@@ -106,10 +106,11 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
         doOpenInBrowser();
     }
 
-    private void doOpenInBrowser()
+    @Override
+    public void doOpenInBrowser()
     {
         Intent i = new Intent( Intent.ACTION_VIEW );
-        i.setData( Uri.parse( "http://facebook.com/" + post.getId() ) );
+        i.setData( Helper.getFacebookPostUrl( post ) );
         getContext().startActivity( i );
     }
 }

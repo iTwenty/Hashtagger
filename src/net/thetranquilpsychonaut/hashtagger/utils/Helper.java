@@ -1,6 +1,8 @@
 package net.thetranquilpsychonaut.hashtagger.utils;
 
 import android.content.Context;
+import android.net.Uri;
+import android.text.Spannable;
 import android.text.TextPaint;
 import android.text.format.DateUtils;
 import android.text.style.URLSpan;
@@ -8,8 +10,11 @@ import android.text.util.Linkify;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.Toast;
+import com.google.api.services.plus.model.Activity;
 import com.twitter.Autolink;
+import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
+import twitter4j.Status;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -21,9 +26,8 @@ import java.util.regex.Matcher;
 public class Helper
 {
 
-    private static final String   FACEBOOK_PROFILE_PICTURE_URL = "http://graph.facebook.com/%s/picture?type=square";
-    private static final boolean  DEBUG                        = true;
-    private static final Autolink autolink                     = new Autolink();
+    private static final String  FACEBOOK_PROFILE_PICTURE_URL = "http://graph.facebook.com/%s/picture?type=square";
+    private static final boolean DEBUG                        = true;
 //    private static final Pattern hashtagPattern               = Pattern.compile( "#([A-Za-z0-9_-]+)" );
 //
 //    private static final String twitterHashtagScheme = "http://www.twitter.com/search/";
@@ -65,12 +69,12 @@ public class Helper
         return sdf.format( date );
     }
 
-    public static String linkifyTweet( String tweetText )
+    public static String getLinkedTweetText( String tweetText )
     {
-        return autolink.autoLink( tweetText );
+        return new Autolink().autoLink( tweetText );
     }
 
-//    public static void linkifyTwitter( TextView tv )
+    //    public static void linkifyTwitter( TextView tv )
 //    {
 //        Linkify.addLinks( tv, twitterMentionPattern, twitterMentionScheme, null, filter );
 //        Linkify.addLinks( tv, hashtagPattern, twitterHashtagScheme, null, filter );
@@ -79,20 +83,19 @@ public class Helper
 //
 //    }
 //
-//    private static void stripUnderlines( TextView textView )
-//    {
-//        Spannable s = ( Spannable ) textView.getText();
-//        URLSpan[] spans = s.getSpans( 0, s.length(), URLSpan.class );
-//        for ( URLSpan span : spans )
-//        {
-//            int start = s.getSpanStart( span );
-//            int end = s.getSpanEnd( span );
-//            s.removeSpan( span );
-//            span = new URLSpanNoUnderline( span.getURL() );
-//            s.setSpan( span, start, end, 0 );
-//        }
-//        textView.setText( s );
-//    }
+    public static Spannable stripUnderlines( Spannable spannable )
+    {
+        URLSpan[] spans = spannable.getSpans( 0, spannable.length(), URLSpan.class );
+        for ( URLSpan span : spans )
+        {
+            int start = spannable.getSpanStart( span );
+            int end = spannable.getSpanEnd( span );
+            spannable.removeSpan( span );
+            span = new URLSpanNoUnderline( span.getURL() );
+            spannable.setSpan( span, start, end, 0 );
+        }
+        return spannable;
+    }
 
     public static String getFacebookPictureUrl( String userId )
     {
@@ -153,5 +156,20 @@ public class Helper
             super.updateDrawState( ds );
             ds.setUnderlineText( false );
         }
+    }
+
+    public static Uri getTwitterStatusUrl( Status status )
+    {
+        return Uri.parse( "http://twitter.com/" + status.getUser().getId() + "/status/" + status.getId() );
+    }
+
+    public static Uri getFacebookPostUrl( Post post )
+    {
+        return Uri.parse( "http://facebook.com/" + post.getId() );
+    }
+
+    public static Uri getGPlusActivityUrl( Activity activity )
+    {
+        return Uri.parse( activity.getUrl() );
     }
 }

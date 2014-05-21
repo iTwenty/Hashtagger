@@ -164,4 +164,13 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
         TwitterReplyDialog dialog = TwitterReplyDialog.newInstance( status.getUser().getScreenName(), status.getId() );
         dialog.show( ( ( FragmentActivity ) getContext() ).getFragmentManager(), TwitterReplyDialog.TAG );
     }
+
+
+    @Override
+    public void doOpenInBrowser()
+    {
+        Intent i = new Intent( Intent.ACTION_VIEW );
+        i.setData( Helper.getTwitterStatusUrl( status ) );
+        getContext().startActivity( i );
+    }
 }

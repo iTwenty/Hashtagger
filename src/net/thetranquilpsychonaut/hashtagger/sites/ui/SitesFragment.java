@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -25,7 +26,7 @@ import java.util.List;
 /**
  * Created by itwenty on 2/26/14.
  */
-public abstract class SitesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemClickListener, SitesSearchHandler.SitesSearchListener, SitesUserHandler.SitesUserListener
+public abstract class SitesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemClickListener, SitesSearchHandler.SitesSearchListener, SitesUserHandler.SitesUserListener, AdapterView.OnItemLongClickListener
 {
     private static final String ACTIVE_VIEW_KEY       = HashtaggerApp.NAMESPACE + "active_view_key";
     private static final String RESULTS_LIST_KEY      = HashtaggerApp.NAMESPACE + "results_list_key";
@@ -105,7 +106,9 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         initNewResultsBar( viewReady );
         initResultsListView( viewReady );
         if ( null != savedInstanceState )
+        {
             restoreViewStates( savedInstanceState );
+        }
         return viewReady;
 
     }
@@ -166,7 +169,9 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             public void onScrollToNewClicked( NewResultsBar bar, int resultCount )
             {
                 if ( null != readyHolder.lvResultsList )
+                {
                     readyHolder.lvResultsList.smoothScrollToPosition( 0 );
+                }
                 bar.setOnScrollToNewClickListener( null );
             }
         } );
@@ -179,6 +184,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         readyHolder.lvResultsList.setAdapter( sitesListAdapter );
         readyHolder.lvResultsList.setEmptyView( readyHolder.lvResultsListEmpty );
         readyHolder.lvResultsList.setOnItemClickListener( this );
+        readyHolder.lvResultsList.setOnItemLongClickListener( this );
         readyHolder.lvResultsList.setOnScrollListener( readyHolder.newResultsBar );
     }
 
@@ -234,17 +240,23 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         final String hashtag = ( ( SitesActivity ) getActivity() ).getHashtag();
         if ( TextUtils.isEmpty( hashtag ) )
+        {
             return;
+        }
         readyHolder.lvResultsListEmpty.setText( "Click to search for " + hashtag );
     }
 
     private void searhHashtagIfAlreadyEntered()
     {
         if ( null == getActivity() )
+        {
             return;
+        }
         String hashtag = ( ( SitesActivity ) getActivity() ).getHashtag();
         if ( TextUtils.isEmpty( hashtag ) )
+        {
             return;
+        }
         searchHashtag( hashtag );
     }
 
@@ -620,6 +632,17 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             readyHolder.lvResultsList.smoothScrollBy( hiddenHeight, 2 * hiddenHeight );
         }
     }
+
+    @Override
+    public boolean onItemLongClick( AdapterView<?> parent, View view, int position, long id )
+    {
+        Intent i = new Intent( Intent.ACTION_VIEW );
+        i.setData( getResultUrl( parent.getItemAtPosition( position ) ) );
+        getActivity().startActivity( i );
+        return true;
+    }
+
+    protected abstract Uri getResultUrl( Object result );
 
     protected static class Ready
     {

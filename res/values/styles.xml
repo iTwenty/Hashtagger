@@ -31,13 +31,11 @@
     </style>
 
     <style name="sitesListRowStyle" parent="AppTheme">
-        <item name="android:background">@drawable/card</item>
+        <item name="android:background">@drawable/selector_card</item>
         <item name="android:padding">@dimen/card_padding</item>
     </style>
 
-    <style name="sitesFooterStyle" parent="AppTheme">
-        <item name="android:background">@drawable/selector_card</item>
-        <item name="android:padding">@dimen/card_padding</item>
+    <style name="sitesFooterStyle" parent="sitesListRowStyle">
     </style>
 
     <style name="newResultsBarStyle" parent="AppTheme">

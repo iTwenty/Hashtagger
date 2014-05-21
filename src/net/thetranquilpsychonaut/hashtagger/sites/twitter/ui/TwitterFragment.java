@@ -1,5 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
+import android.net.Uri;
 import android.widget.Toast;
 import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
@@ -107,6 +108,12 @@ public class TwitterFragment extends SitesFragment
     protected void addToStart( List<?> searchResults )
     {
         ( ( List<Status> ) results ).addAll( 0, ( List<Status> ) searchResults );
+    }
+
+    @Override
+    protected Uri getResultUrl( Object result )
+    {
+        return Helper.getTwitterStatusUrl( ( Status ) result );
     }
 
     @Override
