@@ -24,6 +24,12 @@
 
     </PreferenceCategory>
 
+    <ListPreference
+        android:title="Auto update interval"
+        android:key="auto_update_interval"
+        android:entries="@array/listAutoUpdate"
+        android:entryValues="@array/listAutoUpdateValues"/>
+
     <Preference
         android:title="Clear recently searched hashtags"
         android:summary="This will not clear your saved hashtags"

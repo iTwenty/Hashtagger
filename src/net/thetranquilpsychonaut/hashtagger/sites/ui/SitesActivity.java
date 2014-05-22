@@ -57,9 +57,9 @@ public class SitesActivity extends SavedHashtagsActivity
         vpSitesPager.setAdapter( vpSitesPagerAdapter );
         vpSitesPager.setOffscreenPageLimit( 2 );
 
-        showActiveSites();
-
         ipiSitesPager.setViewPager( vpSitesPager );
+
+        showActiveSites();
 
         if ( null != getIntent() && getIntent().getAction().equals( Intent.ACTION_SEARCH ) )
         {
@@ -71,10 +71,10 @@ public class SitesActivity extends SavedHashtagsActivity
     protected void onStart()
     {
         super.onStart();
-        if ( SharedPreferencesHelper.getActiveSitesChanged() )
+        if ( SharedPreferencesHelper.activeSitesChanged )
         {
             showActiveSites();
-            SharedPreferencesHelper.setActiveSitesChanged( false );
+            SharedPreferencesHelper.activeSitesChanged = false;
         }
     }
 
@@ -140,9 +140,9 @@ public class SitesActivity extends SavedHashtagsActivity
     {
         int[] positions = new int[HashtaggerApp.TOTAL_SITES_COUNT];
         int activePosition = 0;
-        positions[HashtaggerApp.TWITTER_VALUE] = SharedPreferencesHelper.isTwitterActive() ? activePosition++ : -1;
-        positions[HashtaggerApp.FACEBOOK_VALUE] = SharedPreferencesHelper.isFacebookActive() ? activePosition++ : -1;
-        positions[HashtaggerApp.GPLUS_VALUE] = SharedPreferencesHelper.isGPlusActive() ? activePosition++ : -1;
+        positions[HashtaggerApp.TWITTER_VALUE] = SharedPreferencesHelper.twitterActive ? activePosition++ : -1;
+        positions[HashtaggerApp.FACEBOOK_VALUE] = SharedPreferencesHelper.facebookActive ? activePosition++ : -1;
+        positions[HashtaggerApp.GPLUS_VALUE] = SharedPreferencesHelper.gPlusActive ? activePosition++ : -1;
         return positions;
     }
 
@@ -258,6 +258,7 @@ public class SitesActivity extends SavedHashtagsActivity
             {
                 if ( f instanceof SitesFragment )
                 {
+                    Helper.debug( ((SitesFragment)f).getLoginButtonText() );
                     ( ( SitesFragment ) f ).searchHashtag( hashtag );
                 }
             }

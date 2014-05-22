@@ -20,14 +20,23 @@ public class SharedPreferencesHelper
     public static final String GPLUS_REFRESH_TOKEN_KEY         = "gplus_refresh_token";
     public static final String GPLUS_USER_NAME_KEY             = "gplus_user_name";
 
+    public static SharedPreferences shared_prefs = HashtaggerApp.app.getSharedPreferences( LOGIN_SHARED_PREFS, Context.MODE_PRIVATE );
+
     public static final String TWITTER_SITE_KEY         = "site_twitter";
     public static final String FACEBOOK_SITE_KEY        = "site_facebook";
     public static final String GPLUS_SITE_KEY           = "site_gplus";
+    public static final String AUTO_UPDATE_INTERVAL_KEY = "auto_update_interval";
     public static final String CLEAR_SEARCH_KEY         = "clear_search";
-    public static final String ACTIVE_SITES_CHANGED_KEY = "active_sites_changed";
 
-    public static SharedPreferences shared_prefs  = HashtaggerApp.app.getSharedPreferences( LOGIN_SHARED_PREFS, Context.MODE_PRIVATE );
     public static SharedPreferences default_prefs = PreferenceManager.getDefaultSharedPreferences( HashtaggerApp.app );
+
+    // These values are updated whenever Preferences change in the Settings screen.
+    // Helps avoid disk access by keeping them in memory.
+    public static boolean twitterActive      = SharedPreferencesHelper.isTwitterActive();
+    public static boolean facebookActive     = SharedPreferencesHelper.isFacebookActive();
+    public static boolean gPlusActive        = SharedPreferencesHelper.isGPlusActive();
+    public static boolean activeSitesChanged = false;
+    public static int     autoUpdateInterval = SharedPreferencesHelper.getAutoUpdateInterval();
 
 
     /**
@@ -173,13 +182,8 @@ public class SharedPreferencesHelper
         return default_prefs.getBoolean( GPLUS_SITE_KEY, true );
     }
 
-    public static void setActiveSitesChanged( boolean activeSitesChanged )
+    public static int getAutoUpdateInterval()
     {
-        default_prefs.edit().putBoolean( ACTIVE_SITES_CHANGED_KEY, activeSitesChanged ).commit();
-    }
-
-    public static boolean getActiveSitesChanged()
-    {
-        return default_prefs.getBoolean( ACTIVE_SITES_CHANGED_KEY, false );
+        return Integer.parseInt( default_prefs.getString( AUTO_UPDATE_INTERVAL_KEY, "30000" ) );
     }
 }

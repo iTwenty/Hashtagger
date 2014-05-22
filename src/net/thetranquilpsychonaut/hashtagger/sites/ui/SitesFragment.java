@@ -22,6 +22,7 @@ import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.SharedPreferencesHelper;
 
 import java.util.List;
 
@@ -35,7 +36,6 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     private static final String SRL_IS_REFRESHING_KEY = HashtaggerApp.NAMESPACE + "srl_is_refreshing_key";
     private static final String FOOTER_MODE_KEY       = HashtaggerApp.NAMESPACE + "footer_mode";
     private static final String BAR_VISIBILITY_KEY    = HashtaggerApp.NAMESPACE + "bar_visibility";
-    private static final int UPDATE_DELAY = 1000 * 20;
 
     private static final int READY   = 0;
     private static final int LOADING = 1;
@@ -79,8 +79,19 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         super.onResume();
         sitesSearchHandler.registerReceiver();
-        if ( !TextUtils.isEmpty ( ( ( SitesActivity ) getActivity() ).getHashtag() ) && !results.isEmpty() )
-            timedSearchHandler.postDelayed( timedSearchRunner, UPDATE_DELAY );
+        Helper.debug( "Auto update interval : " + SharedPreferencesHelper.autoUpdateInterval );
+        if ( !TextUtils.isEmpty( ( ( SitesActivity ) getActivity() ).getHashtag() ) && !results.isEmpty() )
+            postNextTimedSearch();
+    }
+
+    private void postNextTimedSearch()
+    {
+        if ( SharedPreferencesHelper.autoUpdateInterval != -1 )
+        {
+            Helper.debug( "Search posted for interval : " + SharedPreferencesHelper.autoUpdateInterval );
+            timedSearchHandler.removeCallbacks( timedSearchRunner );
+            timedSearchHandler.postDelayed( timedSearchRunner, SharedPreferencesHelper.autoUpdateInterval );
+        }
     }
 
     @Override
@@ -524,8 +535,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             readyHolder.lvResultsListEmpty.setText( getResources().getString( R.string.str_toast_no_results ) );
             readyHolder.lvResultsListEmpty.setOnClickListener( null );
         }
-        timedSearchHandler.removeCallbacks( timedSearchRunner );
-        timedSearchHandler.postDelayed( timedSearchRunner, UPDATE_DELAY );
+        postNextTimedSearch();
     }
 
     public void afterOlderSearch( List<?> searchResults )
@@ -571,8 +581,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     public void afterTimedSearch( List<?> searchResults )
     {
         afterNewerSearch( searchResults );
-        timedSearchHandler.removeCallbacks( timedSearchRunner );
-        timedSearchHandler.postDelayed( timedSearchRunner, UPDATE_DELAY );
+        postNextTimedSearch();
     }
 
     @Override
@@ -591,6 +600,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
                 Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_newer_results_error ), Toast.LENGTH_LONG ).show();
                 break;
             case TIMED:
+                postNextTimedSearch();
                 break;
         }
     }

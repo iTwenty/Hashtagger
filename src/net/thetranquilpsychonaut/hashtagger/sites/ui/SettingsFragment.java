@@ -2,6 +2,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.provider.SearchRecentSuggestions;
@@ -17,6 +18,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     CheckBoxPreference cbpTwitter;
     CheckBoxPreference cbpFacebook;
     CheckBoxPreference cbpGPlus;
+    ListPreference     lpAutoUpdateInterval;
     Preference         prefClearSearch;
 
     @Override
@@ -27,6 +29,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         cbpTwitter = ( CheckBoxPreference ) findPreference( SharedPreferencesHelper.TWITTER_SITE_KEY );
         cbpFacebook = ( CheckBoxPreference ) findPreference( SharedPreferencesHelper.FACEBOOK_SITE_KEY );
         cbpGPlus = ( CheckBoxPreference ) findPreference( SharedPreferencesHelper.GPLUS_SITE_KEY );
+        lpAutoUpdateInterval = ( ListPreference ) findPreference( SharedPreferencesHelper.AUTO_UPDATE_INTERVAL_KEY );
         prefClearSearch = findPreference( SharedPreferencesHelper.CLEAR_SEARCH_KEY );
         cbpTwitter.setSummary( SharedPreferencesHelper.areTwitterDetailsPresent() ?
                 "Logged in as : " + SharedPreferencesHelper.getTwitterUserName() :
@@ -40,6 +43,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         cbpTwitter.setOnPreferenceChangeListener( this );
         cbpFacebook.setOnPreferenceChangeListener( this );
         cbpGPlus.setOnPreferenceChangeListener( this );
+        lpAutoUpdateInterval.setOnPreferenceChangeListener( this );
         prefClearSearch.setOnPreferenceClickListener( this );
     }
 
@@ -60,10 +64,23 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     @Override
     public boolean onPreferenceChange( Preference preference, Object newValue )
     {
-        if ( !SharedPreferencesHelper.getActiveSitesChanged() )
+        if ( preference.equals( cbpTwitter ) )
         {
-            SharedPreferencesHelper.setActiveSitesChanged( true );
+            SharedPreferencesHelper.twitterActive = ( Boolean ) newValue;
+            SharedPreferencesHelper.activeSitesChanged = true;
         }
+        if ( preference.equals( cbpFacebook ) )
+        {
+            SharedPreferencesHelper.facebookActive = ( Boolean ) newValue;
+            SharedPreferencesHelper.activeSitesChanged = true;
+        }
+        if ( preference.equals( cbpGPlus ) )
+        {
+            SharedPreferencesHelper.gPlusActive = ( Boolean ) newValue;
+            SharedPreferencesHelper.activeSitesChanged = true;
+        }
+        if ( preference.equals( lpAutoUpdateInterval ) )
+            SharedPreferencesHelper.autoUpdateInterval = Integer.parseInt( ( String ) newValue );
         return true;
     }
 }
