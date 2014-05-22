@@ -80,7 +80,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             SharedPreferencesHelper.activeSitesChanged = true;
         }
         if ( preference.equals( lpAutoUpdateInterval ) )
+        {
             SharedPreferencesHelper.autoUpdateInterval = Integer.parseInt( ( String ) newValue );
+        }
         return true;
     }
 }

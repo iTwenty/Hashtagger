@@ -109,7 +109,6 @@ public class NewResultsBar extends LinearLayout implements AbsListView.OnScrollL
     {
         this.setVisibility( GONE );
         this.setResultsCount( 0 );
-        this.setOnScrollToNewClickListener( null );
     }
 
     @Override

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <net.thetranquilpsychonaut.hashtagger.widgets.MySwipeRefreshLayout
         android:id="@+id/srl_ready"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -21,7 +21,7 @@
             android:listSelector="@android:color/transparent"
             android:cacheColorHint="@android:color/transparent"/>
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </net.thetranquilpsychonaut.hashtagger.widgets.MySwipeRefreshLayout>
 
     <net.thetranquilpsychonaut.hashtagger.sites.ui.NewResultsBar
         android:id="@+id/new_results_bar"

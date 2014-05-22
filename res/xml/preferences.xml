@@ -24,11 +24,18 @@
 
     </PreferenceCategory>
 
-    <ListPreference
-        android:title="Auto update interval"
-        android:key="auto_update_interval"
-        android:entries="@array/listAutoUpdate"
-        android:entryValues="@array/listAutoUpdateValues"/>
+    <PreferenceCategory
+        android:title="Auto Update"
+        android:key="auto_update">
+
+        <ListPreference
+            android:title="Auto update interval"
+            android:key="auto_update_interval"
+            android:defaultValue="20000"
+            android:entries="@array/listAutoUpdate"
+            android:entryValues="@array/listAutoUpdateValues"/>
+
+    </PreferenceCategory>
 
     <Preference
         android:title="Clear recently searched hashtags"

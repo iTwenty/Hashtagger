@@ -23,6 +23,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.utils.SharedPreferencesHelper;
+import net.thetranquilpsychonaut.hashtagger.widgets.MySwipeRefreshLayout;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 {
     private static final String ACTIVE_VIEW_KEY       = HashtaggerApp.NAMESPACE + "active_view_key";
     private static final String RESULTS_LIST_KEY      = HashtaggerApp.NAMESPACE + "results_list_key";
-    private static final String SRL_IS_REFRESHING_KEY = HashtaggerApp.NAMESPACE + "srl_is_refreshing_key";
+    //private static final String SRL_IS_REFRESHING_KEY = HashtaggerApp.NAMESPACE + "srl_is_refreshing_key";
     private static final String FOOTER_MODE_KEY       = HashtaggerApp.NAMESPACE + "footer_mode";
     private static final String BAR_VISIBILITY_KEY    = HashtaggerApp.NAMESPACE + "bar_visibility";
 
@@ -157,7 +158,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     private void initSwipeRefreshLayout( View viewReady )
     {
-        readyHolder.srlReady = ( SwipeRefreshLayout ) viewReady.findViewById( R.id.srl_ready );
+        readyHolder.srlReady = ( MySwipeRefreshLayout ) viewReady.findViewById( R.id.srl_ready );
         readyHolder.srlReady.setOnRefreshListener( this );
         readyHolder.srlReady.setColorScheme( android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
@@ -203,7 +204,6 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
                 {
                     readyHolder.lvResultsList.smoothScrollToPosition( 0 );
                 }
-                bar.setOnScrollToNewClickListener( null );
             }
         } );
     }
@@ -229,7 +229,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     private void restoreViewStates( Bundle savedInstanceState )
     {
-        readyHolder.srlReady.setRefreshing( savedInstanceState.getBoolean( SRL_IS_REFRESHING_KEY ) );
+        //readyHolder.srlReady.setRefreshing( savedInstanceState.getBoolean( SRL_IS_REFRESHING_KEY ) );
         readyHolder.sitesFooterView.setMode( savedInstanceState.getInt( FOOTER_MODE_KEY ) );
         Helper.debug( String.valueOf( savedInstanceState.getInt( BAR_VISIBILITY_KEY ) ) );
         readyHolder.newResultsBar.setVisibility( savedInstanceState.getInt( BAR_VISIBILITY_KEY ) );
@@ -374,7 +374,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         super.onSaveInstanceState( outState );
         outState.putSerializable( RESULTS_LIST_KEY, ( java.io.Serializable ) results );
         outState.putInt( ACTIVE_VIEW_KEY, activeView );
-        outState.putBoolean( SRL_IS_REFRESHING_KEY, readyHolder.srlReady.isRefreshing() );
+        //outState.putBoolean( SRL_IS_REFRESHING_KEY, readyHolder.srlReady.isRefreshing() );
         outState.putInt( FOOTER_MODE_KEY, readyHolder.sitesFooterView.getMode() );
         outState.putInt( BAR_VISIBILITY_KEY, readyHolder.newResultsBar.getVisibility() );
         sitesListAdapter.saveTypes( outState );
@@ -562,11 +562,14 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         readyHolder.srlReady.setRefreshing( false );
         if ( !searchResults.isEmpty() )
         {
+            int newFirstVisiblePositionIndex = readyHolder.lvResultsList.getFirstVisiblePosition() + searchResults.size();
+            int topOffset = null == readyHolder.lvResultsList.getChildAt( 0 ) ? 0 : readyHolder.lvResultsList.getChildAt( 0 ).getTop();
             // Since we cannot add directly to List<?>, we have to delegate the adding to subclass which
             // casts the list to appropriate type and then does the adding
             addToStart( searchResults );
             sitesListAdapter.updateTypes( SearchType.NEWER, searchResults );
             sitesListAdapter.notifyDataSetChanged();
+            readyHolder.lvResultsList.setSelectionFromTop( newFirstVisiblePositionIndex, topOffset );
             readyHolder.newResultsBar.setVisibility( View.VISIBLE );
             readyHolder.newResultsBar.setResultsCount( readyHolder.newResultsBar.getResultsCount() + searchResults.size() );
         }
@@ -580,7 +583,19 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     public void afterTimedSearch( List<?> searchResults )
     {
-        afterNewerSearch( searchResults );
+        if ( !searchResults.isEmpty() )
+        {
+            int newFirstVisiblePositionIndex = readyHolder.lvResultsList.getFirstVisiblePosition() + searchResults.size();
+            int topOffset = null == readyHolder.lvResultsList.getChildAt( 0 ) ? 0 : readyHolder.lvResultsList.getChildAt( 0 ).getTop();
+            // Since we cannot add directly to List<?>, we have to delegate the adding to subclass which
+            // casts the list to appropriate type and then does the adding
+            addToStart( searchResults );
+            sitesListAdapter.updateTypes( SearchType.NEWER, searchResults );
+            sitesListAdapter.notifyDataSetChanged();
+            readyHolder.lvResultsList.setSelectionFromTop( newFirstVisiblePositionIndex, topOffset );
+            readyHolder.newResultsBar.setVisibility( View.VISIBLE );
+            readyHolder.newResultsBar.setResultsCount( readyHolder.newResultsBar.getResultsCount() + searchResults.size() );
+        }
         postNextTimedSearch();
     }
 
@@ -693,11 +708,11 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     protected static class Ready
     {
-        public ListView           lvResultsList;
-        public TextView           lvResultsListEmpty;
-        public SitesFooterView    sitesFooterView;
-        public SwipeRefreshLayout srlReady;
-        public NewResultsBar      newResultsBar;
+        public ListView             lvResultsList;
+        public TextView             lvResultsListEmpty;
+        public SitesFooterView      sitesFooterView;
+        public MySwipeRefreshLayout srlReady;
+        public NewResultsBar newResultsBar;
     }
 
     protected static class Loading

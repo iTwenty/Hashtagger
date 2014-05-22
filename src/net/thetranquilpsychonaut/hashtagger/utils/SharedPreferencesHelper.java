@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
+import net.thetranquilpsychonaut.hashtagger.R;
 
 /**
  * Created by itwenty on 4/4/14.
@@ -184,6 +185,6 @@ public class SharedPreferencesHelper
 
     public static int getAutoUpdateInterval()
     {
-        return Integer.parseInt( default_prefs.getString( AUTO_UPDATE_INTERVAL_KEY, "30000" ) );
+        return Integer.parseInt( default_prefs.getString( AUTO_UPDATE_INTERVAL_KEY, HashtaggerApp.app.getResources().getStringArray( R.array.listAutoUpdateValues )[0] ) );
     }
 }
