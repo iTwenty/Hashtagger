@@ -68,9 +68,9 @@ public class SitesActivity extends SavedHashtagsActivity
     }
 
     @Override
-    protected void onStart()
+    protected void onRestart()
     {
-        super.onStart();
+        super.onRestart();
         if ( SharedPreferencesHelper.activeSitesChanged )
         {
             showActiveSites();
