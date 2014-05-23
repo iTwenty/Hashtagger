@@ -16,8 +16,8 @@ import net.thetranquilpsychonaut.hashtagger.config.GPlusConfig;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesService;
+import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
-import net.thetranquilpsychonaut.hashtagger.utils.SharedPreferencesHelper;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -39,7 +39,7 @@ public class GPlusService extends SitesService
         {
             HttpTransport httpTransport = new NetHttpTransport();
             JsonFactory jsonFactory = new AndroidJsonFactory();
-            if ( !SharedPreferencesHelper.areGPlusDetailsPresent() )
+            if ( !AccountPrefs.areGPlusDetailsPresent() )
             {
                 throw new IOException( "Google+ access token not found" );
             }
@@ -48,8 +48,8 @@ public class GPlusService extends SitesService
                     .setTransport( httpTransport )
                     .setClientSecrets( GPlusConfig.SECRETS )
                     .build();
-            credential.setAccessToken( SharedPreferencesHelper.getGPlusAccessToken() );
-            credential.setRefreshToken( SharedPreferencesHelper.getGPlusRefreshToken() );
+            credential.setAccessToken( AccountPrefs.getGPlusAccessToken() );
+            credential.setRefreshToken( AccountPrefs.getGPlusRefreshToken() );
             Helper.debug( String.valueOf( credential.getExpiresInSeconds() ) );
             Plus plus = new Plus.Builder( httpTransport, jsonFactory, credential )
                     .build();

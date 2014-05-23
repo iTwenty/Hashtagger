@@ -69,12 +69,6 @@ public class TwitterFragment extends SitesFragment
     }
 
     @Override
-    protected int getNotLoggedInToastTextId()
-    {
-        return R.string.str_toast_twitter_not_logged_in;
-    }
-
-    @Override
     protected int getLoggedInToastTextId()
     {
         return R.string.str_toast_twitter_logged_in_as;

@@ -7,8 +7,8 @@ import net.thetranquilpsychonaut.hashtagger.enums.AuthType;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesService;
+import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
-import net.thetranquilpsychonaut.hashtagger.utils.SharedPreferencesHelper;
 import twitter4j.*;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
@@ -32,12 +32,12 @@ public class TwitterService extends SitesService
         query.setCount( HashtaggerApp.TWITTER_SEARCH_LIMIT );
         try
         {
-            if ( !SharedPreferencesHelper.areTwitterDetailsPresent() )
+            if ( !AccountPrefs.areTwitterDetailsPresent() )
             {
                 throw new TwitterException( "Twitter access token not found" );
             }
             Twitter twitter = new TwitterFactory( TwitterConfig.CONFIGURATION ).getInstance();
-            twitter.setOAuthAccessToken( new AccessToken( SharedPreferencesHelper.getTwitterAccessToken(), SharedPreferencesHelper.getTwitterAccessTokenSecret() ) );
+            twitter.setOAuthAccessToken( new AccessToken( AccountPrefs.getTwitterAccessToken(), AccountPrefs.getTwitterAccessTokenSecret() ) );
 
              /*
             for our initial search we dont need either max or since id.

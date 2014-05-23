@@ -21,8 +21,8 @@ import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
+import net.thetranquilpsychonaut.hashtagger.utils.DefaultPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
-import net.thetranquilpsychonaut.hashtagger.utils.SharedPreferencesHelper;
 import net.thetranquilpsychonaut.hashtagger.widgets.MySwipeRefreshLayout;
 
 import java.util.List;
@@ -34,9 +34,10 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 {
     private static final String ACTIVE_VIEW_KEY    = HashtaggerApp.NAMESPACE + "active_view_key";
     private static final String RESULTS_LIST_KEY   = HashtaggerApp.NAMESPACE + "results_list_key";
-    //private static final String SRL_IS_REFRESHING_KEY = HashtaggerApp.NAMESPACE + "srl_is_refreshing_key";
     private static final String FOOTER_MODE_KEY    = HashtaggerApp.NAMESPACE + "footer_mode";
     private static final String BAR_VISIBILITY_KEY = HashtaggerApp.NAMESPACE + "bar_visibility";
+
+    private static final int AUTO_UPDATE_INTERVAL = 1000 * 30; // 30 seconds
 
     private static final int READY   = 0;
     private static final int LOADING = 1;
@@ -80,7 +81,6 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         super.onResume();
         sitesSearchHandler.registerReceiver();
-        Helper.debug( "Auto update interval : " + SharedPreferencesHelper.autoUpdateInterval );
         if ( !TextUtils.isEmpty( ( ( SitesActivity ) getActivity() ).getHashtag() ) && !results.isEmpty() )
         {
             postNextTimedSearch();
@@ -89,11 +89,10 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     private void postNextTimedSearch()
     {
-        if ( SharedPreferencesHelper.autoUpdateInterval != -1 )
+        if ( DefaultPrefs.autoUpdate )
         {
-            Helper.debug( "Search posted for interval : " + SharedPreferencesHelper.autoUpdateInterval );
             timedSearchHandler.removeCallbacks( timedSearchRunner );
-            timedSearchHandler.postDelayed( timedSearchRunner, SharedPreferencesHelper.autoUpdateInterval );
+            timedSearchHandler.postDelayed( timedSearchRunner, AUTO_UPDATE_INTERVAL );
         }
     }
 
@@ -353,7 +352,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         if ( !sitesUserHandler.isUserLoggedIn() )
         {
-            Toast.makeText( getActivity(), getResources().getString( getNotLoggedInToastTextId() ), Toast.LENGTH_LONG ).show();
+            loginHolder.btnLogin.animate().rotationX( loginHolder.btnLogin.getRotationX() == 0 ? 360 : 0 ).setDuration( 1000 ).start();
             return;
         }
         timedSearchHandler.removeCallbacks( timedSearchRunner );
@@ -361,8 +360,6 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         readyHolder.lvResultsList.setTag( null );
         sitesSearchHandler.beginSearch( SearchType.INITIAL, hashtag );
     }
-
-    protected abstract int getNotLoggedInToastTextId();
 
     public void showView( int activeView )
     {
@@ -436,7 +433,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         }
         if ( !sitesUserHandler.isUserLoggedIn() )
         {
-            Toast.makeText( getActivity(), getResources().getString( getNotLoggedInToastTextId() ), Toast.LENGTH_LONG ).show();
+            Toast.makeText( getActivity(), getResources().getString( R.string.str_not_logged_in ), Toast.LENGTH_LONG ).show();
             return;
         }
         sitesSearchHandler.beginSearch( SearchType.NEWER, ( ( SitesActivity ) getActivity() ).getHashtag() );
@@ -470,7 +467,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         }
         if ( !sitesUserHandler.isUserLoggedIn() )
         {
-            Toast.makeText( getActivity(), getResources().getString( getNotLoggedInToastTextId() ), Toast.LENGTH_LONG ).show();
+            Toast.makeText( getActivity(), getResources().getString( R.string.str_not_logged_in ), Toast.LENGTH_LONG ).show();
             return;
         }
         sitesSearchHandler.beginSearch( SearchType.OLDER, ( ( SitesActivity ) getActivity() ).getHashtag() );

@@ -7,8 +7,8 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
+import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
-import net.thetranquilpsychonaut.hashtagger.utils.SharedPreferencesHelper;
 
 /**
  * Created by itwenty on 5/6/14.
@@ -52,7 +52,7 @@ public class GPlusLoginHandler extends SitesLoginHandler
         }
         GoogleTokenResponse tokenResponse = GPlusData.AuthData.popTokenResponse();
         String userName = intent.getStringExtra( Result.RESULT_EXTRAS );
-        SharedPreferencesHelper.addGPlusDetails( tokenResponse.getAccessToken(), tokenResponse.getRefreshToken(), userName );
+        AccountPrefs.addGPlusDetails( tokenResponse.getAccessToken(), tokenResponse.getRefreshToken(), userName );
         gPlusLoginListener.onUserLoggedIn();
     }
 

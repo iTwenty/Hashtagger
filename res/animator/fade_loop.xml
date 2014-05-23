@@ -5,7 +5,7 @@
         android:propertyName="alpha"
         android:valueFrom="1"
         android:valueTo="0"
-        android:repeatCount="infinite"
+        android:repeatCount="2"
         android:repeatMode="reverse"
         android:duration="2000"/>
 </set>

@@ -1,10 +1,12 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
@@ -31,6 +33,20 @@ public class TwitterLoginActivity extends SitesLoginActivity implements TwitterL
     protected View initMainView( Bundle savedInstanceState )
     {
         wvTwitterLogin = new WebView( this );
+        wvTwitterLogin.setWebViewClient( new WebViewClient()
+        {
+            @Override
+            public void onPageStarted( WebView view, String url, Bitmap favicon )
+            {
+                showLoadingView();
+            }
+
+            @Override
+            public void onPageFinished( WebView view, String url )
+            {
+                showMainView();
+            }
+        } );
         return wvTwitterLogin;
     }
 

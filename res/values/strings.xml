@@ -17,13 +17,11 @@
     <string name="str_title_activity_twitter_login">Sign In With Twitter</string>
     <string name="str_load_older_results">Load older results</string>
     <string name="str_toast_no_network">Connect to a network first.</string>
-    <string name="str_toast_twitter_not_logged_in">Log in to Twitter first.</string>
     <string name="str_toast_no_older_results">No older results</string>
     <string name="str_toast_no_newer_results">No newer results</string>
     <string name="str_toast_newer_results_error">Failed to load newer results</string>
     <string name="str_toast_twitter_logged_in_as">Logged in to Twitter as :</string>
-    <string name="str_toast_twitter_login_failed">Failed to log in to Twitter. Please try again.</string>
-    <string name="str_toast_facebook_not_logged_in">Not logged in to Facebook</string>
+    <string name="str_toast_twitter_login_failed">Could not log in to Twitter</string>
     <string name="str_toast_facebook_logged_in_as">Logged in to Facebook as :</string>
     <string name="str_toast_facebook_login_failed">Could not log in to Facebook</string>
     <string name="str_title_activity_facebook_login">Sign in with Facebook</string>
@@ -33,9 +31,8 @@
     <string name="close_drawer_desc">Close Drawer</string>
     <string name="str_pref_category_active_sites">Active Sites</string>
     <string name="str_pref_category_logged_in_as">Logged in as...</string>
-    <string name="str_toast_gplus_not_logged_in">Not logged in to Google+</string>
     <string name="str_toast_gplus_logged_in_as">Logged in to Google+ as :</string>
-    <string name="str_toast_gplus_login_failed">Failed to log in to Google+</string>
+    <string name="str_toast_gplus_login_failed">Could not log in to Google+</string>
     <string name="str_twitter_login_button_text">Sign in with Twitter</string>
     <string name="str_facebook_login_button_text">Sign in with Facebook</string>
     <string name="str_gplus_login_button_text">Sign in with Google+</string>
@@ -43,4 +40,5 @@
     <string name="str_reply">Reply</string>
     <string name="str_cancel">Cancel</string>
     <string name="str_footer_error">Failed to load. Try again?</string>
+    <string name="str_not_logged_in">Not logged in.</string>
 </resources>

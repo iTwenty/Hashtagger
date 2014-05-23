@@ -1,7 +1,7 @@
 package net.thetranquilpsychonaut.hashtagger.sites.gplus.components;
 
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
-import net.thetranquilpsychonaut.hashtagger.utils.SharedPreferencesHelper;
+import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
 
 /**
  * Created by itwenty on 5/5/14.
@@ -16,7 +16,7 @@ public class GPlusUserHandler extends SitesUserHandler
     @Override
     public boolean isUserLoggedIn()
     {
-        return SharedPreferencesHelper.areGPlusDetailsPresent();
+        return AccountPrefs.areGPlusDetailsPresent();
     }
 
     @Override
@@ -26,13 +26,13 @@ public class GPlusUserHandler extends SitesUserHandler
         {
             throw new RuntimeException( "Must be logged in to Google+ before prodding user name" );
         }
-        return SharedPreferencesHelper.getGPlusUserName();
+        return AccountPrefs.getGPlusUserName();
     }
 
     @Override
     public void logoutUser()
     {
-        SharedPreferencesHelper.removeGPlusDetails();
+        AccountPrefs.removeGPlusDetails();
         sitesUserListener.onUserLoggedOut();
     }
 }

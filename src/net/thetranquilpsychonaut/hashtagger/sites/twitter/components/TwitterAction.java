@@ -6,8 +6,8 @@ import net.thetranquilpsychonaut.hashtagger.config.TwitterConfig;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterFavoriteEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterReplyEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterRetweetEvent;
+import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
-import net.thetranquilpsychonaut.hashtagger.utils.SharedPreferencesHelper;
 import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -44,7 +44,7 @@ public class TwitterAction
         public TwitterReplyTask( String reply, long inReplyToUserId )
         {
             twitter = new TwitterFactory( TwitterConfig.CONFIGURATION ).getInstance();
-            twitter.setOAuthAccessToken( new AccessToken( SharedPreferencesHelper.getTwitterAccessToken(), SharedPreferencesHelper.getTwitterAccessTokenSecret() ) );
+            twitter.setOAuthAccessToken( new AccessToken( AccountPrefs.getTwitterAccessToken(), AccountPrefs.getTwitterAccessTokenSecret() ) );
             this.reply = reply;
             this.inReplyToUserId = inReplyToUserId;
         }
@@ -82,7 +82,7 @@ public class TwitterAction
         public TwitterRetweetTask( long retweetId, int position )
         {
             twitter = new TwitterFactory( TwitterConfig.CONFIGURATION ).getInstance();
-            twitter.setOAuthAccessToken( new AccessToken( SharedPreferencesHelper.getTwitterAccessToken(), SharedPreferencesHelper.getTwitterAccessTokenSecret() ) );
+            twitter.setOAuthAccessToken( new AccessToken( AccountPrefs.getTwitterAccessToken(), AccountPrefs.getTwitterAccessTokenSecret() ) );
             this.retweetId = retweetId;
             this.position = position;
         }
@@ -125,7 +125,7 @@ public class TwitterAction
             this.position = position;
             this.isFavorited = isFavorited;
             twitter = new TwitterFactory( TwitterConfig.CONFIGURATION ).getInstance();
-            twitter.setOAuthAccessToken( new AccessToken( SharedPreferencesHelper.getTwitterAccessToken(), SharedPreferencesHelper.getTwitterAccessTokenSecret() ) );
+            twitter.setOAuthAccessToken( new AccessToken( AccountPrefs.getTwitterAccessToken(), AccountPrefs.getTwitterAccessTokenSecret() ) );
         }
 
         @Override

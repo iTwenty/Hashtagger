@@ -7,7 +7,7 @@ import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
 import net.thetranquilpsychonaut.hashtagger.enums.AuthType;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
-import net.thetranquilpsychonaut.hashtagger.utils.SharedPreferencesHelper;
+import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 
@@ -75,7 +75,7 @@ public class TwitterLoginHandler extends SitesLoginHandler
             case ACCESS:
                 AccessToken accessToken = ( AccessToken ) intent.getSerializableExtra( Result.RESULT_DATA );
                 String userName = intent.getStringExtra( Result.RESULT_EXTRAS );
-                SharedPreferencesHelper.addTwitterDetails( accessToken.getToken(), accessToken.getTokenSecret(), userName );
+                AccountPrefs.addTwitterDetails( accessToken.getToken(), accessToken.getTokenSecret(), userName );
                 twitterLoginListener.onUserLoggedIn();
         }
     }

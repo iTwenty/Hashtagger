@@ -4,8 +4,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:title="@string/str_pref_category_active_sites"
-        android:key="active_sites">
+        android:title="Active Sites"
+        android:key="category_active_sites">
 
         <CheckBoxPreference
             android:title="Twitter"
@@ -26,14 +26,12 @@
 
     <PreferenceCategory
         android:title="Auto Update"
-        android:key="auto_update">
+        android:key="category_auto_update">
 
-        <ListPreference
-            android:title="Auto update interval"
-            android:key="auto_update_interval"
-            android:defaultValue="20000"
-            android:entries="@array/listAutoUpdate"
-            android:entryValues="@array/listAutoUpdateValues"/>
+        <CheckBoxPreference
+            android:title="Auto Update"
+            android:key="auto_update"
+            android:defaultValue="true"/>
 
     </PreferenceCategory>
 

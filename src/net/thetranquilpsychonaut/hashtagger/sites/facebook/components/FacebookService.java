@@ -8,8 +8,8 @@ import net.thetranquilpsychonaut.hashtagger.config.FacebookConfig;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesService;
+import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
-import net.thetranquilpsychonaut.hashtagger.utils.SharedPreferencesHelper;
 
 import java.io.Serializable;
 
@@ -28,12 +28,12 @@ public class FacebookService extends SitesService
         ResponseList<Post> responseList = null;
         try
         {
-            if ( !SharedPreferencesHelper.areFacebookDetailsPresent() )
+            if ( !AccountPrefs.areFacebookDetailsPresent() )
             {
                 throw new FacebookException( "Facebook access token nor found" );
             }
             Facebook facebook = new FacebookFactory( FacebookConfig.CONFIGURATION ).getInstance();
-            facebook.setOAuthAccessToken( new AccessToken( SharedPreferencesHelper.getFacebookAccessToken() ) );
+            facebook.setOAuthAccessToken( new AccessToken( AccountPrefs.getFacebookAccessToken() ) );
             switch ( searchType )
             {
                 case INITIAL:

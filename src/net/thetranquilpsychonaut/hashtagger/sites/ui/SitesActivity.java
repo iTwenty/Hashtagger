@@ -29,8 +29,8 @@ import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsProviderC
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterFragment;
+import net.thetranquilpsychonaut.hashtagger.utils.DefaultPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
-import net.thetranquilpsychonaut.hashtagger.utils.SharedPreferencesHelper;
 import net.thetranquilpsychonaut.hashtagger.widgets.IconPagerIndicator;
 
 import java.util.ArrayList;
@@ -71,10 +71,10 @@ public class SitesActivity extends SavedHashtagsActivity
     protected void onRestart()
     {
         super.onRestart();
-        if ( SharedPreferencesHelper.activeSitesChanged )
+        if ( DefaultPrefs.activeSitesChanged )
         {
             showActiveSites();
-            SharedPreferencesHelper.activeSitesChanged = false;
+            DefaultPrefs.activeSitesChanged = false;
         }
     }
 
@@ -140,9 +140,9 @@ public class SitesActivity extends SavedHashtagsActivity
     {
         int[] positions = new int[HashtaggerApp.TOTAL_SITES_COUNT];
         int activePosition = 0;
-        positions[HashtaggerApp.TWITTER_VALUE] = SharedPreferencesHelper.twitterActive ? activePosition++ : -1;
-        positions[HashtaggerApp.FACEBOOK_VALUE] = SharedPreferencesHelper.facebookActive ? activePosition++ : -1;
-        positions[HashtaggerApp.GPLUS_VALUE] = SharedPreferencesHelper.gPlusActive ? activePosition++ : -1;
+        positions[HashtaggerApp.TWITTER_VALUE] = DefaultPrefs.twitterActive ? activePosition++ : -1;
+        positions[HashtaggerApp.FACEBOOK_VALUE] = DefaultPrefs.facebookActive ? activePosition++ : -1;
+        positions[HashtaggerApp.GPLUS_VALUE] = DefaultPrefs.gPlusActive ? activePosition++ : -1;
         return positions;
     }
 

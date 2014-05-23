@@ -7,7 +7,7 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
-import net.thetranquilpsychonaut.hashtagger.utils.SharedPreferencesHelper;
+import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
 
 /**
  * Created by itwenty on 4/7/14.
@@ -50,7 +50,7 @@ public class FacebookLoginHandler extends SitesLoginHandler
         }
         AccessToken accessToken = ( AccessToken ) intent.getSerializableExtra( Result.RESULT_DATA );
         String userName = intent.getStringExtra( Result.RESULT_EXTRAS );
-        SharedPreferencesHelper.addFacebookDetails( accessToken.getToken(), userName );
+        AccountPrefs.addFacebookDetails( accessToken.getToken(), userName );
         facebookLoginListener.onUserLoggedIn();
     }
 

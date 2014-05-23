@@ -1,5 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -34,7 +35,6 @@ public class GPlusLoginActivity extends SitesLoginActivity implements GPlusLogin
             {
                 if ( !url.startsWith( HashtaggerApp.GPLUS_CALLBACK_URL ) )
                 {
-                    wvGPlusLogin.loadUrl( url );
                     return false;
                 }
                 Uri uri = Uri.parse( url );
@@ -48,6 +48,20 @@ public class GPlusLoginActivity extends SitesLoginActivity implements GPlusLogin
                     finish();
                 }
                 return true;
+            }
+
+            @Override
+            public void onPageStarted( WebView view, String url, Bitmap favicon )
+            {
+                super.onPageStarted( view, url, favicon );
+                showLoadingView();
+            }
+
+            @Override
+            public void onPageFinished( WebView view, String url )
+            {
+                super.onPageFinished( view, url );
+                showMainView();
             }
         } );
         return wvGPlusLogin;

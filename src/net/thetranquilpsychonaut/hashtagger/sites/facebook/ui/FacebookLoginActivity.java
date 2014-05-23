@@ -1,5 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -44,6 +45,20 @@ public class FacebookLoginActivity extends SitesLoginActivity implements Faceboo
                     finish();
                 }
                 return true;
+            }
+
+            @Override
+            public void onPageStarted( WebView view, String url, Bitmap favicon )
+            {
+                super.onPageStarted( view, url, favicon );
+                showLoadingView();
+            }
+
+            @Override
+            public void onPageFinished( WebView view, String url )
+            {
+                super.onPageFinished( view, url );
+                showMainView();
             }
         } );
         return wvFacebookLogin;
