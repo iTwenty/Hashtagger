@@ -77,10 +77,15 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     }
 
     @Override
-    public void onResume()
+    public void onStart()
     {
-        super.onResume();
+        super.onStart();
+        Helper.debug( "onStart" );
         sitesSearchHandler.registerReceiver();
+        if ( activeView == LOADING && !sitesSearchHandler.isSearchRunning() )
+        {
+            showView( READY );
+        }
         if ( !TextUtils.isEmpty( ( ( SitesActivity ) getActivity() ).getHashtag() ) && !results.isEmpty() )
         {
             postNextTimedSearch();
@@ -97,11 +102,11 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     }
 
     @Override
-    public void onPause()
+    public void onStop()
     {
         timedSearchHandler.removeCallbacks( timedSearchRunner );
         sitesSearchHandler.unregisterReceiver();
-        super.onPause();
+        super.onStop();
     }
 
     @Override
@@ -230,9 +235,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     private void restoreViewStates( Bundle savedInstanceState )
     {
-        //readyHolder.srlReady.setRefreshing( savedInstanceState.getBoolean( SRL_IS_REFRESHING_KEY ) );
         readyHolder.sitesFooterView.setMode( savedInstanceState.getInt( FOOTER_MODE_KEY ) );
-        Helper.debug( String.valueOf( savedInstanceState.getInt( BAR_VISIBILITY_KEY ) ) );
         readyHolder.newResultsBar.setVisibility( savedInstanceState.getInt( BAR_VISIBILITY_KEY ) );
     }
 
@@ -373,7 +376,6 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         super.onSaveInstanceState( outState );
         outState.putSerializable( RESULTS_LIST_KEY, ( java.io.Serializable ) results );
         outState.putInt( ACTIVE_VIEW_KEY, activeView );
-        //outState.putBoolean( SRL_IS_REFRESHING_KEY, readyHolder.srlReady.isRefreshing() );
         outState.putInt( FOOTER_MODE_KEY, readyHolder.sitesFooterView.getMode() );
         outState.putInt( BAR_VISIBILITY_KEY, readyHolder.newResultsBar.getVisibility() );
         sitesListAdapter.saveTypes( outState );

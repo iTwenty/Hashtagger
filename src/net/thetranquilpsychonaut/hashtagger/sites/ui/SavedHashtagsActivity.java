@@ -83,17 +83,17 @@ public class SavedHashtagsActivity extends FragmentActivity implements LoaderMan
     }
 
     @Override
-    protected void onResume()
+    protected void onStart()
     {
-        super.onResume();
+        super.onStart();
         HashtaggerApp.bus.register( this );
     }
 
     @Override
-    protected void onPause()
+    protected void onStop()
     {
         HashtaggerApp.bus.unregister( this );
-        super.onPause();
+        super.onStop();
     }
 
     @Override

@@ -27,9 +27,12 @@ import java.util.Arrays;
  */
 public class GPlusService extends SitesService
 {
+    private static boolean isSearchRunning;
+
     @Override
     protected Intent doSearch( Intent searchIntent )
     {
+        isSearchRunning = true;
         final SearchType searchType = ( SearchType ) searchIntent.getSerializableExtra( SearchType.SEARCH_TYPE_KEY );
         final String hashtag = searchIntent.getStringExtra( HashtaggerApp.HASHTAG_KEY );
         Intent resultIntent = new Intent();
@@ -74,6 +77,7 @@ public class GPlusService extends SitesService
             }
             GPlusData.SearchData.pushSearchResults( results.getItems() );
         }
+        isSearchRunning = false;
         return resultIntent;
     }
 
@@ -131,5 +135,10 @@ public class GPlusService extends SitesService
     public String getSearchActionName()
     {
         return HashtaggerApp.GPLUS_SEARCH_ACTION;
+    }
+
+    public static boolean isIsSearchRunning()
+    {
+        return isSearchRunning;
     }
 }

@@ -41,10 +41,4 @@ public abstract class SitesService extends MyIntentService implements SearchActi
     protected abstract Intent doSearch( Intent intent );
 
     protected abstract Intent doAuth( Intent intent );
-
-    @Override
-    public void onDestroy()
-    {
-        super.onDestroy();
-    }
 }

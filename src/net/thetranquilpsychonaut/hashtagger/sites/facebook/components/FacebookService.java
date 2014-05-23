@@ -18,9 +18,12 @@ import java.io.Serializable;
  */
 public class FacebookService extends SitesService
 {
+    private static boolean isSearchRunning;
+
     @Override
     protected Intent doSearch( Intent searchIntent )
     {
+        isSearchRunning = true;
         final SearchType searchType = ( SearchType ) searchIntent.getSerializableExtra( SearchType.SEARCH_TYPE_KEY );
         final String hashtag = searchIntent.getStringExtra( HashtaggerApp.HASHTAG_KEY );
         Intent resultIntent = new Intent();
@@ -71,6 +74,7 @@ public class FacebookService extends SitesService
             }
             resultIntent.putExtra( Result.RESULT_DATA, ( Serializable ) responseList );
         }
+        isSearchRunning = true;
         return resultIntent;
     }
 
@@ -114,5 +118,11 @@ public class FacebookService extends SitesService
     public String getSearchActionName()
     {
         return HashtaggerApp.FACEBOOK_SEARCH_ACTION;
+    }
+
+    public static boolean isSearchRunning()
+    {
+
+        return isSearchRunning;
     }
 }

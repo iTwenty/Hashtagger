@@ -32,6 +32,12 @@ public class GPlusSearchHandler extends SitesSearchHandler
     }
 
     @Override
+    public boolean isSearchRunning()
+    {
+        return GPlusService.isIsSearchRunning();
+    }
+
+    @Override
     public void onReceive( Context context, Intent intent )
     {
         SearchType searchType = ( SearchType ) intent.getSerializableExtra( SearchType.SEARCH_TYPE_KEY );

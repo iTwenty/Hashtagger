@@ -38,6 +38,12 @@ public class FacebookSearchHandler extends SitesSearchHandler
     }
 
     @Override
+    public boolean isSearchRunning()
+    {
+        return FacebookService.isSearchRunning();
+    }
+
+    @Override
     public void onReceive( Context context, Intent intent )
     {
         SearchType searchType = ( SearchType ) intent.getSerializableExtra( SearchType.SEARCH_TYPE_KEY );

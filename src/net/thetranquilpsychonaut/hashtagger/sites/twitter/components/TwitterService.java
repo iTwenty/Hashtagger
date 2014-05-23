@@ -20,9 +20,12 @@ import java.util.List;
  */
 public class TwitterService extends SitesService
 {
+    private static boolean isSearchRunning = false;
+
     @Override
     protected Intent doSearch( Intent searchIntent )
     {
+        isSearchRunning = true;
         final SearchType searchType = ( SearchType ) searchIntent.getSerializableExtra( SearchType.SEARCH_TYPE_KEY );
         final String hashtag = searchIntent.getStringExtra( HashtaggerApp.HASHTAG_KEY );
         Intent resultIntent = new Intent();
@@ -92,6 +95,7 @@ public class TwitterService extends SitesService
             }
             resultIntent.putExtra( Result.RESULT_DATA, queryResult );
         }
+        isSearchRunning = false;
         return resultIntent;
     }
 
@@ -179,5 +183,10 @@ public class TwitterService extends SitesService
     public String getLoginActionName()
     {
         return HashtaggerApp.TWITTER_LOGIN_ACTION;
+    }
+
+    public static boolean isIsSearchRunning()
+    {
+        return isSearchRunning;
     }
 }

@@ -40,7 +40,7 @@ public class TwitterDetailActivity extends BaseActivity
         if ( status.getMediaEntities().length > 0 )
         {
             imgvMediaImage.setVisibility( View.VISIBLE );
-            Picasso.with( this ).load( status.getMediaEntities()[0].getMediaURL() ).into( imgvMediaImage );
+            Picasso.with( this ).load( status.getMediaEntities()[0].getMediaURL() + ":large" ).into( imgvMediaImage );
         }
     }
 }

@@ -33,6 +33,12 @@ public class TwitterSearchHandler extends SitesSearchHandler
     }
 
     @Override
+    public boolean isSearchRunning()
+    {
+        return TwitterService.isIsSearchRunning();
+    }
+
+    @Override
     public void onReceive( Context context, Intent intent )
     {
         SearchType searchType = ( SearchType ) intent.getSerializableExtra( SearchType.SEARCH_TYPE_KEY );

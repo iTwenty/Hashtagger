@@ -59,4 +59,6 @@ public abstract class SitesSearchHandler extends BroadcastReceiver implements Se
     {
         HashtaggerApp.app.unregisterReceiver( this );
     }
+
+    public abstract boolean isSearchRunning();
 }

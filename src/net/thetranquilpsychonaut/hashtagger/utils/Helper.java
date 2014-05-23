@@ -6,7 +6,6 @@ import android.text.Spannable;
 import android.text.TextPaint;
 import android.text.format.DateUtils;
 import android.text.style.URLSpan;
-import android.text.util.Linkify;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.Toast;
@@ -18,7 +17,6 @@ import twitter4j.Status;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.regex.Matcher;
 
 /**
  * Created by itwenty on 2/7/14.
@@ -34,14 +32,14 @@ public class Helper
 //
 //    private static final Pattern twitterMentionPattern = Pattern.compile( "@([A-Za-z0-9_-]+)" );
 //    private static final String  twitterMentionScheme  = "http://www.twitter.com/";
-
-    private static final Linkify.TransformFilter filter = new Linkify.TransformFilter()
-    {
-        public final String transformUrl( final Matcher match, String url )
-        {
-            return match.group();
-        }
-    };
+//
+//    private static final Linkify.TransformFilter filter = new Linkify.TransformFilter()
+//    {
+//        public final String transformUrl( final Matcher match, String url )
+//        {
+//            return match.group();
+//        }
+//    };
 
     public static void debug( String s )
     {
