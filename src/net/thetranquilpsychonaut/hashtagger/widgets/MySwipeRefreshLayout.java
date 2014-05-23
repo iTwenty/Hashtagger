@@ -37,18 +37,6 @@ public class MySwipeRefreshLayout extends SwipeRefreshLayout
         this.setRefreshing( savedState.isRefreshing() );
     }
 
-    @Override
-    protected void dispatchSaveInstanceState( SparseArray<Parcelable> container )
-    {
-        super.dispatchFreezeSelfOnly( container );
-    }
-
-    @Override
-    protected void dispatchRestoreInstanceState( SparseArray<Parcelable> container )
-    {
-        super.dispatchThawSelfOnly( container );
-    }
-
     protected static class SavedState extends BaseSavedState
     {
         private boolean isRefreshing;
