@@ -49,11 +49,9 @@ public class FacebookSearchHandler extends SitesSearchHandler
         }
         List<Post> results = ( List<Post> ) intent.getSerializableExtra( Result.RESULT_DATA );
         Iterator<Post> iterator = results.iterator();
-        Post post;
         while ( iterator.hasNext() )
         {
-            post = iterator.next();
-            if ( TextUtils.isEmpty( post.getMessage() ) )
+            if ( TextUtils.isEmpty( iterator.next().getMessage() ) )
             {
                 iterator.remove();
             }

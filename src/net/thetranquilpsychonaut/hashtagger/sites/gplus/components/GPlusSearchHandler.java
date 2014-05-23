@@ -8,8 +8,8 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
-import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -17,7 +17,8 @@ import java.util.List;
  */
 public class GPlusSearchHandler extends SitesSearchHandler
 {
-    public static String nextPageToken;
+    public static  String   nextPageToken;
+    private static Activity newestActivity;
 
     public GPlusSearchHandler( SitesSearchListener listener )
     {
@@ -41,6 +42,25 @@ public class GPlusSearchHandler extends SitesSearchHandler
             return;
         }
         List<Activity> results = GPlusData.SearchData.popSearchResults();
+        if ( searchType == searchType.INITIAL && !results.isEmpty() )
+        {
+            newestActivity = results.get( 0 );
+        }
+        else if ( searchType == searchType.NEWER || searchType == searchType.TIMED )
+        {
+            Iterator<Activity> iterator = results.iterator();
+            while ( iterator.hasNext() )
+            {
+                if ( iterator.next().getPublished().getValue() <= newestActivity.getPublished().getValue() )
+                {
+                    iterator.remove();
+                }
+            }
+            if ( !results.isEmpty() )
+            {
+                newestActivity = results.get( 0 );
+            }
+        }
         // We strip all HTML formatting tags from the text of the activity since parsing HTML in getView causes awful lag in scrolling
         for ( Activity activity : results )
         {

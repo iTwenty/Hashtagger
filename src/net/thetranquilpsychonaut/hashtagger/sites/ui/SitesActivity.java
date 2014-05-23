@@ -236,7 +236,9 @@ public class SitesActivity extends SavedHashtagsActivity
         svHashtag.onActionViewCollapsed();
         String input = intent.getStringExtra( SearchManager.QUERY );
         if ( TextUtils.isEmpty( input ) )
+        {
             return;
+        }
         // No point continuing is network is not available
         if ( !HashtaggerApp.isNetworkConnected() )
         {
@@ -258,7 +260,7 @@ public class SitesActivity extends SavedHashtagsActivity
             {
                 if ( f instanceof SitesFragment )
                 {
-                    Helper.debug( ((SitesFragment)f).getLoginButtonText() );
+                    Helper.debug( ( ( SitesFragment ) f ).getLoginButtonText() );
                     ( ( SitesFragment ) f ).searchHashtag( hashtag );
                 }
             }

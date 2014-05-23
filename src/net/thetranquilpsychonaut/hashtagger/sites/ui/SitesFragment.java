@@ -32,11 +32,11 @@ import java.util.List;
  */
 public abstract class SitesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemClickListener, SitesSearchHandler.SitesSearchListener, SitesUserHandler.SitesUserListener, AdapterView.OnItemLongClickListener
 {
-    private static final String ACTIVE_VIEW_KEY       = HashtaggerApp.NAMESPACE + "active_view_key";
-    private static final String RESULTS_LIST_KEY      = HashtaggerApp.NAMESPACE + "results_list_key";
+    private static final String ACTIVE_VIEW_KEY    = HashtaggerApp.NAMESPACE + "active_view_key";
+    private static final String RESULTS_LIST_KEY   = HashtaggerApp.NAMESPACE + "results_list_key";
     //private static final String SRL_IS_REFRESHING_KEY = HashtaggerApp.NAMESPACE + "srl_is_refreshing_key";
-    private static final String FOOTER_MODE_KEY       = HashtaggerApp.NAMESPACE + "footer_mode";
-    private static final String BAR_VISIBILITY_KEY    = HashtaggerApp.NAMESPACE + "bar_visibility";
+    private static final String FOOTER_MODE_KEY    = HashtaggerApp.NAMESPACE + "footer_mode";
+    private static final String BAR_VISIBILITY_KEY = HashtaggerApp.NAMESPACE + "bar_visibility";
 
     private static final int READY   = 0;
     private static final int LOADING = 1;
@@ -82,7 +82,9 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         sitesSearchHandler.registerReceiver();
         Helper.debug( "Auto update interval : " + SharedPreferencesHelper.autoUpdateInterval );
         if ( !TextUtils.isEmpty( ( ( SitesActivity ) getActivity() ).getHashtag() ) && !results.isEmpty() )
+        {
             postNextTimedSearch();
+        }
     }
 
     private void postNextTimedSearch()
@@ -712,7 +714,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         public TextView             lvResultsListEmpty;
         public SitesFooterView      sitesFooterView;
         public MySwipeRefreshLayout srlReady;
-        public NewResultsBar newResultsBar;
+        public NewResultsBar        newResultsBar;
     }
 
     protected static class Loading
