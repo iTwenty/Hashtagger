@@ -3,6 +3,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.gplus.components;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.services.plus.model.Activity;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
@@ -26,11 +27,7 @@ public class GPlusData
 
         public static GoogleTokenResponse popTokenResponse()
         {
-            if ( authData.isEmpty() )
-            {
-                throw new RuntimeException( "No GoogleTokenResponse to pop!" );
-            }
-            GoogleTokenResponse response = authData.pop();
+            GoogleTokenResponse response = authData.isEmpty() ? null : authData.pop();
             authData.clear();
             return response;
         }
@@ -48,11 +45,7 @@ public class GPlusData
 
         public static List<Activity> popSearchResults()
         {
-            if ( searchData.isEmpty() )
-            {
-                throw new RuntimeException( "No Activity list to pop!" );
-            }
-            List<Activity> activities = searchData.pop();
+            List<Activity> activities = searchData.isEmpty() ? Collections.<Activity>emptyList() : searchData.pop();
             searchData.clear();
             return activities;
         }
@@ -70,11 +63,7 @@ public class GPlusData
 
         public static Activity popActivity()
         {
-            if ( activityData.isEmpty() )
-            {
-                throw new RuntimeException( "No activity to pop!" );
-            }
-            Activity activity = activityData.pop();
+            Activity activity = activityData.isEmpty() ? null : activityData.pop();
             activityData.clear();
             return activity;
         }

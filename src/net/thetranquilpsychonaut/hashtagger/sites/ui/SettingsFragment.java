@@ -87,6 +87,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         if ( preference.equals( cbpAutoUpdate ) )
         {
             setAutoUpdateSummary( ( Boolean ) newValue );
+            DefaultPrefs.autoUpdate = ( Boolean ) newValue;
         }
         return true;
     }

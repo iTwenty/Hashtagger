@@ -63,7 +63,8 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         @Override
         public void run()
         {
-            sitesSearchHandler.beginSearch( SearchType.TIMED, ( ( SitesActivity ) getActivity() ).getHashtag() );
+            // Ensure that getEnteredHashtag() does not return null before calling this.
+            sitesSearchHandler.beginSearch( SearchType.TIMED, getEnteredHashtag() );
         }
     }
 
@@ -81,11 +82,22 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         super.onStart();
         sitesSearchHandler.registerReceiver();
-        if ( activeView == LOADING && !sitesSearchHandler.isSearchRunning() )
+        if ( !sitesSearchHandler.isSearchRunning() )
         {
-            showView( READY );
+            if ( activeView == LOADING )
+            {
+                showView( READY );
+            }
+            if ( readyHolder.srlReady.isRefreshing() )
+            {
+                readyHolder.srlReady.setRefreshing( false );
+            }
+            if ( readyHolder.sitesFooterView.getMode() == readyHolder.sitesFooterView.LOADING )
+            {
+                readyHolder.sitesFooterView.setMode( readyHolder.sitesFooterView.NORMAL );
+            }
         }
-        if ( !TextUtils.isEmpty( ( ( SitesActivity ) getActivity() ).getHashtag() ) && !results.isEmpty() )
+        if ( !TextUtils.isEmpty( getEnteredHashtag() ) && !results.isEmpty() )
         {
             postNextTimedSearch();
         }
@@ -93,6 +105,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     private void postNextTimedSearch()
     {
+        Helper.debug( "Auto update is : " + DefaultPrefs.autoUpdate );
         if ( DefaultPrefs.autoUpdate )
         {
             Helper.debug( "Next timed search posted" );
@@ -166,10 +179,10 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         readyHolder.srlReady = ( MySwipeRefreshLayout ) viewReady.findViewById( R.id.srl_ready );
         readyHolder.srlReady.setOnRefreshListener( this );
-        readyHolder.srlReady.setColorScheme( android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light );
+        readyHolder.srlReady.setColorScheme( android.R.color.holo_blue_light,
+                android.R.color.holo_blue_dark,
+                android.R.color.holo_blue_light,
+                android.R.color.holo_blue_dark );
     }
 
     private void initSitesFooterView( View viewReady )
@@ -180,7 +193,10 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             @Override
             public void onClick( View v )
             {
-                doLoadOlderResults();
+                if ( !TextUtils.isEmpty( getEnteredHashtag() ) )
+                {
+                    doLoadOlderResults( getEnteredHashtag() );
+                }
             }
         } );
     }
@@ -273,26 +289,25 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     private void showClickHashtagIfAlreadyEntered()
     {
-        final String hashtag = ( ( SitesActivity ) getActivity() ).getHashtag();
-        if ( TextUtils.isEmpty( hashtag ) )
+        String hashtag = getEnteredHashtag();
+        if ( !TextUtils.isEmpty( hashtag ) )
         {
-            return;
+            readyHolder.lvResultsListEmpty.setText( "Click to search for " + hashtag );
         }
-        readyHolder.lvResultsListEmpty.setText( "Click to search for " + hashtag );
     }
 
     private void searchHashtagIfAlreadyEntered()
     {
-        if ( null == getActivity() )
+        String hashtag = getEnteredHashtag();
+        if ( !TextUtils.isEmpty( hashtag ) )
         {
-            return;
+            searchHashtag( hashtag );
         }
-        String hashtag = ( ( SitesActivity ) getActivity() ).getHashtag();
-        if ( TextUtils.isEmpty( hashtag ) )
-        {
-            return;
-        }
-        searchHashtag( hashtag );
+    }
+
+    private String getEnteredHashtag()
+    {
+        return null != getActivity() && !TextUtils.isEmpty( ( ( SitesActivity ) getActivity() ).getHashtag() ) ? ( ( SitesActivity ) getActivity() ).getHashtag() : null;
     }
 
     protected abstract String getLoginButtonText();
@@ -425,10 +440,13 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     @Override
     public void onRefresh()
     {
-        doLoadNewerResults();
+        if ( !TextUtils.isEmpty( getEnteredHashtag() ) )
+        {
+            doLoadNewerResults( getEnteredHashtag() );
+        }
     }
 
-    private void doLoadNewerResults()
+    private void doLoadNewerResults( String hashtag )
     {
         if ( !HashtaggerApp.isNetworkConnected() )
         {
@@ -440,7 +458,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             Toast.makeText( getActivity(), getResources().getString( R.string.str_not_logged_in ), Toast.LENGTH_LONG ).show();
             return;
         }
-        sitesSearchHandler.beginSearch( SearchType.NEWER, ( ( SitesActivity ) getActivity() ).getHashtag() );
+        sitesSearchHandler.beginSearch( SearchType.NEWER, hashtag );
     }
 
     public void doLogin()
@@ -462,7 +480,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
      * ************** for FooterListener **********************
      */
 
-    public void doLoadOlderResults()
+    public void doLoadOlderResults( String hashtag )
     {
         if ( !HashtaggerApp.isNetworkConnected() )
         {
@@ -474,7 +492,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             Toast.makeText( getActivity(), getResources().getString( R.string.str_not_logged_in ), Toast.LENGTH_LONG ).show();
             return;
         }
-        sitesSearchHandler.beginSearch( SearchType.OLDER, ( ( SitesActivity ) getActivity() ).getHashtag() );
+        sitesSearchHandler.beginSearch( SearchType.OLDER, hashtag );
     }
 
     /**

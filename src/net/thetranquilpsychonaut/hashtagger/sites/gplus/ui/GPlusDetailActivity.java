@@ -22,6 +22,10 @@ public class GPlusDetailActivity extends BaseActivity
         setContentView( R.layout.activity_gplus_detail );
         tvContent = ( TextView ) findViewById( R.id.tv_content );
         activity = GPlusData.ActivityData.popActivity();
+        if ( null == activity )
+        {
+            finish();
+        }
         tvContent.setText( Html.fromHtml( activity.getObject().getContent() ) );
     }
 }

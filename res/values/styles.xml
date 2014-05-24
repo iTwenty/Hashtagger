@@ -18,6 +18,7 @@
 
     <style name="MainMessage">
         <item name="android:lineSpacingMultiplier">1.2</item>
+        <item name="android:maxLines">10</item>
     </style>
 
     <style name="DateText" parent="TextView_Default">

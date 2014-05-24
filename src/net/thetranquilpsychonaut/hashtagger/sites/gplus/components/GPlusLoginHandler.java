@@ -51,6 +51,11 @@ public class GPlusLoginHandler extends SitesLoginHandler
             return;
         }
         GoogleTokenResponse tokenResponse = GPlusData.AuthData.popTokenResponse();
+        if ( null == tokenResponse )
+        {
+            gPlusLoginListener.onError();
+            return;
+        }
         String userName = intent.getStringExtra( Result.RESULT_EXTRAS );
         AccountPrefs.addGPlusDetails( tokenResponse.getAccessToken(), tokenResponse.getRefreshToken(), userName );
         gPlusLoginListener.onUserLoggedIn();

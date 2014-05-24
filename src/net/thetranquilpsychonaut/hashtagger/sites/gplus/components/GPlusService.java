@@ -54,6 +54,7 @@ public class GPlusService extends SitesService
             credential.setAccessToken( AccountPrefs.getGPlusAccessToken() );
             credential.setRefreshToken( AccountPrefs.getGPlusRefreshToken() );
             Plus plus = new Plus.Builder( httpTransport, jsonFactory, credential )
+                    .setApplicationName( GPlusConfig.APP_NAME )
                     .build();
             Plus.Activities.Search searchActivities = plus.activities().search( hashtag );
             searchActivities.setMaxResults( 20L );
@@ -106,12 +107,12 @@ public class GPlusService extends SitesService
                     .setClientSecrets( GPlusConfig.SECRETS )
                     .build();
             credential.setAccessToken( tokenResponse.getAccessToken() );
-            Person me = new Plus.Builder( httpTransport, jsonFactory, credential ).build().people().get( "me" ).execute();
+            Person me = new Plus.Builder( httpTransport, jsonFactory, credential ).setApplicationName( GPlusConfig.APP_NAME ).build().people().get( "me" ).execute();
             userName = me.getDisplayName();
         }
         catch ( IOException e )
         {
-            Helper.debug( "Failed to get Google+ access token" );
+            Helper.debug( "Failed to get Google+ access token" + e.getMessage() );
         }
         Result accessResult = null == tokenResponse ? Result.FAILURE : Result.SUCCESS;
         resultIntent.putExtra( Result.RESULT_KEY, accessResult );
