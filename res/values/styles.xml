@@ -13,7 +13,13 @@
     <style name="ErrorText">
         <item name="android:textSize">20sp</item>
         <item name="android:lineSpacingMultiplier">1.2</item>
-        <item name="android:textColor">@android:color/holo_red_light</item>
+        <item name="android:textColor">@color/error_red</item>
+    </style>
+
+    <style name="LoginButton">
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="MainMessage">
@@ -33,12 +39,10 @@
 
     <style name="sitesListRowStyle" parent="AppTheme">
         <item name="android:background">@drawable/card</item>
-        <item name="android:padding">@dimen/card_padding</item>
     </style>
 
     <style name="sitesFooterStyle" parent="AppTheme">
         <item name="android:background">@drawable/selector_card</item>
-        <item name="android:padding">@dimen/card_padding</item>
     </style>
 
     <style name="newResultsBarStyle" parent="AppTheme">

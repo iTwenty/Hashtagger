@@ -15,4 +15,6 @@
     <item name="orange" type="color">#ff8800</item>
     <color name="link_background_pressed">#99999999</color>
     <color name="sites_button_pressed">#99999999</color>
+    <color name="error_red">#ff4444</color>
+    <color name="login_button_pressed">#77ff8800</color>
 </resources>

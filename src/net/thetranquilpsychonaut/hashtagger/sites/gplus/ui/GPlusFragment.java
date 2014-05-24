@@ -58,6 +58,12 @@ public class GPlusFragment extends SitesFragment
     }
 
     @Override
+    protected int getLoginButtonBackgroundId()
+    {
+        return R.drawable.selector_gplus_icon_background;
+    }
+
+    @Override
     protected String getLoginButtonText()
     {
         return getResources().getString( R.string.str_gplus_login_button_text );

@@ -35,6 +35,12 @@ public class TwitterFragment extends SitesFragment
     }
 
     @Override
+    protected int getLoginButtonBackgroundId()
+    {
+        return R.drawable.selector_twitter_background;
+    }
+
+    @Override
     protected String getLoginButtonText()
     {
         return getResources().getString( R.string.str_twitter_login_button_text );

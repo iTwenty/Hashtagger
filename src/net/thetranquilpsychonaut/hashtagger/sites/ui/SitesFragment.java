@@ -261,6 +261,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         loginHolder = new Login();
         loginHolder.btnLogin = ( Button ) viewLogin.findViewById( R.id.btn_login );
         loginHolder.btnLogin.setText( getLoginButtonText() );
+        loginHolder.btnLogin.setBackgroundResource( getLoginButtonBackgroundId() );
         loginHolder.btnLogin.setOnClickListener( new View.OnClickListener()
         {
             @Override
@@ -271,6 +272,8 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         } );
         return viewLogin;
     }
+
+    protected abstract int getLoginButtonBackgroundId();
 
     private View initViewError( LayoutInflater inflater, Bundle savedInstanceState )
     {

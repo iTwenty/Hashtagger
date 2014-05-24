@@ -30,6 +30,12 @@ public class FacebookFragment extends SitesFragment
     }
 
     @Override
+    protected int getLoginButtonBackgroundId()
+    {
+        return R.drawable.selector_facebook_icon_background;
+    }
+
+    @Override
     protected String getLoginButtonText()
     {
         return getResources().getString( R.string.str_facebook_login_button_text );

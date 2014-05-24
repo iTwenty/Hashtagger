@@ -8,9 +8,9 @@
 
     <Button
         android:id="@+id/btn_login"
-        android:text="Authorize"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        style="@style/LoginButton"/>
 
 </RelativeLayout>

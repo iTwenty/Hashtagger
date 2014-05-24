@@ -25,28 +25,12 @@ import twitter4j.auth.RequestToken;
 public class TwitterLoginActivity extends SitesLoginActivity implements TwitterLoginHandler.TwitterLoginListener
 {
     WebView      wvTwitterLogin;
-    // We need to persist this request token throughout the entire login procedure. So make sure it
-    // does not get destroyed anytime during activity lifecycle!
     RequestToken requestToken;
 
     @Override
     protected View initMainView( Bundle savedInstanceState )
     {
         wvTwitterLogin = new WebView( this );
-        wvTwitterLogin.setWebViewClient( new WebViewClient()
-        {
-            @Override
-            public void onPageStarted( WebView view, String url, Bitmap favicon )
-            {
-                showLoadingView();
-            }
-
-            @Override
-            public void onPageFinished( WebView view, String url )
-            {
-                showMainView();
-            }
-        } );
         return wvTwitterLogin;
     }
 
