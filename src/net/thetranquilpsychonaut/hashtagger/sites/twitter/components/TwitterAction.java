@@ -59,6 +59,7 @@ public class TwitterAction
             }
             catch ( TwitterException e )
             {
+                Helper.debug( "Error while posting twitter reply : " + e.getMessage() );
             }
             return null;
         }
@@ -97,7 +98,7 @@ public class TwitterAction
             }
             catch ( TwitterException e )
             {
-                Helper.debug( e.getMessage() );
+                Helper.debug( "Error while performing Twitter retweet : " + e.getMessage() );
             }
             return null;
         }
@@ -138,6 +139,7 @@ public class TwitterAction
             }
             catch ( TwitterException e )
             {
+                Helper.debug( "Error while favoriting Twitter status :" + e.getMessage() );
             }
             return null;
         }

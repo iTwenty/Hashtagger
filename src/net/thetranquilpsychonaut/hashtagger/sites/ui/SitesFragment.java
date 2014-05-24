@@ -80,7 +80,6 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     public void onStart()
     {
         super.onStart();
-        Helper.debug( "onStart" );
         sitesSearchHandler.registerReceiver();
         if ( activeView == LOADING && !sitesSearchHandler.isSearchRunning() )
         {
@@ -96,6 +95,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         if ( DefaultPrefs.autoUpdate )
         {
+            Helper.debug( "Next timed search posted" );
             timedSearchHandler.removeCallbacks( timedSearchRunner );
             timedSearchHandler.postDelayed( timedSearchRunner, AUTO_UPDATE_INTERVAL );
         }
@@ -361,6 +361,8 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         timedSearchHandler.removeCallbacks( timedSearchRunner );
         // We use the listview tag to keep track of selected position. On a new search, we clear this tag.
         readyHolder.lvResultsList.setTag( null );
+        sitesListAdapter.clear();
+        sitesListAdapter.clearTypes();
         sitesSearchHandler.beginSearch( SearchType.INITIAL, hashtag );
     }
 
@@ -521,8 +523,6 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     public void afterCurrentSearch( List<?> searchResults )
     {
         showView( READY );
-        sitesListAdapter.clear();
-        sitesListAdapter.clearTypes();
         if ( !searchResults.isEmpty() )
         {
             // Since we cannot add directly to List<?>, we have to delegate the adding to subclass which

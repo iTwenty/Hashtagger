@@ -156,7 +156,6 @@ public class TwitterFragment extends SitesFragment
     @Subscribe
     public void onReplyDone( TwitterReplyEvent event )
     {
-        Helper.debug( "onReply" );
         if ( event.getSuccess() )
         {
             Toast.makeText( getActivity(), "Replied like a champ!", Toast.LENGTH_SHORT ).show();

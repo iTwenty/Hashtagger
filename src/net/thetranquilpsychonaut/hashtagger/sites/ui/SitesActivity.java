@@ -260,7 +260,6 @@ public class SitesActivity extends SavedHashtagsActivity
             {
                 if ( f instanceof SitesFragment )
                 {
-                    Helper.debug( ( ( SitesFragment ) f ).getLoginButtonText() );
                     ( ( SitesFragment ) f ).searchHashtag( hashtag );
                 }
             }

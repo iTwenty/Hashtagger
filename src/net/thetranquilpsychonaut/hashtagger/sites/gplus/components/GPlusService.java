@@ -53,7 +53,6 @@ public class GPlusService extends SitesService
                     .build();
             credential.setAccessToken( AccountPrefs.getGPlusAccessToken() );
             credential.setRefreshToken( AccountPrefs.getGPlusRefreshToken() );
-            Helper.debug( String.valueOf( credential.getExpiresInSeconds() ) );
             Plus plus = new Plus.Builder( httpTransport, jsonFactory, credential )
                     .build();
             Plus.Activities.Search searchActivities = plus.activities().search( hashtag );

@@ -138,8 +138,6 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
 
     private void doRetweet()
     {
-        Helper.debug( String.valueOf( status.isRetweetedByMe() ) );
-        Helper.debug( String.valueOf( status.isRetweeted() ) );
         if ( status.isRetweeted() )
         {
             Toast.makeText( getContext(), "You have already retweeted this", Toast.LENGTH_SHORT ).show();

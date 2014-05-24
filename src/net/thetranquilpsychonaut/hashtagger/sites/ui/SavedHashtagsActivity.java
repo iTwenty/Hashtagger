@@ -148,7 +148,6 @@ public class SavedHashtagsActivity extends FragmentActivity implements LoaderMan
         String selectedHashtag = cursor.getString( cursor.getColumnIndex( SavedHashtagsDBContract.SavedHashtags.COLUMN_HASHTAG ) );
         // Close the drawer first
         dlNavDrawer.closeDrawers();
-        Helper.debug( selectedHashtag );
         // We need to deliver the search intent manually in case a saved hashtag was selected
 //        Intent intent = new Intent( Intent.ACTION_SEARCH );
 //        intent.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK );
