@@ -13,6 +13,7 @@ public class FacebookDetailActivity extends BaseActivity
 {
     public static final String POST_KEY = "post";
 
+    private FacebookHeader facebookHeader;
     private TextView tvMessage;
     private Post     post;
 
@@ -21,8 +22,10 @@ public class FacebookDetailActivity extends BaseActivity
     {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_facebook_detail );
+        facebookHeader = ( FacebookHeader ) findViewById( R.id.facebook_header );
         tvMessage = ( TextView ) findViewById( R.id.tv_message );
         this.post = ( Post ) getIntent().getSerializableExtra( POST_KEY );
+        facebookHeader.updateHeader( post );
         tvMessage.setText( post.getMessage() );
     }
 }

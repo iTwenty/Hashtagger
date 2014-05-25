@@ -1,5 +1,7 @@
 package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
@@ -57,13 +59,35 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     {
         if ( preference.equals( prefClearSearch ) )
         {
-            SearchRecentSuggestions suggestions = new SearchRecentSuggestions(
-                    getActivity(),
-                    HashtagSuggestionsProvider.AUTHORITY,
-                    HashtagSuggestionsProvider.MODE );
-            suggestions.clearHistory();
+            new AlertDialog.Builder( getActivity() ).setMessage( "Clear search history?" )
+                    .setPositiveButton( "Yes", new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick( DialogInterface dialog, int which )
+                        {
+                            doClearRecentSearch();
+                        }
+                    } )
+                    .setNegativeButton( "No", new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick( DialogInterface dialog, int which )
+                        {
+                            dialog.dismiss();
+                        }
+                    } )
+                    .show();
         }
         return true;
+    }
+
+    private void doClearRecentSearch()
+    {
+        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(
+                getActivity(),
+                HashtagSuggestionsProvider.AUTHORITY,
+                HashtagSuggestionsProvider.MODE );
+        suggestions.clearHistory();
     }
 
     @Override

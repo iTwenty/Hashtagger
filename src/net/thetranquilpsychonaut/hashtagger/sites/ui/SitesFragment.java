@@ -87,6 +87,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             if ( activeView == LOADING )
             {
                 showView( READY );
+                showClickHashtagIfAlreadyEntered();
             }
             if ( readyHolder.srlReady.isRefreshing() )
             {

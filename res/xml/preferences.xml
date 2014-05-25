@@ -39,8 +39,8 @@
     </PreferenceCategory>
 
     <Preference
-        android:title="Clear recently searched hashtags"
-        android:summary="This will not clear your saved hashtags"
-        android:key="clear_search"/>
+        android:title="Clear search history"
+        android:key="clear_search"
+        android:icon="@android:drawable/ic_menu_delete"/>
 
 </PreferenceScreen>

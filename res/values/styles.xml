@@ -25,6 +25,9 @@
     <style name="MainMessage">
         <item name="android:lineSpacingMultiplier">1.2</item>
         <item name="android:maxLines">10</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingRight">10dp</item>
     </style>
 
     <style name="DateText" parent="TextView_Default">

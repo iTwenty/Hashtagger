@@ -35,7 +35,8 @@ public class TwitterDetailActivity extends BaseActivity
         imgvMediaImage = ( ImageView ) findViewById( R.id.imgv_media_image );
         status = ( Status ) getIntent().getSerializableExtra( STATUS_KEY );
         twitterHeader.updateHeader( status );
-        tvStatus.setText( Helper.stripUnderlines( new SpannableString( Html.fromHtml( Helper.getLinkedTweetText( status.isRetweet() ? status.getRetweetedStatus().getText() : status.getText() ) ) ) ) );
+        String statusHtml = Helper.getLinkedTweetText( status.isRetweet() ? status.getRetweetedStatus().getText() : status.getText() );
+        tvStatus.setText( Helper.stripUnderlines( new SpannableString( Html.fromHtml( statusHtml ) ) ) );
         tvStatus.setMovementMethod( LinkMovementMethod.getInstance() );
         if ( status.getMediaEntities().length > 0 )
         {
