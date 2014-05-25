@@ -1,5 +1,7 @@
 package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -14,8 +16,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.*;
 import android.widget.*;
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
@@ -24,7 +24,6 @@ import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
 import net.thetranquilpsychonaut.hashtagger.utils.DefaultPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.widgets.MySwipeRefreshLayout;
-import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 import java.util.List;
 
@@ -374,7 +373,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         if ( !sitesUserHandler.isUserLoggedIn() )
         {
-            animate( loginHolder.btnLogin ).rotationX( loginHolder.btnLogin.getRotationX() == 0 ? 360 : 0 ).setDuration( 1000 ).start();
+            loginHolder.btnLogin.animate().rotationX( loginHolder.btnLogin.getRotationX() == 0 ? 360 : 0 ).setDuration( 1000 ).start();
             return;
         }
         timedSearchHandler.removeCallbacks( timedSearchRunner );

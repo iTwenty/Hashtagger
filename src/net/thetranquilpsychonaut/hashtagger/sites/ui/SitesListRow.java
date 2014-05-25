@@ -1,9 +1,9 @@
 package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
-import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import net.thetranquilpsychonaut.hashtagger.R;
 
 /**
