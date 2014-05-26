@@ -221,12 +221,45 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         readyHolder.newResultsBar.setOnScrollToNewClickListener( new NewResultsBar.OnScrollToNewClickListener()
         {
             @Override
-            public void onScrollToNewClicked( NewResultsBar bar, int resultCount )
+            public void onScrollToNewClicked( final NewResultsBar bar, int resultCount )
             {
-                if ( null != readyHolder.lvResultsList )
+                if ( null == readyHolder.lvResultsList )
+                    return;
+
+                final int currentPosition = readyHolder.lvResultsList.getFirstVisiblePosition();
+                if ( currentPosition > resultCount )
                 {
-                    readyHolder.lvResultsList.smoothScrollToPosition( 0 );
+                    // We set a new onScrollListener to notify us when scroll stops
+                    readyHolder.lvResultsList.setOnScrollListener( new AbsListView.OnScrollListener()
+                    {
+                        @Override
+                        public void onScrollStateChanged( AbsListView view, int scrollState )
+                        {
+                            if ( scrollState == SCROLL_STATE_IDLE )
+                            {
+                                // When the scroll ends and results count is reached,
+                                // we call expandNewResultsText() to make user aware of new results above
+                                // this point and restore the scroll listener to its previous value
+                                bar.expandNewResultsText();
+                                readyHolder.lvResultsList.setOnScrollListener( bar );
+                            }
+                        }
+
+                        // No need to override this method
+                        @Override
+                        public void onScroll( AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount )
+                        {
+
+                        }
+                    } );
+                    // Now we actually perform the scroll upto results count
+                    // We need an offset certain pixels because without it, getFirstVisiblePosition()
+                    // reports one position less than the position actually visible, causing NewResultsBar count
+                    // to decrease by one.
+                    readyHolder.lvResultsList.smoothScrollToPositionFromTop( resultCount, -5 );
                 }
+                else
+                    readyHolder.lvResultsList.smoothScrollToPosition( 0 );
             }
         } );
     }

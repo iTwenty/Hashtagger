@@ -1,5 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
+import android.animation.*;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -74,7 +75,7 @@ public class NewResultsBar extends LinearLayout implements AbsListView.OnScrollL
     public void setResultsCount( int count )
     {
         this.count = count;
-        tvNewResultsCount.setText( String.format( "%d New Results", this.count ) );
+        tvNewResultsCount.setText( String.format( "%d New Result" + ( this.count == 1 ? "" : "s" ), this.count ) );
     }
 
     public int getResultsCount()
@@ -83,10 +84,7 @@ public class NewResultsBar extends LinearLayout implements AbsListView.OnScrollL
     }
 
     @Override
-    public void onScrollStateChanged( AbsListView view, int scrollState )
-    {
-
-    }
+    public void onScrollStateChanged( AbsListView view, int scrollState ) { }
 
     @Override
     public void onScroll( AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount )
@@ -109,6 +107,18 @@ public class NewResultsBar extends LinearLayout implements AbsListView.OnScrollL
     {
         this.setVisibility( GONE );
         this.setResultsCount( 0 );
+    }
+
+    public void expandNewResultsText()
+    {
+        ObjectAnimator expandAnimator = ObjectAnimator.ofPropertyValuesHolder(
+                tvNewResultsCount,
+                PropertyValuesHolder.ofFloat( "scaleX", 1.5f ),
+                PropertyValuesHolder.ofFloat( "scaleY", 1.5f ) );
+        expandAnimator.setRepeatMode( ValueAnimator.REVERSE );
+        expandAnimator.setRepeatCount( 1 );
+        expandAnimator.setDuration( 500 );
+        expandAnimator.start();
     }
 
     @Override
