@@ -1,6 +1,8 @@
 package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
-import android.animation.*;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -84,7 +86,9 @@ public class NewResultsBar extends LinearLayout implements AbsListView.OnScrollL
     }
 
     @Override
-    public void onScrollStateChanged( AbsListView view, int scrollState ) { }
+    public void onScrollStateChanged( AbsListView view, int scrollState )
+    {
+    }
 
     @Override
     public void onScroll( AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount )

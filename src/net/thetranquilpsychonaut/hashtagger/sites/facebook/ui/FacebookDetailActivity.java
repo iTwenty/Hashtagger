@@ -14,8 +14,8 @@ public class FacebookDetailActivity extends BaseActivity
     public static final String POST_KEY = "post";
 
     private FacebookHeader facebookHeader;
-    private TextView tvMessage;
-    private Post     post;
+    private TextView       tvMessage;
+    private Post           post;
 
     @Override
     protected void onCreate( Bundle savedInstanceState )

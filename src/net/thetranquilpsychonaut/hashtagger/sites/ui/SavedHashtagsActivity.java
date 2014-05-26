@@ -32,7 +32,7 @@ import net.thetranquilpsychonaut.hashtagger.widgets.buttontoast.OnClickWrapper;
 /**
  * Created by itwenty on 5/10/14.
  */
-public class SavedHashtagsActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener
+public abstract class SavedHashtagsActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener
 {
     private static final int SAVED_HASHTAG_LOADER = 0;
 
@@ -140,21 +140,6 @@ public class SavedHashtagsActivity extends FragmentActivity implements LoaderMan
         savedHashtagsAdapter.swapCursor( null );
     }
 
-    @Override
-    public void onItemClick( AdapterView<?> parent, View view, int position, long id )
-    {
-        Cursor cursor = ( Cursor ) parent.getItemAtPosition( position );
-        String selectedHashtag = cursor.getString( cursor.getColumnIndex( SavedHashtagsDBContract.SavedHashtags.COLUMN_HASHTAG ) );
-        // Close the drawer first
-        dlNavDrawer.closeDrawers();
-        // We need to deliver the search intent manually in case a saved hashtag was selected
-//        Intent intent = new Intent( Intent.ACTION_SEARCH );
-//        intent.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK );
-//        intent.putExtra( SearchManager.QUERY, selectedHashtag );
-//        intent.setComponent( getComponentName() );
-//        startActivity( intent );
-    }
-
     @Subscribe
     public void onSavedHashtagDeleted( final SavedHashtagDeletedEvent event )
     {
@@ -181,4 +166,7 @@ public class SavedHashtagsActivity extends FragmentActivity implements LoaderMan
         Uri result = getContentResolver().insert( SavedHashtagsProviderContract.SavedHashtags.CONTENT_URI, values );
         return result == null ? false : true;
     }
+
+    @Override
+    public abstract void onItemClick( AdapterView<?> parent, View view, int position, long id );
 }

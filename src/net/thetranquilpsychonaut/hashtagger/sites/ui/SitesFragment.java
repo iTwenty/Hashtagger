@@ -55,6 +55,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     protected SitesListAdapter   sitesListAdapter;
     protected Handler            timedSearchHandler;
     protected TimedSearchRunner  timedSearchRunner;
+    private   boolean            fragmentReady;
 
     protected int activeView = READY;
 
@@ -106,10 +107,8 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     private void postNextTimedSearch()
     {
-        Helper.debug( "Auto update is : " + DefaultPrefs.autoUpdate );
         if ( DefaultPrefs.autoUpdate )
         {
-            Helper.debug( "Next timed search posted" );
             timedSearchHandler.removeCallbacks( timedSearchRunner );
             timedSearchHandler.postDelayed( timedSearchRunner, AUTO_UPDATE_INTERVAL );
         }
@@ -180,10 +179,10 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         readyHolder.srlReady = ( MySwipeRefreshLayout ) viewReady.findViewById( R.id.srl_ready );
         readyHolder.srlReady.setOnRefreshListener( this );
-        readyHolder.srlReady.setColorScheme( android.R.color.holo_blue_light,
+        readyHolder.srlReady.setColorScheme( android.R.color.holo_blue_dark,
+                android.R.color.holo_orange_dark,
                 android.R.color.holo_blue_dark,
-                android.R.color.holo_blue_light,
-                android.R.color.holo_blue_dark );
+                android.R.color.holo_orange_dark );
     }
 
     private void initSitesFooterView( View viewReady )
@@ -224,7 +223,9 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             public void onScrollToNewClicked( final NewResultsBar bar, int resultCount )
             {
                 if ( null == readyHolder.lvResultsList )
+                {
                     return;
+                }
 
                 final int currentPosition = readyHolder.lvResultsList.getFirstVisiblePosition();
                 if ( currentPosition > resultCount )
@@ -259,7 +260,9 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
                     readyHolder.lvResultsList.smoothScrollToPositionFromTop( resultCount, -5 );
                 }
                 else
+                {
                     readyHolder.lvResultsList.smoothScrollToPosition( 0 );
+                }
             }
         } );
     }
@@ -403,7 +406,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     protected abstract int getLogo();
 
-    protected void searchHashtag( String hashtag )
+    protected void searchHashtag( final String hashtag )
     {
         if ( !sitesUserHandler.isUserLoggedIn() )
         {
@@ -415,7 +418,14 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         readyHolder.lvResultsList.setTag( null );
         sitesListAdapter.clear();
         sitesListAdapter.clearTypes();
-        sitesSearchHandler.beginSearch( SearchType.INITIAL, hashtag );
+        new Handler( getActivity().getMainLooper() ).post( new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                sitesSearchHandler.beginSearch( SearchType.INITIAL, hashtag );
+            }
+        } );
     }
 
     public void showView( int activeView )

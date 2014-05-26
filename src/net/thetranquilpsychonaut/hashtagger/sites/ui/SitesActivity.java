@@ -60,12 +60,8 @@ public class SitesActivity extends SavedHashtagsActivity
         ipiSitesPager.setViewPager( vpSitesPager );
 
         showActiveSites();
-
-        if ( null != getIntent() && getIntent().getAction().equals( Intent.ACTION_SEARCH ) )
-        {
-            handleIntent( getIntent() );
-        }
     }
+
 
     @Override
     protected void onRestart()
@@ -161,6 +157,7 @@ public class SitesActivity extends SavedHashtagsActivity
         SearchManager searchManager = ( SearchManager ) getSystemService( Context.SEARCH_SERVICE );
         svHashtag = ( SearchView ) menu.findItem( R.id.sv_hashtag ).getActionView();
         svHashtag.setSearchableInfo( searchManager.getSearchableInfo( getComponentName() ) );
+        menu.findItem( R.id.it_save_hashtag ).setVisible( null == this.hashtag ? false : true );
         return true;
     }
 
@@ -173,14 +170,6 @@ public class SitesActivity extends SavedHashtagsActivity
             return false;
         }
         return super.onOptionsItemSelected( item );
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu( Menu menu )
-    {
-        // Don't show save option if no hashtag has been entered
-        menu.findItem( R.id.it_save_hashtag ).setVisible( null == this.hashtag ? false : true );
-        return true;
     }
 
     public void doSaveHashtag( MenuItem item )
@@ -281,7 +270,6 @@ public class SitesActivity extends SavedHashtagsActivity
         dlNavDrawer.closeDrawers();
         // We need to deliver the search intent manually in case a saved hashtag was selected
         Intent intent = new Intent( Intent.ACTION_SEARCH );
-        intent.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK );
         intent.putExtra( SearchManager.QUERY, selectedHashtag );
         intent.setComponent( getComponentName() );
         startActivity( intent );

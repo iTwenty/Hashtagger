@@ -2,10 +2,7 @@ package net.thetranquilpsychonaut.hashtagger.utils;
 
 import android.content.Context;
 import android.net.Uri;
-import android.text.Spannable;
-import android.text.TextPaint;
 import android.text.format.DateUtils;
-import android.text.style.URLSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.Toast;
@@ -23,23 +20,8 @@ import java.util.Date;
  */
 public class Helper
 {
-
     private static final String  FACEBOOK_PROFILE_PICTURE_URL = "http://graph.facebook.com/%s/picture?type=square";
     private static final boolean DEBUG                        = true;
-//    private static final Pattern hashtagPattern               = Pattern.compile( "#([A-Za-z0-9_-]+)" );
-//
-//    private static final String twitterHashtagScheme = "http://www.twitter.com/search/";
-//
-//    private static final Pattern twitterMentionPattern = Pattern.compile( "@([A-Za-z0-9_-]+)" );
-//    private static final String  twitterMentionScheme  = "http://www.twitter.com/";
-//
-//    private static final Linkify.TransformFilter filter = new Linkify.TransformFilter()
-//    {
-//        public final String transformUrl( final Matcher match, String url )
-//        {
-//            return match.group();
-//        }
-//    };
 
     public static void debug( String s )
     {
@@ -52,7 +34,9 @@ public class Helper
     public static CharSequence getFuzzyDateTime( long time )
     {
         if ( time > System.currentTimeMillis() )
+        {
             return "now";
+        }
 
         return DateUtils.getRelativeDateTimeString(
                 HashtaggerApp.app.getApplicationContext(),
@@ -70,32 +54,9 @@ public class Helper
         return sdf.format( date );
     }
 
-    public static String getLinkedTweetText( String tweetText )
+    public static String getLinkedStatusText( String tweetText )
     {
         return new Autolink().autoLink( tweetText );
-    }
-
-    //    public static void linkifyTwitter( TextView tv )
-//    {
-//        Linkify.addLinks( tv, twitterMentionPattern, twitterMentionScheme, null, filter );
-//        Linkify.addLinks( tv, hashtagPattern, twitterHashtagScheme, null, filter );
-//        Linkify.addLinks( tv, Patterns.WEB_URL, null, null, filter );
-//        stripUnderlines( tv );
-//
-//    }
-//
-    public static Spannable stripUnderlines( Spannable spannable )
-    {
-        URLSpan[] spans = spannable.getSpans( 0, spannable.length(), URLSpan.class );
-        for ( URLSpan span : spans )
-        {
-            int start = spannable.getSpanStart( span );
-            int end = spannable.getSpanEnd( span );
-            spannable.removeSpan( span );
-            span = new URLSpanNoUnderline( span.getURL() );
-            spannable.setSpan( span, start, end, 0 );
-        }
-        return spannable;
     }
 
     public static String getFacebookPictureUrl( String userId )
@@ -142,21 +103,6 @@ public class Helper
     public static void showNoNetworkToast( Context context )
     {
         Toast.makeText( context, "Connect to a network first", Toast.LENGTH_SHORT ).show();
-    }
-
-    private static class URLSpanNoUnderline extends URLSpan
-    {
-        public URLSpanNoUnderline( String url )
-        {
-            super( url );
-        }
-
-        @Override
-        public void updateDrawState( TextPaint ds )
-        {
-            super.updateDrawState( ds );
-            ds.setUnderlineText( false );
-        }
     }
 
     public static Uri getTwitterStatusUrl( Status status )

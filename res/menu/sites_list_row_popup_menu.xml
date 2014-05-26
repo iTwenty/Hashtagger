@@ -3,7 +3,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/it_open_in_browser"
-        android:title="Open in browser"/>
+        android:id="@+id/it_search_for_hashtag"
+        android:title="Search for hashtag"/>
 
 </menu>
