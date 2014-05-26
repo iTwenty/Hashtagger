@@ -561,7 +561,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         switch ( searchType )
         {
             case INITIAL:
-                afterCurrentSearch( searchResults );
+                afterInitialSearch( searchResults );
                 break;
             case OLDER:
                 afterOlderSearch( searchResults );
@@ -575,7 +575,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         }
     }
 
-    public void afterCurrentSearch( List<?> searchResults )
+    public void afterInitialSearch( List<?> searchResults )
     {
         showView( READY );
         if ( !searchResults.isEmpty() )

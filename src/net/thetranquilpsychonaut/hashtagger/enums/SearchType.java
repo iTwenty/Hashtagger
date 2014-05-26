@@ -8,5 +8,5 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 public enum SearchType
 {
     INITIAL, OLDER, NEWER, TIMED;
-    public static String SEARCH_TYPE_KEY = HashtaggerApp.NAMESPACE + "search_type_key";
+    public static final String SEARCH_TYPE_KEY = HashtaggerApp.NAMESPACE + "search_type_key";
 }

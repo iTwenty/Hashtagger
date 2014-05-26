@@ -8,5 +8,5 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 public enum ActionType
 {
     SEARCH, AUTH;
-    public static String ACTION_TYPE_KEY = HashtaggerApp.NAMESPACE + "action_type_key";
+    public static final String ACTION_TYPE_KEY = HashtaggerApp.NAMESPACE + "action_type_key";
 }

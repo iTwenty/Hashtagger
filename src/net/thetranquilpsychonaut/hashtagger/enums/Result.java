@@ -8,7 +8,7 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 public enum Result
 {
     SUCCESS, FAILURE;
-    public static String RESULT_KEY    = HashtaggerApp.NAMESPACE + "result_key";
-    public static String RESULT_DATA   = HashtaggerApp.NAMESPACE + "result_data";
-    public static String RESULT_EXTRAS = HashtaggerApp.NAMESPACE + "result_extras";
+    public static final String RESULT_KEY    = HashtaggerApp.NAMESPACE + "result_key";
+    public static final String RESULT_DATA   = HashtaggerApp.NAMESPACE + "result_data";
+    public static final String RESULT_EXTRAS = HashtaggerApp.NAMESPACE + "result_extras";
 }

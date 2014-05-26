@@ -8,5 +8,5 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 public enum AuthType
 {
     REQUEST, ACCESS;
-    public static String AUTH_TYPE_KEY = HashtaggerApp.NAMESPACE + "auth_type_key";
+    public static final String AUTH_TYPE_KEY = HashtaggerApp.NAMESPACE + "auth_type_key";
 }

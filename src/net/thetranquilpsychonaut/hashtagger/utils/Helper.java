@@ -51,13 +51,16 @@ public class Helper
 
     public static CharSequence getFuzzyDateTime( long time )
     {
-        String timeStr = DateUtils.getRelativeDateTimeString(
+        if ( time > System.currentTimeMillis() )
+            return "now";
+
+        return DateUtils.getRelativeDateTimeString(
                 HashtaggerApp.app.getApplicationContext(),
                 time,
                 DateUtils.SECOND_IN_MILLIS,
                 DateUtils.WEEK_IN_MILLIS,
                 DateUtils.FORMAT_ABBREV_ALL ).toString();
-        return timeStr.startsWith( "in" ) ? "just now" : timeStr;
+
 
     }
 
