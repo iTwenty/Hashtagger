@@ -20,6 +20,7 @@ import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -107,6 +108,7 @@ public class IconPagerIndicator extends LinearLayout implements OnPageChangeList
     {
         ImageButton imageButton = new ImageButton( getContext(), null, android.R.style.Widget_DeviceDefault_Button_Borderless );
         LayoutParams params = new LayoutParams( 0, ViewGroup.LayoutParams.WRAP_CONTENT, 1 );
+        params.gravity = Gravity.CENTER;
         imageButton.setLayoutParams( params );
         switch ( iconType )
         {

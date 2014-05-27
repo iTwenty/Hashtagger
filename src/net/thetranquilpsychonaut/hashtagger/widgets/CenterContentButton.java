@@ -11,12 +11,12 @@ public class CenterContentButton extends Button
 
     public CenterContentButton( Context context )
     {
-        this( context, null, 0 );
+        super( context );
     }
 
     public CenterContentButton( Context context, AttributeSet attrs )
     {
-        this( context, attrs, 0 );
+        super( context, attrs );
     }
 
     public CenterContentButton( Context context, AttributeSet attrs, int defStyle )

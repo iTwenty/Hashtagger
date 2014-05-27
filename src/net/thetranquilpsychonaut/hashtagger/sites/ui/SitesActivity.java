@@ -11,9 +11,7 @@ import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
 import android.widget.AdapterView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
@@ -62,11 +60,10 @@ public class SitesActivity extends SavedHashtagsActivity
         showActiveSites();
     }
 
-
     @Override
-    protected void onRestart()
+    protected void onResumeFragments()
     {
-        super.onRestart();
+        super.onResumeFragments();
         if ( DefaultPrefs.activeSitesChanged )
         {
             showActiveSites();
@@ -157,7 +154,16 @@ public class SitesActivity extends SavedHashtagsActivity
         SearchManager searchManager = ( SearchManager ) getSystemService( Context.SEARCH_SERVICE );
         svHashtag = ( SearchView ) menu.findItem( R.id.sv_hashtag ).getActionView();
         svHashtag.setSearchableInfo( searchManager.getSearchableInfo( getComponentName() ) );
-        menu.findItem( R.id.it_save_hashtag ).setVisible( null == this.hashtag ? false : true );
+        MenuItem saveHashtagItem = menu.findItem( R.id.it_save_hashtag );
+        if ( TextUtils.isEmpty( this.hashtag ) )
+        {
+            saveHashtagItem.setVisible( false );
+        }
+        else
+        {
+            saveHashtagItem.setTitle( "Save " + this.hashtag );
+            saveHashtagItem.setVisible( true );
+        }
         return true;
     }
 
@@ -186,8 +192,7 @@ public class SitesActivity extends SavedHashtagsActivity
 
     public void doLaunchSettings( MenuItem item )
     {
-        Intent intent = new Intent( this, SettingsActivity.class );
-        startActivity( intent );
+        startActivity( new Intent( this, SettingsActivity.class ) );
     }
 
     @Override
@@ -275,6 +280,9 @@ public class SitesActivity extends SavedHashtagsActivity
         startActivity( intent );
     }
 
+    // Do not remove this method even thought it seems to do nothing,
+    // Otto can't deliver SavedHashtagDeletedEvent to abstract superclass
+    // So we have to Subscribe in the concrete subclass
     @Subscribe
     public void onSavedHashtagDeleted( SavedHashtagDeletedEvent event )
     {

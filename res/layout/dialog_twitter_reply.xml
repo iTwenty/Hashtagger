@@ -3,7 +3,8 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="@dimen/layout_padding">
 
     <EditText
         android:id="@+id/edt_reply_text"
@@ -16,7 +17,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/edt_reply_text"
-        android:text="0/140"/>
+        android:text="0/140"
+        style="@style/DateText"/>
 
     <TextView
         android:id="@+id/tv_reply_progress"

@@ -30,6 +30,11 @@
         <item name="android:paddingRight">10dp</item>
     </style>
 
+    <style name="MainMessage_Detail" parent="MainMessage">
+        <item name="android:typeface">serif</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
     <style name="DateText" parent="TextView_Default">
         <item name="android:textSize">10sp</item>
         <item name="android:textColor">@color/text_faded</item>
@@ -62,11 +67,11 @@
         <item name="android:scaleType">fitCenter</item>
         <item name="android:layout_width">50dp</item>
         <item name="android:layout_height">50dp</item>
-        <item name="android:background">@drawable/selector_shadow_border</item>
+        <item name="android:background">@drawable/selector_picture_frame</item>
     </style>
 
     <style name="MediaImage">
-        <item name="android:background">@android:drawable/picture_frame</item>
+        <item name="android:background">@drawable/selector_picture_frame</item>
         <item name="android:layout_width">75dp</item>
         <item name="android:layout_height">75dp</item>
         <item name="android:scaleType">fitCenter</item>
