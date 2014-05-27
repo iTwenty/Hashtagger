@@ -77,6 +77,8 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         results = initResultsList();
         resultTypes = new ArrayList<Integer>();
         sitesListAdapter = initSitesListAdapter();
+        sitesUserHandler = initSitesUserHandler();
+        sitesSearchHandler = initSitesSearchHandler();
     }
 
     @Override
@@ -126,8 +128,6 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
     {
-        sitesUserHandler = initSitesUserHandler();
-        sitesSearchHandler = initSitesSearchHandler();
         View v = inflater.inflate( R.layout.fragment_sites, container, false );
         vaSitesView = ( ViewAnimator ) v.findViewById( R.id.va_sites_view );
         vaSitesView.addView( initViewReady( inflater ), READY );
