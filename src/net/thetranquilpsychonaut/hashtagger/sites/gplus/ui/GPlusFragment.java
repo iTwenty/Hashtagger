@@ -26,29 +26,26 @@ public class GPlusFragment extends SitesFragment
     @Override
     protected SitesUserHandler initSitesUserHandler()
     {
-        GPlusUserHandler gPlusUserHandler = new GPlusUserHandler( this );
-        return gPlusUserHandler;
+        return new GPlusUserHandler( this );
     }
 
     @Override
     protected SitesSearchHandler initSitesSearchHandler()
     {
-        GPlusSearchHandler gPlusSearchHandler = new GPlusSearchHandler( this );
-        return gPlusSearchHandler;
+        return new GPlusSearchHandler( this );
     }
 
     @Override
     protected SitesListAdapter initSitesListAdapter()
     {
-        GPlusListAdapter gPlusListAdapter = new GPlusListAdapter( getActivity(), 0, results );
-        return gPlusListAdapter;
+        return new GPlusListAdapter( getActivity(), 0, results, resultTypes );
+
     }
 
     @Override
     protected List<?> initResultsList()
     {
-        List<Activity> results = new ArrayList<Activity>();
-        return results;
+        return new ArrayList<Activity>();
     }
 
     @Override

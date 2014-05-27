@@ -22,10 +22,11 @@ public class TwitterListAdapter extends SitesListAdapter
     private static final int STATUS_TYPE_LINK   = 2;
     private static final int STATUS_TYPE_COUNT  = 3;
 
-    public TwitterListAdapter( Context context, int textViewResourceId, List<?> results )
+    protected TwitterListAdapter( Context context, int textViewResourceId, List<?> objects, List<Integer> resultTypes )
     {
-        super( context, textViewResourceId, results );
+        super( context, textViewResourceId, objects, resultTypes );
     }
+
 
     @Override
     public int getItemViewType( int position )

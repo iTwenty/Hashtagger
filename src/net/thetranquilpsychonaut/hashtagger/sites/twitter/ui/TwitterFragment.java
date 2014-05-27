@@ -49,29 +49,25 @@ public class TwitterFragment extends SitesFragment
     @Override
     protected SitesUserHandler initSitesUserHandler()
     {
-        TwitterUserHandler twitterUserHandler = new TwitterUserHandler( this );
-        return twitterUserHandler;
+        return new TwitterUserHandler( this );
     }
 
     @Override
     protected SitesSearchHandler initSitesSearchHandler()
     {
-        TwitterSearchHandler twitterSearchHandler = new TwitterSearchHandler( this );
-        return twitterSearchHandler;
+        return new TwitterSearchHandler( this );
     }
 
     @Override
     protected SitesListAdapter initSitesListAdapter()
     {
-        TwitterListAdapter twitterListAdapter = new TwitterListAdapter( getActivity(), 0, results );
-        return twitterListAdapter;
+        return new TwitterListAdapter( getActivity(), 0, results, resultTypes );
     }
 
     @Override
     protected List<?> initResultsList()
     {
-        List<Status> results = new ArrayList<Status>();
-        return results;
+        return new ArrayList<Status>();
     }
 
     @Override

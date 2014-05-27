@@ -129,7 +129,7 @@ public class NewResultsBar extends LinearLayout implements AbsListView.OnScrollL
     protected Parcelable onSaveInstanceState()
     {
         Parcelable superState = super.onSaveInstanceState();
-        return new SavedState( superState, this.count );
+        return new SavedState( superState, this.count, this.getVisibility() );
     }
 
     @Override
@@ -138,6 +138,7 @@ public class NewResultsBar extends LinearLayout implements AbsListView.OnScrollL
         SavedState savedState = ( SavedState ) state;
         super.onRestoreInstanceState( savedState.getSuperState() );
         setResultsCount( savedState.getCount() );
+        setVisibility( savedState.getVisibility() );
     }
 
     @Override
@@ -155,17 +156,20 @@ public class NewResultsBar extends LinearLayout implements AbsListView.OnScrollL
     protected static class SavedState extends BaseSavedState
     {
         private int count;
+        private int visibility;
 
         public SavedState( Parcel source )
         {
             super( source );
             this.count = source.readInt();
+            this.visibility = source.readInt();
         }
 
-        public SavedState( Parcelable superState, int count )
+        public SavedState( Parcelable superState, int count, int visibility )
         {
             super( superState );
             this.count = count;
+            this.visibility = visibility;
         }
 
         public int getCount()
@@ -173,11 +177,17 @@ public class NewResultsBar extends LinearLayout implements AbsListView.OnScrollL
             return this.count;
         }
 
+        public int getVisibility()
+        {
+            return this.visibility;
+        }
+
         @Override
         public void writeToParcel( Parcel dest, int flags )
         {
             super.writeToParcel( dest, flags );
             dest.writeInt( this.count );
+            dest.writeInt( this.visibility );
         }
 
         public static final Creator<SavedState> CREATOR = new Creator<SavedState>()

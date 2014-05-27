@@ -1,7 +1,10 @@
 package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.SparseArray;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -17,7 +20,7 @@ public class SitesFooterView extends FrameLayout
     public static final int LOADING = 1;
     public static final int ERROR   = 2;
 
-    private int mode = NORMAL;
+    private int activeView = NORMAL;
     private TextView    tvFooter;
     private ProgressBar pgbrFooter;
 
@@ -37,30 +40,33 @@ public class SitesFooterView extends FrameLayout
         inflate( context, R.layout.sites_footer_view, this );
         tvFooter = ( TextView ) findViewById( R.id.tv_footer );
         pgbrFooter = ( ProgressBar ) findViewById( R.id.pgbr_footer );
+        showView( NORMAL );
     }
 
-    public void setMode( int mode )
+    public void showView( int activeView )
     {
-        this.mode = mode;
-        switch ( mode )
+        switch ( activeView )
         {
             case NORMAL:
                 showNormal();
+                this.activeView = activeView;
                 break;
             case LOADING:
                 showLoading();
+                this.activeView = activeView;
                 break;
             case ERROR:
                 showError();
+                this.activeView = activeView;
                 break;
             default:
-                Helper.debug( "Invalid mode for Footer : " + mode );
+                Helper.debug( "Invalid activeView for Footer : " + activeView );
         }
     }
 
-    public int getMode()
+    public int getActiveView()
     {
-        return this.mode;
+        return this.activeView;
     }
 
     private void showLoading()
@@ -89,75 +95,74 @@ public class SitesFooterView extends FrameLayout
         this.setEnabled( true );
     }
 
-//    @Override
-//    protected Parcelable onSaveInstanceState()
-//    {
-//        Parcelable superState = super.onSaveInstanceState();
-//        Helper.debug( "footer saveInstanceState" );
-//        return new SavedState( superState, this.mode );
-//    }
-//
-//    @Override
-//    protected void onRestoreInstanceState( Parcelable state )
-//    {
-//        SavedState savedState = ( SavedState ) state;
-//        super.onRestoreInstanceState( savedState.getSuperState() );
-//        setMode( savedState.getMode() );
-//    }
-//
-//    @Override
-//    protected void dispatchSaveInstanceState( SparseArray<Parcelable> container )
-//    {
-//        super.dispatchFreezeSelfOnly( container );
-//    }
-//
-//    @Override
-//    protected void dispatchRestoreInstanceState( SparseArray<Parcelable> container )
-//    {
-//        super.dispatchThawSelfOnly( container );
-//    }
-//
-//    protected static class SavedState extends BaseSavedState
-//    {
-//        private int mode;
-//
-//        public SavedState( Parcel source )
-//        {
-//            super( source );
-//            this.mode = source.readInt();
-//        }
-//
-//        public SavedState( Parcelable superState, int mode )
-//        {
-//            super( superState );
-//            this.mode = mode;
-//        }
-//
-//        public int getMode()
-//        {
-//            return this.mode;
-//        }
-//
-//        @Override
-//        public void writeToParcel( Parcel dest, int flags )
-//        {
-//            super.writeToParcel( dest, flags );
-//            dest.writeInt( this.mode );
-//        }
-//
-//        public static final Creator<SavedState> CREATOR = new Creator<SavedState>()
-//        {
-//            @Override
-//            public SavedState createFromParcel( Parcel source )
-//            {
-//                return new SavedState( source );
-//            }
-//
-//            @Override
-//            public SavedState[] newArray( int size )
-//            {
-//                return new SavedState[size];
-//            }
-//        };
-//    }
+    @Override
+    protected Parcelable onSaveInstanceState()
+    {
+        Parcelable superState = super.onSaveInstanceState();
+        return new SavedState( superState, this.activeView );
+    }
+
+    @Override
+    protected void onRestoreInstanceState( Parcelable state )
+    {
+        SavedState savedState = ( SavedState ) state;
+        super.onRestoreInstanceState( savedState.getSuperState() );
+        showView( savedState.getActiveView() );
+    }
+
+    @Override
+    protected void dispatchSaveInstanceState( SparseArray<Parcelable> container )
+    {
+        super.dispatchFreezeSelfOnly( container );
+    }
+
+    @Override
+    protected void dispatchRestoreInstanceState( SparseArray<Parcelable> container )
+    {
+        super.dispatchThawSelfOnly( container );
+    }
+
+    protected static class SavedState extends BaseSavedState
+    {
+        private int activeView;
+
+        public SavedState( Parcel source )
+        {
+            super( source );
+            this.activeView = source.readInt();
+        }
+
+        public SavedState( Parcelable superState, int activeView )
+        {
+            super( superState );
+            this.activeView = activeView;
+        }
+
+        public int getActiveView()
+        {
+            return this.activeView;
+        }
+
+        @Override
+        public void writeToParcel( Parcel dest, int flags )
+        {
+            super.writeToParcel( dest, flags );
+            dest.writeInt( this.activeView );
+        }
+
+        public static final Creator<SavedState> CREATOR = new Creator<SavedState>()
+        {
+            @Override
+            public SavedState createFromParcel( Parcel source )
+            {
+                return new SavedState( source );
+            }
+
+            @Override
+            public SavedState[] newArray( int size )
+            {
+                return new SavedState[size];
+            }
+        };
+    }
 }

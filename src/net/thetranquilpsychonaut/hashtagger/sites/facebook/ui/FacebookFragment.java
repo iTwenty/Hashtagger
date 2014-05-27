@@ -44,29 +44,25 @@ public class FacebookFragment extends SitesFragment
     @Override
     protected SitesUserHandler initSitesUserHandler()
     {
-        FacebookUserHandler facebookUserHandler = new FacebookUserHandler( this );
-        return facebookUserHandler;
+        return new FacebookUserHandler( this );
     }
 
     @Override
     protected SitesSearchHandler initSitesSearchHandler()
     {
-        FacebookSearchHandler facebookSearchHandler = new FacebookSearchHandler( this );
-        return facebookSearchHandler;
+        return new FacebookSearchHandler( this );
     }
 
     @Override
     protected SitesListAdapter initSitesListAdapter()
     {
-        FacebookListAdapter facebookListAdapter = new FacebookListAdapter( getActivity(), 0, results );
-        return facebookListAdapter;
+        return new FacebookListAdapter( getActivity(), 0, results, resultTypes );
     }
 
     @Override
     protected List<?> initResultsList()
     {
-        List<Post> results = new ArrayList<Post>();
-        return results;
+        return new ArrayList<Post>();
     }
 
     @Override

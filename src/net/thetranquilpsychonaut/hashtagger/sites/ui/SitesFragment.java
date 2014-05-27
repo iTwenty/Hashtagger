@@ -25,6 +25,7 @@ import net.thetranquilpsychonaut.hashtagger.utils.DefaultPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.widgets.MySwipeRefreshLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,11 +33,6 @@ import java.util.List;
  */
 public abstract class SitesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemClickListener, SitesSearchHandler.SitesSearchListener, SitesUserHandler.SitesUserListener, AdapterView.OnItemLongClickListener
 {
-    private static final String ACTIVE_VIEW_KEY    = HashtaggerApp.NAMESPACE + "active_view_key";
-    private static final String RESULTS_LIST_KEY   = HashtaggerApp.NAMESPACE + "results_list_key";
-    private static final String FOOTER_MODE_KEY    = HashtaggerApp.NAMESPACE + "footer_mode";
-    private static final String BAR_VISIBILITY_KEY = HashtaggerApp.NAMESPACE + "bar_visibility";
-
     private static final int AUTO_UPDATE_INTERVAL = 1000 * 30; // 30 seconds
 
     private static final int READY   = 0;
@@ -52,12 +48,13 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     protected SitesSearchHandler sitesSearchHandler;
     protected SitesUserHandler   sitesUserHandler;
     protected List<?>            results;
+    protected List<Integer>      resultTypes;
     protected SitesListAdapter   sitesListAdapter;
     protected Handler            timedSearchHandler;
     protected TimedSearchRunner  timedSearchRunner;
-    private   boolean            fragmentReady;
 
     protected int activeView = READY;
+    protected int activeFooterView;
 
     private class TimedSearchRunner implements Runnable
     {
@@ -74,8 +71,12 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         super.onCreate( savedInstanceState );
         setHasOptionsMenu( true );
+        setRetainInstance( true );
         timedSearchHandler = new Handler( Looper.getMainLooper() );
         timedSearchRunner = new TimedSearchRunner();
+        results = initResultsList();
+        resultTypes = new ArrayList<Integer>();
+        sitesListAdapter = initSitesListAdapter();
     }
 
     @Override
@@ -94,9 +95,9 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             {
                 readyHolder.srlReady.setRefreshing( false );
             }
-            if ( readyHolder.sitesFooterView.getMode() == readyHolder.sitesFooterView.LOADING )
+            if ( readyHolder.sitesFooterView.getActiveView() == readyHolder.sitesFooterView.LOADING )
             {
-                readyHolder.sitesFooterView.setMode( readyHolder.sitesFooterView.NORMAL );
+                readyHolder.sitesFooterView.showView( readyHolder.sitesFooterView.NORMAL );
             }
         }
         if ( !TextUtils.isEmpty( getEnteredHashtag() ) && !results.isEmpty() )
@@ -129,50 +130,29 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         sitesSearchHandler = initSitesSearchHandler();
         View v = inflater.inflate( R.layout.fragment_sites, container, false );
         vaSitesView = ( ViewAnimator ) v.findViewById( R.id.va_sites_view );
-        vaSitesView.addView( initViewReady( inflater, savedInstanceState ), READY );
-        vaSitesView.addView( initViewLoading( inflater, savedInstanceState ), LOADING );
-        vaSitesView.addView( initViewLogin( inflater, savedInstanceState ), LOGIN );
-        vaSitesView.addView( initViewError( inflater, savedInstanceState ), ERROR );
-        showView( null == savedInstanceState ? READY : savedInstanceState.getInt( ACTIVE_VIEW_KEY ) );
+        vaSitesView.addView( initViewReady( inflater ), READY );
+        vaSitesView.addView( initViewLoading( inflater ), LOADING );
+        vaSitesView.addView( initViewLogin( inflater ), LOGIN );
+        vaSitesView.addView( initViewError( inflater ), ERROR );
+        showView( activeView );
         if ( !sitesUserHandler.isUserLoggedIn() )
         {
             showView( LOGIN );
         }
+        readyHolder.sitesFooterView.showView( activeFooterView );
         return v;
     }
 
-    private View initViewReady( LayoutInflater inflater, Bundle savedInstanceState )
+    private View initViewReady( LayoutInflater inflater )
     {
         View viewReady = inflater.inflate( R.layout.sites_view_ready, null );
         readyHolder = new Ready();
-
-        // Non view members whose state needs to be saved
-        initResultsList( savedInstanceState );
-        initSitesListAdapter( savedInstanceState );
-
-        // View members whose state needs to be saved are restored in restoreViewStates()
         initSwipeRefreshLayout( viewReady );
         initSitesFooterView( viewReady );
         initResultListEmptyView( viewReady );
         initNewResultsBar( viewReady );
         initResultsListView( viewReady );
-        if ( null != savedInstanceState )
-        {
-            restoreViewStates( savedInstanceState );
-        }
         return viewReady;
-
-    }
-
-    private void initResultsList( Bundle savedInstanceState )
-    {
-        results = null == savedInstanceState ? initResultsList() : ( List<?> ) savedInstanceState.getSerializable( RESULTS_LIST_KEY );
-    }
-
-    private void initSitesListAdapter( Bundle savedInstanceState )
-    {
-        sitesListAdapter = initSitesListAdapter();
-        sitesListAdapter.initTypes( savedInstanceState );
     }
 
     private void initSwipeRefreshLayout( View viewReady )
@@ -278,7 +258,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         readyHolder.lvResultsList.setOnScrollListener( readyHolder.newResultsBar );
     }
 
-    private View initViewLoading( LayoutInflater inflater, Bundle savedInstanceState )
+    private View initViewLoading( LayoutInflater inflater )
     {
         View viewLoading = inflater.inflate( R.layout.sites_view_loading, null );
         loadingHolder = new Loading();
@@ -286,13 +266,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         return viewLoading;
     }
 
-    private void restoreViewStates( Bundle savedInstanceState )
-    {
-        readyHolder.sitesFooterView.setMode( savedInstanceState.getInt( FOOTER_MODE_KEY ) );
-        readyHolder.newResultsBar.setVisibility( savedInstanceState.getInt( BAR_VISIBILITY_KEY ) );
-    }
-
-    private View initViewLogin( LayoutInflater inflater, Bundle savedInstanceState )
+    private View initViewLogin( LayoutInflater inflater )
     {
         View viewLogin = inflater.inflate( R.layout.sites_view_login, null );
         loginHolder = new Login();
@@ -312,7 +286,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     protected abstract int getLoginButtonBackgroundId();
 
-    private View initViewError( LayoutInflater inflater, Bundle savedInstanceState )
+    private View initViewError( LayoutInflater inflater )
     {
         View viewError = inflater.inflate( R.layout.sites_view_error, null );
         errorHolder = new Error();
@@ -325,6 +299,13 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         super.onActivityCreated( savedInstanceState );
         showClickHashtagIfAlreadyEntered();
+    }
+
+    @Override
+    public void onSaveInstanceState( Bundle outState )
+    {
+        super.onSaveInstanceState( outState );
+        this.activeFooterView = readyHolder.sitesFooterView.getActiveView();
     }
 
     private void showClickHashtagIfAlreadyEntered()
@@ -432,17 +413,6 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         vaSitesView.setDisplayedChild( activeView );
         this.activeView = activeView;
-    }
-
-    @Override
-    public void onSaveInstanceState( Bundle outState )
-    {
-        super.onSaveInstanceState( outState );
-        outState.putSerializable( RESULTS_LIST_KEY, ( java.io.Serializable ) results );
-        outState.putInt( ACTIVE_VIEW_KEY, activeView );
-        outState.putInt( FOOTER_MODE_KEY, readyHolder.sitesFooterView.getMode() );
-        outState.putInt( BAR_VISIBILITY_KEY, readyHolder.newResultsBar.getVisibility() );
-        sitesListAdapter.saveTypes( outState );
     }
 
     @Override
@@ -555,7 +525,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
                 showView( LOADING );
                 break;
             case OLDER:
-                readyHolder.sitesFooterView.setMode( SitesFooterView.LOADING );
+                readyHolder.sitesFooterView.showView( SitesFooterView.LOADING );
                 break;
             case NEWER:
                 readyHolder.srlReady.setRefreshing( true );
@@ -606,7 +576,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     public void afterOlderSearch( List<?> searchResults )
     {
-        readyHolder.sitesFooterView.setMode( SitesFooterView.NORMAL );
+        readyHolder.sitesFooterView.showView( SitesFooterView.NORMAL );
         if ( !searchResults.isEmpty() )
         {
             // Since we cannot add directly to List<?>, we have to delegate the adding to subclass which
@@ -674,7 +644,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
                 showView( ERROR );
                 break;
             case OLDER:
-                readyHolder.sitesFooterView.setMode( SitesFooterView.ERROR );
+                readyHolder.sitesFooterView.showView( SitesFooterView.ERROR );
                 break;
             case NEWER:
                 readyHolder.srlReady.setRefreshing( false );

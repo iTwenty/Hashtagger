@@ -21,9 +21,9 @@ public class FacebookListAdapter extends SitesListAdapter
     private static final int POST_TYPE_LINK   = 2;
     private static final int POST_TYPE_COUNT  = 3;
 
-    public FacebookListAdapter( Context context, int textViewResourceId, List<?> posts )
+    protected FacebookListAdapter( Context context, int textViewResourceId, List<?> objects, List<Integer> resultTypes )
     {
-        super( context, textViewResourceId, posts );
+        super( context, textViewResourceId, objects, resultTypes );
     }
 
     @Override

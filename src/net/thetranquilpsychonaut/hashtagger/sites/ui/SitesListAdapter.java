@@ -1,13 +1,11 @@
 package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,20 +13,18 @@ import java.util.List;
  */
 public abstract class SitesListAdapter extends ArrayAdapter
 {
-    private static final String RESULT_TYPES_KEY = "result_types";
-    Context context;
     protected List<Integer> resultTypes;
 
-    protected SitesListAdapter( Context context, int textViewResourceId, List<?> objects )
+    protected SitesListAdapter( Context context, int textViewResourceId, List<?> objects, List<Integer> resultTypes )
     {
         super( context, textViewResourceId, objects );
-        this.context = context;
+        this.resultTypes = resultTypes;
     }
 
     @Override
     public View getView( int position, View convertView, ViewGroup parent )
     {
-        SitesListRow sitesListRow = getSitesListRow( context, position, convertView, parent );
+        SitesListRow sitesListRow = getSitesListRow( getContext(), position, convertView, parent );
         Object data = getItem( position );
         sitesListRow.updateRow( data );
         sitesListRow.sitesButtons.setTag( position );
@@ -63,22 +59,5 @@ public abstract class SitesListAdapter extends ArrayAdapter
     public void clearTypes()
     {
         resultTypes.clear();
-    }
-
-    public void initTypes( Bundle savedInstanceState )
-    {
-        if ( null != savedInstanceState )
-        {
-            resultTypes = ( List<Integer> ) savedInstanceState.getSerializable( RESULT_TYPES_KEY );
-        }
-        else
-        {
-            resultTypes = new ArrayList<Integer>();
-        }
-    }
-
-    public void saveTypes( Bundle outState )
-    {
-        outState.putSerializable( RESULT_TYPES_KEY, ( java.io.Serializable ) resultTypes );
     }
 }

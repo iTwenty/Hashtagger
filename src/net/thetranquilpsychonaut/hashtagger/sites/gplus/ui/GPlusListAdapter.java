@@ -21,9 +21,9 @@ public class GPlusListAdapter extends SitesListAdapter
     private static final int ACTIVITY_TYPE_LINK   = 2;
     private static final int ACTIVITY_TYPE_COUNT  = 3;
 
-    public GPlusListAdapter( Context context, int textViewResourceId, List<?> objects )
+    protected GPlusListAdapter( Context context, int textViewResourceId, List<?> objects, List<Integer> resultTypes )
     {
-        super( context, textViewResourceId, objects );
+        super( context, textViewResourceId, objects, resultTypes );
     }
 
     @Override
