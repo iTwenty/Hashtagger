@@ -14,6 +14,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragmentData;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import twitter4j.Status;
@@ -38,6 +39,13 @@ public class TwitterFragment extends SitesFragment
     protected int getLoginButtonBackgroundId()
     {
         return R.drawable.selector_twitter_background;
+    }
+
+    @Override
+    protected void saveData()
+    {
+        SitesFragmentData.Twitter.statuses = ( List<Status> ) results;
+        SitesFragmentData.Twitter.statusTypes = resultTypes;
     }
 
     @Override
@@ -67,7 +75,13 @@ public class TwitterFragment extends SitesFragment
     @Override
     protected List<?> initResultsList()
     {
-        return new ArrayList<Status>();
+        return null == SitesFragmentData.Twitter.statuses ? new ArrayList<Status>() : SitesFragmentData.Twitter.statuses;
+    }
+
+    @Override
+    protected List<Integer> initResultTypesList()
+    {
+        return null == SitesFragmentData.Twitter.statusTypes ? new ArrayList<Integer>() : SitesFragmentData.Twitter.statusTypes;
     }
 
     @Override

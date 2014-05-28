@@ -51,15 +51,12 @@ public abstract class ArrayPagerAdapter<T extends Fragment> extends PagerAdapter
     private HashMap<Fragment, Integer> positionDelta     = new HashMap<Fragment, Integer>();
     private RetentionStrategy          retentionStrategy = null;
 
-    public ArrayPagerAdapter( FragmentManager fragmentManager,
-                              ArrayList<PageDescriptor> descriptors )
+    public ArrayPagerAdapter( FragmentManager fragmentManager, ArrayList<PageDescriptor> descriptors )
     {
         this( fragmentManager, descriptors, null );
     }
 
-    public ArrayPagerAdapter( FragmentManager fragmentManager,
-                              ArrayList<PageDescriptor> descriptors,
-                              RetentionStrategy retentionStrategy )
+    public ArrayPagerAdapter( FragmentManager fragmentManager, ArrayList<PageDescriptor> descriptors, RetentionStrategy retentionStrategy )
     {
         this.fm = fragmentManager;
         this.entries = new ArrayList<PageEntry>();

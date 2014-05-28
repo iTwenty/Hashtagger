@@ -10,6 +10,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.components.FacebookSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.components.FacebookUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragmentData;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
@@ -33,6 +34,13 @@ public class FacebookFragment extends SitesFragment
     protected int getLoginButtonBackgroundId()
     {
         return R.drawable.selector_facebook_icon_background;
+    }
+
+    @Override
+    protected void saveData()
+    {
+        SitesFragmentData.Facebook.posts = ( List<Post> ) results;
+        SitesFragmentData.Facebook.postTypes = resultTypes;
     }
 
     @Override
@@ -62,7 +70,13 @@ public class FacebookFragment extends SitesFragment
     @Override
     protected List<?> initResultsList()
     {
-        return new ArrayList<Post>();
+        return null == SitesFragmentData.Facebook.posts ? new ArrayList<Post>() : SitesFragmentData.Facebook.posts;
+    }
+
+    @Override
+    protected List<Integer> initResultTypesList()
+    {
+        return null == SitesFragmentData.Facebook.postTypes ? new ArrayList<Integer>() : SitesFragmentData.Facebook.postTypes;
     }
 
     @Override

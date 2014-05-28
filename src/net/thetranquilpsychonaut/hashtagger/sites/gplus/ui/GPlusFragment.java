@@ -10,6 +10,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.GPlusSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.GPlusUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragmentData;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
@@ -45,7 +46,13 @@ public class GPlusFragment extends SitesFragment
     @Override
     protected List<?> initResultsList()
     {
-        return new ArrayList<Activity>();
+        return null == SitesFragmentData.GPlus.activities ? new ArrayList<Activity>() : SitesFragmentData.GPlus.activities;
+    }
+
+    @Override
+    protected List<Integer> initResultTypesList()
+    {
+        return null == SitesFragmentData.GPlus.activityTypes ? new ArrayList<Integer>() : SitesFragmentData.GPlus.activityTypes;
     }
 
     @Override
@@ -58,6 +65,13 @@ public class GPlusFragment extends SitesFragment
     protected int getLoginButtonBackgroundId()
     {
         return R.drawable.selector_gplus_icon_background;
+    }
+
+    @Override
+    protected void saveData()
+    {
+        SitesFragmentData.GPlus.activities = ( List<Activity> ) results;
+        SitesFragmentData.GPlus.activityTypes = resultTypes;
     }
 
     @Override

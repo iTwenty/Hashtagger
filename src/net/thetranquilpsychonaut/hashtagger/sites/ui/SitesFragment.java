@@ -25,7 +25,6 @@ import net.thetranquilpsychonaut.hashtagger.utils.DefaultPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.widgets.MySwipeRefreshLayout;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,6 +32,9 @@ import java.util.List;
  */
 public abstract class SitesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemClickListener, SitesSearchHandler.SitesSearchListener, SitesUserHandler.SitesUserListener, AdapterView.OnItemLongClickListener
 {
+    private static final String ACTIVE_VIEW_KEY        = "active_view";
+    private static final String ACTIVE_FOOTER_VIEW_KEY = "active_footer_view";
+
     private static final int AUTO_UPDATE_INTERVAL = 1000 * 30; // 30 seconds
 
     private static final int READY   = 0;
@@ -54,7 +56,6 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     protected TimedSearchRunner  timedSearchRunner;
 
     protected int activeView = READY;
-    protected int activeFooterView;
 
     private class TimedSearchRunner implements Runnable
     {
@@ -71,15 +72,16 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         super.onCreate( savedInstanceState );
         setHasOptionsMenu( true );
-        setRetainInstance( true );
         timedSearchHandler = new Handler( Looper.getMainLooper() );
         timedSearchRunner = new TimedSearchRunner();
         results = initResultsList();
-        resultTypes = new ArrayList<Integer>();
+        resultTypes = initResultTypesList();
         sitesListAdapter = initSitesListAdapter();
         sitesUserHandler = initSitesUserHandler();
         sitesSearchHandler = initSitesSearchHandler();
     }
+
+    protected abstract List<Integer> initResultTypesList();
 
     @Override
     public void onStart()
@@ -134,13 +136,18 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         vaSitesView.addView( initViewLoading( inflater ), LOADING );
         vaSitesView.addView( initViewLogin( inflater ), LOGIN );
         vaSitesView.addView( initViewError( inflater ), ERROR );
-        showView( activeView );
+        return v;
+    }
+
+    @Override
+    public void onViewCreated( View view, Bundle savedInstanceState )
+    {
+        super.onViewCreated( view, savedInstanceState );
+        restoreViewStates( savedInstanceState );
         if ( !sitesUserHandler.isUserLoggedIn() )
         {
             showView( LOGIN );
         }
-        readyHolder.sitesFooterView.showView( activeFooterView );
-        return v;
     }
 
     private View initViewReady( LayoutInflater inflater )
@@ -294,6 +301,15 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         return viewError;
     }
 
+    private void restoreViewStates( Bundle savedInstanceState )
+    {
+        if ( null != savedInstanceState )
+        {
+            showView( savedInstanceState.getInt( ACTIVE_VIEW_KEY ) );
+            readyHolder.sitesFooterView.showView( savedInstanceState.getInt( ACTIVE_FOOTER_VIEW_KEY ) );
+        }
+    }
+
     @Override
     public void onActivityCreated( Bundle savedInstanceState )
     {
@@ -305,8 +321,12 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     public void onSaveInstanceState( Bundle outState )
     {
         super.onSaveInstanceState( outState );
-        this.activeFooterView = readyHolder.sitesFooterView.getActiveView();
+        outState.putInt( ACTIVE_VIEW_KEY, getActiveView() );
+        outState.putInt( ACTIVE_FOOTER_VIEW_KEY, readyHolder.sitesFooterView.getActiveView() );
+        saveData();
     }
+
+    protected abstract void saveData();
 
     private void showClickHashtagIfAlreadyEntered()
     {
@@ -749,6 +769,11 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         public SitesFooterView      sitesFooterView;
         public MySwipeRefreshLayout srlReady;
         public NewResultsBar        newResultsBar;
+    }
+
+    public int getActiveView()
+    {
+        return this.activeView;
     }
 
     protected static class Loading
