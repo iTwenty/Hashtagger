@@ -18,7 +18,7 @@ import java.io.Serializable;
  */
 public class FacebookService extends SitesService
 {
-    private static boolean isSearchRunning;
+    private volatile static boolean isSearchRunning;
 
     @Override
     protected Intent doSearch( Intent searchIntent )

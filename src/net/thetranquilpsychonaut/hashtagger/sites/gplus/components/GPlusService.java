@@ -27,7 +27,7 @@ import java.util.Arrays;
  */
 public class GPlusService extends SitesService
 {
-    private static boolean isSearchRunning;
+    private volatile static boolean isSearchRunning;
 
     @Override
     protected Intent doSearch( Intent searchIntent )
@@ -60,10 +60,10 @@ public class GPlusService extends SitesService
             switch ( searchType )
             {
                 case INITIAL:
-                    searchActivities.setMaxResults( 20L );
+                    searchActivities.setMaxResults( HashtaggerApp.GPLUS_SEARCH_LIMIT );
                     break;
                 case OLDER:
-                    searchActivities.setMaxResults( 20L );
+                    searchActivities.setMaxResults( HashtaggerApp.GPLUS_SEARCH_LIMIT );
                     searchActivities.setPageToken( GPlusSearchHandler.nextPageToken );
                     break;
                 default:

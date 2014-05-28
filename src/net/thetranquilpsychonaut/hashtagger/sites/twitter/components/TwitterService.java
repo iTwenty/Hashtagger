@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class TwitterService extends SitesService
 {
-    private static boolean isSearchRunning = false;
+    private volatile static boolean isSearchRunning = false;
 
     @Override
     protected Intent doSearch( Intent searchIntent )

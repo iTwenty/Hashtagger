@@ -3,6 +3,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.ui;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,8 +13,13 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.utils.SingleMediaScanner;
 import net.thetranquilpsychonaut.hashtagger.widgets.TouchImageView;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.Calendar;
 
 /**
@@ -56,9 +62,24 @@ public class ViewImageActivity extends BaseActivity
     {
         if ( null != imageBitmap )
         {
-            String imageName = String.valueOf( Calendar.getInstance().getTimeInMillis() );
-            String savedImageUrl = MediaStore.Images.Media.insertImage( getContentResolver(), imageBitmap, imageName, "" );
-            Toast.makeText( this, null == savedImageUrl ? "Failed to save image" : "Saved image to Gallery", Toast.LENGTH_SHORT ).show();
+            boolean success = false;
+            String fileName = String.valueOf( Calendar.getInstance().getTimeInMillis() ) + ".png";
+            File fileDir = new File( Environment.getExternalStorageDirectory() + "/Hashtagger" );
+            if ( !fileDir.exists() )
+                fileDir.mkdirs();
+            File imageFile = new File( fileDir, fileName );
+            try
+            {
+                OutputStream out = new FileOutputStream( imageFile );
+                imageBitmap.compress( Bitmap.CompressFormat.PNG, 100, out );
+                new SingleMediaScanner( this, imageFile );
+                success = true;
+            }
+            catch ( FileNotFoundException e )
+            {
+                e.printStackTrace();
+            }
+            Toast.makeText( this, success ? "Image saved" : "Failed to saved image", Toast.LENGTH_SHORT ).show();
         }
     }
 
