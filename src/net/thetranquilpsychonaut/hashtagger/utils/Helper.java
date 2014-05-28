@@ -3,8 +3,11 @@ package net.thetranquilpsychonaut.hashtagger.utils;
 import android.content.Context;
 import android.net.Uri;
 import android.text.format.DateUtils;
+import android.text.util.Linkify;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.Patterns;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.api.services.plus.model.Activity;
 import com.twitter.Autolink;
@@ -14,6 +17,8 @@ import twitter4j.Status;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by itwenty on 2/7/14.
@@ -57,6 +62,25 @@ public class Helper
     public static String getLinkedStatusText( String tweetText )
     {
         return new Autolink().autoLink( tweetText );
+    }
+
+    public static void linkifyFacebook( TextView tv )
+    {
+        Linkify.TransformFilter filter = new Linkify.TransformFilter()
+        {
+            @Override
+            public String transformUrl( Matcher match, String url )
+            {
+                return match.group();
+            }
+        };
+
+        Pattern hashtagPattern = Pattern.compile( "#([A-Za-z0-9_-]+)" );
+        String hashtagScheme = "http://www.facebook.com/hashtag/";
+        Linkify.addLinks( tv, hashtagPattern, hashtagScheme, null, filter );
+
+        Pattern urlPattern = Patterns.WEB_URL;
+        Linkify.addLinks( tv, urlPattern, null, null, filter );
     }
 
     public static String getFacebookPictureUrl( String userId )

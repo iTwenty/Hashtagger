@@ -1346,7 +1346,7 @@ public class TouchImageView extends ImageView
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+    @TargetApi( Build.VERSION_CODES.GINGERBREAD )
     private class CompatScroller
     {
         Scroller     scroller;
@@ -1442,7 +1442,7 @@ public class TouchImageView extends ImageView
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @TargetApi( Build.VERSION_CODES.JELLY_BEAN )
     private void compatPostOnAnimation( Runnable runnable )
     {
         if ( VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN )

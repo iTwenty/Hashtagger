@@ -81,8 +81,6 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         sitesSearchHandler = initSitesSearchHandler();
     }
 
-    protected abstract List<Integer> initResultTypesList();
-
     @Override
     public void onStart()
     {
@@ -196,7 +194,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             @Override
             public void onClick( View v )
             {
-                searchHashtagIfAlreadyEntered();
+                searchHashtag();
             }
         } );
     }
@@ -330,25 +328,15 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     private void showClickHashtagIfAlreadyEntered()
     {
-        String hashtag = getEnteredHashtag();
-        if ( !TextUtils.isEmpty( hashtag ) )
+        if ( !TextUtils.isEmpty( getEnteredHashtag() ) )
         {
-            readyHolder.lvResultsListEmpty.setText( "Click to search for " + hashtag );
-        }
-    }
-
-    private void searchHashtagIfAlreadyEntered()
-    {
-        String hashtag = getEnteredHashtag();
-        if ( !TextUtils.isEmpty( hashtag ) )
-        {
-            searchHashtag( hashtag );
+            readyHolder.lvResultsListEmpty.setText( "Click to search for " + getEnteredHashtag() );
         }
     }
 
     private String getEnteredHashtag()
     {
-        return null != getActivity() && !TextUtils.isEmpty( ( ( SitesActivity ) getActivity() ).getHashtag() ) ? ( ( SitesActivity ) getActivity() ).getHashtag() : null;
+        return SitesActivity.currentHashtag;
     }
 
     protected abstract String getLoginButtonText();
@@ -405,18 +393,27 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     protected abstract List<?> initResultsList();
 
+    protected abstract List<Integer> initResultTypesList();
+
     protected abstract int getLogo();
 
-    protected void searchHashtag( final String hashtag )
+    protected void searchHashtag()
     {
+        if ( TextUtils.isEmpty( getEnteredHashtag() ) )
+        {
+            return;
+        }
+
         if ( !sitesUserHandler.isUserLoggedIn() )
         {
-            loginHolder.btnLogin.animate().rotationX( loginHolder.btnLogin.getRotationX() == 0 ? 360 : 0 ).setDuration( 1000 ).start();
+            loginHolder.btnLogin.animate().rotationXBy( 360 ).setDuration( 1000 ).start();
             return;
         }
         timedSearchHandler.removeCallbacks( timedSearchRunner );
         // We use the listview tag to keep track of selected position. On a new search, we clear this tag.
         readyHolder.lvResultsList.setTag( null );
+        readyHolder.srlReady.setRefreshing( false );
+        readyHolder.sitesFooterView.showView( SitesFooterView.NORMAL );
         sitesListAdapter.clear();
         sitesListAdapter.clearTypes();
         new Handler( getActivity().getMainLooper() ).post( new Runnable()
@@ -424,7 +421,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             @Override
             public void run()
             {
-                sitesSearchHandler.beginSearch( SearchType.INITIAL, hashtag );
+                sitesSearchHandler.beginSearch( SearchType.INITIAL, getEnteredHashtag() );
             }
         } );
     }

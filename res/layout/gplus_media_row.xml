@@ -28,9 +28,9 @@
         <net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusMediaView
             android:id="@id/gplus_media_view"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_height="wrap_content"/>
+            android:layout_centerVertical="true"/>
 
     </RelativeLayout>
 

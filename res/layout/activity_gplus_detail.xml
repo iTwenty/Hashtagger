@@ -24,6 +24,31 @@
             android:layout_below="@id/gplus_header"
             style="@style/MainMessage_Detail"/>
 
+        <FrameLayout
+            android:id="@+id/fl_wrapper"
+            android:layout_below="@id/tv_content"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/imgv_media_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                style="@style/Image"/>
+
+            <ImageView
+                android:id="@+id/imgv_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/play_button"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
+
+        </FrameLayout>
+
     </RelativeLayout>
 
 </ScrollView>

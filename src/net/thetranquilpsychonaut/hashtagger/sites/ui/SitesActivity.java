@@ -38,11 +38,12 @@ import java.util.List;
 
 public class SitesActivity extends SavedHashtagsActivity
 {
+    public static String currentHashtag = null;
+
     ViewPager          vpSitesPager;
     IconPagerIndicator ipiSitesPager;
     SitesAdapter       vpSitesPagerAdapter;
     SearchView         svHashtag;
-    String             hashtag;
 
     @Override
     public void onCreate( Bundle savedInstanceState )
@@ -58,6 +59,11 @@ public class SitesActivity extends SavedHashtagsActivity
         vpSitesPager.setOffscreenPageLimit( 2 );
 
         ipiSitesPager.setViewPager( vpSitesPager );
+
+        if ( !TextUtils.isEmpty( currentHashtag ) )
+        {
+            setTitle( currentHashtag );
+        }
 
         showActiveSites();
     }
@@ -157,13 +163,13 @@ public class SitesActivity extends SavedHashtagsActivity
         svHashtag = ( SearchView ) menu.findItem( R.id.sv_hashtag ).getActionView();
         svHashtag.setSearchableInfo( searchManager.getSearchableInfo( getComponentName() ) );
         MenuItem saveHashtagItem = menu.findItem( R.id.it_save_hashtag );
-        if ( TextUtils.isEmpty( this.hashtag ) )
+        if ( TextUtils.isEmpty( currentHashtag ) )
         {
             saveHashtagItem.setVisible( false );
         }
         else
         {
-            saveHashtagItem.setTitle( "Save " + this.hashtag );
+            saveHashtagItem.setTitle( "Save " + currentHashtag );
             saveHashtagItem.setVisible( true );
         }
         return true;
@@ -182,14 +188,14 @@ public class SitesActivity extends SavedHashtagsActivity
 
     public void doSaveHashtag( MenuItem item )
     {
-        if ( TextUtils.isEmpty( this.hashtag ) )
+        if ( TextUtils.isEmpty( currentHashtag ) )
         {
             return;
         }
         ContentValues values = new ContentValues();
-        values.put( SavedHashtagsDBContract.SavedHashtags.COLUMN_HASHTAG, this.hashtag );
+        values.put( SavedHashtagsDBContract.SavedHashtags.COLUMN_HASHTAG, currentHashtag );
         Uri result = getContentResolver().insert( SavedHashtagsProviderContract.SavedHashtags.CONTENT_URI, values );
-        Toast.makeText( this, result == null ? "Failed to save hashtag " + this.hashtag : "Saved hashtag " + this.hashtag, Toast.LENGTH_SHORT ).show();
+        Toast.makeText( this, result == null ? "Failed to save hashtag " + currentHashtag : "Saved hashtag " + currentHashtag, Toast.LENGTH_SHORT ).show();
     }
 
     public void doLaunchSettings( MenuItem item )
@@ -210,21 +216,6 @@ public class SitesActivity extends SavedHashtagsActivity
         }
     }
 
-    @Override
-    protected void onSaveInstanceState( Bundle outState )
-    {
-        super.onSaveInstanceState( outState );
-        outState.putString( HashtaggerApp.HASHTAG_KEY, hashtag );
-    }
-
-    @Override
-    protected void onRestoreInstanceState( Bundle savedInstanceState )
-    {
-        super.onRestoreInstanceState( savedInstanceState );
-        this.hashtag = savedInstanceState.getString( HashtaggerApp.HASHTAG_KEY );
-        setTitle( null == this.hashtag ? getResources().getString( R.string.app_name ) : this.hashtag );
-    }
-
     public void handleIntent( Intent intent )
     {
         // Collapse the searchView, supposed to happen automatically, but doesn't :(
@@ -242,13 +233,13 @@ public class SitesActivity extends SavedHashtagsActivity
             return;
         }
 
-        hashtag = input.startsWith( "#" ) ? input : "#" + input;
+        currentHashtag = input.startsWith( "#" ) ? input : "#" + input;
         // We have a hashtag, time to show the save option in the menu
         invalidateOptionsMenu();
         // Save the entered query for later search suggestion
         SearchRecentSuggestions suggestions = new SearchRecentSuggestions( this, HashtagSuggestionsProvider.AUTHORITY, HashtagSuggestionsProvider.MODE );
-        suggestions.saveRecentQuery( hashtag, null );
-        setTitle( hashtag );
+        suggestions.saveRecentQuery( currentHashtag, null );
+        setTitle( currentHashtag );
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
         if ( null != fragments )
         {
@@ -256,16 +247,10 @@ public class SitesActivity extends SavedHashtagsActivity
             {
                 if ( f instanceof SitesFragment )
                 {
-                    ( ( SitesFragment ) f ).searchHashtag( hashtag );
+                    ( ( SitesFragment ) f ).searchHashtag();
                 }
             }
         }
-    }
-
-
-    public String getHashtag()
-    {
-        return hashtag;
     }
 
     @Override
@@ -289,5 +274,10 @@ public class SitesActivity extends SavedHashtagsActivity
     public void onSavedHashtagDeleted( SavedHashtagDeletedEvent event )
     {
         super.onSavedHashtagDeleted( event );
+    }
+
+    public static final String getCurrentHashtag()
+    {
+        return currentHashtag;
     }
 }

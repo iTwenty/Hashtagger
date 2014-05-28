@@ -11,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:textSize="20sp"
-        android:layout_toLeftOf="@+id/imgb_delete_saved_hashtag"/>
+        android:layout_toLeftOf="@+id/imgb_delete_saved_hashtag"
+        style="@style/SavedHashtagText"/>
 
     <ImageButton
         android:id="@id/imgb_delete_saved_hashtag"

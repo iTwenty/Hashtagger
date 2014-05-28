@@ -63,18 +63,19 @@
         <item name="android:background">@drawable/selector_sites_buttons</item>
     </style>
 
-    <style name="ProfileImage">
-        <item name="android:scaleType">fitCenter</item>
-        <item name="android:layout_width">50dp</item>
-        <item name="android:layout_height">50dp</item>
+    <style name="Image">
         <item name="android:background">@drawable/selector_picture_frame</item>
+        <item name="android:scaleType">fitCenter</item>
     </style>
 
-    <style name="MediaImage">
-        <item name="android:background">@drawable/selector_picture_frame</item>
+    <style name="ListMediaImage" parent="Image">
         <item name="android:layout_width">75dp</item>
         <item name="android:layout_height">75dp</item>
-        <item name="android:scaleType">fitCenter</item>
+    </style>
+
+    <style name="ProfileImage" parent="Image">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
     </style>
 
     <style name="ProfileName" parent="TextView_Default">
@@ -91,6 +92,10 @@
         <item name="android:maxLines">2</item>
         <item name="android:ellipsize">end</item>
         <item name="android:padding">@dimen/link_padding</item>
+    </style>
+
+    <style name="SavedHashtagText" parent="TextView_Default">
+        <item name="android:textSize">20sp</item>
     </style>
 
     <!-- Styles for ButtonToast -->

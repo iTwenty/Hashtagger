@@ -17,10 +17,10 @@ import java.util.List;
 public class TwitterListAdapter extends SitesListAdapter
 {
 
-    private static final int STATUS_TYPE_NORMAL = 0;
-    private static final int STATUS_TYPE_MEDIA  = 1;
-    private static final int STATUS_TYPE_LINK   = 2;
-    private static final int STATUS_TYPE_COUNT  = 3;
+    public static final int STATUS_TYPE_NORMAL = 0;
+    public static final int STATUS_TYPE_MEDIA  = 1;
+    public static final int STATUS_TYPE_LINK   = 2;
+    public static final int STATUS_TYPE_COUNT  = 3;
 
     protected TwitterListAdapter( Context context, int textViewResourceId, List<?> objects, List<Integer> resultTypes )
     {
@@ -78,18 +78,7 @@ public class TwitterListAdapter extends SitesListAdapter
         List<Integer> newTypes = new ArrayList<Integer>( searchResults.size() );
         for ( Status status : ( List<Status> ) searchResults )
         {
-            if ( status.getMediaEntities().length > 0 )
-            {
-                newTypes.add( STATUS_TYPE_MEDIA );
-            }
-            else if ( status.getURLEntities().length > 0 )
-            {
-                newTypes.add( STATUS_TYPE_LINK );
-            }
-            else
-            {
-                newTypes.add( STATUS_TYPE_NORMAL );
-            }
+            newTypes.add( TwitterListAdapter.getStatusType( status ) );
         }
         if ( searchType == SearchType.NEWER )
         {
@@ -99,5 +88,21 @@ public class TwitterListAdapter extends SitesListAdapter
         {
             resultTypes.addAll( newTypes );
         }
+    }
+
+    public static int getStatusType( Status status )
+    {
+        int statusType = STATUS_TYPE_NORMAL;
+
+        if ( status.getMediaEntities().length > 0 )
+        {
+            statusType = STATUS_TYPE_MEDIA;
+        }
+        else if ( status.getURLEntities().length > 0 )
+        {
+            statusType = STATUS_TYPE_LINK;
+        }
+
+        return statusType;
     }
 }

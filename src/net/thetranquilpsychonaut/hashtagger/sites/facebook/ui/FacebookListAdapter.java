@@ -16,10 +16,10 @@ import java.util.List;
  */
 public class FacebookListAdapter extends SitesListAdapter
 {
-    private static final int POST_TYPE_NORMAL = 0;
-    private static final int POST_TYPE_MEDIA  = 1;
-    private static final int POST_TYPE_LINK   = 2;
-    private static final int POST_TYPE_COUNT  = 3;
+    public static final int POST_TYPE_NORMAL = 0;
+    public static final int POST_TYPE_MEDIA  = 1;
+    public static final int POST_TYPE_LINK   = 2;
+    public static final int POST_TYPE_COUNT  = 3;
 
     protected FacebookListAdapter( Context context, int textViewResourceId, List<?> objects, List<Integer> resultTypes )
     {
@@ -74,26 +74,9 @@ public class FacebookListAdapter extends SitesListAdapter
         }
 
         List<Integer> newTypes = new ArrayList<Integer>( searchResults.size() );
-        boolean hasMedia;
-        boolean hasLink;
-        String postType;
         for ( Post post : ( List<Post> ) searchResults )
         {
-            postType = post.getType();
-            hasMedia = ( "video".equals( postType ) || "photo".equals( postType ) );
-            hasLink = "link".equals( postType );
-            if ( hasMedia )
-            {
-                newTypes.add( POST_TYPE_MEDIA );
-            }
-            else if ( hasLink )
-            {
-                newTypes.add( POST_TYPE_LINK );
-            }
-            else
-            {
-                newTypes.add( POST_TYPE_NORMAL );
-            }
+            newTypes.add( FacebookListAdapter.getPostType( post ) );
         }
         if ( searchType == SearchType.NEWER )
         {
@@ -103,5 +86,23 @@ public class FacebookListAdapter extends SitesListAdapter
         {
             resultTypes.addAll( newTypes );
         }
+    }
+
+    public static int getPostType( Post post )
+    {
+        int postType = POST_TYPE_NORMAL;
+        boolean hasMedia = ( "video".equals( post.getType() ) || "photo".equals( post.getType() ) );
+        boolean hasLink = "link".equals( post.getType() );
+
+        if ( hasMedia )
+        {
+            postType = POST_TYPE_MEDIA;
+        }
+        else if ( hasLink )
+        {
+            postType = POST_TYPE_LINK;
+        }
+
+        return postType;
     }
 }

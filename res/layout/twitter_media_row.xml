@@ -28,8 +28,10 @@
         <ImageView
             tools:src="@drawable/twitter_logo_blue"
             android:id="@id/imgv_media_thumb"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_alignParentRight="true"
-            style="@style/MediaImage"/>
+            style="@style/Image"/>
 
     </RelativeLayout>
 

@@ -7,13 +7,14 @@
 
     <ImageView
         android:id="@+id/imgv_attachment"
-        style="@style/MediaImage"/>
+        style="@style/ListMediaImage"/>
 
     <ImageView
         android:id="@+id/imgv_play"
         android:layout_width="wrap_content"
         android:layout_gravity="center"
         android:layout_height="wrap_content"
-        android:src="@drawable/play_button"/>
+        android:src="@drawable/play_button"
+        android:visibility="gone"/>
 
 </merge>

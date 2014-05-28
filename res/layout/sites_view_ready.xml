@@ -36,7 +36,7 @@
         android:gravity="center"
         android:text="@string/str_enter_hashtag"
         android:textSize="20sp"
-        android:textStyle="bold"
+        android:textStyle="normal"
         android:freezesText="true"/>
 
 </RelativeLayout>
