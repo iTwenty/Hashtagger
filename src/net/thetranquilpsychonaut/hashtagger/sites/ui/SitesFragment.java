@@ -40,13 +40,9 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     private static final int READY   = 0;
     private static final int LOADING = 1;
     private static final int LOGIN   = 2;
-    private static final int ERROR   = 3;
 
     private   ViewAnimator       vaSitesView;
-    protected Ready              readyHolder;
-    protected Loading            loadingHolder;
-    protected Login              loginHolder;
-    protected Error              errorHolder;
+    protected ViewHolder         viewHolder;
     protected SitesSearchHandler sitesSearchHandler;
     protected SitesUserHandler   sitesUserHandler;
     protected List<?>            results;
@@ -93,13 +89,13 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
                 showView( READY );
                 showClickHashtagIfAlreadyEntered();
             }
-            if ( readyHolder.srlReady.isRefreshing() )
+            if ( viewHolder.srlReady.isRefreshing() )
             {
-                readyHolder.srlReady.setRefreshing( false );
+                viewHolder.srlReady.setRefreshing( false );
             }
-            if ( readyHolder.sitesFooterView.getActiveView() == readyHolder.sitesFooterView.LOADING )
+            if ( viewHolder.sitesFooterView.getActiveView() == viewHolder.sitesFooterView.LOADING )
             {
-                readyHolder.sitesFooterView.showView( readyHolder.sitesFooterView.NORMAL );
+                viewHolder.sitesFooterView.showView( viewHolder.sitesFooterView.NORMAL );
             }
         }
         if ( !TextUtils.isEmpty( getEnteredHashtag() ) && !results.isEmpty() )
@@ -130,10 +126,10 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         View v = inflater.inflate( R.layout.fragment_sites, container, false );
         vaSitesView = ( ViewAnimator ) v.findViewById( R.id.va_sites_view );
+        viewHolder = new ViewHolder();
         vaSitesView.addView( initViewReady( inflater ), READY );
         vaSitesView.addView( initViewLoading( inflater ), LOADING );
         vaSitesView.addView( initViewLogin( inflater ), LOGIN );
-        vaSitesView.addView( initViewError( inflater ), ERROR );
         return v;
     }
 
@@ -151,7 +147,6 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     private View initViewReady( LayoutInflater inflater )
     {
         View viewReady = inflater.inflate( R.layout.sites_view_ready, null );
-        readyHolder = new Ready();
         initSwipeRefreshLayout( viewReady );
         initSitesFooterView( viewReady );
         initResultListEmptyView( viewReady );
@@ -162,9 +157,9 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     private void initSwipeRefreshLayout( View viewReady )
     {
-        readyHolder.srlReady = ( MySwipeRefreshLayout ) viewReady.findViewById( R.id.srl_ready );
-        readyHolder.srlReady.setOnRefreshListener( this );
-        readyHolder.srlReady.setColorScheme( android.R.color.holo_blue_dark,
+        viewHolder.srlReady = ( MySwipeRefreshLayout ) viewReady.findViewById( R.id.srl_ready );
+        viewHolder.srlReady.setOnRefreshListener( this );
+        viewHolder.srlReady.setColorScheme( android.R.color.holo_blue_dark,
                 android.R.color.holo_orange_dark,
                 android.R.color.holo_blue_dark,
                 android.R.color.holo_orange_dark );
@@ -172,8 +167,8 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     private void initSitesFooterView( View viewReady )
     {
-        readyHolder.sitesFooterView = new SitesFooterView( viewReady.getContext() );
-        readyHolder.sitesFooterView.setOnClickListener( new View.OnClickListener()
+        viewHolder.sitesFooterView = new SitesFooterView( viewReady.getContext() );
+        viewHolder.sitesFooterView.setOnClickListener( new View.OnClickListener()
         {
             @Override
             public void onClick( View v )
@@ -188,8 +183,8 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     private void initResultListEmptyView( View viewReady )
     {
-        readyHolder.lvResultsListEmpty = ( TextView ) viewReady.findViewById( R.id.tv_results_list_empty );
-        readyHolder.lvResultsListEmpty.setOnClickListener( new View.OnClickListener()
+        viewHolder.sitesEmptyView = ( SitesEmptyView ) viewReady.findViewById( R.id.sites_empty_view );
+        viewHolder.sitesEmptyView.setOnClickListener( new View.OnClickListener()
         {
             @Override
             public void onClick( View v )
@@ -197,26 +192,28 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
                 searchHashtag();
             }
         } );
+        viewHolder.sitesEmptyView.setText( "Enter a hashtag" );
+        viewHolder.sitesEmptyView.setImage( getLogo() );
     }
 
     private void initNewResultsBar( View viewReady )
     {
-        readyHolder.newResultsBar = ( NewResultsBar ) viewReady.findViewById( R.id.new_results_bar );
-        readyHolder.newResultsBar.setOnScrollToNewClickListener( new NewResultsBar.OnScrollToNewClickListener()
+        viewHolder.newResultsBar = ( NewResultsBar ) viewReady.findViewById( R.id.new_results_bar );
+        viewHolder.newResultsBar.setOnScrollToNewClickListener( new NewResultsBar.OnScrollToNewClickListener()
         {
             @Override
             public void onScrollToNewClicked( final NewResultsBar bar, int resultCount )
             {
-                if ( null == readyHolder.lvResultsList )
+                if ( null == viewHolder.lvResultsList )
                 {
                     return;
                 }
 
-                final int currentPosition = readyHolder.lvResultsList.getFirstVisiblePosition();
+                final int currentPosition = viewHolder.lvResultsList.getFirstVisiblePosition();
                 if ( currentPosition > resultCount )
                 {
                     // We set a new onScrollListener to notify us when scroll stops
-                    readyHolder.lvResultsList.setOnScrollListener( new AbsListView.OnScrollListener()
+                    viewHolder.lvResultsList.setOnScrollListener( new AbsListView.OnScrollListener()
                     {
                         @Override
                         public void onScrollStateChanged( AbsListView view, int scrollState )
@@ -227,7 +224,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
                                 // we call expandNewResultsText() to make user aware of new results above
                                 // this point and restore the scroll listener to its previous value
                                 bar.expandNewResultsText();
-                                readyHolder.lvResultsList.setOnScrollListener( bar );
+                                viewHolder.lvResultsList.setOnScrollListener( bar );
                             }
                         }
 
@@ -242,11 +239,11 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
                     // We need an offset certain pixels because without it, getFirstVisiblePosition()
                     // reports one position less than the position actually visible, causing NewResultsBar count
                     // to decrease by one.
-                    readyHolder.lvResultsList.smoothScrollToPositionFromTop( resultCount, -5 );
+                    viewHolder.lvResultsList.smoothScrollToPositionFromTop( resultCount, -5 );
                 }
                 else
                 {
-                    readyHolder.lvResultsList.smoothScrollToPosition( 0 );
+                    viewHolder.lvResultsList.smoothScrollToPosition( 0 );
                 }
             }
         } );
@@ -254,31 +251,29 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     private void initResultsListView( View viewReady )
     {
-        readyHolder.lvResultsList = ( ListView ) viewReady.findViewById( R.id.lv_results_list );
-        readyHolder.lvResultsList.addFooterView( readyHolder.sitesFooterView, null, false );
-        readyHolder.lvResultsList.setAdapter( sitesListAdapter );
-        readyHolder.lvResultsList.setEmptyView( readyHolder.lvResultsListEmpty );
-        readyHolder.lvResultsList.setOnItemClickListener( this );
-        readyHolder.lvResultsList.setOnItemLongClickListener( this );
-        readyHolder.lvResultsList.setOnScrollListener( readyHolder.newResultsBar );
+        viewHolder.lvResultsList = ( ListView ) viewReady.findViewById( R.id.lv_results_list );
+        viewHolder.lvResultsList.addFooterView( viewHolder.sitesFooterView, null, false );
+        viewHolder.lvResultsList.setAdapter( sitesListAdapter );
+        viewHolder.lvResultsList.setEmptyView( viewHolder.sitesEmptyView );
+        viewHolder.lvResultsList.setOnItemClickListener( this );
+        viewHolder.lvResultsList.setOnItemLongClickListener( this );
+        viewHolder.lvResultsList.setOnScrollListener( viewHolder.newResultsBar );
     }
 
     private View initViewLoading( LayoutInflater inflater )
     {
         View viewLoading = inflater.inflate( R.layout.sites_view_loading, null );
-        loadingHolder = new Loading();
-        loadingHolder.pgbrLoadingResults = ( ProgressBar ) viewLoading.findViewById( R.id.pgbr_loading_results );
+        viewHolder.pgbrLoadingResults = ( ProgressBar ) viewLoading.findViewById( R.id.pgbr_loading_results );
         return viewLoading;
     }
 
     private View initViewLogin( LayoutInflater inflater )
     {
         View viewLogin = inflater.inflate( R.layout.sites_view_login, null );
-        loginHolder = new Login();
-        loginHolder.btnLogin = ( Button ) viewLogin.findViewById( R.id.btn_login );
-        loginHolder.btnLogin.setText( getLoginButtonText() );
-        loginHolder.btnLogin.setBackgroundResource( getLoginButtonBackgroundId() );
-        loginHolder.btnLogin.setOnClickListener( new View.OnClickListener()
+        viewHolder.btnLogin = ( Button ) viewLogin.findViewById( R.id.btn_login );
+        viewHolder.btnLogin.setText( getLoginButtonText() );
+        viewHolder.btnLogin.setBackgroundResource( getLoginButtonBackgroundId() );
+        viewHolder.btnLogin.setOnClickListener( new View.OnClickListener()
         {
             @Override
             public void onClick( View v )
@@ -291,20 +286,12 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     protected abstract int getLoginButtonBackgroundId();
 
-    private View initViewError( LayoutInflater inflater )
-    {
-        View viewError = inflater.inflate( R.layout.sites_view_error, null );
-        errorHolder = new Error();
-        errorHolder.tvError = ( TextView ) viewError.findViewById( R.id.tv_error );
-        return viewError;
-    }
-
     private void restoreViewStates( Bundle savedInstanceState )
     {
         if ( null != savedInstanceState )
         {
             showView( savedInstanceState.getInt( ACTIVE_VIEW_KEY ) );
-            readyHolder.sitesFooterView.showView( savedInstanceState.getInt( ACTIVE_FOOTER_VIEW_KEY ) );
+            viewHolder.sitesFooterView.showView( savedInstanceState.getInt( ACTIVE_FOOTER_VIEW_KEY ) );
         }
     }
 
@@ -320,7 +307,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         super.onSaveInstanceState( outState );
         outState.putInt( ACTIVE_VIEW_KEY, getActiveView() );
-        outState.putInt( ACTIVE_FOOTER_VIEW_KEY, readyHolder.sitesFooterView.getActiveView() );
+        outState.putInt( ACTIVE_FOOTER_VIEW_KEY, viewHolder.sitesFooterView.getActiveView() );
         saveData();
     }
 
@@ -330,7 +317,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         if ( !TextUtils.isEmpty( getEnteredHashtag() ) )
         {
-            readyHolder.lvResultsListEmpty.setText( "Click to search for " + getEnteredHashtag() );
+            viewHolder.sitesEmptyView.setText( "Click to search for " + getEnteredHashtag() );
         }
     }
 
@@ -406,14 +393,14 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
         if ( !sitesUserHandler.isUserLoggedIn() )
         {
-            loginHolder.btnLogin.animate().rotationXBy( 360 ).setDuration( 1000 ).start();
+            viewHolder.btnLogin.animate().rotationXBy( 360 ).setDuration( 1000 ).start();
             return;
         }
         timedSearchHandler.removeCallbacks( timedSearchRunner );
         // We use the listview tag to keep track of selected position. On a new search, we clear this tag.
-        readyHolder.lvResultsList.setTag( null );
-        readyHolder.srlReady.setRefreshing( false );
-        readyHolder.sitesFooterView.showView( SitesFooterView.NORMAL );
+        viewHolder.lvResultsList.setTag( null );
+        viewHolder.srlReady.setRefreshing( false );
+        viewHolder.sitesFooterView.showView( SitesFooterView.NORMAL );
         sitesListAdapter.clear();
         sitesListAdapter.clearTypes();
         new Handler( getActivity().getMainLooper() ).post( new Runnable()
@@ -542,10 +529,10 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
                 showView( LOADING );
                 break;
             case OLDER:
-                readyHolder.sitesFooterView.showView( SitesFooterView.LOADING );
+                viewHolder.sitesFooterView.showView( SitesFooterView.LOADING );
                 break;
             case NEWER:
-                readyHolder.srlReady.setRefreshing( true );
+                viewHolder.srlReady.setRefreshing( true );
                 break;
             case TIMED:
                 break;
@@ -585,15 +572,14 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         }
         else
         {
-            readyHolder.lvResultsListEmpty.setText( getResources().getString( R.string.str_toast_no_results ) );
-            readyHolder.lvResultsListEmpty.setOnClickListener( null );
+            viewHolder.sitesEmptyView.setText( "No results found. Click to try again" );
         }
         postNextTimedSearch();
     }
 
     public void afterOlderSearch( List<?> searchResults )
     {
-        readyHolder.sitesFooterView.showView( SitesFooterView.NORMAL );
+        viewHolder.sitesFooterView.showView( SitesFooterView.NORMAL );
         if ( !searchResults.isEmpty() )
         {
             // Since we cannot add directly to List<?>, we have to delegate the adding to subclass which
@@ -612,19 +598,19 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     public void afterNewerSearch( List<?> searchResults )
     {
-        readyHolder.srlReady.setRefreshing( false );
+        viewHolder.srlReady.setRefreshing( false );
         if ( !searchResults.isEmpty() )
         {
-            int newFirstVisiblePositionIndex = readyHolder.lvResultsList.getFirstVisiblePosition() + searchResults.size();
-            int topOffset = null == readyHolder.lvResultsList.getChildAt( 0 ) ? 0 : readyHolder.lvResultsList.getChildAt( 0 ).getTop();
+            int newFirstVisiblePositionIndex = viewHolder.lvResultsList.getFirstVisiblePosition() + searchResults.size();
+            int topOffset = null == viewHolder.lvResultsList.getChildAt( 0 ) ? 0 : viewHolder.lvResultsList.getChildAt( 0 ).getTop();
             // Since we cannot add directly to List<?>, we have to delegate the adding to subclass which
             // casts the list to appropriate type and then does the adding
             addToStart( searchResults );
             sitesListAdapter.updateTypes( SearchType.NEWER, searchResults );
             sitesListAdapter.notifyDataSetChanged();
-            readyHolder.lvResultsList.setSelectionFromTop( newFirstVisiblePositionIndex, topOffset );
-            readyHolder.newResultsBar.setVisibility( View.VISIBLE );
-            readyHolder.newResultsBar.setResultsCount( readyHolder.newResultsBar.getResultsCount() + searchResults.size() );
+            viewHolder.lvResultsList.setSelectionFromTop( newFirstVisiblePositionIndex, topOffset );
+            viewHolder.newResultsBar.setVisibility( View.VISIBLE );
+            viewHolder.newResultsBar.setResultsCount( viewHolder.newResultsBar.getResultsCount() + searchResults.size() );
         }
         else
         {
@@ -638,16 +624,16 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         if ( !searchResults.isEmpty() )
         {
-            int newFirstVisiblePositionIndex = readyHolder.lvResultsList.getFirstVisiblePosition() + searchResults.size();
-            int topOffset = null == readyHolder.lvResultsList.getChildAt( 0 ) ? 0 : readyHolder.lvResultsList.getChildAt( 0 ).getTop();
+            int newFirstVisiblePositionIndex = viewHolder.lvResultsList.getFirstVisiblePosition() + searchResults.size();
+            int topOffset = null == viewHolder.lvResultsList.getChildAt( 0 ) ? 0 : viewHolder.lvResultsList.getChildAt( 0 ).getTop();
             // Since we cannot add directly to List<?>, we have to delegate the adding to subclass which
             // casts the list to appropriate type and then does the adding
             addToStart( searchResults );
             sitesListAdapter.updateTypes( SearchType.NEWER, searchResults );
             sitesListAdapter.notifyDataSetChanged();
-            readyHolder.lvResultsList.setSelectionFromTop( newFirstVisiblePositionIndex, topOffset );
-            readyHolder.newResultsBar.setVisibility( View.VISIBLE );
-            readyHolder.newResultsBar.setResultsCount( readyHolder.newResultsBar.getResultsCount() + searchResults.size() );
+            viewHolder.lvResultsList.setSelectionFromTop( newFirstVisiblePositionIndex, topOffset );
+            viewHolder.newResultsBar.setVisibility( View.VISIBLE );
+            viewHolder.newResultsBar.setResultsCount( viewHolder.newResultsBar.getResultsCount() + searchResults.size() );
         }
         postNextTimedSearch();
     }
@@ -658,13 +644,14 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         switch ( searchType )
         {
             case INITIAL:
-                showView( ERROR );
+                showView( READY );
+                viewHolder.sitesEmptyView.setText( "Something went wrong. Click to try again" );
                 break;
             case OLDER:
-                readyHolder.sitesFooterView.showView( SitesFooterView.ERROR );
+                viewHolder.sitesFooterView.showView( SitesFooterView.ERROR );
                 break;
             case NEWER:
-                readyHolder.srlReady.setRefreshing( false );
+                viewHolder.srlReady.setRefreshing( false );
                 Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_newer_results_error ), Toast.LENGTH_LONG ).show();
                 break;
             case TIMED:
@@ -742,9 +729,9 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         view.getLocalVisibleRect( r );
         int hiddenHeight = view.getHeight() - r.height();
         if ( ( hiddenHeight > 0 ) &&
-                ( readyHolder.lvResultsList.getLastVisiblePosition() == readyHolder.lvResultsList.getPositionForView( view ) ) )
+                ( viewHolder.lvResultsList.getLastVisiblePosition() == viewHolder.lvResultsList.getPositionForView( view ) ) )
         {
-            readyHolder.lvResultsList.smoothScrollBy( hiddenHeight, 2 * hiddenHeight );
+            viewHolder.lvResultsList.smoothScrollBy( hiddenHeight, 2 * hiddenHeight );
         }
     }
 
@@ -785,32 +772,19 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     protected abstract Uri getResultUrl( Object result );
 
-    protected static class Ready
+    protected static class ViewHolder
     {
         public ListView             lvResultsList;
-        public TextView             lvResultsListEmpty;
+        public SitesEmptyView       sitesEmptyView;
         public SitesFooterView      sitesFooterView;
         public MySwipeRefreshLayout srlReady;
         public NewResultsBar        newResultsBar;
+        public ProgressBar pgbrLoadingResults;
+        public Button btnLogin;
     }
 
     public int getActiveView()
     {
         return this.activeView;
-    }
-
-    protected static class Loading
-    {
-        public ProgressBar pgbrLoadingResults;
-    }
-
-    protected static class Login
-    {
-        public Button btnLogin;
-    }
-
-    protected static class Error
-    {
-        public TextView tvError;
     }
 }

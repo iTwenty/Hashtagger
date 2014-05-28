@@ -27,7 +27,7 @@ public class FacebookFragment extends SitesFragment
     @Override
     protected int getLogo()
     {
-        return R.drawable.facebook_logo;
+        return R.drawable.facebook_sketch;
     }
 
     @Override

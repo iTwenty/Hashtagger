@@ -32,7 +32,7 @@ public class TwitterFragment extends SitesFragment
     @Override
     protected int getLogo()
     {
-        return R.drawable.twitter_logo;
+        return R.drawable.twitter_sketch;
     }
 
     @Override

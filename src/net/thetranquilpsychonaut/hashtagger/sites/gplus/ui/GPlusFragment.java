@@ -58,7 +58,7 @@ public class GPlusFragment extends SitesFragment
     @Override
     protected int getLogo()
     {
-        return R.drawable.gplus_logo;
+        return R.drawable.gplus_sketch;
     }
 
     @Override
