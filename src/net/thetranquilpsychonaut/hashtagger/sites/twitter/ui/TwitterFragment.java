@@ -121,6 +121,13 @@ public class TwitterFragment extends SitesFragment
     }
 
     @Override
+    protected String getResultText( Object result )
+    {
+        Status status = ( Status ) result;
+        return status.isRetweet() ? status.getRetweetedStatus().getText() : status.getText();
+    }
+
+    @Override
     protected Uri getResultUrl( Object result )
     {
         return Helper.getTwitterStatusUrl( ( Status ) result );

@@ -117,6 +117,12 @@ public class GPlusFragment extends SitesFragment
     }
 
     @Override
+    protected String getResultText( Object result )
+    {
+        return ( ( Activity ) result ).getObject().getOriginalContent();
+    }
+
+    @Override
     protected Uri getResultUrl( Object result )
     {
         return Helper.getGPlusActivityUrl( ( Activity ) result );

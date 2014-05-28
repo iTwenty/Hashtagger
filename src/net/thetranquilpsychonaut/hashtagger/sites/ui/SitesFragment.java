@@ -751,11 +751,37 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     @Override
     public boolean onItemLongClick( AdapterView<?> parent, View view, int position, long id )
     {
-        Intent i = new Intent( Intent.ACTION_VIEW );
-        i.setData( getResultUrl( parent.getItemAtPosition( position ) ) );
-        getActivity().startActivity( i );
+        final Object result = parent.getItemAtPosition( position );
+        PopupMenu popupMenu = new PopupMenu( view.getContext(), view );
+        popupMenu.getMenuInflater().inflate( R.menu.sites_list_row_popup_menu, popupMenu.getMenu() );
+        popupMenu.getMenu().findItem( R.id.it_open_in_browser ).setOnMenuItemClickListener( new MenuItem.OnMenuItemClickListener()
+        {
+            @Override
+            public boolean onMenuItemClick( MenuItem item )
+            {
+                Intent i = new Intent( Intent.ACTION_VIEW );
+                i.setData( getResultUrl( result ) );
+                getActivity().startActivity( i );
+                return true;
+            }
+        } );
+        popupMenu.getMenu().findItem( R.id.it_share ).setOnMenuItemClickListener( new MenuItem.OnMenuItemClickListener()
+        {
+            @Override
+            public boolean onMenuItemClick( MenuItem item )
+            {
+                Intent i = new Intent( Intent.ACTION_SEND );
+                i.putExtra( Intent.EXTRA_TEXT, getResultText( result ) );
+                i.setType( "text/plain" );
+                getActivity().startActivity( i );
+                return true;
+            }
+        } );
+        popupMenu.show();
         return true;
     }
+
+    protected abstract String getResultText( Object result );
 
     protected abstract Uri getResultUrl( Object result );
 

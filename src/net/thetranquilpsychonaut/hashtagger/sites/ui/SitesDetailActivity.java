@@ -83,7 +83,7 @@ public abstract class SitesDetailActivity extends BaseActivity
         public void onClick( final View widget )
         {
             PopupMenu menu = new PopupMenu( widget.getContext(), widget );
-            menu.getMenuInflater().inflate( R.menu.sites_list_row_popup_menu, menu.getMenu() );
+            menu.getMenuInflater().inflate( R.menu.hashtag_popup_menu, menu.getMenu() );
             MenuItem searchHashtagItem = menu.getMenu().findItem( R.id.it_search_for_hashtag );
             searchHashtagItem.setTitle( "Search for " + this.hashtag );
             searchHashtagItem.setOnMenuItemClickListener( new MenuItem.OnMenuItemClickListener()

@@ -116,6 +116,12 @@ public class FacebookFragment extends SitesFragment
     }
 
     @Override
+    protected String getResultText( Object result )
+    {
+        return ( ( Post ) result ).getMessage();
+    }
+
+    @Override
     protected Uri getResultUrl( Object result )
     {
         return Helper.getFacebookPostUrl( ( Post ) result );
