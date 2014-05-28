@@ -32,7 +32,6 @@ public class TwitterService extends SitesService
         resultIntent.putExtra( SearchType.SEARCH_TYPE_KEY, searchType );
         Query query = new Query( hashtag );
         QueryResult queryResult = null;
-        query.setCount( HashtaggerApp.TWITTER_SEARCH_LIMIT );
         try
         {
             if ( !AccountPrefs.areTwitterDetailsPresent() )
@@ -51,8 +50,10 @@ public class TwitterService extends SitesService
             switch ( searchType )
             {
                 case INITIAL:
+                    query.setCount( HashtaggerApp.TWITTER_SEARCH_LIMIT );
                     break;
                 case OLDER:
+                    query.setCount( HashtaggerApp.TWITTER_SEARCH_LIMIT );
                     query.setMaxId( TwitterSearchHandler.maxId );
                     break;
                 case NEWER:

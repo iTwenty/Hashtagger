@@ -57,10 +57,17 @@ public class GPlusService extends SitesService
                     .setApplicationName( GPlusConfig.APP_NAME )
                     .build();
             Plus.Activities.Search searchActivities = plus.activities().search( hashtag );
-            searchActivities.setMaxResults( 20L );
-            if ( searchType == SearchType.OLDER )
+            switch ( searchType )
             {
-                searchActivities.setPageToken( GPlusSearchHandler.nextPageToken );
+                case INITIAL:
+                    searchActivities.setMaxResults( 20L );
+                    break;
+                case OLDER:
+                    searchActivities.setMaxResults( 20L );
+                    searchActivities.setPageToken( GPlusSearchHandler.nextPageToken );
+                    break;
+                default:
+                    break;
             }
             results = searchActivities.execute();
         }
