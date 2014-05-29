@@ -15,6 +15,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.*;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.*;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
@@ -30,7 +32,7 @@ import java.util.List;
 /**
  * Created by itwenty on 2/26/14.
  */
-public abstract class SitesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemClickListener, SitesSearchHandler.SitesSearchListener, SitesUserHandler.SitesUserListener, AdapterView.OnItemLongClickListener
+public abstract class SitesFragment extends Fragment implements AdapterView.OnItemClickListener, SitesSearchHandler.SitesSearchListener, SitesUserHandler.SitesUserListener, AdapterView.OnItemLongClickListener
 {
     private static final String ACTIVE_VIEW_KEY        = "active_view";
     private static final String ACTIVE_FOOTER_VIEW_KEY = "active_footer_view";
@@ -50,6 +52,8 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     protected SitesListAdapter   sitesListAdapter;
     protected Handler            timedSearchHandler;
     protected TimedSearchRunner  timedSearchRunner;
+    protected Animation          fadeIn;
+    protected Animation          fadeOut;
 
     protected int activeView = READY;
 
@@ -149,7 +153,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         View viewReady = inflater.inflate( R.layout.sites_view_ready, null );
         initSwipeRefreshLayout( viewReady );
         initSitesFooterView( viewReady );
-        initResultListEmptyView( viewReady );
+        initSitesEmptyView( viewReady );
         initNewResultsBar( viewReady );
         initResultsListView( viewReady );
         return viewReady;
@@ -158,7 +162,15 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     private void initSwipeRefreshLayout( View viewReady )
     {
         viewHolder.srlReady = ( MySwipeRefreshLayout ) viewReady.findViewById( R.id.srl_ready );
-        viewHolder.srlReady.setOnRefreshListener( this );
+        viewHolder.srlReady.setOnRefreshListener( new SwipeRefreshLayout.OnRefreshListener()
+        {
+            @Override
+            public void onRefresh()
+            {
+                if ( !TextUtils.isEmpty( getEnteredHashtag() ) )
+                    doLoadNewerResults( getEnteredHashtag() );
+            }
+        } );
         viewHolder.srlReady.setColorScheme( android.R.color.holo_blue_dark,
                 android.R.color.holo_orange_dark,
                 android.R.color.holo_blue_dark,
@@ -174,14 +186,12 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             public void onClick( View v )
             {
                 if ( !TextUtils.isEmpty( getEnteredHashtag() ) )
-                {
                     doLoadOlderResults( getEnteredHashtag() );
-                }
             }
         } );
     }
 
-    private void initResultListEmptyView( View viewReady )
+    private void initSitesEmptyView( View viewReady )
     {
         viewHolder.sitesEmptyView = ( SitesEmptyView ) viewReady.findViewById( R.id.sites_empty_view );
         viewHolder.sitesEmptyView.setOnClickListener( new View.OnClickListener()
@@ -189,7 +199,10 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
             @Override
             public void onClick( View v )
             {
-                searchHashtag();
+                if ( TextUtils.isEmpty( getEnteredHashtag() ) )
+                    ( ( SitesActivity ) getActivity() ).svHashtag.onActionViewExpanded();
+                else
+                    searchHashtag();
             }
         } );
         viewHolder.sitesEmptyView.setText( "Enter a hashtag" );
@@ -300,6 +313,8 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     {
         super.onActivityCreated( savedInstanceState );
         showClickHashtagIfAlreadyEntered();
+        fadeIn = AnimationUtils.loadAnimation( getActivity(), android.R.anim.fade_in );
+        fadeOut = AnimationUtils.loadAnimation( getActivity(), android.R.anim.fade_out );
     }
 
     @Override
@@ -415,7 +430,15 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
 
     public void showView( int activeView )
     {
+        int currentIndex = vaSitesView.indexOfChild( vaSitesView.getCurrentView() );
+        if ( ( currentIndex == LOADING || currentIndex == READY ) && ( activeView == READY || activeView == LOADING ) )
+        {
+            vaSitesView.setInAnimation( fadeIn );
+            vaSitesView.setOutAnimation( fadeOut );
+        }
         vaSitesView.setDisplayedChild( activeView );
+        vaSitesView.setInAnimation( null );
+        vaSitesView.setOutAnimation( null );
         this.activeView = activeView;
     }
 
@@ -457,15 +480,6 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
     /**
      * **************** for onRefreshListener **************
      */
-
-    @Override
-    public void onRefresh()
-    {
-        if ( !TextUtils.isEmpty( getEnteredHashtag() ) )
-        {
-            doLoadNewerResults( getEnteredHashtag() );
-        }
-    }
 
     private void doLoadNewerResults( String hashtag )
     {
@@ -572,7 +586,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         }
         else
         {
-            viewHolder.sitesEmptyView.setText( "No results found. Click to try again" );
+            viewHolder.sitesEmptyView.setText( "No results found. Try again?" );
         }
         postNextTimedSearch();
     }
@@ -645,7 +659,7 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         {
             case INITIAL:
                 showView( READY );
-                viewHolder.sitesEmptyView.setText( "Something went wrong. Click to try again" );
+                viewHolder.sitesEmptyView.setText( "Something went wrong :( Try again?" );
                 break;
             case OLDER:
                 viewHolder.sitesFooterView.showView( SitesFooterView.ERROR );
@@ -779,8 +793,8 @@ public abstract class SitesFragment extends Fragment implements SwipeRefreshLayo
         public SitesFooterView      sitesFooterView;
         public MySwipeRefreshLayout srlReady;
         public NewResultsBar        newResultsBar;
-        public ProgressBar pgbrLoadingResults;
-        public Button btnLogin;
+        public ProgressBar          pgbrLoadingResults;
+        public Button               btnLogin;
     }
 
     public int getActiveView()
