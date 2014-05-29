@@ -10,7 +10,7 @@ import com.google.api.services.plus.model.Activity;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewImageActivity;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.widgets.TwoWayView;
 
@@ -21,7 +21,7 @@ import java.util.ArrayList;
  */
 public class GPlusAlbumRow extends SitesListRow implements AdapterView.OnItemClickListener
 {
-    public static final String ALBUM_IMAGE_URLS = "ALBUM_IMAGE_URLS";
+    public static final String ALBUM_IMAGE_URLS = "urls";
 
     private GPlusHeader       gPlusHeader;
     private TextView          tvMessage;
@@ -79,9 +79,14 @@ public class GPlusAlbumRow extends SitesListRow implements AdapterView.OnItemCli
     @Override
     public void onItemClick( AdapterView<?> parent, View view, int position, long id )
     {
-        String imageUrl = ( String ) parent.getItemAtPosition( position );
-        Intent i = new Intent( getContext(), ViewImageActivity.class );
-        i.putExtra( ViewImageActivity.IMAGE_URL_KEY, Helper.getGPlusLargeMediaUrl( imageUrl ) );
+        ArrayList<String> largeAlbumImageUrls = new ArrayList<String>( albumImageUrls.size() );
+        for ( String url : albumImageUrls )
+        {
+            largeAlbumImageUrls.add( Helper.getGPlusLargeImageUrl( url ) );
+        }
+        Intent i = new Intent( getContext(), ViewAlbumActivity.class );
+        i.putExtra( ViewAlbumActivity.ALBUM_IMAGE_URLS_KEY, largeAlbumImageUrls );
+        i.putExtra( ViewAlbumActivity.SELECTED_POSITION_KEY, position );
         getContext().startActivity( i );
     }
 }

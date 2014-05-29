@@ -78,7 +78,7 @@ public class FacebookMediaRow extends SitesListRow implements View.OnClickListen
             else if ( "photo".equals( post.getType() ) )
             {
                 Intent intent = new Intent( getContext(), ViewImageActivity.class );
-                intent.putExtra( ViewImageActivity.IMAGE_URL_KEY, Helper.getFacebookLargeMediaUrl( post.getPicture().toString() ) );
+                intent.putExtra( ViewImageActivity.IMAGE_URL_KEY, Helper.getFacebookLargeImageUrl( post.getPicture().toString() ) );
                 getContext().startActivity( intent );
             }
         }

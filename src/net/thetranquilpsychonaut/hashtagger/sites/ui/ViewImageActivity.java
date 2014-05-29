@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +33,7 @@ public class ViewImageActivity extends BaseActivity
     private TouchImageView touchImageView;
     private MyTarget       target;
     private Bitmap         imageBitmap;
+    private String imageUrl;
 
     public void onCreate( Bundle savedInstanceState )
     {
@@ -40,7 +42,12 @@ public class ViewImageActivity extends BaseActivity
         touchImageView = ( TouchImageView ) findViewById( R.id.touch_image_view );
         imageLoaded = false;
         target = new MyTarget();
-        Picasso.with( HashtaggerApp.app ).load( getIntent().getStringExtra( IMAGE_URL_KEY ) ).into( target );
+        if ( null == getIntent() )
+            finish();
+        imageUrl = getIntent().getStringExtra( IMAGE_URL_KEY );
+        if ( TextUtils.isEmpty( imageUrl ) )
+            finish();
+        Picasso.with( HashtaggerApp.app ).load( imageUrl ).into( target );
     }
 
     @Override
