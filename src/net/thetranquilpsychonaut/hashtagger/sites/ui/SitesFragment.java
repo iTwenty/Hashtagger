@@ -206,7 +206,7 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
             }
         } );
         viewHolder.sitesEmptyView.setText( "Enter a hashtag" );
-        viewHolder.sitesEmptyView.setImage( getLogo() );
+        viewHolder.sitesEmptyView.setImage( getSketchLogoResId() );
     }
 
     private void initNewResultsBar( View viewReady )
@@ -360,7 +360,8 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
     private void doLogout()
     {
         new AlertDialog.Builder( getActivity() )
-                .setTitle( "Logout?" )
+                .setIcon( getLogoResId() )
+                .setTitle( getSiteName() )
                 .setMessage( "Are you sure you want to logout?" )
                 .setPositiveButton( "Yes", new DialogInterface.OnClickListener()
                 {
@@ -381,6 +382,8 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
                 .show();
     }
 
+    protected abstract String getSiteName();
+
     @Override
     public void onPrepareOptionsMenu( Menu menu )
     {
@@ -397,7 +400,9 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
 
     protected abstract List<Integer> initResultTypesList();
 
-    protected abstract int getLogo();
+    protected abstract int getSketchLogoResId();
+
+    protected abstract int getLogoResId();
 
     protected void searchHashtag()
     {
@@ -416,9 +421,10 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
         viewHolder.lvResultsList.setTag( null );
         viewHolder.srlReady.setRefreshing( false );
         viewHolder.sitesFooterView.showView( SitesFooterView.NORMAL );
-        sitesListAdapter.clear();
-        sitesListAdapter.clearTypes();
-        new Handler( getActivity().getMainLooper() ).post( new Runnable()
+        results.clear();
+        resultTypes.clear();
+        sitesListAdapter.notifyDataSetChanged();
+        new Handler( Looper.getMainLooper() ).post( new Runnable()
         {
             @Override
             public void run()
@@ -580,8 +586,7 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
         {
             // Since we cannot add directly to List<?>, we have to delegate the adding to subclass which
             // casts the list to appropriate type and then does the adding
-            addToEnd( searchResults );
-            sitesListAdapter.updateTypes( SearchType.INITIAL, searchResults );
+            updateResultsAndTypes( SearchType.INITIAL, searchResults );
             sitesListAdapter.notifyDataSetChanged();
         }
         else
@@ -598,8 +603,7 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
         {
             // Since we cannot add directly to List<?>, we have to delegate the adding to subclass which
             // casts the list to appropriate type and then does the adding
-            addToEnd( searchResults );
-            sitesListAdapter.updateTypes( SearchType.OLDER, searchResults );
+            updateResultsAndTypes( SearchType.OLDER, searchResults );
             sitesListAdapter.notifyDataSetChanged();
         }
         else
@@ -607,8 +611,6 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
             Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_no_older_results ), Toast.LENGTH_LONG ).show();
         }
     }
-
-    protected abstract void addToEnd( List<?> searchResults );
 
     public void afterNewerSearch( List<?> searchResults )
     {
@@ -619,8 +621,7 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
             int topOffset = null == viewHolder.lvResultsList.getChildAt( 0 ) ? 0 : viewHolder.lvResultsList.getChildAt( 0 ).getTop();
             // Since we cannot add directly to List<?>, we have to delegate the adding to subclass which
             // casts the list to appropriate type and then does the adding
-            addToStart( searchResults );
-            sitesListAdapter.updateTypes( SearchType.NEWER, searchResults );
+            updateResultsAndTypes( SearchType.NEWER, searchResults );
             sitesListAdapter.notifyDataSetChanged();
             viewHolder.lvResultsList.setSelectionFromTop( newFirstVisiblePositionIndex, topOffset );
             viewHolder.newResultsBar.setVisibility( View.VISIBLE );
@@ -632,8 +633,6 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
         }
     }
 
-    protected abstract void addToStart( List<?> searchResults );
-
     public void afterTimedSearch( List<?> searchResults )
     {
         if ( !searchResults.isEmpty() )
@@ -642,8 +641,7 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
             int topOffset = null == viewHolder.lvResultsList.getChildAt( 0 ) ? 0 : viewHolder.lvResultsList.getChildAt( 0 ).getTop();
             // Since we cannot add directly to List<?>, we have to delegate the adding to subclass which
             // casts the list to appropriate type and then does the adding
-            addToStart( searchResults );
-            sitesListAdapter.updateTypes( SearchType.NEWER, searchResults );
+            updateResultsAndTypes( SearchType.TIMED, searchResults );
             sitesListAdapter.notifyDataSetChanged();
             viewHolder.lvResultsList.setSelectionFromTop( newFirstVisiblePositionIndex, topOffset );
             viewHolder.newResultsBar.setVisibility( View.VISIBLE );
@@ -651,6 +649,8 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
         }
         postNextTimedSearch();
     }
+
+    protected abstract void updateResultsAndTypes( SearchType searchType, List<?> searchResults );
 
     @Override
     public void onError( SearchType searchType )

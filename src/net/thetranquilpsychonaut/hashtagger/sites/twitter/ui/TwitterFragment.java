@@ -6,6 +6,7 @@ import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.SimplePageDescriptor;
+import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterFavoriteEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterReplyEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterRetweetEvent;
@@ -30,9 +31,15 @@ public class TwitterFragment extends SitesFragment
     public static SimplePageDescriptor descriptor = new SimplePageDescriptor( HashtaggerApp.TWITTER, HashtaggerApp.TWITTER );
 
     @Override
-    protected int getLogo()
+    protected int getSketchLogoResId()
     {
         return R.drawable.twitter_sketch;
+    }
+
+    @Override
+    protected int getLogoResId()
+    {
+        return R.drawable.twitter_icon_flat;
     }
 
     @Override
@@ -52,6 +59,12 @@ public class TwitterFragment extends SitesFragment
     protected String getLoginButtonText()
     {
         return getResources().getString( R.string.str_twitter_login_button_text );
+    }
+
+    @Override
+    protected String getSiteName()
+    {
+        return HashtaggerApp.TWITTER;
     }
 
     @Override
@@ -109,15 +122,24 @@ public class TwitterFragment extends SitesFragment
     }
 
     @Override
-    protected void addToEnd( List<?> searchResults )
+    protected void updateResultsAndTypes( SearchType searchType, List<?> searchResults )
     {
-        ( ( List<Status> ) results ).addAll( ( List<Status> ) searchResults );
-    }
-
-    @Override
-    protected void addToStart( List<?> searchResults )
-    {
-        ( ( List<Status> ) results ).addAll( 0, ( List<Status> ) searchResults );
+        List<Status> newResults = ( List<Status> ) searchResults;
+        List<Integer> newResultTypes = new ArrayList<Integer>( newResults.size() );
+        for ( Status status : newResults )
+        {
+            newResultTypes.add( TwitterListAdapter.getStatusType( status ) );
+        }
+        if ( searchType == SearchType.NEWER || searchType == SearchType.TIMED )
+        {
+            ( ( List<Status> ) results ).addAll( 0, newResults );
+            resultTypes.addAll( 0, newResultTypes );
+        }
+        else
+        {
+            ( ( List<Status> ) results ).addAll( newResults );
+            resultTypes.addAll( newResultTypes );
+        }
     }
 
     @Override

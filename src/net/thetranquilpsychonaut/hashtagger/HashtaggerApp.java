@@ -44,7 +44,7 @@ public class HashtaggerApp extends Application
     public static final String FACEBOOK_SEARCH_ACTION = NAMESPACE + "facebook_search_action";
 
 
-    public static final String GPLUS               = "GPlus";
+    public static final String GPLUS               = "Google+";
     public static final int    GPLUS_VALUE         = 2;
     public static final String GPLUS_CALLBACK_URL  = "http://localhost/";
     public static final String GPLUS_CODE_KEY      = "code";

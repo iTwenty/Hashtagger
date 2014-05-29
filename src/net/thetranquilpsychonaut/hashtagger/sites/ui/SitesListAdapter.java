@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 
 import java.util.List;
 
@@ -53,11 +52,4 @@ public abstract class SitesListAdapter extends ArrayAdapter
     public abstract int getViewTypeCount();
 
     protected abstract SitesListRow getSitesListRow( Context context, int position, View convertView, ViewGroup parent );
-
-    public abstract void updateTypes( SearchType searchType, List<?> searchResults );
-
-    public void clearTypes()
-    {
-        resultTypes.clear();
-    }
 }

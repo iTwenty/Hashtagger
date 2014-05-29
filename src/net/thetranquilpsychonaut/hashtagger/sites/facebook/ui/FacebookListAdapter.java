@@ -4,11 +4,9 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import facebook4j.Post;
-import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -63,29 +61,6 @@ public class FacebookListAdapter extends SitesListAdapter
                 break;
         }
         return ( SitesListRow ) convertView;
-    }
-
-    @Override
-    public void updateTypes( SearchType searchType, List<?> searchResults )
-    {
-        if ( searchResults.isEmpty() )
-        {
-            return;
-        }
-
-        List<Integer> newTypes = new ArrayList<Integer>( searchResults.size() );
-        for ( Post post : ( List<Post> ) searchResults )
-        {
-            newTypes.add( FacebookListAdapter.getPostType( post ) );
-        }
-        if ( searchType == SearchType.NEWER )
-        {
-            resultTypes.addAll( 0, newTypes );
-        }
-        else
-        {
-            resultTypes.addAll( newTypes );
-        }
     }
 
     public static int getPostType( Post post )

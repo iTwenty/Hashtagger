@@ -4,11 +4,9 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import com.google.api.services.plus.model.Activity;
-import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -62,29 +60,6 @@ public class GPlusListAdapter extends SitesListAdapter
                 }
         }
         return ( SitesListRow ) convertView;
-    }
-
-    @Override
-    public void updateTypes( SearchType searchType, List<?> searchResults )
-    {
-        if ( searchResults.isEmpty() )
-        {
-            return;
-        }
-
-        List<Integer> newTypes = new ArrayList<Integer>( searchResults.size() );
-        for ( Activity activity : ( List<Activity> ) searchResults )
-        {
-            newTypes.add( GPlusListAdapter.getActivityType( activity ) );
-        }
-        if ( searchType == SearchType.NEWER )
-        {
-            resultTypes.addAll( 0, newTypes );
-        }
-        else
-        {
-            resultTypes.addAll( newTypes );
-        }
     }
 
     public static int getActivityType( Activity activity )

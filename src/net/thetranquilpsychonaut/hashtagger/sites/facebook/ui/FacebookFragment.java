@@ -5,6 +5,7 @@ import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.SimplePageDescriptor;
+import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.components.FacebookSearchHandler;
@@ -25,9 +26,15 @@ public class FacebookFragment extends SitesFragment
     public static SimplePageDescriptor descriptor = new SimplePageDescriptor( HashtaggerApp.FACEBOOK, HashtaggerApp.FACEBOOK );
 
     @Override
-    protected int getLogo()
+    protected int getSketchLogoResId()
     {
         return R.drawable.facebook_sketch;
+    }
+
+    @Override
+    protected int getLogoResId()
+    {
+        return R.drawable.facebook_icon_flat;
     }
 
     @Override
@@ -47,6 +54,12 @@ public class FacebookFragment extends SitesFragment
     protected String getLoginButtonText()
     {
         return getResources().getString( R.string.str_facebook_login_button_text );
+    }
+
+    @Override
+    protected String getSiteName()
+    {
+        return HashtaggerApp.FACEBOOK;
     }
 
     @Override
@@ -104,15 +117,24 @@ public class FacebookFragment extends SitesFragment
     }
 
     @Override
-    protected void addToEnd( List<?> searchResults )
+    protected void updateResultsAndTypes( SearchType searchType, List<?> searchResults )
     {
-        ( ( List<Post> ) results ).addAll( ( List<Post> ) searchResults );
-    }
-
-    @Override
-    protected void addToStart( List<?> searchResults )
-    {
-        ( ( List<Post> ) results ).addAll( 0, ( List<Post> ) searchResults );
+        List<Post> newResults = ( List<Post> ) searchResults;
+        List<Integer> newResultTypes = new ArrayList<Integer>( newResults.size() );
+        for ( Post post : newResults )
+        {
+            newResultTypes.add( FacebookListAdapter.getPostType( post ) );
+        }
+        if ( searchType == SearchType.NEWER || searchType == SearchType.TIMED )
+        {
+            ( ( List<Post> ) results ).addAll( 0, newResults );
+            resultTypes.addAll( 0, newResultTypes );
+        }
+        else
+        {
+            ( ( List<Post> ) results ).addAll( newResults );
+            resultTypes.addAll( newResultTypes );
+        }
     }
 
     @Override

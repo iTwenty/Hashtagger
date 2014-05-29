@@ -5,6 +5,7 @@ import com.google.api.services.plus.model.Activity;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.SimplePageDescriptor;
+import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.GPlusSearchHandler;
@@ -56,9 +57,15 @@ public class GPlusFragment extends SitesFragment
     }
 
     @Override
-    protected int getLogo()
+    protected int getSketchLogoResId()
     {
         return R.drawable.gplus_sketch;
+    }
+
+    @Override
+    protected int getLogoResId()
+    {
+        return R.drawable.gplus_icon_flat;
     }
 
     @Override
@@ -78,6 +85,12 @@ public class GPlusFragment extends SitesFragment
     protected String getLoginButtonText()
     {
         return getResources().getString( R.string.str_gplus_login_button_text );
+    }
+
+    @Override
+    protected String getSiteName()
+    {
+        return HashtaggerApp.GPLUS;
     }
 
     @Override
@@ -105,16 +118,26 @@ public class GPlusFragment extends SitesFragment
     }
 
     @Override
-    protected void addToEnd( List<?> searchResults )
+    protected void updateResultsAndTypes( SearchType searchType, List<?> searchResults )
     {
-        ( ( List<Activity> ) results ).addAll( ( List<Activity> ) searchResults );
+        List<Activity> newResults = ( List<Activity> ) searchResults;
+        List<Integer> newResultTypes = new ArrayList<Integer>( newResults.size() );
+        for ( Activity activity : newResults )
+        {
+            newResultTypes.add( GPlusListAdapter.getActivityType( activity ) );
+        }
+        if ( searchType == SearchType.NEWER || searchType == SearchType.TIMED )
+        {
+            ( ( List<Activity> ) results ).addAll( 0, newResults );
+            resultTypes.addAll( 0, newResultTypes );
+        }
+        else
+        {
+            ( ( List<Activity> ) results ).addAll( newResults );
+            resultTypes.addAll( newResultTypes );
+        }
     }
 
-    @Override
-    protected void addToStart( List<?> searchResults )
-    {
-        ( ( List<Activity> ) results ).addAll( 0, ( List<Activity> ) searchResults );
-    }
 
     @Override
     protected String getResultText( Object result )
