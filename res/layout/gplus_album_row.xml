@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusHeader
+        android:id="@id/gplus_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/tv_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/gplus_header"
+        android:ellipsize="end"
+        style="@style/MainMessage"/>
+
+    <net.thetranquilpsychonaut.hashtagger.widgets.TwoWayView
+        android:id="@+id/album_view"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_below="@id/tv_message"
+        android:layout_centerHorizontal="true"
+        android:focusable="false"
+        android:orientation="horizontal"/>
+
+    <net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusButtons
+        android:id="@+id/gplus_buttons"
+        android:layout_below="@id/album_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+
+</RelativeLayout>

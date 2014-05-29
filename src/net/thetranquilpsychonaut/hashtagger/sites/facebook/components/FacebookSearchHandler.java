@@ -2,6 +2,8 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.components;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import facebook4j.Paging;
 import facebook4j.Post;
@@ -44,25 +46,39 @@ public class FacebookSearchHandler extends SitesSearchHandler
     }
 
     @Override
-    public void onReceive( Context context, Intent intent )
+    public void onReceive( Context context, final Intent intent )
     {
-        SearchType searchType = ( SearchType ) intent.getSerializableExtra( SearchType.SEARCH_TYPE_KEY );
-        Result resultType = ( Result ) intent.getSerializableExtra( Result.RESULT_KEY );
-        if ( resultType == Result.FAILURE )
+        new Thread( new Runnable()
         {
-            sitesSearchListener.onError( searchType );
-            return;
-        }
-        List<Post> results = ( List<Post> ) intent.getSerializableExtra( Result.RESULT_DATA );
-        Iterator<Post> iterator = results.iterator();
-        while ( iterator.hasNext() )
-        {
-            if ( TextUtils.isEmpty( iterator.next().getMessage() ) )
+            @Override
+            public void run()
             {
-                iterator.remove();
+                final SearchType searchType = ( SearchType ) intent.getSerializableExtra( SearchType.SEARCH_TYPE_KEY );
+                Result resultType = ( Result ) intent.getSerializableExtra( Result.RESULT_KEY );
+                if ( resultType == Result.FAILURE )
+                {
+                    sitesSearchListener.onError( searchType );
+                    return;
+                }
+                final List<Post> results = ( List<Post> ) intent.getSerializableExtra( Result.RESULT_DATA );
+                Iterator<Post> iterator = results.iterator();
+                while ( iterator.hasNext() )
+                {
+                    if ( TextUtils.isEmpty( iterator.next().getMessage() ) )
+                    {
+                        iterator.remove();
+                    }
+                }
+                new Handler( Looper.getMainLooper() ).post( new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        sitesSearchListener.afterSearching( searchType, results );
+                    }
+                } );
             }
-        }
-        sitesSearchListener.afterSearching( searchType, results );
+        } ).start();
     }
 
     @Override

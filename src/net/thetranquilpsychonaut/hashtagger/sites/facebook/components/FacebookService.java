@@ -40,7 +40,7 @@ public class FacebookService extends SitesService
             switch ( searchType )
             {
                 case INITIAL:
-                    responseList = facebook.searchPosts( hashtag );
+                    responseList = facebook.searchPosts( hashtag.replace( "#", "" ) );
                     break;
                 case OLDER:
                     responseList = facebook.fetchNext( FacebookSearchHandler.oldestPage );

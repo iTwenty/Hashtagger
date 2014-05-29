@@ -421,9 +421,6 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
         viewHolder.lvResultsList.setTag( null );
         viewHolder.srlReady.setRefreshing( false );
         viewHolder.sitesFooterView.showView( SitesFooterView.NORMAL );
-        results.clear();
-        resultTypes.clear();
-        sitesListAdapter.notifyDataSetChanged();
         new Handler( Looper.getMainLooper() ).post( new Runnable()
         {
             @Override
@@ -546,6 +543,9 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
         switch ( searchType )
         {
             case INITIAL:
+                results.clear();
+                resultTypes.clear();
+                sitesListAdapter.notifyDataSetChanged();
                 showView( LOADING );
                 break;
             case OLDER:
@@ -584,8 +584,6 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
         showView( READY );
         if ( !searchResults.isEmpty() )
         {
-            // Since we cannot add directly to List<?>, we have to delegate the adding to subclass which
-            // casts the list to appropriate type and then does the adding
             updateResultsAndTypes( SearchType.INITIAL, searchResults );
             sitesListAdapter.notifyDataSetChanged();
         }
@@ -601,8 +599,6 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
         viewHolder.sitesFooterView.showView( SitesFooterView.NORMAL );
         if ( !searchResults.isEmpty() )
         {
-            // Since we cannot add directly to List<?>, we have to delegate the adding to subclass which
-            // casts the list to appropriate type and then does the adding
             updateResultsAndTypes( SearchType.OLDER, searchResults );
             sitesListAdapter.notifyDataSetChanged();
         }
@@ -619,8 +615,6 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
         {
             int newFirstVisiblePositionIndex = viewHolder.lvResultsList.getFirstVisiblePosition() + searchResults.size();
             int topOffset = null == viewHolder.lvResultsList.getChildAt( 0 ) ? 0 : viewHolder.lvResultsList.getChildAt( 0 ).getTop();
-            // Since we cannot add directly to List<?>, we have to delegate the adding to subclass which
-            // casts the list to appropriate type and then does the adding
             updateResultsAndTypes( SearchType.NEWER, searchResults );
             sitesListAdapter.notifyDataSetChanged();
             viewHolder.lvResultsList.setSelectionFromTop( newFirstVisiblePositionIndex, topOffset );
@@ -639,8 +633,6 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
         {
             int newFirstVisiblePositionIndex = viewHolder.lvResultsList.getFirstVisiblePosition() + searchResults.size();
             int topOffset = null == viewHolder.lvResultsList.getChildAt( 0 ) ? 0 : viewHolder.lvResultsList.getChildAt( 0 ).getTop();
-            // Since we cannot add directly to List<?>, we have to delegate the adding to subclass which
-            // casts the list to appropriate type and then does the adding
             updateResultsAndTypes( SearchType.TIMED, searchResults );
             sitesListAdapter.notifyDataSetChanged();
             viewHolder.lvResultsList.setSelectionFromTop( newFirstVisiblePositionIndex, topOffset );

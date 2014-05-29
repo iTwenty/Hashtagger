@@ -2,6 +2,8 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.components;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
@@ -39,17 +41,32 @@ public class TwitterSearchHandler extends SitesSearchHandler
     }
 
     @Override
-    public void onReceive( Context context, Intent intent )
+    public void onReceive( Context context, final Intent intent )
     {
-        SearchType searchType = ( SearchType ) intent.getSerializableExtra( SearchType.SEARCH_TYPE_KEY );
-        Result resultType = ( Result ) intent.getSerializableExtra( Result.RESULT_KEY );
-        if ( resultType == Result.FAILURE )
+        new Thread( new Runnable()
         {
-            sitesSearchListener.onError( searchType );
-            return;
-        }
-        QueryResult result = ( QueryResult ) intent.getSerializableExtra( Result.RESULT_DATA );
-        sitesSearchListener.afterSearching( searchType, result.getTweets() );
+            @Override
+            public void run()
+            {
+
+                final SearchType searchType = ( SearchType ) intent.getSerializableExtra( SearchType.SEARCH_TYPE_KEY );
+                Result resultType = ( Result ) intent.getSerializableExtra( Result.RESULT_KEY );
+                if ( resultType == Result.FAILURE )
+                {
+                    sitesSearchListener.onError( searchType );
+                    return;
+                }
+                final QueryResult result = ( QueryResult ) intent.getSerializableExtra( Result.RESULT_DATA );
+                new Handler( Looper.getMainLooper() ).post( new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        sitesSearchListener.afterSearching( searchType, result.getTweets() );
+                    }
+                } );
+            }
+        } ).start();
     }
 
     @Override

@@ -11,6 +11,7 @@ import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewImageActivity;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
 /**
  * Created by itwenty on 5/2/14.
@@ -77,7 +78,7 @@ public class FacebookMediaRow extends SitesListRow implements View.OnClickListen
             else if ( "photo".equals( post.getType() ) )
             {
                 Intent intent = new Intent( getContext(), ViewImageActivity.class );
-                intent.putExtra( ViewImageActivity.IMAGE_URL_KEY, post.getPicture().toString().replace( "_s.", "_o." ) );
+                intent.putExtra( ViewImageActivity.IMAGE_URL_KEY, Helper.getFacebookLargeMediaUrl( post.getPicture().toString() ) );
                 getContext().startActivity( intent );
             }
         }

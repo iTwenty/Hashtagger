@@ -143,4 +143,14 @@ public class Helper
     {
         return Uri.parse( activity.getUrl() );
     }
+
+    public static String getFacebookLargeMediaUrl( String mediaUrl )
+    {
+        return mediaUrl.replace( "_s.", "_o." );
+    }
+
+    public static String getGPlusLargeMediaUrl( String mediaUrl )
+    {
+        return mediaUrl.replaceAll( "/w\\d+-h\\d+.*/", "/" );
+    }
 }

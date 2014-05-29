@@ -44,7 +44,7 @@ public class FacebookDetailActivity extends SitesDetailActivity implements View.
         if ( FacebookListAdapter.getPostType( this.post ) == FacebookListAdapter.POST_TYPE_MEDIA )
         {
             Picasso.with( this )
-                    .load( post.getPicture().toString().replace( "_s", "_o" ) )
+                    .load( Helper.getFacebookLargeMediaUrl( post.getPicture().toString() ) )
                     .into( imagvMediaImage, new Callback()
                     {
                         @Override

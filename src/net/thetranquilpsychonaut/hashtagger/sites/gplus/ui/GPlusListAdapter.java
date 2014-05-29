@@ -17,7 +17,8 @@ public class GPlusListAdapter extends SitesListAdapter
     public static final int ACTIVITY_TYPE_NORMAL = 0;
     public static final int ACTIVITY_TYPE_MEDIA  = 1;
     public static final int ACTIVITY_TYPE_LINK   = 2;
-    public static final int ACTIVITY_TYPE_COUNT  = 3;
+    public static final int ACTIVITY_TYPE_ALBUM  = 3;
+    public static final int ACTIVITY_TYPE_COUNT  = 4;
 
     protected GPlusListAdapter( Context context, int textViewResourceId, List<?> objects, List<Integer> resultTypes )
     {
@@ -58,6 +59,12 @@ public class GPlusListAdapter extends SitesListAdapter
                 {
                     convertView = new GPlusLinkRow( context );
                 }
+                break;
+            case ACTIVITY_TYPE_ALBUM:
+                if ( null == convertView || !( convertView instanceof GPlusAlbumRow ) )
+                {
+                    convertView = new GPlusAlbumRow( context );
+                }
         }
         return ( SitesListRow ) convertView;
     }
@@ -68,6 +75,7 @@ public class GPlusListAdapter extends SitesListAdapter
         String objectType = null == activity.getObject().getAttachments() ? "" : activity.getObject().getAttachments().get( 0 ).getObjectType();
         boolean hasMedia = ( "photo".equals( objectType ) || "video".equals( objectType ) );
         boolean hasLink = "article".equals( objectType );
+        boolean hasAlbum = "album".equals( objectType );
 
         if ( hasMedia )
         {
@@ -76,6 +84,10 @@ public class GPlusListAdapter extends SitesListAdapter
         else if ( hasLink )
         {
             activityType = ACTIVITY_TYPE_LINK;
+        }
+        else if( hasAlbum )
+        {
+            activityType = ACTIVITY_TYPE_ALBUM;
         }
 
         return activityType;

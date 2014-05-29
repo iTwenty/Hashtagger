@@ -2,13 +2,18 @@ package net.thetranquilpsychonaut.hashtagger.sites.gplus.components;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Html;
 import com.google.api.services.plus.model.Activity;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusAlbumRow;
+import net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusListAdapter;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -38,41 +43,67 @@ public class GPlusSearchHandler extends SitesSearchHandler
     }
 
     @Override
-    public void onReceive( Context context, Intent intent )
+    public void onReceive( Context context, final Intent intent )
     {
-        SearchType searchType = ( SearchType ) intent.getSerializableExtra( SearchType.SEARCH_TYPE_KEY );
-        Result resultType = ( Result ) intent.getSerializableExtra( Result.RESULT_KEY );
-        if ( resultType == Result.FAILURE )
+        new Thread( new Runnable()
         {
-            sitesSearchListener.onError( searchType );
-            return;
-        }
-        List<Activity> results = GPlusData.SearchData.popSearchResults();
-        if ( searchType == searchType.INITIAL && !results.isEmpty() )
-        {
-            newestActivity = results.get( 0 );
-        }
-        else if ( searchType == searchType.NEWER || searchType == searchType.TIMED )
-        {
-            Iterator<Activity> iterator = results.iterator();
-            while ( iterator.hasNext() )
+            @Override
+            public void run()
             {
-                if ( iterator.next().getPublished().getValue() <= newestActivity.getPublished().getValue() )
+                final SearchType searchType = ( SearchType ) intent.getSerializableExtra( SearchType.SEARCH_TYPE_KEY );
+                Result resultType = ( Result ) intent.getSerializableExtra( Result.RESULT_KEY );
+                if ( resultType == Result.FAILURE )
                 {
-                    iterator.remove();
+                    sitesSearchListener.onError( searchType );
+                    return;
                 }
+                final List<Activity> results = GPlusData.SearchData.popSearchResults();
+                if ( searchType == searchType.INITIAL && !results.isEmpty() )
+                {
+                    newestActivity = results.get( 0 );
+                }
+                else if ( searchType == searchType.NEWER || searchType == searchType.TIMED )
+                {
+                    Iterator<Activity> iterator = results.iterator();
+                    while ( iterator.hasNext() )
+                    {
+                        if ( iterator.next().getPublished().getValue() <= newestActivity.getPublished().getValue() )
+                        {
+                            iterator.remove();
+                        }
+                    }
+                    if ( !results.isEmpty() )
+                    {
+                        newestActivity = results.get( 0 );
+                    }
+                }
+
+                for ( Activity activity : results )
+                {
+                    // We strip all HTML formatting tags from the text of the activity since parsing HTML in getView causes awful lag in scrolling
+                    activity.getObject().setOriginalContent( Html.fromHtml( activity.getObject().getContent() ).toString() );
+                    if ( GPlusListAdapter.getActivityType( activity ) == GPlusListAdapter.ACTIVITY_TYPE_ALBUM )
+                    {
+                        List<Activity.PlusObject.Attachments.Thumbnails> thumbnails = activity.getObject().getAttachments().get( 0 ).getThumbnails();
+                        List<String> albumImageUrls = new ArrayList<String>( thumbnails.size() );
+                        for ( Activity.PlusObject.Attachments.Thumbnails thumbnail : thumbnails )
+                        {
+                            albumImageUrls.add( thumbnail.getImage().getUrl() );
+                        }
+                        activity.set( GPlusAlbumRow.ALBUM_IMAGE_URLS, albumImageUrls );
+                    }
+                }
+                new Handler( Looper.getMainLooper() ).post( new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        sitesSearchListener.afterSearching( searchType, results );
+                    }
+                } );
             }
-            if ( !results.isEmpty() )
-            {
-                newestActivity = results.get( 0 );
-            }
-        }
-        // We strip all HTML formatting tags from the text of the activity since parsing HTML in getView causes awful lag in scrolling
-        for ( Activity activity : results )
-        {
-            activity.getObject().setOriginalContent( Html.fromHtml( activity.getObject().getContent() ).toString() );
-        }
-        sitesSearchListener.afterSearching( searchType, results );
+
+        } ).start();
     }
 
     @Override

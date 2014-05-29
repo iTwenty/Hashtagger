@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:visibility="gone"
-            style="@style/Image"/>
+            style="@style/FrameImage"/>
 
     </RelativeLayout>
 

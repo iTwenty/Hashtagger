@@ -28,9 +28,14 @@
         <item name="android:paddingTop">10dp</item>
         <item name="android:paddingBottom">10dp</item>
         <item name="android:paddingRight">10dp</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="MainMessage_Detail" parent="MainMessage">
+    <style name="MainMessage_Detail">
+        <item name="android:lineSpacingMultiplier">1.2</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingRight">10dp</item>
         <item name="android:typeface">serif</item>
         <item name="android:textSize">15sp</item>
     </style>
@@ -63,17 +68,23 @@
         <item name="android:background">@drawable/selector_sites_buttons</item>
     </style>
 
-    <style name="Image">
+    <style name="AlbumImage">
+        <item name="android:layout_width">75dp</item>
+        <item name="android:layout_height">75dp</item>
+        <item name="android:padding">8dp</item>
+    </style>
+
+    <style name="FrameImage">
         <item name="android:background">@drawable/selector_picture_frame</item>
         <item name="android:scaleType">fitCenter</item>
     </style>
 
-    <style name="ListMediaImage" parent="Image">
+    <style name="ListMediaImage" parent="FrameImage">
         <item name="android:layout_width">75dp</item>
         <item name="android:layout_height">75dp</item>
     </style>
 
-    <style name="ProfileImage" parent="Image">
+    <style name="ProfileImage" parent="FrameImage">
         <item name="android:layout_width">50dp</item>
         <item name="android:layout_height">50dp</item>
     </style>

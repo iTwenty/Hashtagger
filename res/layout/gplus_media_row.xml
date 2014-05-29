@@ -21,8 +21,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/gplus_media_view"
-            android:maxLines="10"
-            android:ellipsize="end"
             style="@style/MainMessage"/>
 
         <net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusMediaView
