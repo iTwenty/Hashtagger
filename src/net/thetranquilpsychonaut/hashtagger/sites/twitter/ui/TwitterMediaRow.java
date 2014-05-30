@@ -9,16 +9,14 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewImageActivity;
-import twitter4j.Status;
 
 /**
  * Created by itwenty on 5/1/14.
  */
 public class TwitterMediaRow extends TwitterListRow implements View.OnClickListener
 {
-    private ImageView     imgvMediaThumb;
+    private ImageView imgvMediaThumb;
 
     protected TwitterMediaRow( Context context )
     {
@@ -47,13 +45,13 @@ public class TwitterMediaRow extends TwitterListRow implements View.OnClickListe
     @Override
     protected TwitterHeader initTwitterHeader()
     {
-        return  ( TwitterHeader ) findViewById( R.id.twitter_header );
+        return ( TwitterHeader ) findViewById( R.id.twitter_header );
     }
 
     @Override
     protected TextView initStatusText()
     {
-        return ( TextView ) findViewById( R.id.tv_tweet );
+        return ( TextView ) findViewById( R.id.tv_status_text );
     }
 
     @Override

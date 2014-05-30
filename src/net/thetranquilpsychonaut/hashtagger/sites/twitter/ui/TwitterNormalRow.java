@@ -5,8 +5,6 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
-import twitter4j.Status;
 
 /**
  * Created by itwenty on 5/1/14.
@@ -44,7 +42,7 @@ public class TwitterNormalRow extends TwitterListRow
     @Override
     protected TextView initStatusText()
     {
-        return ( TextView ) findViewById( R.id.tv_tweet );
+        return ( TextView ) findViewById( R.id.tv_status_text );
     }
 
     @Override

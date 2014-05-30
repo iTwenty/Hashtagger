@@ -13,7 +13,7 @@
 
     <TextView
         tools:text="tweet tweet tweet\ntweet"
-        android:id="@+id/tv_tweet"
+        android:id="@+id/tv_status_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/twitter_header"
@@ -21,7 +21,7 @@
 
     <net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterButtons
         android:id="@+id/twitter_buttons"
-        android:layout_below="@id/tv_tweet"
+        android:layout_below="@id/tv_status_text"
         android:layout_width="match_parent"
         android:layout_height="0dp"/>
 

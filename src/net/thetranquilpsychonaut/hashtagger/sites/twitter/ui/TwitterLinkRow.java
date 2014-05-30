@@ -8,15 +8,13 @@ import android.view.View;
 import android.widget.TextView;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
-import twitter4j.Status;
 
 /**
  * Created by itwenty on 5/1/14.
  */
 public class TwitterLinkRow extends TwitterListRow implements View.OnClickListener
 {
-    private TextView      tvTwitterLink;
+    private TextView tvTwitterLink;
 
     protected TwitterLinkRow( Context context )
     {
@@ -51,7 +49,7 @@ public class TwitterLinkRow extends TwitterListRow implements View.OnClickListen
     @Override
     protected TextView initStatusText()
     {
-        return ( TextView ) findViewById( R.id.tv_tweet );
+        return ( TextView ) findViewById( R.id.tv_status_text );
     }
 
     @Override

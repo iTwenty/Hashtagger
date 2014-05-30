@@ -13,7 +13,7 @@
 
     <TextView
         tools:text="tweet tweet tweet\ntweet"
-        android:id="@+id/tv_tweet"
+        android:id="@+id/tv_status_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/twitter_header"
@@ -22,7 +22,7 @@
     <TextView
         android:id="@+id/tv_link"
         tools:text="link"
-        android:layout_below="@id/tv_tweet"
+        android:layout_below="@id/tv_status_text"
         android:layout_centerHorizontal="true"
         style="@style/Link"/>
 

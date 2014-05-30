@@ -3,20 +3,15 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.TextView;
-import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 
 /**
  * Created by itwenty on 5/2/14.
  */
-public class FacebookMediaRow extends SitesListRow
+public class FacebookMediaRow extends FacebookListRow
 {
-    private FacebookHeader    facebookHeader;
-    private TextView          tvMessage;
     private FacebookMediaView facebookMediaView;
-    private Post              post;
 
     protected FacebookMediaRow( Context context )
     {
@@ -37,10 +32,20 @@ public class FacebookMediaRow extends SitesListRow
     protected void init( Context context )
     {
         inflate( context, R.layout.facebook_media_row, this );
-        facebookHeader = ( FacebookHeader ) findViewById( R.id.facebook_header );
-        tvMessage = ( TextView ) findViewById( R.id.tv_message );
         facebookMediaView = ( FacebookMediaView ) findViewById( R.id.facebook_media_view );
         super.init( context );
+    }
+
+    @Override
+    protected FacebookHeader initFacebookHeader()
+    {
+        return ( FacebookHeader ) findViewById( R.id.facebook_header );
+    }
+
+    @Override
+    protected TextView initPostText()
+    {
+        return ( TextView ) findViewById( R.id.tv_post_text );
     }
 
     @Override
@@ -52,9 +57,7 @@ public class FacebookMediaRow extends SitesListRow
     @Override
     public void updateRow( Object result )
     {
-        this.post = ( Post ) result;
-        facebookHeader.showHeader( post );
-        tvMessage.setText( post.getMessage() );
+        super.updateRow( result );
         facebookMediaView.showMediaThumbnail( post );
     }
 }

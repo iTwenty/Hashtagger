@@ -31,7 +31,7 @@ public class FacebookDetailActivity extends SitesDetailActivity
         setContentView( R.layout.activity_facebook_detail );
         rlRoot = ( RelativeLayout ) findViewById( R.id.rl_root );
         facebookHeader = ( FacebookHeader ) findViewById( R.id.facebook_header );
-        tvMessage = ( TextView ) findViewById( R.id.tv_message );
+        tvMessage = ( TextView ) findViewById( R.id.tv_post_text );
         if ( null == getIntent() )
         {
             finish();
@@ -51,7 +51,7 @@ public class FacebookDetailActivity extends SitesDetailActivity
             facebookMediaView = new FacebookMediaView( this );
             facebookMediaView.setId( R.id.FacebookMediaView_Detail );
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams( RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT );
-            params.addRule( RelativeLayout.BELOW, R.id.tv_message );
+            params.addRule( RelativeLayout.BELOW, R.id.tv_post_text );
             params.addRule( RelativeLayout.CENTER_HORIZONTAL );
             rlRoot.addView( facebookMediaView, params );
             facebookMediaView.showMedia( this.post );

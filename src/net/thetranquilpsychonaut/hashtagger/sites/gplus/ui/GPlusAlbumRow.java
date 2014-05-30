@@ -5,10 +5,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
-import com.google.api.services.plus.model.Activity;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumFragment;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
@@ -61,7 +59,7 @@ public class GPlusAlbumRow extends GPlusListRow implements AdapterView.OnItemCli
     @Override
     protected TextView initActivityText()
     {
-        return ( TextView ) findViewById( R.id.tv_message );
+        return ( TextView ) findViewById( R.id.tv_activity_text );
     }
 
     @Override

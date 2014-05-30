@@ -19,7 +19,7 @@
 
         <TextView
             tools:text="tweet"
-            android:id="@+id/tv_tweet"
+            android:id="@+id/tv_status_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/imgv_media_thumb"

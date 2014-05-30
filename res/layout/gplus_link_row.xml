@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"/>
 
     <TextView
-        android:id="@id/tv_message"
+        android:id="@id/tv_activity_text"
         android:layout_below="@id/gplus_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,7 +19,7 @@
 
     <TextView
         android:id="@+id/tv_link"
-        android:layout_below="@id/tv_message"
+        android:layout_below="@id/tv_activity_text"
         android:layout_centerHorizontal="true"
         style="@style/Link"/>
 

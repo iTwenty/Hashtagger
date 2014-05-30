@@ -3,20 +3,14 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.TextView;
-import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 
 /**
  * Created by itwenty on 5/2/14.
  */
-public class FacebookNormalRow extends SitesListRow
+public class FacebookNormalRow extends FacebookListRow
 {
-    private FacebookHeader facebookHeader;
-    private TextView       tvMessage;
-    private Post           post;
-
     protected FacebookNormalRow( Context context )
     {
         super( context );
@@ -36,9 +30,19 @@ public class FacebookNormalRow extends SitesListRow
     protected void init( Context context )
     {
         inflate( context, R.layout.facebook_normal_row, this );
-        facebookHeader = ( FacebookHeader ) findViewById( R.id.facebook_header );
-        tvMessage = ( TextView ) findViewById( R.id.tv_message );
         super.init( context );
+    }
+
+    @Override
+    protected FacebookHeader initFacebookHeader()
+    {
+        return ( FacebookHeader ) findViewById( R.id.facebook_header );
+    }
+
+    @Override
+    protected TextView initPostText()
+    {
+        return ( TextView ) findViewById( R.id.tv_post_text );
     }
 
     @Override
@@ -50,8 +54,6 @@ public class FacebookNormalRow extends SitesListRow
     @Override
     public void updateRow( Object result )
     {
-        this.post = ( Post ) result;
-        facebookHeader.showHeader( post );
-        tvMessage.setText( post.getMessage() );
+        super.updateRow( result );
     }
 }

@@ -6,17 +6,15 @@ import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
-import com.google.api.services.plus.model.Activity;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 
 /**
  * Created by itwenty on 5/17/14.
  */
 public class GPlusLinkRow extends GPlusListRow implements View.OnClickListener
 {
-    private TextView    tvLink;
+    private TextView tvLink;
 
     protected GPlusLinkRow( Context context )
     {
@@ -51,7 +49,7 @@ public class GPlusLinkRow extends GPlusListRow implements View.OnClickListener
     @Override
     protected TextView initActivityText()
     {
-        return ( TextView ) findViewById( R.id.tv_message );
+        return ( TextView ) findViewById( R.id.tv_activity_text );
     }
 
     @Override

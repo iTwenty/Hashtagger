@@ -3,7 +3,6 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.TextView;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 import twitter4j.Status;
 

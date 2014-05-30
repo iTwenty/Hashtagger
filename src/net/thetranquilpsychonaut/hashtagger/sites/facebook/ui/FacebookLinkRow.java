@@ -6,20 +6,15 @@ import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
-import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 
 /**
  * Created by itwenty on 5/2/14.
  */
-public class FacebookLinkRow extends SitesListRow implements View.OnClickListener
+public class FacebookLinkRow extends FacebookListRow implements View.OnClickListener
 {
-    private FacebookHeader facebookHeader;
-    private TextView       tvMessage;
-    private TextView       tvLink;
-    private Post           post;
+    private TextView tvLink;
 
     protected FacebookLinkRow( Context context )
     {
@@ -40,11 +35,21 @@ public class FacebookLinkRow extends SitesListRow implements View.OnClickListene
     protected void init( Context context )
     {
         inflate( context, R.layout.facebook_link_row, this );
-        facebookHeader = ( FacebookHeader ) findViewById( R.id.facebook_header );
-        tvMessage = ( TextView ) findViewById( R.id.tv_message );
         tvLink = ( TextView ) findViewById( R.id.tv_link );
         tvLink.setOnClickListener( this );
         super.init( context );
+    }
+
+    @Override
+    protected FacebookHeader initFacebookHeader()
+    {
+        return ( FacebookHeader ) findViewById( R.id.facebook_header );
+    }
+
+    @Override
+    protected TextView initPostText()
+    {
+        return ( TextView ) findViewById( R.id.tv_post_text );
     }
 
     @Override
@@ -56,9 +61,7 @@ public class FacebookLinkRow extends SitesListRow implements View.OnClickListene
     @Override
     public void updateRow( Object result )
     {
-        this.post = ( Post ) result;
-        facebookHeader.showHeader( post );
-        tvMessage.setText( post.getMessage() );
+        super.updateRow( result );
         tvLink.setText( post.getName() );
     }
 
