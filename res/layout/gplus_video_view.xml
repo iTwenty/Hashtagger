@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:src="@drawable/gplus_icon_flat"
+        android:id="@+id/imgv_video_thumbnail"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:padding="8dp"/>
+
+    <TextView
+        android:id="@+id/tv_video_title"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf="@+id/imgv_video_thumbnail"
+        android:layout_alignTop="@id/imgv_video_thumbnail"
+        android:layout_height="wrap_content"
+        style="@style/TextView_Default"
+        android:text="Isis - Oceanic"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/tv_video_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_video_title"
+        android:layout_toRightOf="@id/imgv_video_thumbnail"
+        android:maxLines="3"
+        android:ellipsize="end"
+        android:text="Isis is an post metal band from XYZ\nIsis is an post metal band from XYZ\nIsis is an post metal band from XYZ"
+        style="@style/TwitterScreenName"/>
+
+</merge>

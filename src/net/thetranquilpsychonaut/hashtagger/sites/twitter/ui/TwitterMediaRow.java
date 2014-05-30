@@ -37,7 +37,7 @@ public class TwitterMediaRow extends TwitterListRow implements View.OnClickListe
     protected void init( Context context )
     {
         inflate( context, R.layout.twitter_media_row, this );
-        imgvMediaThumb = ( ImageView ) findViewById( R.id.imgv_media_thumb );
+        imgvMediaThumb = ( ImageView ) findViewById( R.id.imgv_thumbnail );
         imgvMediaThumb.setOnClickListener( this );
         super.init( context );
     }

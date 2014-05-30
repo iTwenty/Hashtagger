@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<merge
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -12,33 +11,32 @@
         android:layout_height="wrap_content"/>
 
     <RelativeLayout
-        android:id="@+id/rl_tweet_thumb_wrapper"
+        android:id="@+id/rl_wrapper"
         android:layout_below="@id/twitter_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <TextView
-            tools:text="tweet"
             android:id="@+id/tv_status_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/imgv_media_thumb"
+            android:layout_toLeftOf="@+id/imgv_thumbnail"
             style="@style/MainMessage"/>
 
         <ImageView
-            tools:src="@drawable/twitter_logo_blue"
-            android:id="@id/imgv_media_thumb"
+            android:id="@id/imgv_thumbnail"
             android:layout_width="75dp"
             android:layout_height="75dp"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             style="@style/FrameImage"/>
 
     </RelativeLayout>
 
     <net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterButtons
         android:id="@+id/twitter_buttons"
-        android:layout_below="@id/rl_tweet_thumb_wrapper"
+        android:layout_below="@id/rl_wrapper"
         android:layout_width="match_parent"
         android:layout_height="0dp"/>
 
-</merge>
+</RelativeLayout>

@@ -21,7 +21,7 @@ public class GPlusDetailActivity extends SitesDetailActivity
 {
     private TextView       tvContent;
     private GPlusHeader    gPlusHeader;
-    private GPlusMediaView gPlusMediaView;
+    private GPlusVideoView gPlusVideoView;
     private Activity       activity;
     private int            activityType;
 
@@ -31,7 +31,7 @@ public class GPlusDetailActivity extends SitesDetailActivity
         setContentView( R.layout.activity_gplus_detail );
         tvContent = ( TextView ) findViewById( R.id.tv_content );
         gPlusHeader = ( GPlusHeader ) findViewById( R.id.gplus_header );
-        gPlusMediaView = ( GPlusMediaView ) findViewById( R.id.gplus_media_view );
+        gPlusVideoView = ( GPlusVideoView ) findViewById( R.id.gplus_media_view );
         activity = GPlusData.ActivityData.popActivity();
         if ( null == activity )
         {
@@ -46,10 +46,10 @@ public class GPlusDetailActivity extends SitesDetailActivity
         tvContent.setText( Html.fromHtml( activity.getObject().getContent() ) );
         tvContent.setMovementMethod( LinkMovementMethod.getInstance() );
 
-        if ( activityType == GPlusListAdapter.ACTIVITY_TYPE_MEDIA )
+        if ( activityType == GPlusListAdapter.ACTIVITY_TYPE_VIDEO )
         {
-            gPlusMediaView.showMedia( this.activity );
-            gPlusMediaView.setVisibility( View.VISIBLE );
+            gPlusVideoView.showVideoThumbnail( this.activity );
+            gPlusVideoView.setVisibility( View.VISIBLE );
         }
         if ( activityType == GPlusListAdapter.ACTIVITY_TYPE_ALBUM )
         {

@@ -15,10 +15,11 @@ import java.util.List;
 public class GPlusListAdapter extends SitesListAdapter
 {
     public static final int ACTIVITY_TYPE_NORMAL = 0;
-    public static final int ACTIVITY_TYPE_MEDIA  = 1;
-    public static final int ACTIVITY_TYPE_LINK   = 2;
-    public static final int ACTIVITY_TYPE_ALBUM  = 3;
-    public static final int ACTIVITY_TYPE_COUNT  = 4;
+    public static final int ACTIVITY_TYPE_PHOTO  = 1;
+    public static final int ACTIVITY_TYPE_VIDEO  = 2;
+    public static final int ACTIVITY_TYPE_LINK   = 3;
+    public static final int ACTIVITY_TYPE_ALBUM  = 4;
+    public static final int ACTIVITY_TYPE_COUNT  = 5;
 
     protected GPlusListAdapter( Context context, int textViewResourceId, List<?> objects, List<Integer> resultTypes )
     {
@@ -48,10 +49,16 @@ public class GPlusListAdapter extends SitesListAdapter
                     convertView = new GPlusNormalRow( context );
                 }
                 break;
-            case ACTIVITY_TYPE_MEDIA:
-                if ( null == convertView || !( convertView instanceof GPlusMediaRow ) )
+            case ACTIVITY_TYPE_PHOTO:
+                if ( null == convertView || !( convertView instanceof GPlusPhotoRow ) )
                 {
-                    convertView = new GPlusMediaRow( context );
+                    convertView = new GPlusPhotoRow( context );
+                }
+                break;
+            case ACTIVITY_TYPE_VIDEO:
+                if ( null == convertView || !( convertView instanceof GPlusVideoRow ) )
+                {
+                    convertView = new GPlusVideoRow( context );
                 }
                 break;
             case ACTIVITY_TYPE_LINK:
@@ -72,20 +79,23 @@ public class GPlusListAdapter extends SitesListAdapter
     public static int getActivityType( Activity activity )
     {
         int activityType = ACTIVITY_TYPE_NORMAL;
-        String objectType = null == activity.getObject().getAttachments() ? "" : activity.getObject().getAttachments().get( 0 ).getObjectType();
-        boolean hasMedia = ( "photo".equals( objectType ) || "video".equals( objectType ) );
-        boolean hasLink = "article".equals( objectType );
-        boolean hasAlbum = "album".equals( objectType );
+        String objectType = null == activity.getObject().getAttachments() ?
+                "" :
+                activity.getObject().getAttachments().get( 0 ).getObjectType();
 
-        if ( hasMedia )
+        if ( "photo".equals( objectType ) )
         {
-            activityType = ACTIVITY_TYPE_MEDIA;
+            activityType = ACTIVITY_TYPE_PHOTO;
         }
-        else if ( hasLink )
+        else if ( "video".equals( objectType ) )
+        {
+            activityType = ACTIVITY_TYPE_VIDEO;
+        }
+        else if ( "article".equals( objectType ) )
         {
             activityType = ACTIVITY_TYPE_LINK;
         }
-        else if ( hasAlbum )
+        else if ( "album".equals( objectType ) )
         {
             activityType = ACTIVITY_TYPE_ALBUM;
         }

@@ -2,9 +2,8 @@
 
 <merge
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:hashtagger="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusHeader
         android:id="@+id/gplus_header"
@@ -12,7 +11,7 @@
         android:layout_height="wrap_content"/>
 
     <RelativeLayout
-        android:id="@+id/rl_message_attachment_wrapper"
+        android:id="@+id/rl_wrapper"
         android:layout_below="@id/gplus_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -21,23 +20,22 @@
             android:id="@+id/tv_activity_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/gplus_media_view"
+            android:layout_toLeftOf="@+id/imgv_thumbnail"
             style="@style/MainMessage"/>
 
-        <net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusMediaView
-            android:id="@id/gplus_media_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ImageView
+            android:id="@id/imgv_thumbnail"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            hashtagger:mediaWidth="75dp"
-            hashtagger:mediaHeight="75dp"/>
+            style="@style/FrameImage"/>
 
     </RelativeLayout>
 
     <net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusButtons
         android:id="@+id/gplus_buttons"
-        android:layout_below="@id/rl_message_attachment_wrapper"
+        android:layout_below="@id/rl_wrapper"
         android:layout_width="match_parent"
         android:layout_height="0dp"/>
 

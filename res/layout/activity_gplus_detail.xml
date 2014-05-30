@@ -25,7 +25,7 @@
             android:layout_below="@id/gplus_header"
             style="@style/MainMessage_Detail"/>
 
-        <net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusMediaView
+        <net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusVideoView
             android:id="@+id/gplus_media_view"
             android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"

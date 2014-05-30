@@ -9,21 +9,21 @@ import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 /**
  * Created by itwenty on 5/14/14.
  */
-public class GPlusMediaRow extends GPlusListRow
+public class GPlusVideoRow extends GPlusListRow
 {
-    private GPlusMediaView gPlusMediaView;
+    private GPlusVideoView gPlusVideoView;
 
-    public GPlusMediaRow( Context context )
+    public GPlusVideoRow( Context context )
     {
         super( context );
     }
 
-    public GPlusMediaRow( Context context, AttributeSet attrs )
+    public GPlusVideoRow( Context context, AttributeSet attrs )
     {
         super( context, attrs );
     }
 
-    public GPlusMediaRow( Context context, AttributeSet attrs, int defStyle )
+    public GPlusVideoRow( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
     }
@@ -31,8 +31,8 @@ public class GPlusMediaRow extends GPlusListRow
     @Override
     protected void init( Context context )
     {
-        inflate( context, R.layout.gplus_media_row, this );
-        gPlusMediaView = ( GPlusMediaView ) findViewById( R.id.gplus_media_view );
+        inflate( context, R.layout.gplus_video_row, this );
+        gPlusVideoView = ( GPlusVideoView ) findViewById( R.id.gplus_video_view );
         super.init( context );
     }
 
@@ -58,6 +58,6 @@ public class GPlusMediaRow extends GPlusListRow
     public void updateRow( Object result )
     {
         super.updateRow( result );
-        gPlusMediaView.showMediaThumbnail( activity );
+        gPlusVideoView.showVideoThumbnail( activity );
     }
 }
