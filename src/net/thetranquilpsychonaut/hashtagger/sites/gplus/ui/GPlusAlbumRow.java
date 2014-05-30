@@ -19,12 +19,9 @@ import java.util.ArrayList;
 /**
  * Created by itwenty on 5/29/14.
  */
-public class GPlusAlbumRow extends SitesListRow implements AdapterView.OnItemClickListener
+public class GPlusAlbumRow extends GPlusListRow implements AdapterView.OnItemClickListener
 {
-    private GPlusHeader       gPlusHeader;
-    private TextView          tvMessage;
     private TwoWayView        albumView;
-    private Activity          activity;
     private ArrayList<String> albumThumbnailUrls;
     private GPlusAlbumAdapter albumAdapter;
 
@@ -47,14 +44,24 @@ public class GPlusAlbumRow extends SitesListRow implements AdapterView.OnItemCli
     protected void init( Context context )
     {
         inflate( context, R.layout.gplus_album_row, this );
-        gPlusHeader = ( GPlusHeader ) findViewById( R.id.gplus_header );
-        tvMessage = ( TextView ) findViewById( R.id.tv_message );
         albumView = ( TwoWayView ) findViewById( R.id.album_view );
-        albumThumbnailUrls = new ArrayList<String>( 50 );
+        albumThumbnailUrls = new ArrayList<String>();
         albumAdapter = new GPlusAlbumAdapter( context, 0, albumThumbnailUrls );
         albumView.setAdapter( albumAdapter );
         albumView.setOnItemClickListener( this );
         super.init( context );
+    }
+
+    @Override
+    protected GPlusHeader initGPlusHeader()
+    {
+        return ( GPlusHeader ) findViewById( R.id.gplus_header );
+    }
+
+    @Override
+    protected TextView initActivityText()
+    {
+        return ( TextView ) findViewById( R.id.tv_message );
     }
 
     @Override
@@ -66,9 +73,7 @@ public class GPlusAlbumRow extends SitesListRow implements AdapterView.OnItemCli
     @Override
     public void updateRow( Object result )
     {
-        this.activity = ( Activity ) result;
-        gPlusHeader.showHeader( this.activity );
-        tvMessage.setText( activity.getObject().getOriginalContent() );
+        super.updateRow( result );
         albumThumbnailUrls.clear();
         albumThumbnailUrls.addAll( ( ArrayList<String> ) activity.get( ViewAlbumFragment.ALBUM_THUMBNAIL_URLS_KEY ) );
         albumAdapter.notifyDataSetChanged();

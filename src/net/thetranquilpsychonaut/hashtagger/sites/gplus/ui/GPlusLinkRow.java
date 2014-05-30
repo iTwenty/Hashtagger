@@ -14,12 +14,9 @@ import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 /**
  * Created by itwenty on 5/17/14.
  */
-public class GPlusLinkRow extends SitesListRow implements View.OnClickListener
+public class GPlusLinkRow extends GPlusListRow implements View.OnClickListener
 {
-    private GPlusHeader gPlusHeader;
-    private TextView    tvMessage;
     private TextView    tvLink;
-    private Activity    activity;
 
     protected GPlusLinkRow( Context context )
     {
@@ -40,11 +37,21 @@ public class GPlusLinkRow extends SitesListRow implements View.OnClickListener
     protected void init( Context context )
     {
         inflate( context, R.layout.gplus_link_row, this );
-        gPlusHeader = ( GPlusHeader ) findViewById( R.id.gplus_header );
-        tvMessage = ( TextView ) findViewById( R.id.tv_message );
         tvLink = ( TextView ) findViewById( R.id.tv_link );
         tvLink.setOnClickListener( this );
         super.init( context );
+    }
+
+    @Override
+    protected GPlusHeader initGPlusHeader()
+    {
+        return ( GPlusHeader ) findViewById( R.id.gplus_header );
+    }
+
+    @Override
+    protected TextView initActivityText()
+    {
+        return ( TextView ) findViewById( R.id.tv_message );
     }
 
     @Override
@@ -56,9 +63,7 @@ public class GPlusLinkRow extends SitesListRow implements View.OnClickListener
     @Override
     public void updateRow( Object result )
     {
-        this.activity = ( Activity ) result;
-        gPlusHeader.showHeader( activity );
-        tvMessage.setText( activity.getObject().getOriginalContent() );
+        super.updateRow( result );
         tvLink.setText( activity.getObject().getAttachments().get( 0 ).getDisplayName() );
     }
 

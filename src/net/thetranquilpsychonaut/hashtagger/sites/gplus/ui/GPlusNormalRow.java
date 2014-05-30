@@ -11,12 +11,8 @@ import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 /**
  * Created by itwenty on 5/7/14.
  */
-public class GPlusNormalRow extends SitesListRow
+public class GPlusNormalRow extends GPlusListRow
 {
-    private GPlusHeader gPlusHeader;
-    private TextView    tvMessage;
-    private Activity    activity;
-
     protected GPlusNormalRow( Context context )
     {
         super( context );
@@ -36,9 +32,19 @@ public class GPlusNormalRow extends SitesListRow
     protected void init( Context context )
     {
         inflate( context, R.layout.gplus_normal_row, this );
-        tvMessage = ( TextView ) findViewById( R.id.tv_message );
-        gPlusHeader = ( GPlusHeader ) findViewById( R.id.gplus_header );
         super.init( context );
+    }
+
+    @Override
+    protected GPlusHeader initGPlusHeader()
+    {
+        return ( GPlusHeader ) findViewById( R.id.gplus_header );
+    }
+
+    @Override
+    protected TextView initActivityText()
+    {
+        return ( TextView ) findViewById( R.id.tv_message );
     }
 
     @Override
@@ -50,8 +56,6 @@ public class GPlusNormalRow extends SitesListRow
     @Override
     public void updateRow( Object result )
     {
-        this.activity = ( Activity ) result;
-        gPlusHeader.showHeader( activity );
-        tvMessage.setText( activity.getObject().getOriginalContent() );
+        super.updateRow( result );
     }
 }
