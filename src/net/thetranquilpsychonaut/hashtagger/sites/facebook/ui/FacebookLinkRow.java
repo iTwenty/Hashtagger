@@ -57,7 +57,7 @@ public class FacebookLinkRow extends SitesListRow implements View.OnClickListene
     public void updateRow( Object result )
     {
         this.post = ( Post ) result;
-        facebookHeader.updateHeader( post );
+        facebookHeader.showHeader( post );
         tvMessage.setText( post.getMessage() );
         tvLink.setText( post.getName() );
     }

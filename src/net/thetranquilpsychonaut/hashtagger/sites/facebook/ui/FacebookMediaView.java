@@ -1,48 +1,50 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.AttributeSet;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
+import android.view.View;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import facebook4j.Post;
-import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesMediaView;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewImageActivity;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
 /**
  * Created by itwenty on 5/17/14.
  */
-public class FacebookMediaView extends FrameLayout
+public class FacebookMediaView extends SitesMediaView
 {
-    private ImageView imgvPicture;
-    private ImageView imgvPlay;
+    private Post post;
 
     public FacebookMediaView( Context context )
     {
-        this( context, null, 0 );
+        super( context );
     }
 
     public FacebookMediaView( Context context, AttributeSet attrs )
     {
-        this( context, attrs, 0 );
+        super( context, attrs );
     }
 
     public FacebookMediaView( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
-        inflate( context, R.layout.facebook_media_view, this );
-        imgvPicture = ( ImageView ) findViewById( R.id.imgv_picture );
-        imgvPlay = ( ImageView ) findViewById( R.id.imgv_play );
     }
 
-    public void updateMedia( Post post )
+    @Override
+    public void showMediaThumbnail( Object result )
     {
-        Picasso.with( HashtaggerApp.app )
+        this.post = ( Post ) result;
+        Picasso.with( getContext() )
                 .load( post.getPicture().toString() )
                 .error( R.drawable.drawable_image_loading )
                 .fit()
                 .centerCrop()
-                .into( imgvPicture );
+                .into( imgvMedia );
         if ( "video".equals( post.getType() ) )
         {
             imgvPlay.setVisibility( VISIBLE );
@@ -50,6 +52,53 @@ public class FacebookMediaView extends FrameLayout
         else
         {
             imgvPlay.setVisibility( GONE );
+        }
+    }
+
+    @Override
+    public void showMedia( Object result )
+    {
+        this.post = ( Post ) result;
+        Picasso.with( getContext() )
+                .load( Helper.getFacebookLargeImageUrl( post.getPicture().toString() ) )
+                .error( R.drawable.drawable_image_loading )
+                .into( imgvMedia, new Callback()
+                {
+                    @Override
+                    public void onSuccess()
+                    {
+                        if ( "video".equals( post.getType() ) )
+                        {
+                            imgvPlay.setVisibility( VISIBLE );
+                        }
+                        else
+                        {
+                            imgvPlay.setVisibility( GONE );
+                        }
+                    }
+
+                    @Override
+                    public void onError()
+                    {
+
+                    }
+                } );
+    }
+
+    @Override
+    public void onClick( View v )
+    {
+        if ( "video".equals( post.getType() ) )
+        {
+            Intent intent = new Intent( Intent.ACTION_VIEW );
+            intent.setData( Uri.parse( post.getSource().toString() ) );
+            getContext().startActivity( intent );
+        }
+        else if ( "photo".equals( post.getType() ) )
+        {
+            Intent intent = new Intent( getContext(), ViewImageActivity.class );
+            intent.putExtra( ViewImageActivity.IMAGE_URL_KEY, Helper.getFacebookLargeImageUrl( post.getPicture().toString() ) );
+            getContext().startActivity( intent );
         }
     }
 }

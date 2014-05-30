@@ -8,6 +8,7 @@
     android:padding="@dimen/layout_padding">
 
     <RelativeLayout
+        android:id="@+id/rl_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/card">
@@ -24,30 +25,19 @@
             android:layout_below="@id/gplus_header"
             style="@style/MainMessage_Detail"/>
 
-        <FrameLayout
-            android:id="@+id/fl_wrapper"
-            android:layout_below="@id/tv_content"
+        <net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusMediaView
+            android:id="@+id/gplus_media_view"
             android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone">
+            android:layout_below="@id/tv_content"
+            android:visibility="gone"/>
 
-            <ImageView
-                android:id="@+id/imgv_media_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                style="@style/FrameImage"/>
-
-            <ImageView
-                android:id="@+id/imgv_play"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/play_button"
-                android:layout_gravity="center"
-                android:visibility="gone"/>
-
-        </FrameLayout>
+        <FrameLayout
+            android:id="@+id/fl_placeholder"
+            android:layout_below="@id/tv_content"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"/>
 
     </RelativeLayout>
 

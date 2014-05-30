@@ -35,8 +35,16 @@ public class TwitterDetailActivity extends SitesDetailActivity implements View.O
         tvStatus = ( TextView ) findViewById( R.id.tv_status );
         twitterHeader = ( TwitterHeader ) findViewById( R.id.twitter_header );
         imgvMediaImage = ( ImageView ) findViewById( R.id.imgv_media_image );
+        if ( null == getIntent() )
+        {
+            finish();
+        }
         status = ( Status ) getIntent().getSerializableExtra( STATUS_KEY );
-        twitterHeader.updateHeader( status );
+        if ( null == status )
+        {
+            finish();
+        }
+        twitterHeader.showHeader( status );
         String statusText = status.isRetweet() ? status.getRetweetedStatus().getText() : status.getText();
         tvStatus.setText( Html.fromHtml( Helper.getLinkedStatusText( statusText ) ) );
         tvStatus.setMovementMethod( LinkMovementMethod.getInstance() );

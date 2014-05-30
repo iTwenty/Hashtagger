@@ -88,7 +88,7 @@
         <activity
             android:name=".sites.facebook.ui.FacebookDetailActivity">
         </activity>
-        
+
         <activity
             android:name=".sites.ui.ViewAlbumActivity">
         </activity>

@@ -34,7 +34,7 @@ public class GPlusAlbumAdapter extends ArrayAdapter<String>
         {
             imageView = ( ImageView ) convertView;
         }
-        Picasso.with( getContext() ).load( getItem( position ) ).into( imageView );
+        Picasso.with( getContext() ).load( getItem( position ) ).fit().centerCrop().into( imageView );
         return imageView;
     }
 }

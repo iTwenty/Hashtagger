@@ -18,7 +18,7 @@ import net.thetranquilpsychonaut.hashtagger.R;
 import java.util.LinkedList;
 
 
-@SuppressWarnings( { "UnusedDeclaration", "BooleanMethodIsAlwaysInverted", "ConstantConditions" } )
+@SuppressWarnings({ "UnusedDeclaration", "BooleanMethodIsAlwaysInverted", "ConstantConditions" })
 public class ButtonToast
 {
     private static final String TAG         = "ButtonToast";

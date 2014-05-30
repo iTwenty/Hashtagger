@@ -57,7 +57,7 @@ public class TwitterLinkRow extends SitesListRow implements View.OnClickListener
     public void updateRow( Object result )
     {
         this.status = ( Status ) result;
-        twitterHeader.updateHeader( status );
+        twitterHeader.showHeader( status );
         tvTweet.setText( status.isRetweet() ? status.getRetweetedStatus().getText() : status.getText() );
         tvTwitterLink.setText( status.getURLEntities()[0].getExpandedURL() );
     }

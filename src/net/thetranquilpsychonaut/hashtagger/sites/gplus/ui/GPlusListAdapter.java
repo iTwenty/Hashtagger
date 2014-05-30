@@ -85,7 +85,7 @@ public class GPlusListAdapter extends SitesListAdapter
         {
             activityType = ACTIVITY_TYPE_LINK;
         }
-        else if( hasAlbum )
+        else if ( hasAlbum )
         {
             activityType = ACTIVITY_TYPE_ALBUM;
         }

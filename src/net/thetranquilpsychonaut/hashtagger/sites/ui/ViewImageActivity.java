@@ -33,7 +33,7 @@ public class ViewImageActivity extends BaseActivity
     private TouchImageView touchImageView;
     private MyTarget       target;
     private Bitmap         imageBitmap;
-    private String imageUrl;
+    private String         imageUrl;
 
     public void onCreate( Bundle savedInstanceState )
     {
@@ -43,10 +43,14 @@ public class ViewImageActivity extends BaseActivity
         imageLoaded = false;
         target = new MyTarget();
         if ( null == getIntent() )
+        {
             finish();
+        }
         imageUrl = getIntent().getStringExtra( IMAGE_URL_KEY );
         if ( TextUtils.isEmpty( imageUrl ) )
+        {
             finish();
+        }
         Picasso.with( HashtaggerApp.app ).load( imageUrl ).into( target );
     }
 
@@ -72,7 +76,9 @@ public class ViewImageActivity extends BaseActivity
             String fileName = String.valueOf( Calendar.getInstance().getTimeInMillis() ) + ".png";
             File fileDir = new File( Environment.getExternalStorageDirectory() + "/Hashtagger" );
             if ( !fileDir.exists() )
+            {
                 fileDir.mkdirs();
+            }
             File imageFile = new File( fileDir, fileName );
             try
             {

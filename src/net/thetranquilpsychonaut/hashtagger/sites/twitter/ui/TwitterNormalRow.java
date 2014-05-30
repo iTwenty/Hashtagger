@@ -51,7 +51,7 @@ public class TwitterNormalRow extends SitesListRow
     public void updateRow( Object result )
     {
         this.status = ( Status ) result;
-        twitterHeader.updateHeader( status );
+        twitterHeader.showHeader( status );
         tvTweet.setText( status.isRetweet() ? status.getRetweetedStatus().getText() : status.getText() );
     }
 }

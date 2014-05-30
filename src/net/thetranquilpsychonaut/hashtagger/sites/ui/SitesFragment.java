@@ -168,7 +168,9 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
             public void onRefresh()
             {
                 if ( !TextUtils.isEmpty( getEnteredHashtag() ) )
+                {
                     doLoadNewerResults( getEnteredHashtag() );
+                }
             }
         } );
         viewHolder.srlReady.setColorScheme( android.R.color.holo_blue_dark,
@@ -186,7 +188,9 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
             public void onClick( View v )
             {
                 if ( !TextUtils.isEmpty( getEnteredHashtag() ) )
+                {
                     doLoadOlderResults( getEnteredHashtag() );
+                }
             }
         } );
     }
@@ -200,9 +204,13 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
             public void onClick( View v )
             {
                 if ( TextUtils.isEmpty( getEnteredHashtag() ) )
+                {
                     ( ( SitesActivity ) getActivity() ).svHashtag.onActionViewExpanded();
+                }
                 else
+                {
                     searchHashtag();
+                }
             }
         } );
         viewHolder.sitesEmptyView.setText( "Enter a hashtag" );
@@ -225,7 +233,7 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
                 final int currentPosition = viewHolder.lvResultsList.getFirstVisiblePosition();
                 if ( currentPosition > resultCount )
                 {
-                    // We set a new onScrollListener to notify us when scroll stops
+                    // We temporarily set a new onScrollListener to notify us when scroll stops
                     viewHolder.lvResultsList.setOnScrollListener( new AbsListView.OnScrollListener()
                     {
                         @Override

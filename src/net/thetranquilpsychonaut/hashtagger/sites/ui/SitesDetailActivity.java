@@ -26,7 +26,10 @@ public abstract class SitesDetailActivity extends BaseActivity
     {
         super.onPostCreate( savedInstanceState );
         linkedTextView = getLinkedTextView();
-        linkedTextView.setText( stripUnderlines( new SpannableString( linkedTextView.getText() ) ) );
+        if ( null != linkedTextView )
+        {
+            linkedTextView.setText( stripUnderlines( new SpannableString( linkedTextView.getText() ) ) );
+        }
     }
 
     protected abstract TextView getLinkedTextView();

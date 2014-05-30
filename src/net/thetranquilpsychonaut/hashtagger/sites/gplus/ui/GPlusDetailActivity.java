@@ -1,30 +1,29 @@
 package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import com.google.api.services.plus.model.Activity;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.GPlusData;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesDetailActivity;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewImageActivity;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumFragment;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+
+import java.util.ArrayList;
 
 /**
  * Created by itwenty on 5/16/14.
  */
-public class GPlusDetailActivity extends SitesDetailActivity implements View.OnClickListener
+public class GPlusDetailActivity extends SitesDetailActivity
 {
-    private TextView    tvContent;
-    private GPlusHeader gPlusHeader;
-    private Activity    activity;
-    private ImageView   imgvMediaImage;
+    private TextView       tvContent;
+    private GPlusHeader    gPlusHeader;
+    private GPlusMediaView gPlusMediaView;
+    private Activity       activity;
+    private int            activityType;
 
     public void onCreate( Bundle savedInstanceState )
     {
@@ -32,73 +31,53 @@ public class GPlusDetailActivity extends SitesDetailActivity implements View.OnC
         setContentView( R.layout.activity_gplus_detail );
         tvContent = ( TextView ) findViewById( R.id.tv_content );
         gPlusHeader = ( GPlusHeader ) findViewById( R.id.gplus_header );
-        imgvMediaImage = ( ImageView ) findViewById( R.id.imgv_media_image );
+        gPlusMediaView = ( GPlusMediaView ) findViewById( R.id.gplus_media_view );
         activity = GPlusData.ActivityData.popActivity();
+        if ( null == activity )
+        {
+            activity = ( Activity ) getLastCustomNonConfigurationInstance();
+        }
         if ( null == activity )
         {
             finish();
         }
-        gPlusHeader.updateHeader( activity );
+        activityType = GPlusListAdapter.getActivityType( activity );
+        gPlusHeader.showHeader( activity );
         tvContent.setText( Html.fromHtml( activity.getObject().getContent() ) );
         tvContent.setMovementMethod( LinkMovementMethod.getInstance() );
-        imgvMediaImage.setOnClickListener( this );
 
-        if ( GPlusListAdapter.getActivityType( this.activity ) == GPlusListAdapter.ACTIVITY_TYPE_MEDIA )
+        if ( activityType == GPlusListAdapter.ACTIVITY_TYPE_MEDIA )
         {
-            Picasso.with( this )
-                    .load( activity.getObject().getAttachments().get( 0 ).getImage().getUrl() )
-                    .into( imgvMediaImage, new Callback()
-                    {
-                        @Override
-                        public void onSuccess()
-                        {
-                            if ( "video".equals( activity.getObject().getAttachments().get( 0 ).getObjectType() ) )
-                            {
-                                findViewById( R.id.imgv_play ).setVisibility( View.VISIBLE );
-                            }
-                            findViewById( R.id.fl_wrapper ).setVisibility( View.VISIBLE );
-                        }
-
-                        @Override
-                        public void onError()
-                        {
-
-                        }
-                    } );
+            gPlusMediaView.showMedia( this.activity );
+            gPlusMediaView.setVisibility( View.VISIBLE );
         }
+        if ( activityType == GPlusListAdapter.ACTIVITY_TYPE_ALBUM )
+        {
+            if ( null == savedInstanceState )
+            {
+                ArrayList<String> albumThumbnailUrls = ( ArrayList<String> ) activity.get( ViewAlbumFragment.ALBUM_THUMBNAIL_URLS_KEY );
+                ArrayList<String> albumImageUrls = new ArrayList<String>( albumThumbnailUrls.size() );
+                for ( String url : albumThumbnailUrls )
+                {
+                    albumImageUrls.add( Helper.getGPlusLargeImageUrl( url ) );
+                }
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .add( R.id.fl_placeholder, ViewAlbumFragment.newInstance( albumImageUrls, 0 ), ViewAlbumFragment.TAG )
+                        .commit();
+            }
+        }
+    }
+
+    @Override
+    public Object onRetainCustomNonConfigurationInstance()
+    {
+        return this.activity;
     }
 
     @Override
     protected TextView getLinkedTextView()
     {
         return tvContent;
-    }
-
-    @Override
-    public void onClick( View v )
-    {
-
-        String objectType = activity.getObject().getAttachments().get( 0 ).getObjectType();
-        if ( "photo".equals( objectType ) )
-        {
-            Intent i = new Intent( this, ViewImageActivity.class );
-            String imageUrl;
-            if ( null != activity.getObject().getAttachments().get( 0 ).getFullImage() )
-            {
-                imageUrl = activity.getObject().getAttachments().get( 0 ).getFullImage().getUrl();
-            }
-            else
-            {
-                imageUrl = activity.getObject().getAttachments().get( 0 ).getImage().getUrl();
-            }
-            i.putExtra( ViewImageActivity.IMAGE_URL_KEY, imageUrl );
-            startActivity( i );
-        }
-        else if ( "video".equals( objectType ) )
-        {
-            Intent i = new Intent( Intent.ACTION_VIEW );
-            i.setData( Uri.parse( activity.getObject().getAttachments().get( 0 ).getUrl() ) );
-            startActivity( i );
-        }
     }
 }

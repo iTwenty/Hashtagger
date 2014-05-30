@@ -36,13 +36,13 @@
         android:layout_centerInParent="true"/>
 
     <!--<TextView-->
-        <!--android:id="@+id/tv_results_list_empty"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:gravity="center"-->
-        <!--android:text="@string/str_enter_hashtag"-->
-        <!--android:textSize="20sp"-->
-        <!--android:textStyle="normal"-->
-        <!--android:freezesText="true"/>-->
+    <!--android:id="@+id/tv_results_list_empty"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:gravity="center"-->
+    <!--android:text="@string/str_enter_hashtag"-->
+    <!--android:textSize="20sp"-->
+    <!--android:textStyle="normal"-->
+    <!--android:freezesText="true"/>-->
 
 </RelativeLayout>

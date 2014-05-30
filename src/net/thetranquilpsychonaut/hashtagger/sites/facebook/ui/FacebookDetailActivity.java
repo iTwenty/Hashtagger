@@ -1,68 +1,60 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
-import android.view.View;
-import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesDetailActivity;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewImageActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
 /**
  * Created by itwenty on 5/18/14.
  */
-public class FacebookDetailActivity extends SitesDetailActivity implements View.OnClickListener
+public class FacebookDetailActivity extends SitesDetailActivity
 {
     public static final String POST_KEY = "post";
 
+    private RelativeLayout rlRoot;
     private FacebookHeader facebookHeader;
     private TextView       tvMessage;
     private Post           post;
-    private ImageView      imagvMediaImage;
+    private int            postType;
+
+    private FacebookMediaView facebookMediaView = null;
 
     @Override
     protected void onCreate( Bundle savedInstanceState )
     {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_facebook_detail );
+        rlRoot = ( RelativeLayout ) findViewById( R.id.rl_root );
         facebookHeader = ( FacebookHeader ) findViewById( R.id.facebook_header );
         tvMessage = ( TextView ) findViewById( R.id.tv_message );
-        imagvMediaImage = ( ImageView ) findViewById( R.id.imgv_media_image );
+        if ( null == getIntent() )
+        {
+            finish();
+        }
         this.post = ( Post ) getIntent().getSerializableExtra( POST_KEY );
-        facebookHeader.updateHeader( post );
+        if ( null == this.post )
+        {
+            finish();
+        }
+        this.postType = FacebookListAdapter.getPostType( this.post );
+        facebookHeader.showHeader( post );
         tvMessage.setText( post.getMessage() );
         Helper.linkifyFacebook( tvMessage );
         tvMessage.setMovementMethod( LinkMovementMethod.getInstance() );
-        imagvMediaImage.setOnClickListener( this );
-        if ( FacebookListAdapter.getPostType( this.post ) == FacebookListAdapter.POST_TYPE_MEDIA )
+        if ( postType == FacebookListAdapter.POST_TYPE_MEDIA )
         {
-            Picasso.with( this )
-                    .load( Helper.getFacebookLargeImageUrl( post.getPicture().toString() ) )
-                    .into( imagvMediaImage, new Callback()
-                    {
-                        @Override
-                        public void onSuccess()
-                        {
-                            if ( "video".equals( post.getType() ) )
-                            {
-                                findViewById( R.id.imgv_play ).setVisibility( View.VISIBLE );
-                            }
-                            findViewById( R.id.fl_wrapper ).setVisibility( View.VISIBLE );
-                        }
-
-                        @Override
-                        public void onError()
-                        {
-
-                        }
-                    } );
+            facebookMediaView = new FacebookMediaView( this );
+            facebookMediaView.setId( R.id.FacebookMediaView_Detail );
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams( RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT );
+            params.addRule( RelativeLayout.BELOW, R.id.tv_message );
+            params.addRule( RelativeLayout.CENTER_HORIZONTAL );
+            rlRoot.addView( facebookMediaView, params );
+            facebookMediaView.showMedia( this.post );
         }
     }
 
@@ -70,25 +62,5 @@ public class FacebookDetailActivity extends SitesDetailActivity implements View.
     protected TextView getLinkedTextView()
     {
         return tvMessage;
-    }
-
-    @Override
-    public void onClick( View v )
-    {
-        if ( v.equals( imagvMediaImage ) )
-        {
-            if ( "video".equals( post.getType() ) )
-            {
-                Intent intent = new Intent( Intent.ACTION_VIEW );
-                intent.setData( Uri.parse( post.getSource().toString() ) );
-                startActivity( intent );
-            }
-            else if ( "photo".equals( post.getType() ) )
-            {
-                Intent intent = new Intent( this, ViewImageActivity.class );
-                intent.putExtra( ViewImageActivity.IMAGE_URL_KEY, post.getPicture().toString().replace( "_s.", "_o." ) );
-                startActivity( intent );
-            }
-        }
     }
 }

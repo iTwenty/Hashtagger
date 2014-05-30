@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
-import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import twitter4j.Status;
@@ -49,7 +48,7 @@ public class TwitterHeader extends RelativeLayout implements View.OnClickListene
         imgvProfileImage.setOnClickListener( this );
     }
 
-    public void updateHeader( Status status )
+    public void showHeader( Status status )
     {
         this.status = status;
         User user = status.getUser();
@@ -62,7 +61,11 @@ public class TwitterHeader extends RelativeLayout implements View.OnClickListene
         {
             tvRetweetName.setVisibility( GONE );
         }
-        Picasso.with( HashtaggerApp.app ).load( user.getProfileImageURL() ).error( R.drawable.drawable_image_loading ).into( imgvProfileImage );
+        Picasso.with( getContext() )
+                .load( user.getProfileImageURL() )
+                .fit()
+                .centerCrop()
+                .into( imgvProfileImage );
         tvName.setText( user.getName() );
         tvScreenName.setText( "@" + user.getScreenName() );
         tvCreatedAt.setText( Helper.getFuzzyDateTime( status.getCreatedAt().getTime() ) );

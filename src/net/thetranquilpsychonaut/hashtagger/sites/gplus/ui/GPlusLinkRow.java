@@ -57,7 +57,7 @@ public class GPlusLinkRow extends SitesListRow implements View.OnClickListener
     public void updateRow( Object result )
     {
         this.activity = ( Activity ) result;
-        gPlusHeader.updateHeader( activity );
+        gPlusHeader.showHeader( activity );
         tvMessage.setText( activity.getObject().getOriginalContent() );
         tvLink.setText( activity.getObject().getAttachments().get( 0 ).getDisplayName() );
     }

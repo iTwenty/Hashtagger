@@ -51,7 +51,7 @@ public class GPlusNormalRow extends SitesListRow
     public void updateRow( Object result )
     {
         this.activity = ( Activity ) result;
-        gPlusHeader.updateHeader( activity );
+        gPlusHeader.showHeader( activity );
         tvMessage.setText( activity.getObject().getOriginalContent() );
     }
 }

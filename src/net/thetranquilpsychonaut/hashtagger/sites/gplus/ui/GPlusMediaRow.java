@@ -1,21 +1,17 @@
 package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.TextView;
 import com.google.api.services.plus.model.Activity;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewImageActivity;
 
 /**
  * Created by itwenty on 5/14/14.
  */
-public class GPlusMediaRow extends SitesListRow implements View.OnClickListener
+public class GPlusMediaRow extends SitesListRow
 {
     private GPlusHeader    gPlusHeader;
     private TextView       tvMessage;
@@ -44,7 +40,6 @@ public class GPlusMediaRow extends SitesListRow implements View.OnClickListener
         tvMessage = ( TextView ) findViewById( R.id.tv_message );
         gPlusHeader = ( GPlusHeader ) findViewById( R.id.gplus_header );
         gPlusMediaView = ( GPlusMediaView ) findViewById( R.id.gplus_media_view );
-        gPlusMediaView.setOnClickListener( this );
         super.init( context );
     }
 
@@ -58,35 +53,8 @@ public class GPlusMediaRow extends SitesListRow implements View.OnClickListener
     public void updateRow( Object result )
     {
         this.activity = ( Activity ) result;
-        gPlusHeader.updateHeader( activity );
+        gPlusHeader.showHeader( activity );
         tvMessage.setText( activity.getObject().getOriginalContent() );
-        gPlusMediaView.updateMedia( activity );
-    }
-
-    @Override
-    public void onClick( View v )
-    {
-        String objectType = activity.getObject().getAttachments().get( 0 ).getObjectType();
-        if ( "photo".equals( objectType ) )
-        {
-            Intent i = new Intent( getContext(), ViewImageActivity.class );
-            String imageUrl;
-            if ( null != activity.getObject().getAttachments().get( 0 ).getFullImage() )
-            {
-                imageUrl = activity.getObject().getAttachments().get( 0 ).getFullImage().getUrl();
-            }
-            else
-            {
-                imageUrl = activity.getObject().getAttachments().get( 0 ).getImage().getUrl();
-            }
-            i.putExtra( ViewImageActivity.IMAGE_URL_KEY, imageUrl );
-            getContext().startActivity( i );
-        }
-        else if ( "video".equals( objectType ) )
-        {
-            Intent i = new Intent( Intent.ACTION_VIEW );
-            i.setData( Uri.parse( activity.getObject().getAttachments().get( 0 ).getUrl() ) );
-            getContext().startActivity( i );
-        }
+        gPlusMediaView.showMediaThumbnail( activity );
     }
 }

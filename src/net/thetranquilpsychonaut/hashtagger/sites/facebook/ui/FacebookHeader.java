@@ -10,7 +10,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import facebook4j.Post;
-import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
@@ -44,10 +43,14 @@ public class FacebookHeader extends RelativeLayout implements View.OnClickListen
         imgvProfileImage.setOnClickListener( this );
     }
 
-    public void updateHeader( Post post )
+    public void showHeader( Post post )
     {
         this.post = post;
-        Picasso.with( HashtaggerApp.app ).load( Helper.getFacebookPictureUrl( post.getFrom().getId() ) ).error( R.drawable.drawable_image_loading ).into( imgvProfileImage );
+        Picasso.with( getContext() )
+                .load( Helper.getFacebookPictureUrl( post.getFrom().getId() ) )
+                .fit()
+                .centerCrop()
+                .into( imgvProfileImage );
         tvUserName.setText( post.getFrom().getName() );
         tvCreatedTime.setText( Helper.getFuzzyDateTime( post.getCreatedTime().getTime() ) );
     }

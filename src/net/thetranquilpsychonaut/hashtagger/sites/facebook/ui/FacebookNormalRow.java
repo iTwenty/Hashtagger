@@ -51,7 +51,7 @@ public class FacebookNormalRow extends SitesListRow
     public void updateRow( Object result )
     {
         this.post = ( Post ) result;
-        facebookHeader.updateHeader( post );
+        facebookHeader.showHeader( post );
         tvMessage.setText( post.getMessage() );
     }
 }
