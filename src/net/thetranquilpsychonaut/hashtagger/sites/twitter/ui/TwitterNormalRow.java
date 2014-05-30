@@ -11,12 +11,8 @@ import twitter4j.Status;
 /**
  * Created by itwenty on 5/1/14.
  */
-public class TwitterNormalRow extends SitesListRow
+public class TwitterNormalRow extends TwitterListRow
 {
-    private TwitterHeader twitterHeader;
-    private TextView      tvTweet;
-    private Status        status;
-
     protected TwitterNormalRow( Context context )
     {
         super( context );
@@ -36,9 +32,19 @@ public class TwitterNormalRow extends SitesListRow
     protected void init( Context context )
     {
         inflate( context, R.layout.twitter_normal_row, this );
-        twitterHeader = ( TwitterHeader ) findViewById( R.id.twitter_header );
-        tvTweet = ( TextView ) findViewById( R.id.tv_tweet );
         super.init( context );
+    }
+
+    @Override
+    protected TwitterHeader initTwitterHeader()
+    {
+        return ( TwitterHeader ) findViewById( R.id.twitter_header );
+    }
+
+    @Override
+    protected TextView initStatusText()
+    {
+        return ( TextView ) findViewById( R.id.tv_tweet );
     }
 
     @Override
@@ -50,8 +56,6 @@ public class TwitterNormalRow extends SitesListRow
     @Override
     public void updateRow( Object result )
     {
-        this.status = ( Status ) result;
-        twitterHeader.showHeader( status );
-        tvTweet.setText( status.isRetweet() ? status.getRetweetedStatus().getText() : status.getText() );
+        super.updateRow( result );
     }
 }
