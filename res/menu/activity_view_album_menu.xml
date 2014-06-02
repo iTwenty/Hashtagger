@@ -7,7 +7,6 @@
         android:icon="@android:drawable/ic_menu_save"
         android:title="Save Image"
         android:showAsAction="always"
-        android:onClick="doSaveImage"
-        android:visible="false"/>
+        android:onClick="doSaveImage"/>
 
 </menu>

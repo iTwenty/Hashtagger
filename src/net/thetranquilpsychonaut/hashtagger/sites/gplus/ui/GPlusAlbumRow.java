@@ -12,7 +12,6 @@ import net.thetranquilpsychonaut.hashtagger.sites.ui.*;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by itwenty on 5/29/14.
@@ -20,7 +19,7 @@ import java.util.List;
 public class GPlusAlbumRow extends GPlusListRow implements View.OnClickListener
 {
     private AlbumThumbnail albumThumbnail;
-    private int albumCount;
+    private int            albumCount;
 
     protected GPlusAlbumRow( Context context )
     {
@@ -94,7 +93,7 @@ public class GPlusAlbumRow extends GPlusListRow implements View.OnClickListener
             if ( albumCount == 1 )
             {
                 String imageUrl = Helper.getGPlusAlbumImageUrl( activity.getObject().getAttachments().get( 0 ).getThumbnails().get( 0 ).getImage().getUrl() );
-                ViewAlbumActivity.createAndStartActivity( v.getContext(), Helper.createStringArrayList( imageUrl ) , 0 );
+                ViewAlbumActivity.createAndStartActivity( v.getContext(), Helper.createStringArrayList( imageUrl ), 0 );
             }
             else
             {

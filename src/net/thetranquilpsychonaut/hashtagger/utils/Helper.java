@@ -158,7 +158,7 @@ public class Helper
         return smallPhotoUrl.replaceAll( ":thumb$|:small$|:medium$|:large$|$", ":large" );
     }
 
-    public static ArrayList<String> createStringArrayList( String ... strings )
+    public static ArrayList<String> createStringArrayList( String... strings )
     {
         ArrayList<String> list = new ArrayList<String>( strings.length );
         for ( String s : strings )

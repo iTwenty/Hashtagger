@@ -26,8 +26,8 @@ public class FacebookDetailActivity extends SitesDetailActivity
     private Post           post;
     private int            postType;
 
-    private ViewStub viewStub;
-    private ImageView imgvPhoto;
+    private ViewStub           viewStub;
+    private ImageView          imgvPhoto;
     private FacebookDetailView facebookDetailView;
 
     @Override

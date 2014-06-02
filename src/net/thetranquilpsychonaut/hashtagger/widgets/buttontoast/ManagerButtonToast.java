@@ -11,7 +11,7 @@ import java.util.LinkedList;
 
 class ManagerButtonToast extends Handler
 {
-    @SuppressWarnings( "UnusedDeclaration" )
+    @SuppressWarnings("UnusedDeclaration")
     private static final String TAG = "ManagerButtonToast";
 
     private static final class Messages
