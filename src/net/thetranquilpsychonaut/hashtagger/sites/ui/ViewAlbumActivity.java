@@ -77,7 +77,7 @@ public class ViewAlbumActivity extends BaseActivity
         }
 
         @Override
-        public Object instantiateItem( View container, int position )
+        public Object instantiateItem( ViewGroup container, int position )
         {
             TouchImageView touchImageView = new TouchImageView( container.getContext() );
             touchImageView.setLayoutParams( new ViewGroup.LayoutParams( ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT ) );
@@ -86,7 +86,7 @@ public class ViewAlbumActivity extends BaseActivity
                     .placeholder( loading )
                     .error( error )
                     .into( touchImageView );
-            ( ( ViewPager ) container ).addView( touchImageView, 0 );
+            container.addView( touchImageView, 0 );
             return touchImageView;
         }
 

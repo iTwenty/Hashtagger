@@ -145,7 +145,7 @@ public class Helper
 
     public static String getFacebookLargePhotoUrl( String smallPhotoUrl )
     {
-        return smallPhotoUrl.replace( "_s.", "_o." );
+        return smallPhotoUrl.replaceAll( "_s.|_t.", "_o." );
     }
 
     public static String getGPlusAlbumImageUrl( String albumThumbnailUrl )

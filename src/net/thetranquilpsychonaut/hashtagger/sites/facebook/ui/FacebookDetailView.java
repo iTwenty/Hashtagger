@@ -54,7 +54,7 @@ public class FacebookDetailView extends RelativeLayout implements Callback, View
         {
             Picasso.with( getContext() )
                     .load( post.getPicture().toString() )
-                    .error( R.drawable.facebook_icon_flat_large )
+                    .error( R.drawable.facebook_sketch )
                     .fit()
                     .centerCrop()
                     .noFade()
@@ -63,7 +63,7 @@ public class FacebookDetailView extends RelativeLayout implements Callback, View
         else
         {
             Picasso.with( getContext() )
-                    .load( R.drawable.facebook_icon_flat_large )
+                    .load( R.drawable.facebook_sketch )
                     .fit()
                     .centerCrop()
                     .noFade()

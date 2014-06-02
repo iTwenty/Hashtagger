@@ -55,7 +55,7 @@ public class GPlusDetailView extends RelativeLayout implements Callback, View.On
         {
             Picasso.with( getContext() )
                     .load( attachment.getImage().getUrl() )
-                    .error( R.drawable.gplus_icon_flat_large )
+                    .error( R.drawable.gplus_sketch )
                     .fit()
                     .centerCrop()
                     .noFade()
@@ -64,7 +64,7 @@ public class GPlusDetailView extends RelativeLayout implements Callback, View.On
         else
         {
             Picasso.with( getContext() )
-                    .load( R.drawable.gplus_icon_flat_large )
+                    .load( R.drawable.gplus_sketch )
                     .fit()
                     .centerCrop()
                     .noFade()

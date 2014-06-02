@@ -8,10 +8,8 @@ import com.google.api.services.plus.model.Activity;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.AlbumThumbnail;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesActivity;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumThumbnailsFragment;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.*;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +20,7 @@ import java.util.List;
 public class GPlusAlbumRow extends GPlusListRow implements View.OnClickListener
 {
     private AlbumThumbnail albumThumbnail;
+    private int albumCount;
 
     protected GPlusAlbumRow( Context context )
     {
@@ -69,14 +68,22 @@ public class GPlusAlbumRow extends GPlusListRow implements View.OnClickListener
     public void updateRow( Object result )
     {
         super.updateRow( result );
+        albumCount = activity.getObject().getAttachments().get( 0 ).getThumbnails().size();
         Picasso.with( getContext() )
                 .load( activity.getObject().getAttachments().get( 0 ).getThumbnails().get( 0 ).getImage().getUrl() )
                 .error( R.drawable.drawable_image_loading )
                 .fit()
                 .centerCrop()
                 .into( albumThumbnail.getAlbumThumbnail() );
-        int albumCount = activity.getObject().getAttachments().get( 0 ).getThumbnails().size();
-        albumThumbnail.getAlbumCount().setText( albumCount + " image" + ( albumCount == 1 ? "" : "s" ) );
+        if ( albumCount == 1 )
+        {
+            albumThumbnail.getAlbumCount().setVisibility( GONE );
+        }
+        else
+        {
+            albumThumbnail.getAlbumCount().setText( albumCount + " images" );
+            albumThumbnail.getAlbumCount().setVisibility( VISIBLE );
+        }
     }
 
     @Override
@@ -84,13 +91,21 @@ public class GPlusAlbumRow extends GPlusListRow implements View.OnClickListener
     {
         if ( v.equals( albumThumbnail ) )
         {
-            List<String> albumThumbnailUrls = new ArrayList<String>( activity.getObject().getAttachments().get( 0 ).getThumbnails().size() );
-            for ( Activity.PlusObject.Attachments.Thumbnails thumbnail : activity.getObject().getAttachments().get( 0 ).getThumbnails() )
+            if ( albumCount == 1 )
             {
-                albumThumbnailUrls.add( thumbnail.getImage().getUrl() );
+                String imageUrl = Helper.getGPlusAlbumImageUrl( activity.getObject().getAttachments().get( 0 ).getThumbnails().get( 0 ).getImage().getUrl() );
+                ViewAlbumActivity.createAndStartActivity( v.getContext(), Helper.createStringArrayList( imageUrl ) , 0 );
             }
-            ViewAlbumThumbnailsFragment fragment = ViewAlbumThumbnailsFragment.newInstance( ( ArrayList<String> ) albumThumbnailUrls, false, HashtaggerApp.GPLUS_VALUE );
-            fragment.show( ( ( SitesActivity ) getContext() ).getSupportFragmentManager(), ViewAlbumThumbnailsFragment.TAG );
+            else
+            {
+                ArrayList<String> albumThumbnailUrls = new ArrayList<String>( activity.getObject().getAttachments().get( 0 ).getThumbnails().size() );
+                for ( Activity.PlusObject.Attachments.Thumbnails thumbnail : activity.getObject().getAttachments().get( 0 ).getThumbnails() )
+                {
+                    albumThumbnailUrls.add( thumbnail.getImage().getUrl() );
+                }
+                ViewAlbumThumbnailsFragment fragment = ViewAlbumThumbnailsFragment.newInstance( albumThumbnailUrls, false, HashtaggerApp.GPLUS_VALUE );
+                fragment.show( ( ( SitesActivity ) getContext() ).getSupportFragmentManager(), ViewAlbumThumbnailsFragment.TAG );
+            }
         }
     }
 }
