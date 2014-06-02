@@ -11,8 +11,6 @@ import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
-import java.util.ArrayList;
-
 /**
  * Created by itwenty on 5/1/14.
  */
@@ -77,8 +75,9 @@ public class TwitterPhotoRow extends TwitterListRow implements View.OnClickListe
     @Override
     public void onClick( View v )
     {
-        ArrayList<String> imageUrls = new ArrayList<String>( 1 );
-        imageUrls.add( Helper.getTwitterLargePhotoUrl( status.getMediaEntities()[0].getMediaURL() ) );
-        ViewAlbumActivity.createAndStartActivity( getContext(), imageUrls, 0 );
+        ViewAlbumActivity.createAndStartActivity(
+                getContext(),
+                Helper.createStringArrayList( Helper.getTwitterLargePhotoUrl( status.getMediaEntities()[0].getMediaURL() ) ),
+                0 );
     }
 }

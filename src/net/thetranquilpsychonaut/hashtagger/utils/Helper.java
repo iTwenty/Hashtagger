@@ -16,6 +16,7 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import twitter4j.Status;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -155,5 +156,15 @@ public class Helper
     public static String getTwitterLargePhotoUrl( String smallPhotoUrl )
     {
         return smallPhotoUrl.replaceAll( ":thumb$|:small$|:medium$|:large$|$", ":large" );
+    }
+
+    public static ArrayList<String> createStringArrayList( String ... strings )
+    {
+        ArrayList<String> list = new ArrayList<String>( strings.length );
+        for ( String s : strings )
+        {
+            list.add( s );
+        }
+        return list;
     }
 }

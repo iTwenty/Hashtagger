@@ -9,8 +9,7 @@ import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
-
-import java.util.ArrayList;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
 /**
  * Created by itwenty on 5/31/14.
@@ -78,16 +77,16 @@ public class GPlusPhotoRow extends GPlusListRow implements View.OnClickListener
     {
         if ( v.equals( imgvThumbnail ) )
         {
-            ArrayList<String> imageUrls = new ArrayList<String>( 1 );
+            String imageUrl;
             if ( null != activity.getObject().getAttachments().get( 0 ).getFullImage() )
             {
-                imageUrls.add( activity.getObject().getAttachments().get( 0 ).getFullImage().getUrl() );
+                imageUrl = activity.getObject().getAttachments().get( 0 ).getFullImage().getUrl();
             }
             else
             {
-                imageUrls.add( activity.getObject().getAttachments().get( 0 ).getImage().getUrl() );
+                imageUrl = activity.getObject().getAttachments().get( 0 ).getImage().getUrl();
             }
-            ViewAlbumActivity.createAndStartActivity( getContext(), imageUrls, 0 );
+            ViewAlbumActivity.createAndStartActivity( getContext(), Helper.createStringArrayList( imageUrl ), 0 );
         }
     }
 }

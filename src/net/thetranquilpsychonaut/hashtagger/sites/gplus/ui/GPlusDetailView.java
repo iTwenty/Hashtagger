@@ -2,9 +2,12 @@ package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.LayerDrawable;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,7 +19,7 @@ import net.thetranquilpsychonaut.hashtagger.R;
 /**
  * Created by itwenty on 5/14/14.
  */
-public class GPlusDetailView extends RelativeLayout implements Callback
+public class GPlusDetailView extends RelativeLayout implements Callback, View.OnClickListener
 {
     private ImageView                       imgvThumbnail;
     private TextView                        tvTitle;
@@ -42,6 +45,7 @@ public class GPlusDetailView extends RelativeLayout implements Callback
         tvTitle = ( TextView ) findViewById( R.id.tv_title );
         tvDescription = ( TextView ) findViewById( R.id.tv_description );
         videoDrawable = ( LayerDrawable ) getContext().getResources().getDrawable( R.drawable.video );
+        this.setOnClickListener( this );
     }
 
     public void showDetails( final Activity activity )
@@ -51,7 +55,7 @@ public class GPlusDetailView extends RelativeLayout implements Callback
         {
             Picasso.with( getContext() )
                     .load( attachment.getImage().getUrl() )
-                    .error( R.drawable.drawable_image_loading )
+                    .error( R.drawable.gplus_icon_flat_large )
                     .fit()
                     .centerCrop()
                     .noFade()
@@ -98,5 +102,20 @@ public class GPlusDetailView extends RelativeLayout implements Callback
     public void onError()
     {
 
+    }
+
+    @Override
+    public void onClick( View v )
+    {
+        Intent intent = new Intent( Intent.ACTION_VIEW );
+        if ( "video".equals( attachment.getObjectType() ) )
+        {
+            intent.setData( Uri.parse( attachment.getEmbed().getUrl() ) );
+        }
+        else
+        {
+            intent.setData( Uri.parse( attachment.getUrl() ) );
+        }
+        getContext().startActivity( intent );
     }
 }

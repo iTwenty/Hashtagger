@@ -2,11 +2,16 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
-import android.widget.RelativeLayout;
+import android.view.View;
+import android.view.ViewStub;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
+import com.squareup.picasso.Picasso;
 import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesDetailActivity;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
 /**
@@ -16,22 +21,23 @@ public class FacebookDetailActivity extends SitesDetailActivity
 {
     public static final String POST_KEY = "post";
 
-    private RelativeLayout rlRoot;
     private FacebookHeader facebookHeader;
-    private TextView       tvMessage;
+    private TextView       tvPostText;
     private Post           post;
     private int            postType;
 
-    private FacebookDetailView facebookMediaView = null;
+    private ViewStub viewStub;
+    private ImageView imgvPhoto;
+    private FacebookDetailView facebookDetailView;
 
     @Override
     protected void onCreate( Bundle savedInstanceState )
     {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_facebook_detail );
-        rlRoot = ( RelativeLayout ) findViewById( R.id.rl_root );
         facebookHeader = ( FacebookHeader ) findViewById( R.id.facebook_header );
-        tvMessage = ( TextView ) findViewById( R.id.tv_post_text );
+        tvPostText = ( TextView ) findViewById( R.id.tv_post_text );
+        viewStub = ( ViewStub ) findViewById( R.id.facebook_view_stub );
         if ( null == getIntent() )
         {
             finish();
@@ -43,14 +49,48 @@ public class FacebookDetailActivity extends SitesDetailActivity
         }
         this.postType = FacebookListAdapter.getPostType( this.post );
         facebookHeader.showHeader( post );
-        tvMessage.setText( post.getMessage() );
-        Helper.linkifyFacebook( tvMessage );
-        tvMessage.setMovementMethod( LinkMovementMethod.getInstance() );
+        tvPostText.setText( post.getMessage() );
+        Helper.linkifyFacebook( tvPostText );
+        tvPostText.setMovementMethod( LinkMovementMethod.getInstance() );
+        if ( postType == FacebookListAdapter.POST_TYPE_PHOTO )
+        {
+            showPhoto( savedInstanceState );
+        }
+        if ( postType == FacebookListAdapter.POST_TYPE_VIDEO || postType == FacebookListAdapter.POST_TYPE_LINK )
+        {
+            showDetails( savedInstanceState );
+        }
+    }
+
+    private void showPhoto( Bundle savedInstanceState )
+    {
+        viewStub.setLayoutResource( R.layout.facebook_detail_activity_type_photo );
+        imgvPhoto = ( ImageView ) viewStub.inflate();
+        final String imageUrl = post.getPicture().toString();
+        Picasso.with( this )
+                .load( imageUrl )
+                .into( imgvPhoto );
+        imgvPhoto.setOnClickListener( new View.OnClickListener()
+        {
+            @Override
+            public void onClick( View v )
+            {
+                ViewAlbumActivity.createAndStartActivity( v.getContext(), Helper.createStringArrayList( imageUrl ), 0 );
+            }
+        } );
+    }
+
+    private void showDetails( Bundle savedInstancState )
+    {
+        viewStub.setLayoutResource( R.layout.facebook_detail_activity_type_video_or_link );
+        FrameLayout temp = ( FrameLayout ) viewStub.inflate();
+        facebookDetailView = ( FacebookDetailView ) temp.getChildAt( 0 );
+        facebookDetailView.showDetails( post );
     }
 
     @Override
     protected TextView getLinkedTextView()
     {
-        return tvMessage;
+        return tvPostText;
     }
 }

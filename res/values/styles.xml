@@ -85,17 +85,24 @@
 
     <style name="FrameImage">
         <item name="android:background">@drawable/selector_picture_frame</item>
-        <item name="android:scaleType">fitCenter</item>
     </style>
 
     <style name="ListMediaImage" parent="FrameImage">
         <item name="android:layout_width">75dp</item>
         <item name="android:layout_height">75dp</item>
+        <item name="android:scaleType">fitCenter</item>
     </style>
 
     <style name="ProfileImage" parent="FrameImage">
         <item name="android:layout_width">50dp</item>
         <item name="android:layout_height">50dp</item>
+        <item name="android:scaleType">fitCenter</item>
+    </style>
+
+    <style name="FullImage" parent="FrameImage">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:adjustViewBounds">true</item>
     </style>
 
     <style name="ProfileName" parent="TextView_Default">

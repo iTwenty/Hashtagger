@@ -1,8 +1,11 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.LayerDrawable;
+import android.net.Uri;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -14,7 +17,7 @@ import net.thetranquilpsychonaut.hashtagger.R;
 /**
  * Created by itwenty on 5/17/14.
  */
-public class FacebookDetailView extends RelativeLayout implements Callback
+public class FacebookDetailView extends RelativeLayout implements Callback, View.OnClickListener
 {
 
     private ImageView     imgvThumbnail;
@@ -41,6 +44,7 @@ public class FacebookDetailView extends RelativeLayout implements Callback
         tvTitle = ( TextView ) findViewById( R.id.tv_title );
         tvDescription = ( TextView ) findViewById( R.id.tv_description );
         videoDrawable = ( LayerDrawable ) getContext().getResources().getDrawable( R.drawable.video );
+        this.setOnClickListener( this );
     }
 
     public void showDetails( Post post )
@@ -50,7 +54,7 @@ public class FacebookDetailView extends RelativeLayout implements Callback
         {
             Picasso.with( getContext() )
                     .load( post.getPicture().toString() )
-                    .error( R.drawable.drawable_image_loading )
+                    .error( R.drawable.facebook_icon_flat_large )
                     .fit()
                     .centerCrop()
                     .noFade()
@@ -88,5 +92,17 @@ public class FacebookDetailView extends RelativeLayout implements Callback
     public void onError()
     {
 
+    }
+
+    @Override
+    public void onClick( View v )
+    {
+        if ( null == post.getLink() )
+        {
+            return;
+        }
+        Intent intent = new Intent( Intent.ACTION_VIEW );
+        intent.setData( Uri.parse( post.getLink().toString() ) );
+        getContext().startActivity( intent );
     }
 }

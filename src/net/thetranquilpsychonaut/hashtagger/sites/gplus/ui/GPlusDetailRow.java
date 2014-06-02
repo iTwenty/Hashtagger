@@ -1,10 +1,7 @@
 package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.TextView;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
@@ -12,7 +9,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 /**
  * Created by itwenty on 5/14/14.
  */
-public class GPlusDetailRow extends GPlusListRow implements View.OnClickListener
+public class GPlusDetailRow extends GPlusListRow
 {
     private GPlusDetailView gPlusDetailView;
 
@@ -36,7 +33,6 @@ public class GPlusDetailRow extends GPlusListRow implements View.OnClickListener
     {
         inflate( context, R.layout.gplus_detail_row, this );
         gPlusDetailView = ( GPlusDetailView ) findViewById( R.id.gplus_detail_view );
-        gPlusDetailView.setOnClickListener( this );
         super.init( context );
     }
 
@@ -63,24 +59,5 @@ public class GPlusDetailRow extends GPlusListRow implements View.OnClickListener
     {
         super.updateRow( result );
         gPlusDetailView.showDetails( activity );
-    }
-
-
-    @Override
-    public void onClick( View v )
-    {
-        if ( v.equals( gPlusDetailView ) )
-        {
-            Intent intent = new Intent( Intent.ACTION_VIEW );
-            if ( "video".equals( activity.getObject().getAttachments().get( 0 ).getObjectType() ) )
-            {
-                intent.setData( Uri.parse( activity.getObject().getAttachments().get( 0 ).getEmbed().getUrl() ) );
-            }
-            else
-            {
-                intent.setData( Uri.parse( activity.getObject().getAttachments().get( 0 ).getUrl() ) );
-            }
-            getContext().startActivity( intent );
-        }
     }
 }

@@ -1,10 +1,7 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.TextView;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
@@ -12,7 +9,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 /**
  * Created by itwenty on 5/2/14.
  */
-public class FacebookDetailRow extends FacebookListRow implements View.OnClickListener
+public class FacebookDetailRow extends FacebookListRow
 {
     private FacebookDetailView facebookDetailView;
 
@@ -36,7 +33,6 @@ public class FacebookDetailRow extends FacebookListRow implements View.OnClickLi
     {
         inflate( context, R.layout.facebook_detail_row, this );
         facebookDetailView = ( FacebookDetailView ) findViewById( R.id.facebook_detail_view );
-        facebookDetailView.setOnClickListener( this );
         super.init( context );
     }
 
@@ -63,20 +59,5 @@ public class FacebookDetailRow extends FacebookListRow implements View.OnClickLi
     {
         super.updateRow( result );
         facebookDetailView.showDetails( post );
-    }
-
-    @Override
-    public void onClick( View v )
-    {
-        if ( v.equals( facebookDetailView ) )
-        {
-            if ( null == post.getLink() )
-            {
-                return;
-            }
-            Intent intent = new Intent( Intent.ACTION_VIEW );
-            intent.setData( Uri.parse( post.getLink().toString() ) );
-            getContext().startActivity( intent );
-        }
     }
 }

@@ -9,8 +9,7 @@ import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
-
-import java.util.ArrayList;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
 /**
  * Created by itwenty on 5/2/14.
@@ -78,9 +77,7 @@ public class FacebookPhotoRow extends FacebookListRow implements View.OnClickLis
     {
         if ( v.equals( imgvThumbnail ) )
         {
-            ArrayList<String> imageUrl = new ArrayList<String>( 1 );
-            imageUrl.add( post.getPicture().toString() );
-            ViewAlbumActivity.createAndStartActivity( getContext(), imageUrl, 0 );
+            ViewAlbumActivity.createAndStartActivity( getContext(), Helper.createStringArrayList( post.getPicture().toString() ), 0 );
         }
     }
 }
