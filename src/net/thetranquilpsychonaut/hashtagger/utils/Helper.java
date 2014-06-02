@@ -49,8 +49,6 @@ public class Helper
                 DateUtils.SECOND_IN_MILLIS,
                 DateUtils.WEEK_IN_MILLIS,
                 DateUtils.FORMAT_ABBREV_ALL ).toString();
-
-
     }
 
     public static String getStringDate( Date date )
@@ -81,11 +79,6 @@ public class Helper
 
         Pattern urlPattern = Patterns.WEB_URL;
         Linkify.addLinks( tv, urlPattern, null, null, filter );
-    }
-
-    public static String getFacebookPictureUrl( String userId )
-    {
-        return String.format( FACEBOOK_PROFILE_PICTURE_URL, userId );
     }
 
     public static int convertPxToDp( int px )
@@ -129,6 +122,11 @@ public class Helper
         Toast.makeText( context, "Connect to a network first", Toast.LENGTH_SHORT ).show();
     }
 
+    public static String getFacebookProfilePictureUrl( String userId )
+    {
+        return String.format( FACEBOOK_PROFILE_PICTURE_URL, userId );
+    }
+
     public static Uri getTwitterStatusUrl( Status status )
     {
         return Uri.parse( "http://twitter.com/" + status.getUser().getId() + "/status/" + status.getId() );
@@ -144,13 +142,18 @@ public class Helper
         return Uri.parse( activity.getUrl() );
     }
 
-    public static String getFacebookLargeImageUrl( String mediaUrl )
+    public static String getFacebookLargePhotoUrl( String smallPhotoUrl )
     {
-        return mediaUrl.replace( "_s.", "_o." );
+        return smallPhotoUrl.replace( "_s.", "_o." );
     }
 
-    public static String getGPlusLargeImageUrl( String mediaUrl )
+    public static String getGPlusAlbumImageUrl( String albumThumbnailUrl )
     {
-        return mediaUrl.replaceAll( "/w\\d+-h\\d+.*/", "/" );
+        return albumThumbnailUrl.replaceAll( "/w\\d+-h\\d+.*/", "/" );
+    }
+
+    public static String getTwitterLargePhotoUrl( String smallPhotoUrl )
+    {
+        return smallPhotoUrl.replaceAll( ":thumb$|:small$|:medium$|:large$|$", ":large" );
     }
 }

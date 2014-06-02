@@ -144,6 +144,7 @@ public abstract class SavedHashtagsActivity extends FragmentActivity implements 
     public void onSavedHashtagDeleted( final SavedHashtagDeletedEvent event )
     {
         dlNavDrawer.closeDrawers();
+        ButtonToast.clearButtonToastsForActivity( this );
         ButtonToast toast = new ButtonToast( this );
         toast.setIndeterminate( true );
         toast.setTouchToDismiss( true );

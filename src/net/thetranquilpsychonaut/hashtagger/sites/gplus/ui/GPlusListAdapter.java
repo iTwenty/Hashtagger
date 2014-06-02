@@ -56,15 +56,15 @@ public class GPlusListAdapter extends SitesListAdapter
                 }
                 break;
             case ACTIVITY_TYPE_VIDEO:
-                if ( null == convertView || !( convertView instanceof GPlusVideoRow ) )
+                if ( null == convertView || !( convertView instanceof GPlusDetailRow ) )
                 {
-                    convertView = new GPlusVideoRow( context );
+                    convertView = new GPlusDetailRow( context );
                 }
                 break;
             case ACTIVITY_TYPE_LINK:
-                if ( null == convertView || !( convertView instanceof GPlusLinkRow ) )
+                if ( null == convertView || !( convertView instanceof GPlusDetailRow ) )
                 {
-                    convertView = new GPlusLinkRow( context );
+                    convertView = new GPlusDetailRow( context );
                 }
                 break;
             case ACTIVITY_TYPE_ALBUM:

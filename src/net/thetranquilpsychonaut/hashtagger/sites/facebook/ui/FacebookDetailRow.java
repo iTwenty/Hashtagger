@@ -12,21 +12,21 @@ import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 /**
  * Created by itwenty on 5/2/14.
  */
-public class FacebookLinkRow extends FacebookListRow implements View.OnClickListener
+public class FacebookDetailRow extends FacebookListRow implements View.OnClickListener
 {
-    private TextView tvLink;
+    private FacebookDetailView facebookDetailView;
 
-    protected FacebookLinkRow( Context context )
+    protected FacebookDetailRow( Context context )
     {
         super( context );
     }
 
-    protected FacebookLinkRow( Context context, AttributeSet attrs )
+    protected FacebookDetailRow( Context context, AttributeSet attrs )
     {
         super( context, attrs );
     }
 
-    protected FacebookLinkRow( Context context, AttributeSet attrs, int defStyle )
+    protected FacebookDetailRow( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
     }
@@ -34,9 +34,9 @@ public class FacebookLinkRow extends FacebookListRow implements View.OnClickList
     @Override
     protected void init( Context context )
     {
-        inflate( context, R.layout.facebook_link_row, this );
-        tvLink = ( TextView ) findViewById( R.id.tv_link );
-        tvLink.setOnClickListener( this );
+        inflate( context, R.layout.facebook_detail_row, this );
+        facebookDetailView = ( FacebookDetailView ) findViewById( R.id.facebook_detail_view );
+        facebookDetailView.setOnClickListener( this );
         super.init( context );
     }
 
@@ -62,13 +62,13 @@ public class FacebookLinkRow extends FacebookListRow implements View.OnClickList
     public void updateRow( Object result )
     {
         super.updateRow( result );
-        tvLink.setText( post.getName() );
+        facebookDetailView.showDetails( post );
     }
 
     @Override
     public void onClick( View v )
     {
-        if ( v.equals( tvLink ) )
+        if ( v.equals( facebookDetailView ) )
         {
             if ( null == post.getLink() )
             {

@@ -21,16 +21,16 @@
         tools:text="line1\nline2\nline3\nline4\nline5\nline6"
         style="@style/MainMessage"/>
 
-    <TextView
-        android:id="@+id/tv_link"
-        android:layout_below="@id/tv_post_text"
-        android:layout_centerHorizontal="true"
-        style="@style/Link"/>
+    <net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookDetailView
+        android:id="@+id/facebook_detail_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_post_text"/>
 
     <net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookButtons
         android:id="@+id/facebook_buttons"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_below="@id/tv_link"/>
+        android:layout_below="@id/facebook_detail_view"/>
 
 </merge>

@@ -12,9 +12,8 @@
         <attr name="newResultsBarStyle" format="reference"/>
     </declare-styleable>
 
-    <declare-styleable name="SitesMediaView">
-        <attr name="mediaWidth" format="dimension"/>
-        <attr name="mediaHeight" format="dimension"/>
+    <declare-styleable name="GPlusDetailView">
+        <attr name="GPlusDetailViewStyle" format="reference"/>
     </declare-styleable>
 
     <declare-styleable name="TwoWayView">

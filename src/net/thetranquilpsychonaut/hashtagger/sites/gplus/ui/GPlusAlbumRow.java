@@ -3,25 +3,25 @@ package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.TextView;
+import com.google.api.services.plus.model.Activity;
+import com.squareup.picasso.Picasso;
+import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.AlbumThumbnail;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumFragment;
-import net.thetranquilpsychonaut.hashtagger.utils.Helper;
-import net.thetranquilpsychonaut.hashtagger.widgets.TwoWayView;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumThumbnailsFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by itwenty on 5/29/14.
  */
-public class GPlusAlbumRow extends GPlusListRow implements AdapterView.OnItemClickListener
+public class GPlusAlbumRow extends GPlusListRow implements View.OnClickListener
 {
-    private TwoWayView        albumView;
-    private ArrayList<String> albumThumbnailUrls;
-    private GPlusAlbumAdapter albumAdapter;
+    private AlbumThumbnail albumThumbnail;
 
     protected GPlusAlbumRow( Context context )
     {
@@ -42,11 +42,8 @@ public class GPlusAlbumRow extends GPlusListRow implements AdapterView.OnItemCli
     protected void init( Context context )
     {
         inflate( context, R.layout.gplus_album_row, this );
-        albumView = ( TwoWayView ) findViewById( R.id.album_view );
-        albumThumbnailUrls = new ArrayList<String>();
-        albumAdapter = new GPlusAlbumAdapter( context, 0, albumThumbnailUrls );
-        albumView.setAdapter( albumAdapter );
-        albumView.setOnItemClickListener( this );
+        albumThumbnail = ( AlbumThumbnail ) findViewById( R.id.album_thumbnail );
+        albumThumbnail.setOnClickListener( this );
         super.init( context );
     }
 
@@ -72,19 +69,28 @@ public class GPlusAlbumRow extends GPlusListRow implements AdapterView.OnItemCli
     public void updateRow( Object result )
     {
         super.updateRow( result );
-        albumThumbnailUrls.clear();
-        albumThumbnailUrls.addAll( ( ArrayList<String> ) activity.get( ViewAlbumFragment.ALBUM_THUMBNAIL_URLS_KEY ) );
-        albumAdapter.notifyDataSetChanged();
+        Picasso.with( getContext() )
+                .load( activity.getObject().getAttachments().get( 0 ).getThumbnails().get( 0 ).getImage().getUrl() )
+                .error( R.drawable.drawable_image_loading )
+                .fit()
+                .centerCrop()
+                .into( albumThumbnail.getAlbumThumbnail() );
+        int albumCount = activity.getObject().getAttachments().get( 0 ).getThumbnails().size();
+        albumThumbnail.getAlbumCount().setText( albumCount + " image" + ( albumCount == 1 ? "" : "s" ) );
     }
 
     @Override
-    public void onItemClick( AdapterView<?> parent, View view, int position, long id )
+    public void onClick( View v )
     {
-        ArrayList<String> albumImageUrls = new ArrayList<String>( albumThumbnailUrls.size() );
-        for ( String url : albumThumbnailUrls )
+        if ( v.equals( albumThumbnail ) )
         {
-            albumImageUrls.add( Helper.getGPlusLargeImageUrl( url ) );
+            List<String> albumThumbnailUrls = new ArrayList<String>( activity.getObject().getAttachments().get( 0 ).getThumbnails().size() );
+            for ( Activity.PlusObject.Attachments.Thumbnails thumbnail : activity.getObject().getAttachments().get( 0 ).getThumbnails() )
+            {
+                albumThumbnailUrls.add( thumbnail.getImage().getUrl() );
+            }
+            ViewAlbumThumbnailsFragment fragment = ViewAlbumThumbnailsFragment.newInstance( ( ArrayList<String> ) albumThumbnailUrls, false, HashtaggerApp.GPLUS_VALUE );
+            fragment.show( ( ( SitesActivity ) getContext() ).getSupportFragmentManager(), ViewAlbumThumbnailsFragment.TAG );
         }
-        ViewAlbumActivity.createAndStartActivity( getContext(), albumImageUrls, position );
     }
 }

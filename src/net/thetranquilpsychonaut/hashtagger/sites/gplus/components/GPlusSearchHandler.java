@@ -10,10 +10,7 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
-import net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusListAdapter;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumFragment;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -79,20 +76,11 @@ public class GPlusSearchHandler extends SitesSearchHandler
                 }
 
                 for ( Activity activity : results )
+                // We strip all HTML formatting tags from the text of the activity since parsing HTML in getView causes awful lag in scrolling
                 {
-                    // We strip all HTML formatting tags from the text of the activity since parsing HTML in getView causes awful lag in scrolling
                     activity.getObject().setOriginalContent( Html.fromHtml( activity.getObject().getContent() ).toString() );
-                    if ( GPlusListAdapter.getActivityType( activity ) == GPlusListAdapter.ACTIVITY_TYPE_ALBUM )
-                    {
-                        List<Activity.PlusObject.Attachments.Thumbnails> thumbnails = activity.getObject().getAttachments().get( 0 ).getThumbnails();
-                        List<String> albumThumbnailUrls = new ArrayList<String>( thumbnails.size() );
-                        for ( Activity.PlusObject.Attachments.Thumbnails thumbnail : thumbnails )
-                        {
-                            albumThumbnailUrls.add( thumbnail.getImage().getUrl() );
-                        }
-                        activity.set( ViewAlbumFragment.ALBUM_THUMBNAIL_URLS_KEY, albumThumbnailUrls );
-                    }
                 }
+
                 new Handler( Looper.getMainLooper() ).post( new Runnable()
                 {
                     @Override

@@ -16,7 +16,7 @@ public class TwitterListAdapter extends SitesListAdapter
 {
 
     public static final int STATUS_TYPE_NORMAL = 0;
-    public static final int STATUS_TYPE_MEDIA  = 1;
+    public static final int STATUS_TYPE_PHOTO  = 1;
     public static final int STATUS_TYPE_LINK   = 2;
     public static final int STATUS_TYPE_COUNT  = 3;
 
@@ -49,10 +49,10 @@ public class TwitterListAdapter extends SitesListAdapter
                     convertView = new TwitterNormalRow( context );
                 }
                 break;
-            case STATUS_TYPE_MEDIA:
-                if ( null == convertView || !( convertView instanceof TwitterMediaRow ) )
+            case STATUS_TYPE_PHOTO:
+                if ( null == convertView || !( convertView instanceof TwitterPhotoRow ) )
                 {
-                    convertView = new TwitterMediaRow( context );
+                    convertView = new TwitterPhotoRow( context );
                 }
                 break;
             case STATUS_TYPE_LINK:
@@ -71,7 +71,7 @@ public class TwitterListAdapter extends SitesListAdapter
 
         if ( status.getMediaEntities().length > 0 )
         {
-            statusType = STATUS_TYPE_MEDIA;
+            statusType = STATUS_TYPE_PHOTO;
         }
         else if ( status.getURLEntities().length > 0 )
         {

@@ -47,7 +47,7 @@ public class FacebookHeader extends RelativeLayout implements View.OnClickListen
     {
         this.post = post;
         Picasso.with( getContext() )
-                .load( Helper.getFacebookPictureUrl( post.getFrom().getId() ) )
+                .load( Helper.getFacebookProfilePictureUrl( post.getFrom().getId() ) )
                 .fit()
                 .centerCrop()
                 .into( imgvProfileImage );

@@ -1,6 +1,5 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -11,9 +10,11 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesDetailActivity;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewImageActivity;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import twitter4j.Status;
+
+import java.util.ArrayList;
 
 /**
  * Created by itwenty on 5/10/14.
@@ -49,10 +50,10 @@ public class TwitterDetailActivity extends SitesDetailActivity implements View.O
         tvStatus.setText( Html.fromHtml( Helper.getLinkedStatusText( statusText ) ) );
         tvStatus.setMovementMethod( LinkMovementMethod.getInstance() );
         imgvMediaImage.setOnClickListener( this );
-        if ( TwitterListAdapter.getStatusType( this.status ) == TwitterListAdapter.STATUS_TYPE_MEDIA )
+        if ( TwitterListAdapter.getStatusType( this.status ) == TwitterListAdapter.STATUS_TYPE_PHOTO )
         {
             Picasso.with( this )
-                    .load( status.getMediaEntities()[0].getMediaURL() + ":large" )
+                    .load( Helper.getTwitterLargePhotoUrl( status.getMediaEntities()[0].getMediaURL() ) )
                     .into( imgvMediaImage, new Callback()
                     {
                         @Override
@@ -79,8 +80,8 @@ public class TwitterDetailActivity extends SitesDetailActivity implements View.O
     @Override
     public void onClick( View v )
     {
-        Intent intent = new Intent( this, ViewImageActivity.class );
-        intent.putExtra( ViewImageActivity.IMAGE_URL_KEY, status.getMediaEntities()[0].getMediaURL() + ":large" );
-        startActivity( intent );
+        ArrayList<String> imageUrls = new ArrayList<String>( 1 );
+        imageUrls.add( Helper.getTwitterLargePhotoUrl( status.getMediaEntities()[0].getMediaURL() ) );
+        ViewAlbumActivity.createAndStartActivity( this, imageUrls, 0 );
     }
 }

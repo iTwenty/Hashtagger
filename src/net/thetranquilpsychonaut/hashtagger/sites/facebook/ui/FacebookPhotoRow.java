@@ -1,4 +1,4 @@
-package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
+package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -13,23 +13,23 @@ import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import java.util.ArrayList;
 
 /**
- * Created by itwenty on 5/31/14.
+ * Created by itwenty on 5/2/14.
  */
-public class GPlusPhotoRow extends GPlusListRow implements View.OnClickListener
+public class FacebookPhotoRow extends FacebookListRow implements View.OnClickListener
 {
     private ImageView imgvThumbnail;
 
-    protected GPlusPhotoRow( Context context )
+    protected FacebookPhotoRow( Context context )
     {
         super( context );
     }
 
-    protected GPlusPhotoRow( Context context, AttributeSet attrs )
+    protected FacebookPhotoRow( Context context, AttributeSet attrs )
     {
         super( context, attrs );
     }
 
-    protected GPlusPhotoRow( Context context, AttributeSet attrs, int defStyle )
+    protected FacebookPhotoRow( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
     }
@@ -37,28 +37,28 @@ public class GPlusPhotoRow extends GPlusListRow implements View.OnClickListener
     @Override
     protected void init( Context context )
     {
-        inflate( context, R.layout.gplus_photo_row, this );
+        inflate( context, R.layout.facebook_photo_row, this );
         imgvThumbnail = ( ImageView ) findViewById( R.id.imgv_thumbnail );
         imgvThumbnail.setOnClickListener( this );
         super.init( context );
     }
 
     @Override
-    protected GPlusHeader initGPlusHeader()
+    protected FacebookHeader initFacebookHeader()
     {
-        return ( GPlusHeader ) findViewById( R.id.gplus_header );
+        return ( FacebookHeader ) findViewById( R.id.facebook_header );
     }
 
     @Override
-    protected TextView initActivityText()
+    protected TextView initPostText()
     {
-        return ( TextView ) findViewById( R.id.tv_activity_text );
+        return ( TextView ) findViewById( R.id.tv_post_text );
     }
 
     @Override
     protected SitesButtons initSitesButtons()
     {
-        return ( SitesButtons ) findViewById( R.id.gplus_buttons );
+        return ( SitesButtons ) findViewById( R.id.facebook_buttons );
     }
 
     @Override
@@ -66,7 +66,7 @@ public class GPlusPhotoRow extends GPlusListRow implements View.OnClickListener
     {
         super.updateRow( result );
         Picasso.with( getContext() )
-                .load( activity.getObject().getAttachments().get( 0 ).getImage().getUrl() )
+                .load( post.getPicture().toString() )
                 .error( R.drawable.drawable_image_loading )
                 .fit()
                 .centerCrop()
@@ -78,16 +78,9 @@ public class GPlusPhotoRow extends GPlusListRow implements View.OnClickListener
     {
         if ( v.equals( imgvThumbnail ) )
         {
-            ArrayList<String> imageUrls = new ArrayList<String>( 1 );
-            if ( null != activity.getObject().getAttachments().get( 0 ).getFullImage() )
-            {
-                imageUrls.add( activity.getObject().getAttachments().get( 0 ).getFullImage().getUrl() );
-            }
-            else
-            {
-                imageUrls.add( activity.getObject().getAttachments().get( 0 ).getImage().getUrl() );
-            }
-            ViewAlbumActivity.createAndStartActivity( getContext(), imageUrls, 0 );
+            ArrayList<String> imageUrl = new ArrayList<String>( 1 );
+            imageUrl.add( post.getPicture().toString() );
+            ViewAlbumActivity.createAndStartActivity( getContext(), imageUrl, 0 );
         }
     }
 }

@@ -1,4 +1,25 @@
 package net.thetranquilpsychonaut.hashtagger.widgets;
+/*
+ * Copyright (C) 2013 Lucas Rocha
+ *
+ * This code is based on bits and pieces of Android's AbsListView,
+ * Listview, and StaggeredGridView.
+ *
+ * Copyright (C) 2012 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -30,7 +51,24 @@ import net.thetranquilpsychonaut.hashtagger.R;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+ * Implementation Notes:
+ *
+ * Some terminology:
+ *
+ *     index    - index of the items that are currently visible
+ *     position - index of the items in the cursor
+ *
+ * Given the bi-directional nature of this view, the source code
+ * usually names variables with 'start' to mean 'top' or 'left'; and
+ * 'end' to mean 'bottom' or 'right', depending on the current
+ * orientation of the widget.
+ */
 
+/**
+ * A view that shows items in a vertical or horizontal scrolling list.
+ * The items come from the {@link ListAdapter} associated with this view.
+ */
 public class TwoWayView extends AdapterView<ListAdapter> implements
         ViewTreeObserver.OnTouchModeChangeListener
 {
@@ -194,27 +232,66 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
     public interface OnScrollListener
     {
 
-
+        /**
+         * The view is not scrolling. Note navigating the list using the trackball counts as
+         * being in the idle state since these transitions are not animated.
+         */
         public static int SCROLL_STATE_IDLE = 0;
 
-
+        /**
+         * The user is scrolling using touch, and their finger is still on the screen
+         */
         public static int SCROLL_STATE_TOUCH_SCROLL = 1;
 
-
+        /**
+         * The user had previously been scrolling using touch and had performed a fling. The
+         * animation is now coasting to a stop
+         */
         public static int SCROLL_STATE_FLING = 2;
 
-
+        /**
+         * Callback method to be invoked while the list view or grid view is being scrolled. If the
+         * view is being scrolled, this method will be called before the next frame of the scroll is
+         * rendered. In particular, it will be called before any calls to
+         * {@link Adapter#getView(int, View, ViewGroup)}.
+         *
+         * @param view        The view whose scroll state is being reported
+         * @param scrollState The current scroll state. One of {@link #SCROLL_STATE_IDLE},
+         *                    {@link #SCROLL_STATE_TOUCH_SCROLL} or {@link #SCROLL_STATE_IDLE}.
+         */
         public void onScrollStateChanged( TwoWayView view, int scrollState );
 
-
+        /**
+         * Callback method to be invoked when the list or grid has been scrolled. This will be
+         * called after the scroll has completed
+         *
+         * @param view             The view whose scroll state is being reported
+         * @param firstVisibleItem the index of the first visible cell (ignore if
+         *                         visibleItemCount == 0)
+         * @param visibleItemCount the number of visible cells
+         * @param totalItemCount   the number of items in the list adaptor
+         */
         public void onScroll( TwoWayView view, int firstVisibleItem, int visibleItemCount,
                               int totalItemCount );
     }
 
-
+    /**
+     * A RecyclerListener is used to receive a notification whenever a View is placed
+     * inside the RecycleBin's scrap heap. This listener is used to free resources
+     * associated to Views placed in the RecycleBin.
+     *
+     * @see TwoWayView.RecycleBin
+     * @see TwoWayView#setRecyclerListener(TwoWayView.RecyclerListener)
+     */
     public static interface RecyclerListener
     {
-
+        /**
+         * Indicates that the specified View was moved into the recycler's scrap heap.
+         * The view is not displayed on screen any more and any expensive resource
+         * associated with the view should be discarded.
+         *
+         * @param view
+         */
         void onMovedToScrapHeap( View view );
     }
 
@@ -293,6 +370,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         mEndEdge = null;
 
         setClickable( true );
+        setFocusableInTouchMode( true );
         setWillNotDraw( false );
         setAlwaysDrawnWithCacheEnabled( false );
         setWillNotDraw( false );
@@ -367,7 +445,12 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         return mItemMargin;
     }
 
-
+    /**
+     * Indicates that the views created by the ListAdapter can contain focusable
+     * items.
+     *
+     * @param itemsCanFocus true if items can get focus, false otherwise
+     */
     public void setItemsCanFocus( boolean itemsCanFocus )
     {
         mItemsCanFocus = itemsCanFocus;
@@ -377,38 +460,71 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         }
     }
 
-
+    /**
+     * @return Whether the views created by the ListAdapter can contain focusable
+     * items.
+     */
     public boolean getItemsCanFocus()
     {
         return mItemsCanFocus;
     }
 
-
+    /**
+     * Set the listener that will receive notifications every time the list scrolls.
+     *
+     * @param l the scroll listener
+     */
     public void setOnScrollListener( OnScrollListener l )
     {
         mOnScrollListener = l;
         invokeOnItemScrollListener();
     }
 
-
+    /**
+     * Sets the recycler listener to be notified whenever a View is set aside in
+     * the recycler for later reuse. This listener can be used to free resources
+     * associated to the View.
+     *
+     * @param listener The recycler listener to be notified of views set aside
+     *                 in the recycler.
+     * @see TwoWayView.RecycleBin
+     * @see TwoWayView.RecyclerListener
+     */
     public void setRecyclerListener( RecyclerListener l )
     {
         mRecycler.mRecyclerListener = l;
     }
 
-
+    /**
+     * Controls whether the selection highlight drawable should be drawn on top of the item or
+     * behind it.
+     *
+     * @param onTop If true, the selector will be drawn on the item it is highlighting. The default
+     *              is false.
+     * @attr ref android.R.styleable#AbsListView_drawSelectorOnTop
+     */
     public void setDrawSelectorOnTop( boolean drawSelectorOnTop )
     {
         mDrawSelectorOnTop = drawSelectorOnTop;
     }
 
-
+    /**
+     * Set a Drawable that should be used to highlight the currently selected item.
+     *
+     * @param resID A Drawable resource to use as the selection highlight.
+     * @attr ref android.R.styleable#AbsListView_listSelector
+     */
     public void setSelector( int resID )
     {
         setSelector( getResources().getDrawable( resID ) );
     }
 
-
+    /**
+     * Set a Drawable that should be used to highlight the currently selected item.
+     *
+     * @param selector A Drawable to use as the selection highlight.
+     * @attr ref android.R.styleable#AbsListView_listSelector
+     */
     public void setSelector( Drawable selector )
     {
         if ( mSelector != null )
@@ -425,33 +541,62 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         updateSelectorState();
     }
 
-
+    /**
+     * Returns the selector {@link android.graphics.drawable.Drawable} that is used to draw the
+     * selection in the list.
+     *
+     * @return the drawable used to display the selector
+     */
     public Drawable getSelector()
     {
         return mSelector;
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getSelectedItemPosition()
     {
         return mNextSelectedPosition;
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getSelectedItemId()
     {
         return mNextSelectedRowId;
     }
 
-
+    /**
+     * Returns the number of items currently selected. This will only be valid
+     * if the choice mode is not {@link #CHOICE_MODE_NONE} (default).
+     * <p/>
+     * <p>To determine the specific items that are currently selected, use one of
+     * the <code>getChecked*</code> methods.
+     *
+     * @return The number of items currently selected
+     * @see #getCheckedItemPosition()
+     * @see #getCheckedItemPositions()
+     * @see #getCheckedItemIds()
+     */
     public int getCheckedItemCount()
     {
         return mCheckedItemCount;
     }
 
-
+    /**
+     * Returns the checked state of the specified position. The result is only
+     * valid if the choice mode has been set to {@link #CHOICE_MODE_SINGLE}
+     * or {@link #CHOICE_MODE_MULTIPLE}.
+     *
+     * @param position The item whose checked state to return
+     * @return The item's checked state or <code>false</code> if choice mode
+     * is invalid
+     * @see #setChoiceMode(int)
+     */
     public boolean isItemChecked( int position )
     {
         if ( mChoiceMode.compareTo( ChoiceMode.NONE ) == 0 && mCheckStates != null )
@@ -462,7 +607,14 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         return false;
     }
 
-
+    /**
+     * Returns the currently checked item. The result is only valid if the choice
+     * mode has been set to {@link #CHOICE_MODE_SINGLE}.
+     *
+     * @return The position of the currently checked item or
+     * {@link #INVALID_POSITION} if nothing is selected
+     * @see #setChoiceMode(int)
+     */
     public int getCheckedItemPosition()
     {
         if ( mChoiceMode.compareTo( ChoiceMode.SINGLE ) == 0 &&
@@ -474,7 +626,15 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         return INVALID_POSITION;
     }
 
-
+    /**
+     * Returns the set of checked items in the list. The result is only valid if
+     * the choice mode has not been set to {@link #CHOICE_MODE_NONE}.
+     *
+     * @return A SparseBooleanArray which will return true for each call to
+     * get(int position) where position is a position in the list,
+     * or <code>null</code> if the choice mode is set to
+     * {@link #CHOICE_MODE_NONE}.
+     */
     public SparseBooleanArray getCheckedItemPositions()
     {
         if ( mChoiceMode.compareTo( ChoiceMode.NONE ) != 0 )
@@ -485,7 +645,14 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         return null;
     }
 
-
+    /**
+     * Returns the set of checked items ids. The result is only valid if the
+     * choice mode has not been set to {@link #CHOICE_MODE_NONE} and the adapter
+     * has stable IDs. ({@link ListAdapter#hasStableIds()} == {@code true})
+     *
+     * @return A new array which contains the id of each checked item in the
+     * list.
+     */
     public long[] getCheckedItemIds()
     {
         if ( mChoiceMode.compareTo( ChoiceMode.NONE ) == 0 ||
@@ -506,7 +673,14 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         return ids;
     }
 
-
+    /**
+     * Sets the checked state of the specified position. The is only valid if
+     * the choice mode has been set to {@link #CHOICE_MODE_SINGLE} or
+     * {@link #CHOICE_MODE_MULTIPLE}.
+     *
+     * @param position The item whose checked state is to be checked
+     * @param value    The new checked state for the item
+     */
     public void setItemChecked( int position, boolean value )
     {
         if ( mChoiceMode.compareTo( ChoiceMode.NONE ) == 0 )
@@ -547,7 +721,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         {
             boolean updateIds = mCheckedIdStates != null && mAdapter.hasStableIds();
 
-
+            // Clear all values if we're checking something, or unchecking the currently
+            // selected item
             if ( value || isItemChecked( position ) )
             {
                 mCheckStates.clear();
@@ -558,7 +733,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                 }
             }
 
-
+            // This may end up selecting the value we just cleared but this way
+            // we ensure length of mCheckStates is 1, a fact getCheckedItemPosition relies on
             if ( value )
             {
                 mCheckStates.put( position, true );
@@ -576,7 +752,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             }
         }
 
-
+        // Do not generate a data change while we are in the layout phase
         if ( !mInLayout && !mBlockLayoutRequests )
         {
             mDataChanged = true;
@@ -585,7 +761,9 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         }
     }
 
-
+    /**
+     * Clear any choices previously set
+     */
     public void clearChoices()
     {
         if ( mCheckStates != null )
@@ -601,13 +779,24 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         mCheckedItemCount = 0;
     }
 
-
+    /**
+     * @return The current choice mode
+     * @see #setChoiceMode(int)
+     */
     public ChoiceMode getChoiceMode()
     {
         return mChoiceMode;
     }
 
-
+    /**
+     * Defines the choice behavior for the List. By default, Lists do not have any choice behavior
+     * ({@link #CHOICE_MODE_NONE}). By setting the choiceMode to {@link #CHOICE_MODE_SINGLE}, the
+     * List allows up to one item to  be in a chosen state. By setting the choiceMode to
+     * {@link #CHOICE_MODE_MULTIPLE}, the list allows any number of items to be chosen.
+     *
+     * @param choiceMode One of {@link #CHOICE_MODE_NONE}, {@link #CHOICE_MODE_SINGLE}, or
+     *                   {@link #CHOICE_MODE_MULTIPLE}
+     */
     public void setChoiceMode( ChoiceMode choiceMode )
     {
         mChoiceMode = choiceMode;
@@ -732,11 +921,11 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         }
         catch ( ClassCastException e )
         {
-
+            // We made it up to the window without find this list view
             return INVALID_POSITION;
         }
 
-
+        // Search the children for the list item
         final int childCount = getChildCount();
         for ( int i = 0; i < childCount; i++ )
         {
@@ -746,7 +935,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             }
         }
 
-
+        // Child not found!
         return INVALID_POSITION;
     }
 
@@ -757,8 +946,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
         if ( view != null && view.getParent() == this )
         {
-
-
+            // The focused rectangle of the selected view offset into the
+            // coordinate space of this view.
             view.getFocusedRect( r );
             offsetDescendantRectToMyCoords( view, r );
         }
@@ -777,8 +966,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         {
             if ( !mIsAttached && mAdapter != null )
             {
-
-
+                // Data may have changed while we were detached and it's valid
+                // to change focus while detached. Refresh so we don't die.
                 mDataChanged = true;
                 mOldItemCount = mItemCount;
                 mItemCount = mAdapter.getCount();
@@ -795,14 +984,16 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         {
             previouslyFocusedRect.offset( getScrollX(), getScrollY() );
 
-
+            // Don't cache the result of getChildCount or mFirstPosition here,
+            // it could change in layoutChildren.
             if ( adapter.getCount() < getChildCount() + mFirstPosition )
             {
                 mLayoutMode = LAYOUT_NORMAL;
                 layoutChildren();
             }
 
-
+            // Figure out which item should be selected based on previously
+            // focused rect.
             Rect otherRect = mTempRect;
             int minDistance = Integer.MAX_VALUE;
             final int childCount = getChildCount();
@@ -810,7 +1001,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
             for ( int i = 0; i < childCount; i++ )
             {
-
+                // Only consider selectable views
                 if ( !adapter.isEnabled( firstPosition + i ) )
                 {
                     continue;
@@ -853,7 +1044,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             mDataSetObserver = new AdapterDataSetObserver();
             mAdapter.registerDataSetObserver( mDataSetObserver );
 
-
+            // Data may have changed while we were detached. Refresh.
             mDataChanged = true;
             mOldItemCount = mItemCount;
             mItemCount = mAdapter.getCount();
@@ -867,7 +1058,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
     {
         super.onDetachedFromWindow();
 
-
+        // Detach any view left in the scrap heap
         mRecycler.clear();
 
         final ViewTreeObserver treeObserver = getViewTreeObserver();
@@ -904,22 +1095,22 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         {
             if ( touchMode == TOUCH_MODE_OFF )
             {
-
+                // Remember the last selected element
                 mResurrectToPosition = mSelectedPosition;
             }
         }
         else
         {
-
+            // If we changed touch mode since the last time we had focus
             if ( touchMode != mLastTouchMode && mLastTouchMode != TOUCH_MODE_UNKNOWN )
             {
-
+                // If we come back in trackball mode, we bring the selection back
                 if ( touchMode == TOUCH_MODE_OFF )
                 {
-
+                    // This will trigger a layout
                     resurrectSelection();
 
-
+                    // If we come back in touch mode, then we want to hide the selector
                 }
                 else
                 {
@@ -1146,7 +1337,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
         if ( mIsVertical && mOverScroll != 0 )
         {
-
+            // Compensate for overscroll
             result += Math.abs( ( int ) ( ( float ) mOverScroll / getHeight() * mItemCount * 100 ) );
         }
 
@@ -1160,7 +1351,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
         if ( !mIsVertical && mOverScroll != 0 )
         {
-
+            // Compensate for overscroll
             result += Math.abs( ( int ) ( ( float ) mOverScroll / getWidth() * mItemCount * 100 ) );
         }
 
@@ -1307,8 +1498,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
     {
         if ( !isEnabled() )
         {
-
-
+            // A disabled view that is clickable still consumes the touch
+            // events, it just doesn't respond to them.
             return isClickable() || isLongClickable();
         }
 
@@ -1391,8 +1582,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
                 if ( mDataChanged )
                 {
-
-
+                    // Re-sync everything if data has been changed
+                    // since the scroll operation can query the adapter.
                     layoutChildren();
                 }
 
@@ -1405,8 +1596,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                     case TOUCH_MODE_DOWN:
                     case TOUCH_MODE_TAP:
                     case TOUCH_MODE_DONE_WAITING:
-
-
+                        // Check if we have moved far enough that it looks more like a
+                        // scroll than a tap
                         maybeStartScrolling( delta );
                         break;
 
@@ -1638,10 +1829,12 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
     {
         if ( isInTouchMode )
         {
-
+            // Get rid of the selection when we enter touch mode
             hideSelector();
 
-
+            // Layout, but only if we already have done so previously.
+            // (Otherwise may clobber a LAYOUT_SYNC layout that was requested to restore
+            // state.)
             if ( getWidth() > 0 && getHeight() > 0 && getChildCount() > 0 )
             {
                 layoutChildren();
@@ -1685,8 +1878,9 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
     @Override
     public void sendAccessibilityEvent( int eventType )
     {
-
-
+        // Since this class calls onScrollChanged even if the mFirstPosition and the
+        // child count have not changed we will avoid sending duplicate accessibility
+        // events.
         if ( eventType == AccessibilityEvent.TYPE_VIEW_SCROLLED )
         {
             final int firstVisiblePosition = getFirstVisiblePosition();
@@ -1762,7 +1956,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                         viewportSize = getWidth() - getPaddingLeft() - getPaddingRight();
                     }
 
-
+                    // TODO: Use some form of smooth scroll instead
                     scrollListItemsBy( viewportSize );
                     return true;
                 }
@@ -1781,7 +1975,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                         viewportSize = getWidth() - getPaddingLeft() - getPaddingRight();
                     }
 
-
+                    // TODO: Use some form of smooth scroll instead
                     scrollListItemsBy( -viewportSize );
                     return true;
                 }
@@ -1791,7 +1985,9 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         return false;
     }
 
-
+    /**
+     * Return true if child is an ancestor of parent, (or equal to the parent).
+     */
     private boolean isViewAncestorOf( View child, View parent )
     {
         if ( child == parent )
@@ -1833,7 +2029,14 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         }
     }
 
-
+    /**
+     * Scrolls up or down by the number of items currently present on screen.
+     *
+     * @param direction either {@link View#FOCUS_UP} or {@link View#FOCUS_DOWN} or
+     *                  {@link View#FOCUS_LEFT} or {@link View#FOCUS_RIGHT} depending on the
+     *                  current view orientation.
+     * @return whether selection was moved
+     */
     boolean pageScroll( int direction )
     {
         forceValidFocusDirection( direction );
@@ -1886,7 +2089,15 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         return false;
     }
 
-
+    /**
+     * Go to the last or first item if possible (not worrying about panning across or navigating
+     * within the internal focus of the currently selected item.)
+     *
+     * @param direction either {@link View#FOCUS_UP} or {@link View#FOCUS_DOWN} or
+     *                  {@link View#FOCUS_LEFT} or {@link View#FOCUS_RIGHT} depending on the
+     *                  current view orientation.
+     * @return whether selection was moved
+     */
     boolean fullScroll( int direction )
     {
         forceValidFocusDirection( direction );
@@ -1932,7 +2143,16 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         return moved;
     }
 
-
+    /**
+     * To avoid horizontal/vertical focus searches changing the selected item,
+     * we manually focus search within the selected item (as applicable), and
+     * prevent focus from jumping to something within another item.
+     *
+     * @param direction either {@link View#FOCUS_UP} or {@link View#FOCUS_DOWN} or
+     *                  {@link View#FOCUS_LEFT} or {@link View#FOCUS_RIGHT} depending on the
+     *                  current view orientation.
+     * @return Whether this consumes the key event.
+     */
     private boolean handleFocusWithinItem( int direction )
     {
         forceValidInnerFocusDirection( direction );
@@ -1953,7 +2173,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
                 if ( nextFocus != null )
                 {
-
+                    // Do the math to get interesting rect in next focus' coordinates
                     currentFocus.getFocusedRect( mTempRect );
                     offsetDescendantRectToMyCoords( currentFocus, mTempRect );
                     offsetRectIntoDescendantCoords( nextFocus, mTempRect );
@@ -1964,7 +2184,11 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                     }
                 }
 
-
+                // We are blocking the key from being handled (by returning true)
+                // if the global result is going to be some other view within this
+                // list. This is to achieve the overall goal of having horizontal/vertical
+                // d-pad navigation remain in the current item depending on the current
+                // orientation in this view.
                 final View globalNextFocus = FocusFinder.getInstance().findNextFocus(
                         ( ViewGroup ) getRootView(), currentFocus, direction );
 
@@ -1978,7 +2202,14 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         return false;
     }
 
-
+    /**
+     * Scrolls to the next or previous item if possible.
+     *
+     * @param direction either {@link View#FOCUS_UP} or {@link View#FOCUS_DOWN} or
+     *                  {@link View#FOCUS_LEFT} or {@link View#FOCUS_RIGHT} depending on the
+     *                  current view orientation.
+     * @return whether selection was moved
+     */
     private boolean arrowScroll( int direction )
     {
         forceValidFocusDirection( direction );
@@ -2001,7 +2232,20 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         }
     }
 
-
+    /**
+     * When selection changes, it is possible that the previously selected or the
+     * next selected item will change its size.  If so, we need to offset some folks,
+     * and re-layout the items as appropriate.
+     *
+     * @param selectedView        The currently selected view (before changing selection).
+     *                            should be <code>null</code> if there was no previous selection.
+     * @param direction           either {@link View#FOCUS_UP} or {@link View#FOCUS_DOWN} or
+     *                            {@link View#FOCUS_LEFT} or {@link View#FOCUS_RIGHT} depending on the
+     *                            current view orientation.
+     * @param newSelectedPosition The position of the next selection.
+     * @param newFocusAssigned    whether new focus was assigned.  This matters because
+     *                            when something has focus, we don't want to show selection (ugh).
+     */
     private void handleNewSelectionChange( View selectedView, int direction, int newSelectedPosition,
                                            boolean newFocusAssigned )
     {
@@ -2012,7 +2256,10 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             throw new IllegalArgumentException( "newSelectedPosition needs to be valid" );
         }
 
-
+        // Whether or not we are moving down/right or up/left, we want to preserve the
+        // top/left of whatever view is at the start:
+        // - moving down/right: the view that had selection
+        // - moving up/left: the view that is getting selection
         final int selectedIndex = mSelectedPosition - mFirstPosition;
         final int nextSelectedIndex = newSelectedPosition - mFirstPosition;
         int startViewIndex, endViewIndex;
@@ -2038,14 +2285,14 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
         final int numChildren = getChildCount();
 
-
+        // start with top view: is it changing size?
         if ( startView != null )
         {
             startView.setSelected( !newFocusAssigned && topSelected );
             measureAndAdjustDown( startView, startViewIndex, numChildren );
         }
 
-
+        // is the bottom view changing size?
         if ( endView != null )
         {
             endView.setSelected( !newFocusAssigned && !topSelected );
@@ -2053,7 +2300,14 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         }
     }
 
-
+    /**
+     * Re-measure a child, and if its height changes, lay it out preserving its
+     * top, and adjust the children below it appropriately.
+     *
+     * @param child       The child
+     * @param childIndex  The view group index of the child.
+     * @param numChildren The number of children in the view group.
+     */
     private void measureAndAdjustDown( View child, int childIndex, int numChildren )
     {
         int oldHeight = child.getHeight();
@@ -2064,10 +2318,10 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             return;
         }
 
-
+        // lay out the view, preserving its top
         relayoutMeasuredChild( child );
 
-
+        // adjust views below appropriately
         final int heightDelta = child.getMeasuredHeight() - oldHeight;
         for ( int i = childIndex + 1; i < numChildren; i++ )
         {
@@ -2075,7 +2329,16 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         }
     }
 
-
+    /**
+     * Do an arrow scroll based on focus searching.  If a new view is
+     * given focus, return the selection delta and amount to scroll via
+     * an {@link ArrowScrollFocusResult}, otherwise, return null.
+     *
+     * @param direction either {@link View#FOCUS_UP} or {@link View#FOCUS_DOWN} or
+     *                  {@link View#FOCUS_LEFT} or {@link View#FOCUS_RIGHT} depending on the
+     *                  current view orientation.
+     * @return The result if focus has changed, or <code>null</code>.
+     */
     private ArrowScrollFocusResult arrowScrollFocused( final int direction )
     {
         forceValidFocusDirection( direction );
@@ -2136,7 +2399,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         {
             final int positionOfNewFocus = positionOfNewFocus( newFocus );
 
-
+            // If the focus change is in a different new position, make sure
+            // we aren't jumping over another selectable position.
             if ( mSelectedPosition != INVALID_POSITION && positionOfNewFocus != mSelectedPosition )
             {
                 final int selectablePosition = lookForSelectablePositionOnScreen( direction );
@@ -2159,15 +2423,17 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             final int maxScrollAmount = getMaxScrollAmount();
             if ( focusScroll < maxScrollAmount )
             {
-
+                // Not moving too far, safe to give next view focus
                 newFocus.requestFocus( direction );
                 mArrowScrollFocusResult.populate( positionOfNewFocus, focusScroll );
                 return mArrowScrollFocusResult;
             }
             else if ( distanceToView( newFocus ) < maxScrollAmount )
             {
-
-
+                // Case to consider:
+                // Too far to get entire next focusable on screen, but by going
+                // max scroll amount, we are getting it at least partially in view,
+                // so give it focus and scroll the max amount.
                 newFocus.requestFocus( direction );
                 mArrowScrollFocusResult.populate( positionOfNewFocus, maxScrollAmount );
                 return mArrowScrollFocusResult;
@@ -2177,24 +2443,32 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         return null;
     }
 
-
+    /**
+     * @return The maximum amount a list view will scroll in response to
+     * an arrow event.
+     */
     public int getMaxScrollAmount()
     {
         return ( int ) ( MAX_SCROLL_FACTOR * getHeight() );
     }
 
-
+    /**
+     * @return The amount to preview next items when arrow scrolling.
+     */
     private int getArrowScrollPreviewLength()
     {
-
-
+        // FIXME: TwoWayView has no fading edge support just yet but using it
+        // makes it convenient for defining the next item's previous length.
         int fadingEdgeLength =
                 ( mIsVertical ? getVerticalFadingEdgeLength() : getHorizontalFadingEdgeLength() );
 
         return mItemMargin + Math.max( MIN_SCROLL_PREVIEW_PIXELS, fadingEdgeLength );
     }
 
-
+    /**
+     * @param newFocus The view that would have focus.
+     * @return the position that contains newFocus
+     */
     private int positionOfNewFocus( View newFocus )
     {
         final int numChildren = getChildCount();
@@ -2212,7 +2486,15 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                 + " children of the list!" );
     }
 
-
+    /**
+     * Handle an arrow scroll going up or down.  Take into account whether items are selectable,
+     * whether there are focusable items, etc.
+     *
+     * @param direction either {@link View#FOCUS_UP} or {@link View#FOCUS_DOWN} or
+     *                  {@link View#FOCUS_LEFT} or {@link View#FOCUS_RIGHT} depending on the
+     *                  current view orientation.
+     * @return Whether any scrolling, selection or focus change occurred.
+     */
     private boolean arrowScrollImpl( int direction )
     {
         forceValidFocusDirection( direction );
@@ -2228,7 +2510,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         int nextSelectedPosition = lookForSelectablePositionOnScreen( direction );
         int amountToScroll = amountToScroll( direction, nextSelectedPosition );
 
-
+        // If we are moving focus, we may OVERRIDE the default behaviour
         final ArrowScrollFocusResult focusResult = ( mItemsCanFocus ? arrowScrollFocused( direction ) : null );
         if ( focusResult != null )
         {
@@ -2249,8 +2531,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
             if ( mItemsCanFocus && focusResult == null )
             {
-
-
+                // There was no new view found to take focus, make sure we
+                // don't leave focus with the old selection.
                 final View focused = getFocusedChild();
                 if ( focused != null )
                 {
@@ -2269,7 +2551,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             needToRedraw = true;
         }
 
-
+        // If we didn't find a new focusable, make sure any existing focused
+        // item that was panned off screen gives up focus.
         if ( mItemsCanFocus && focusResult == null &&
                 selectedView != null && selectedView.hasFocus() )
         {
@@ -2280,14 +2563,15 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             }
         }
 
-
+        // If the current selection is panned off, we need to remove the selection
         if ( nextSelectedPosition == INVALID_POSITION && selectedView != null
                 && !isViewAncestorOf( selectedView, this ) )
         {
             selectedView = null;
             hideSelector();
 
-
+            // But we don't want to set the ressurect position (that would make subsequent
+            // unhandled key events bring back the item we just scrolled off)
             mResurrectToPosition = INVALID_POSITION;
         }
 
@@ -2311,7 +2595,18 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         return false;
     }
 
-
+    /**
+     * Determine how much we need to scroll in order to get the next selected view
+     * visible. The amount is capped at {@link #getMaxScrollAmount()}.
+     *
+     * @param direction            either {@link View#FOCUS_UP} or {@link View#FOCUS_DOWN} or
+     *                             {@link View#FOCUS_LEFT} or {@link View#FOCUS_RIGHT} depending on the
+     *                             current view orientation.
+     * @param nextSelectedPosition The position of the next selection, or
+     *                             {@link #INVALID_POSITION} if there is no next selectable position
+     * @return The amount to scroll. Note: this is always positive!  Direction
+     * needs to be taken into account when actually scrolling.
+     */
     private int amountToScroll( int direction, int nextSelectedPosition )
     {
         forceValidFocusDirection( direction );
@@ -2345,14 +2640,14 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
             if ( viewToMakeVisibleEnd <= goalEnd )
             {
-
+                // Target item is fully visible
                 return 0;
             }
 
             if ( nextSelectedPosition != INVALID_POSITION &&
                     ( goalEnd - viewToMakeVisibleStart ) >= getMaxScrollAmount() )
             {
-
+                // Item already has enough of it visible, changing selection is good enough
                 return 0;
             }
 
@@ -2363,7 +2658,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                 final View lastChild = getChildAt( numChildren - 1 );
                 final int lastChildEnd = ( mIsVertical ? lastChild.getBottom() : lastChild.getRight() );
 
-
+                // Last is last in list -> Make sure we don't scroll past it
                 final int max = lastChildEnd - end;
                 amountToScroll = Math.min( amountToScroll, max );
             }
@@ -2396,14 +2691,14 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
             if ( viewToMakeVisibleStart >= goalStart )
             {
-
+                // Item is fully visible
                 return 0;
             }
 
             if ( nextSelectedPosition != INVALID_POSITION &&
                     ( viewToMakeVisibleEnd - goalStart ) >= getMaxScrollAmount() )
             {
-
+                // Item already has enough of it visible, changing selection is good enough
                 return 0;
             }
 
@@ -2414,7 +2709,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                 final View firstChild = getChildAt( 0 );
                 final int firstChildStart = ( mIsVertical ? firstChild.getTop() : firstChild.getLeft() );
 
-
+                // First is first in list -> make sure we don't scroll past it
                 final int max = start - firstChildStart;
                 amountToScroll = Math.min( amountToScroll, max );
             }
@@ -2423,7 +2718,17 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         }
     }
 
-
+    /**
+     * Determine how much we need to scroll in order to get newFocus in view.
+     *
+     * @param direction          either {@link View#FOCUS_UP} or {@link View#FOCUS_DOWN} or
+     *                           {@link View#FOCUS_LEFT} or {@link View#FOCUS_RIGHT} depending on the
+     *                           current view orientation.
+     * @param newFocus           The view that would take focus.
+     * @param positionOfNewFocus The position of the list item containing newFocus
+     * @return The amount to scroll. Note: this is always positive! Direction
+     * needs to be taken into account when actually scrolling.
+     */
     private int amountToScrollToNewFocus( int direction, View newFocus, int positionOfNewFocus )
     {
         forceValidFocusDirection( direction );
@@ -2466,7 +2771,13 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         return amountToScroll;
     }
 
-
+    /**
+     * Determine the distance to the nearest edge of a view in a particular
+     * direction.
+     *
+     * @param descendant A descendant of this list.
+     * @return The distance, or 0 if the nearest edge is already on screen.
+     */
     private int distanceToView( View descendant )
     {
         descendant.getDrawingRect( mTempRect );
@@ -2731,7 +3042,9 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         }
     }
 
-
+    /**
+     * Notify our scroll listener (if there is one) of a change in scroll state
+     */
     private void invokeOnItemScrollListener()
     {
         if ( mOnScrollListener != null )
@@ -2739,7 +3052,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             mOnScrollListener.onScroll( this, mFirstPosition, getChildCount(), mItemCount );
         }
 
-
+        // Dummy values, View's implementation does not use these.
         onScrollChanged( 0, 0, 0, 0 );
     }
 
@@ -2774,7 +3087,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             mTouchMode = TOUCH_MODE_DRAGGING;
         }
 
-
+        // Time to start stealing events! Once we've stolen them, don't
+        // let anyone steal from us.
         final ViewParent parent = getParent();
         if ( parent != null )
         {
@@ -2809,8 +3123,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
     private void handleDragChange( int delta )
     {
-
-
+        // Time to start stealing events! Once we've stolen them, don't
+        // let anyone steal from us.
         final ViewParent parent = getParent();
         if ( parent != null )
         {
@@ -2824,8 +3138,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         }
         else
         {
-
-
+            // If we don't have a motion position that we can reliably track,
+            // pick something in the middle to make a best guess at things below.
             motionIndex = getChildCount() / 2;
         }
 
@@ -2865,7 +3179,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
         if ( Math.abs( mOverscrollDistance ) == Math.abs( mOverScroll ) )
         {
-
+            // Break fling velocity if we impacted an edge
             if ( mVelocityTracker != null )
             {
                 mVelocityTracker.clear();
@@ -2938,17 +3252,27 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             scrollListItemsBy( delta );
             mTouchMode = TOUCH_MODE_DRAGGING;
 
-
+            // We did not scroll the full amount. Treat this essentially like the
+            // start of a new touch scroll
             mMotionPosition = findClosestMotionRowOrColumn( ( int ) mLastTouchPos );
             mTouchRemainderPos = 0;
         }
     }
 
-
+    /**
+     * What is the distance between the source and destination rectangles given the direction of
+     * focus navigation between them? The direction basically helps figure out more quickly what is
+     * self evident by the relationship between the rects...
+     *
+     * @param source    the source rectangle
+     * @param dest      the destination rectangle
+     * @param direction the direction
+     * @return the distance between the rectangles
+     */
     private static int getDistance( Rect source, Rect dest, int direction )
     {
-        int sX, sY;
-        int dX, dY;
+        int sX, sY; // source x, y
+        int dX, dY; // dest x, y
 
         switch ( direction )
         {
@@ -3241,7 +3565,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             detachViewsFromParent( start, count );
         }
 
-
+        // invalidate before moving the children to avoid unnecessary invalidate
+        // calls to bubble up from the children all the way to the top
         if ( !awakenScrollbarsInternal() )
         {
             invalidate();
@@ -3530,7 +3855,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         mNextSelectedPosition = position;
         mNextSelectedRowId = getItemIdAtPosition( position );
 
-
+        // If we are trying to sync to the selection, update that too
         if ( mNeedSync && mSyncMode == SYNC_SELECTED_POSITION && position >= 0 )
         {
             mSyncPosition = position;
@@ -3550,7 +3875,10 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         }
     }
 
-
+    /**
+     * Sets the selector state to "pressed" and posts a CheckForKeyLongPress to see if
+     * this is a long press.
+     */
     private void keyPressed()
     {
         if ( !isEnabled() || !isClickable() )
@@ -3642,8 +3970,10 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
         if ( mInLayout || mBlockLayoutRequests )
         {
-
-
+            // If we are in a layout traversal, defer notification
+            // by posting. This ensures that the view tree is
+            // in a consistent state and is able to accommodate
+            // new layout or invalidate requests.
             if ( mSelectionNotifier == null )
             {
                 mSelectionNotifier = new SelectionNotifier();
@@ -3684,7 +4014,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         final int position = getSelectedItemPosition();
         if ( position >= 0 )
         {
-
+            // We fire selection events here not in View
             sendAccessibilityEvent( AccessibilityEvent.TYPE_VIEW_SELECTED );
         }
     }
@@ -3740,7 +4070,15 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         }
     }
 
-
+    /**
+     * @param direction either {@link View#FOCUS_UP} or {@link View#FOCUS_DOWN} or
+     *                  {@link View#FOCUS_LEFT} or {@link View#FOCUS_RIGHT} depending on the
+     *                  current view orientation.
+     * @return The position of the next selectable position of the views that
+     * are currently visible, taking into account the fact that there might
+     * be no selection.  Returns {@link #INVALID_POSITION} if there is no
+     * selectable view on screen in the given direction.
+     */
     private int lookForSelectablePositionOnScreen( int direction )
     {
         forceValidFocusDirection( direction );
@@ -3814,17 +4152,21 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
     @Override
     protected int[] onCreateDrawableState( int extraSpace )
     {
-
+        // If the child view is enabled then do the default behavior.
         if ( mIsChildViewEnabled )
         {
-
+            // Common case
             return super.onCreateDrawableState( extraSpace );
         }
 
-
+        // The selector uses this View's drawable state. The selected child view
+        // is disabled, so we need to remove the enabled state from the drawable
+        // states.
         final int enabledState = ENABLED_STATE_SET[0];
 
-
+        // If we don't have any extra space, it will return one of the static state arrays,
+        // and clearing the enabled state on those arrays is a bad thing!  If we specify
+        // we need extra space, it will create+copy into a new array that safely mutable.
         int[] state = super.onCreateDrawableState( extraSpace + 1 );
         int enabledPos = -1;
         for ( int i = state.length - 1; i >= 0; i-- )
@@ -3836,7 +4178,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             }
         }
 
-
+        // Remove the enabled state
         if ( enabledPos >= 0 )
         {
             System.arraycopy( state, enabledPos + 1, state, enabledPos,
@@ -3971,16 +4313,16 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
     @Override
     public boolean dispatchKeyEvent( KeyEvent event )
     {
-
+        // Dispatch in the normal way
         boolean handled = super.dispatchKeyEvent( event );
         if ( !handled )
         {
-
+            // If we didn't handle it...
             final View focused = getFocusedChild();
             if ( focused != null && event.getAction() == KeyEvent.ACTION_DOWN )
             {
-
-
+                // ... and our focused child didn't handle it
+                // ... give it to ourselves so we can scroll if necessary
                 handled = onKeyDown( event.getKeyCode(), event );
             }
         }
@@ -3991,8 +4333,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
     @Override
     protected void dispatchSetPressed( boolean pressed )
     {
-
-
+        // Don't dispatch setPressed to our children. We call setPressed on ourselves to
+        // get the selector in the right state, but we don't want to press each child.
     }
 
     @Override
@@ -4161,14 +4503,14 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
                 case LAYOUT_MOVE_SELECTION:
                 default:
-
+                    // Remember the previously selected view
                     index = mSelectedPosition - mFirstPosition;
                     if ( index >= 0 && index < childCount )
                     {
                         oldSelected = getChildAt( index );
                     }
 
-
+                    // Remember the previous first child
                     oldFirstChild = getChildAt( 0 );
 
                     if ( mNextSelectedPosition >= 0 )
@@ -4176,7 +4518,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                         delta = mNextSelectedPosition - mSelectedPosition;
                     }
 
-
+                    // Caution: newSelected might be null
                     newSelected = getChildAt( index + delta );
             }
 
@@ -4186,7 +4528,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                 handleDataChanged();
             }
 
-
+            // Handle the empty set by removing all views that are visible
+            // and calling it a day
             if ( mItemCount == 0 )
             {
                 resetState();
@@ -4203,10 +4546,11 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
             setSelectedPositionInt( mNextSelectedPosition );
 
-
+            // Reset the focus restoration
             View focusLayoutRestoreDirectChild = null;
 
-
+            // Pull all children into the RecycleBin.
+            // These views will be reused if possible
             final int firstPosition = mFirstPosition;
             final RecycleBin recycleBin = mRecycler;
 
@@ -4222,21 +4566,24 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                 recycleBin.fillActiveViews( childCount, firstPosition );
             }
 
-
+            // Take focus back to us temporarily to avoid the eventual
+            // call to clear focus when removing the focused child below
+            // from messing things up when ViewAncestor assigns focus back
+            // to someone else.
             final View focusedChild = getFocusedChild();
             if ( focusedChild != null )
             {
-
-
+                // We can remember the focused view to restore after relayout if the
+                // data hasn't changed, or if the focused position is a header or footer.
                 if ( !dataChanged )
                 {
                     focusLayoutRestoreDirectChild = focusedChild;
 
-
+                    // Remember the specific view that had focus
                     focusLayoutRestoreView = findFocus();
                     if ( focusLayoutRestoreView != null )
                     {
-
+                        // Tell it we are going to mess with it
                         focusLayoutRestoreView.onStartTemporaryDetach();
                     }
                 }
@@ -4244,6 +4591,9 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                 requestFocus();
             }
 
+            // FIXME: We need a way to save current accessibility focus here
+            // so that it can be restored after we re-attach the children on each
+            // layout round.
 
             detachAllViewsFromParent();
 
@@ -4337,8 +4687,9 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
                     if ( !focusWasTaken )
                     {
-
-
+                        // Selected item didn't take focus, fine, but still want
+                        // to make sure something else outside of the selected view
+                        // has focus
                         final View focused = getFocusedChild();
                         if ( focused != null )
                         {
@@ -4377,14 +4728,16 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                     mSelectorRect.setEmpty();
                 }
 
-
+                // Even if there is not selected position, we may need to restore
+                // focus (i.e. something focusable in touch mode)
                 if ( hasFocus() && focusLayoutRestoreView != null )
                 {
                     focusLayoutRestoreView.requestFocus();
                 }
             }
 
-
+            // Tell focus view we are done mucking with it, if it is still in
+            // our view hierarchy.
             if ( focusLayoutRestoreView != null
                     && focusLayoutRestoreView.getWindowToken() != null )
             {
@@ -4449,28 +4802,47 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
         if ( delta > 0 )
         {
+            /*
+             * Case 1: Scrolling down.
+             */
 
+            /*
+             *     Before           After
+             *    |       |        |       |
+             *    +-------+        +-------+
+             *    |   A   |        |   A   |
+             *    |   1   |   =>   +-------+
+             *    +-------+        |   B   |
+             *    |   B   |        |   2   |
+             *    +-------+        +-------+
+             *    |       |        |       |
+             *
+             *    Try to keep the top of the previously selected item where it was.
+             *    oldSelected = A
+             *    selected = B
+             */
 
+            // Put oldSelected (A) where it belongs
             oldSelected = makeAndAddView( selectedPosition - 1, oldSelectedStart, true, false );
 
             final int itemMargin = mItemMargin;
 
-
+            // Now put the new selection (B) below that
             selected = makeAndAddView( selectedPosition, oldSelectedEnd + itemMargin, true, true );
 
             final int selectedStart = ( mIsVertical ? selected.getTop() : selected.getLeft() );
             final int selectedEnd = ( mIsVertical ? selected.getBottom() : selected.getRight() );
 
-
+            // Some of the newly selected item extends below the bottom of the list
             if ( selectedEnd > end )
             {
-
+                // Find space available above the selection into which we can scroll upwards
                 final int spaceBefore = selectedStart - start;
 
-
+                // Find space required to bring the bottom of the selected item fully into view
                 final int spaceAfter = selectedEnd - end;
 
-
+                // Don't scroll more than half the size of the list
                 final int halfSpace = ( end - start ) / 2;
                 int offset = Math.min( spaceBefore, spaceAfter );
                 offset = Math.min( offset, halfSpace );
@@ -4487,41 +4859,59 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                 }
             }
 
-
+            // Fill in views before and after
             fillBefore( mSelectedPosition - 2, selectedStart - itemMargin );
             adjustViewsStartOrEnd();
             fillAfter( mSelectedPosition + 1, selectedEnd + itemMargin );
         }
         else if ( delta < 0 )
         {
+            /*
+             * Case 2: Scrolling up.
+             */
 
+            /*
+             *     Before           After
+             *    |       |        |       |
+             *    +-------+        +-------+
+             *    |   A   |        |   A   |
+             *    +-------+   =>   |   1   |
+             *    |   B   |        +-------+
+             *    |   2   |        |   B   |
+             *    +-------+        +-------+
+             *    |       |        |       |
+             *
+             *    Try to keep the top of the item about to become selected where it was.
+             *    newSelected = A
+             *    olSelected = B
+             */
 
             if ( newSelected != null )
             {
-
+                // Try to position the top of newSel (A) where it was before it was selected
                 final int newSelectedStart = ( mIsVertical ? newSelected.getTop() : newSelected.getLeft() );
                 selected = makeAndAddView( selectedPosition, newSelectedStart, true, true );
             }
             else
             {
-
-
+                // If (A) was not on screen and so did not have a view, position
+                // it above the oldSelected (B)
                 selected = makeAndAddView( selectedPosition, oldSelectedStart, false, true );
             }
 
             final int selectedStart = ( mIsVertical ? selected.getTop() : selected.getLeft() );
             final int selectedEnd = ( mIsVertical ? selected.getBottom() : selected.getRight() );
 
-
+            // Some of the newly selected item extends above the top of the list
             if ( selectedStart < start )
             {
-
+                // Find space required to bring the top of the selected item fully into view
                 final int spaceBefore = start - selectedStart;
 
-
+                // Find space available below the selection into which we can scroll downwards
                 final int spaceAfter = end - selectedEnd;
 
-
+                // Don't scroll more than half the height of the list
                 final int halfSpace = ( end - start ) / 2;
                 int offset = Math.min( spaceBefore, spaceAfter );
                 offset = Math.min( offset, halfSpace );
@@ -4536,27 +4926,29 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                 }
             }
 
-
+            // Fill in views above and below
             fillBeforeAndAfter( selected, selectedPosition );
         }
         else
         {
-
+            /*
+             * Case 3: Staying still
+             */
 
             selected = makeAndAddView( selectedPosition, oldSelectedStart, true, true );
 
             final int selectedStart = ( mIsVertical ? selected.getTop() : selected.getLeft() );
             final int selectedEnd = ( mIsVertical ? selected.getBottom() : selected.getRight() );
 
-
+            // We're staying still...
             if ( oldSelectedStart < start )
             {
-
-
+                // ... but the top of the old selection was off screen.
+                // (This can happen if the data changes size out from under us)
                 int newEnd = selectedEnd;
                 if ( newEnd < start + 20 )
                 {
-
+                    // Not enough visible -- bring it onscreen
                     if ( mIsVertical )
                     {
                         selected.offsetTopAndBottom( start - selectedStart );
@@ -4568,7 +4960,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                 }
             }
 
-
+            // Fill in views above and below
             fillBeforeAndAfter( selected, selectedPosition );
         }
 
@@ -4577,7 +4969,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
     void confirmCheckedPositionsById()
     {
-
+        // Clear out the positional check states, we'll rebuild it below from IDs.
         mCheckStates.clear();
 
         for ( int checkedIndex = 0; checkedIndex < mCheckedIdStates.size(); checkedIndex++ )
@@ -4588,7 +4980,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             final long lastPosId = mAdapter.getItemId( lastPos );
             if ( id != lastPosId )
             {
-
+                // Look around to see if the ID is nearby. If not, uncheck it.
                 final int start = Math.max( 0, lastPos - CHECK_POSITION_SEARCH_DISTANCE );
                 final int end = Math.min( lastPos + CHECK_POSITION_SEARCH_DISTANCE, mItemCount );
                 boolean found = false;
@@ -4634,10 +5026,10 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             int newPos;
             int selectablePos;
 
-
+            // Find the row we are supposed to sync to
             if ( mNeedSync )
             {
-
+                // Update this first, since setNextSelectedPositionInt inspects it
                 mNeedSync = false;
                 mPendingSync = null;
 
@@ -4646,8 +5038,10 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                     case SYNC_SELECTED_POSITION:
                         if ( isInTouchMode() )
                         {
-
-
+                            // We saved our state when not in touch mode. (We know this because
+                            // mSyncMode is SYNC_SELECTED_POSITION.) Now we are trying to
+                            // restore in touch mode. Just leave mSyncPosition as it is (possibly
+                            // adjusting if the available range changed) and return.
                             mLayoutMode = LAYOUT_SYNC;
                             mSyncPosition = Math.min( Math.max( 0, mSyncPosition ), itemCount - 1 );
 
@@ -4655,32 +5049,32 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                         }
                         else
                         {
-
-
+                            // See if we can find a position in the new data with the same
+                            // id as the old selection. This will change mSyncPosition.
                             newPos = findSyncPosition();
                             if ( newPos >= 0 )
                             {
-
+                                // Found it. Now verify that new selection is still selectable
                                 selectablePos = lookForSelectablePosition( newPos, true );
                                 if ( selectablePos == newPos )
                                 {
-
+                                    // Same row id is selected
                                     mSyncPosition = newPos;
 
                                     if ( mSyncHeight == getHeight() )
                                     {
-
-
+                                        // If we are at the same height as when we saved state, try
+                                        // to restore the scroll position too.
                                         mLayoutMode = LAYOUT_SYNC;
                                     }
                                     else
                                     {
-
-
+                                        // We are not the same height as when the selection was saved, so
+                                        // don't try to restore the exact position
                                         mLayoutMode = LAYOUT_SET_SELECTION;
                                     }
 
-
+                                    // Restore selection
                                     setNextSelectedPositionInt( newPos );
                                     return;
                                 }
@@ -4689,7 +5083,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                         break;
 
                     case SYNC_FIRST_POSITION:
-
+                        // Leave mSyncPosition as it is -- just pin to available range
                         mLayoutMode = LAYOUT_SYNC;
                         mSyncPosition = Math.min( Math.max( 0, mSyncPosition ), itemCount - 1 );
 
@@ -4699,10 +5093,10 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
             if ( !isInTouchMode() )
             {
-
+                // We couldn't find matching data -- try to use the same position
                 newPos = getSelectedItemPosition();
 
-
+                // Pin position to the available range
                 if ( newPos >= itemCount )
                 {
                     newPos = itemCount - 1;
@@ -4712,7 +5106,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                     newPos = 0;
                 }
 
-
+                // Make sure we select something selectable -- first look down
                 selectablePos = lookForSelectablePosition( newPos, true );
 
                 if ( selectablePos >= 0 )
@@ -4722,7 +5116,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                 }
                 else
                 {
-
+                    // Looking down didn't work -- try looking up
                     selectablePos = lookForSelectablePosition( newPos, false );
                     if ( selectablePos >= 0 )
                     {
@@ -4733,7 +5127,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             }
             else
             {
-
+                // We already know where we want to resurrect the selection
                 if ( mResurrectToPosition >= 0 )
                 {
                     return;
@@ -4741,7 +5135,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             }
         }
 
-
+        // Nothing is selected. Give up and reset everything.
         mLayoutMode = LAYOUT_FORCE_TOP;
         mSelectedPosition = INVALID_POSITION;
         mSelectedRowId = INVALID_ROW_ID;
@@ -4796,7 +5190,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         }
         else if ( toPosition < firstPosition )
         {
-
+            // Default to selecting whatever is first
             selectedPosition = firstPosition;
 
             for ( int i = 0; i < childCount; i++ )
@@ -4806,13 +5200,13 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
                 if ( i == 0 )
                 {
-
+                    // Remember the position of the first item
                     selectedStart = childStart;
                 }
 
                 if ( childStart >= start )
                 {
-
+                    // Found a view whose top is fully visible
                     selectedPosition = firstPosition + i;
                     selectedStart = childStart;
                     break;
@@ -4866,7 +5260,10 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         return selectedPosition >= 0;
     }
 
-
+    /**
+     * If there is a selection returns false.
+     * Otherwise resurrects the selection and returns true if resurrected.
+     */
     boolean resurrectSelectionIfNeeded()
     {
         if ( mSelectedPosition < 0 && resurrectSelection() )
@@ -4965,7 +5362,32 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         scrapChild.measure( widthMeasureSpec, heightMeasureSpec );
     }
 
-
+    /**
+     * Measures the height of the given range of children (inclusive) and
+     * returns the height with this TwoWayView's padding and item margin heights
+     * included. If maxHeight is provided, the measuring will stop when the
+     * current height reaches maxHeight.
+     *
+     * @param widthMeasureSpec             The width measure spec to be given to a child's
+     *                                     {@link View#measure(int, int)}.
+     * @param startPosition                The position of the first child to be shown.
+     * @param endPosition                  The (inclusive) position of the last child to be
+     *                                     shown. Specify {@link #NO_POSITION} if the last child should be
+     *                                     the last available child from the adapter.
+     * @param maxHeight                    The maximum height that will be returned (if all the
+     *                                     children don't fit in this value, this value will be
+     *                                     returned).
+     * @param disallowPartialChildPosition In general, whether the returned
+     *                                     height should only contain entire children. This is more
+     *                                     powerful--it is the first inclusive position at which partial
+     *                                     children will not be allowed. Example: it looks nice to have
+     *                                     at least 3 completely visible children, and in portrait this
+     *                                     will most likely fit; but in landscape there could be times
+     *                                     when even 2 children can not be completely shown, so a value
+     *                                     of 2 (remember, inclusive) would be good (assuming
+     *                                     startPosition is 0).
+     * @return The height of this TwoWayView with the given children.
+     */
     private int measureHeightOfChildren( int widthMeasureSpec, int startPosition, int endPosition,
                                          final int maxHeight, int disallowPartialChildPosition )
     {
@@ -4979,16 +5401,17 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             return paddingTop + paddingBottom;
         }
 
-
+        // Include the padding of the list
         int returnedHeight = paddingTop + paddingBottom;
         final int itemMargin = mItemMargin;
 
-
+        // The previous height value that was less than maxHeight and contained
+        // no partial children
         int prevHeightWithoutPartialChild = 0;
         int i;
         View child;
 
-
+        // mItemCount - 1 since endPosition parameter is inclusive
         endPosition = ( endPosition == NO_POSITION ) ? adapter.getCount() - 1 : endPosition;
         final RecycleBin recycleBin = mRecycler;
         final boolean shouldRecycle = recycleOnMeasure();
@@ -5002,11 +5425,11 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
             if ( i > 0 )
             {
-
+                // Count the item margin for all but one child
                 returnedHeight += itemMargin;
             }
 
-
+            // Recycle the view before we possibly return from the method
             if ( shouldRecycle )
             {
                 recycleBin.addScrapView( child, -1 );
@@ -5016,12 +5439,12 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
             if ( returnedHeight >= maxHeight )
             {
-
-
-                return ( disallowPartialChildPosition >= 0 )
-                        && ( i > disallowPartialChildPosition )
-                        && ( prevHeightWithoutPartialChild > 0 )
-                        && ( returnedHeight != maxHeight )
+                // We went over, figure out which height to return.  If returnedHeight > maxHeight,
+                // then the i'th position did not fit completely.
+                return ( disallowPartialChildPosition >= 0 ) // Disallowing is enabled (> -1)
+                        && ( i > disallowPartialChildPosition ) // We've past the min pos
+                        && ( prevHeightWithoutPartialChild > 0 ) // We have a prev height
+                        && ( returnedHeight != maxHeight ) // i'th child did not fit completely
                         ? prevHeightWithoutPartialChild
                         : maxHeight;
             }
@@ -5032,11 +5455,37 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             }
         }
 
-
+        // At this point, we went through the range of children, and they each
+        // completely fit, so return the returnedHeight
         return returnedHeight;
     }
 
-
+    /**
+     * Measures the width of the given range of children (inclusive) and
+     * returns the width with this TwoWayView's padding and item margin widths
+     * included. If maxWidth is provided, the measuring will stop when the
+     * current width reaches maxWidth.
+     *
+     * @param heightMeasureSpec            The height measure spec to be given to a child's
+     *                                     {@link View#measure(int, int)}.
+     * @param startPosition                The position of the first child to be shown.
+     * @param endPosition                  The (inclusive) position of the last child to be
+     *                                     shown. Specify {@link #NO_POSITION} if the last child should be
+     *                                     the last available child from the adapter.
+     * @param maxWidth                     The maximum width that will be returned (if all the
+     *                                     children don't fit in this value, this value will be
+     *                                     returned).
+     * @param disallowPartialChildPosition In general, whether the returned
+     *                                     width should only contain entire children. This is more
+     *                                     powerful--it is the first inclusive position at which partial
+     *                                     children will not be allowed. Example: it looks nice to have
+     *                                     at least 3 completely visible children, and in portrait this
+     *                                     will most likely fit; but in landscape there could be times
+     *                                     when even 2 children can not be completely shown, so a value
+     *                                     of 2 (remember, inclusive) would be good (assuming
+     *                                     startPosition is 0).
+     * @return The width of this TwoWayView with the given children.
+     */
     private int measureWidthOfChildren( int heightMeasureSpec, int startPosition, int endPosition,
                                         final int maxWidth, int disallowPartialChildPosition )
     {
@@ -5050,16 +5499,17 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             return paddingLeft + paddingRight;
         }
 
-
+        // Include the padding of the list
         int returnedWidth = paddingLeft + paddingRight;
         final int itemMargin = mItemMargin;
 
-
+        // The previous height value that was less than maxHeight and contained
+        // no partial children
         int prevWidthWithoutPartialChild = 0;
         int i;
         View child;
 
-
+        // mItemCount - 1 since endPosition parameter is inclusive
         endPosition = ( endPosition == NO_POSITION ) ? adapter.getCount() - 1 : endPosition;
         final RecycleBin recycleBin = mRecycler;
         final boolean shouldRecycle = recycleOnMeasure();
@@ -5073,11 +5523,11 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
             if ( i > 0 )
             {
-
+                // Count the item margin for all but one child
                 returnedWidth += itemMargin;
             }
 
-
+            // Recycle the view before we possibly return from the method
             if ( shouldRecycle )
             {
                 recycleBin.addScrapView( child, -1 );
@@ -5087,12 +5537,12 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
             if ( returnedWidth >= maxWidth )
             {
-
-
-                return ( disallowPartialChildPosition >= 0 )
-                        && ( i > disallowPartialChildPosition )
-                        && ( prevWidthWithoutPartialChild > 0 )
-                        && ( returnedWidth != maxWidth )
+                // We went over, figure out which width to return.  If returnedWidth > maxWidth,
+                // then the i'th position did not fit completely.
+                return ( disallowPartialChildPosition >= 0 ) // Disallowing is enabled (> -1)
+                        && ( i > disallowPartialChildPosition ) // We've past the min pos
+                        && ( prevWidthWithoutPartialChild > 0 ) // We have a prev width
+                        && ( returnedWidth != maxWidth ) // i'th child did not fit completely
                         ? prevWidthWithoutPartialChild
                         : maxWidth;
             }
@@ -5103,7 +5553,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             }
         }
 
-
+        // At this point, we went through the range of children, and they each
+        // completely fit, so return the returnedWidth
         return returnedWidth;
     }
 
@@ -5125,22 +5576,22 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
         if ( !mDataChanged )
         {
-
+            // Try to use an existing view for this position
             final View activeChild = mRecycler.getActiveView( position );
             if ( activeChild != null )
             {
-
-
+                // Found it -- we're using an existing child
+                // This just needs to be positioned
                 setupChild( activeChild, position, top, left, flow, selected, true );
 
                 return activeChild;
             }
         }
 
-
+        // Make a new view for this position, or convert an unused view if possible
         final View child = obtainView( position, mIsScrap );
 
-
+        // This needs to be positioned and measured
         setupChild( child, position, top, left, flow, selected, mIsScrap[0] );
 
         return child;
@@ -5160,7 +5611,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         final boolean updateChildPressed = isPressed != child.isPressed();
         final boolean needToMeasure = !recycled || updateChildSelected || child.isLayoutRequested();
 
-
+        // Respect layout params that are already in the view. Otherwise make some up...
         LayoutParams lp = ( LayoutParams ) child.getLayoutParams();
         if ( lp == null )
         {
@@ -5346,7 +5797,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         final boolean tempIsSelected = ( position == mSelectedPosition );
         View temp = makeAndAddView( position, offset, true, tempIsSelected );
 
-
+        // Possibly changed again in fillBefore if we add rows above this one.
         mFirstPosition = position;
 
         final int itemMargin = mItemMargin;
@@ -5362,7 +5813,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         }
         final View before = fillBefore( position - 1, offsetBefore );
 
-
+        // This will correct for the top of the first view not touching the top of the list
         adjustViewsStartOrEnd();
 
         final int offsetAfter;
@@ -5481,37 +5932,39 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         final int selectedStart = ( mIsVertical ? selected.getTop() : selected.getLeft() );
         final int selectedEnd = ( mIsVertical ? selected.getBottom() : selected.getRight() );
 
-
+        // Some of the newly selected item extends below the bottom of the list
         if ( selectedEnd > end )
         {
-
-
+            // Find space available above the selection into which we can scroll
+            // upwards
             final int spaceAbove = selectedStart - start;
 
-
+            // Find space required to bring the bottom of the selected item
+            // fully into view
             final int spaceBelow = selectedEnd - end;
 
             final int offset = Math.min( spaceAbove, spaceBelow );
 
-
+            // Now offset the selected item to get it into view
             selected.offsetTopAndBottom( -offset );
         }
         else if ( selectedStart < start )
         {
-
-
+            // Find space required to bring the top of the selected item fully
+            // into view
             final int spaceAbove = start - selectedStart;
 
-
+            // Find space available below the selection into which we can scroll
+            // downwards
             final int spaceBelow = end - selectedEnd;
 
             final int offset = Math.min( spaceAbove, spaceBelow );
 
-
+            // Offset the selected item to get it into view
             selected.offsetTopAndBottom( offset );
         }
 
-
+        // Fill in views above and below
         fillBeforeAndAfter( selected, selectedPosition );
         correctTooHigh( getChildCount() );
 
@@ -5520,18 +5973,18 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
     private void correctTooHigh( int childCount )
     {
-
-
+        // First see if the last item is visible. If it is not, it is OK for the
+        // top of the list to be pushed up.
         final int lastPosition = mFirstPosition + childCount - 1;
         if ( lastPosition != mItemCount - 1 || childCount == 0 )
         {
             return;
         }
 
-
+        // Get the last child ...
         final View lastChild = getChildAt( childCount - 1 );
 
-
+        // ... and its end edge
         final int lastEnd;
         if ( mIsVertical )
         {
@@ -5542,37 +5995,40 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             lastEnd = lastChild.getRight();
         }
 
-
+        // This is bottom of our drawable area
         final int start = ( mIsVertical ? getPaddingTop() : getPaddingLeft() );
         final int end =
                 ( mIsVertical ? getHeight() - getPaddingBottom() : getWidth() - getPaddingRight() );
 
-
+        // This is how far the end edge of the last view is from the end of the
+        // drawable area
         int endOffset = end - lastEnd;
 
         View firstChild = getChildAt( 0 );
         int firstStart = ( mIsVertical ? firstChild.getTop() : firstChild.getLeft() );
 
-
+        // Make sure we are 1) Too high, and 2) Either there are more rows above the
+        // first row or the first row is scrolled off the top of the drawable area
         if ( endOffset > 0 && ( mFirstPosition > 0 || firstStart < start ) )
         {
             if ( mFirstPosition == 0 )
             {
-
+                // Don't pull the top too far down
                 endOffset = Math.min( endOffset, start - firstStart );
             }
 
-
+            // Move everything down
             offsetChildren( endOffset );
 
             if ( mFirstPosition > 0 )
             {
                 firstStart = ( mIsVertical ? firstChild.getTop() : firstChild.getLeft() );
 
-
+                // Fill the gap that was opened above mFirstPosition with more rows, if
+                // possible
                 fillBefore( mFirstPosition - 1, firstStart - mItemMargin );
 
-
+                // Close up the remaining gap
                 adjustViewsStartOrEnd();
             }
         }
@@ -5580,8 +6036,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
     private void correctTooLow( int childCount )
     {
-
-
+        // First see if the first item is visible. If it is not, it is OK for the
+        // bottom of the list to be pushed down.
         if ( mFirstPosition != 0 || childCount == 0 )
         {
             return;
@@ -5602,7 +6058,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             end = getWidth() - getPaddingRight();
         }
 
-
+        // This is how far the start edge of the first view is from the start of the
+        // drawable area
         int startOffset = firstStart - start;
 
         View last = getChildAt( childCount - 1 );
@@ -5610,28 +6067,31 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
         int lastPosition = mFirstPosition + childCount - 1;
 
-
+        // Make sure we are 1) Too low, and 2) Either there are more columns/rows below the
+        // last column/row or the last column/row is scrolled off the end of the
+        // drawable area
         if ( startOffset > 0 )
         {
             if ( lastPosition < mItemCount - 1 || lastEnd > end )
             {
                 if ( lastPosition == mItemCount - 1 )
                 {
-
+                    // Don't pull the bottom too far up
                     startOffset = Math.min( startOffset, lastEnd - end );
                 }
 
-
+                // Move everything up
                 offsetChildren( -startOffset );
 
                 if ( lastPosition < mItemCount - 1 )
                 {
                     lastEnd = ( mIsVertical ? last.getBottom() : last.getRight() );
 
-
+                    // Fill the gap that was opened below the last position with more rows, if
+                    // possible
                     fillAfter( lastPosition + 1, lastEnd + mItemMargin );
 
-
+                    // Close up the remaining gap
                     adjustViewsStartOrEnd();
                 }
             }
@@ -5663,7 +6123,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
         if ( delta < 0 )
         {
-
+            // We only are looking to see if we are too low, not too high
             delta = 0;
         }
 
@@ -5711,13 +6171,13 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
         final long idToMatch = mSyncRowId;
 
-
+        // If there isn't a selection don't hunt for it
         if ( idToMatch == INVALID_ROW_ID )
         {
             return INVALID_POSITION;
         }
 
-
+        // Pin seed to reasonable values
         int seed = mSyncPosition;
         seed = Math.max( 0, seed );
         seed = Math.min( itemCount - 1, seed );
@@ -5726,22 +6186,23 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
         long rowId;
 
-
+        // first position scanned so far
         int first = seed;
 
-
+        // last position scanned so far
         int last = seed;
 
-
+        // True if we should move down on the next iteration
         boolean next = false;
 
-
+        // True when we have looked at the first item in the data
         boolean hitFirst;
 
-
+        // True when we have looked at the last item in the data
         boolean hitLast;
 
-
+        // Get the item ID locally (instead of getItemIdAtPosition), so
+        // we need the adapter
         final ListAdapter adapter = mAdapter;
         if ( adapter == null )
         {
@@ -5753,7 +6214,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             rowId = adapter.getItemId( seed );
             if ( rowId == idToMatch )
             {
-
+                // Found it!
                 return seed;
             }
 
@@ -5762,26 +6223,26 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
             if ( hitLast && hitFirst )
             {
-
+                // Looked at everything
                 break;
             }
 
             if ( hitFirst || ( next && !hitLast ) )
             {
-
+                // Either we hit the top, or we are trying to move down
                 last++;
                 seed = last;
 
-
+                // Try going up next time
                 next = false;
             }
             else if ( hitLast || ( !next && !hitFirst ) )
             {
-
+                // Either we hit the bottom, or we are trying to move up
                 first--;
                 seed = first;
 
-
+                // Try going down next time
                 next = true;
             }
         }
@@ -5904,7 +6365,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         }
         else
         {
-
+            // Sync the based on the offset of the first view
             View child = getChildAt( 0 );
             ListAdapter adapter = getAdapter();
 
@@ -6026,7 +6487,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
     private boolean performLongPress( final View child,
                                       final int longPressPosition, final long longPressId )
     {
-
+        // CHOICE_MODE_MULTIPLE_MODAL takes over long press.
         boolean handled = false;
 
         OnItemLongClickListener listener = getOnItemLongClickListener();
@@ -6117,7 +6578,17 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         }
         else if ( haveChildren && mFirstPosition > 0 )
         {
-
+            // Remember the position of the first child.
+            // We only do this if we are not currently at the top of
+            // the list, for two reasons:
+            //
+            // (1) The list may be in the process of becoming empty, in
+            // which case mItemCount may not be 0, but if we try to
+            // ask for any information about position 0 we will crash.
+            //
+            // (2) Being "at the top" seems like a special case, anyway,
+            // and the user wouldn't expect to end up somewhere else when
+            // they revisit the list even if its content has changed.
 
             View child = getChildAt( 0 );
             ss.viewStart = ( mIsVertical ? child.getTop() : child.getLeft() );
@@ -6183,7 +6654,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         {
             setSelectedPositionInt( INVALID_POSITION );
 
-
+            // Do this before setting mNeedSync since setNextSelectedPosition looks at mNeedSync
             setNextSelectedPositionInt( INVALID_POSITION );
 
             mSelectorPosition = INVALID_POSITION;
@@ -6212,16 +6683,32 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
     public static class LayoutParams extends ViewGroup.LayoutParams
     {
-
+        /**
+         * Type of this view as reported by the adapter
+         */
         int viewType;
 
-
+        /**
+         * The stable ID of the item this view displays
+         */
         long id = -1;
 
-
+        /**
+         * The position the view was removed from when pulled out of the
+         * scrap heap.
+         *
+         * @hide
+         */
         int scrappedFromPosition;
 
-
+        /**
+         * When a TwoWayView is measured with an AT_MOST measure spec, it needs
+         * to obtain children views to measure itself. When doing so, the children
+         * are not attached to the window, but put in the recycler which assumes
+         * they've been attached before. Setting this flag will force the reused
+         * view to be attached to the window rather than just attached to the
+         * parent.
+         */
         boolean forceAdd;
 
         public LayoutParams( int width, int height )
@@ -6406,7 +6893,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             {
                 View child = getChildAt( i );
 
-
+                // Note:  We do place AdapterView.ITEM_VIEW_TYPE_IGNORE in active views.
+                //        However, we will NOT place them into scrap views.
                 activeViews[i] = child;
             }
         }
@@ -6486,7 +6974,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             final int viewType = lp.viewType;
             final boolean scrapHasTransientState = ViewCompat.hasTransientState( scrap );
 
-
+            // Don't put views that should be ignored into the scrap heap
             if ( !shouldRecycleViewType( viewType ) || scrapHasTransientState )
             {
                 if ( scrapHasTransientState )
@@ -6511,7 +6999,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                 mScrapViews[viewType].add( scrap );
             }
 
-
+            // FIXME: Unfortunately, ViewCompat.setAccessibilityDelegate() doesn't accept
+            // null delegates.
             if ( Build.VERSION.SDK_INT >= 14 )
             {
                 scrap.setAccessibilityDelegate( null );
@@ -6568,7 +7057,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                     lp.scrappedFromPosition = mFirstActivePosition + i;
                     scrapViews.add( victim );
 
-
+                    // FIXME: Unfortunately, ViewCompat.setAccessibilityDelegate() doesn't accept
+                    // null delegates.
                     if ( Build.VERSION.SDK_INT >= 14 )
                     {
                         victim.setAccessibilityDelegate( null );
@@ -6704,7 +7194,9 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         final ListAdapter adapter = getAdapter();
         final boolean focusable = ( adapter != null && adapter.getCount() > 0 );
 
-
+        // The order in which we set focusable in touch mode/focusable may matter
+        // for the client, see View.setFocusableInTouchMode() comments for more
+        // details
         super.setFocusableInTouchMode( focusable && mDesiredFocusableInTouchModeState );
         super.setFocusable( focusable && mDesiredFocusableState );
 
@@ -6727,12 +7219,14 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             }
             else
             {
-
-
+                // If the caller just removed our empty view, make sure the list
+                // view is visible
                 setVisibility( View.VISIBLE );
             }
 
-
+            // We are now GONE, so pending layouts will not be dispatched.
+            // Force one here to make sure that the state of the list matches
+            // the state of the adapter.
             if ( mDataChanged )
             {
                 layout( getLeft(), getTop(), getRight(), getBottom() );
@@ -6760,7 +7254,8 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             mOldItemCount = mItemCount;
             mItemCount = getAdapter().getCount();
 
-
+            // Detect the case where a cursor that was previously invalidated has
+            // been re-populated with new data.
             if ( TwoWayView.this.mHasStableIds && mInstanceState != null
                     && mOldItemCount == 0 && mItemCount > 0 )
             {
@@ -6783,12 +7278,12 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
 
             if ( TwoWayView.this.mHasStableIds )
             {
-
-
+                // Remember the current state for the case where our hosting activity is being
+                // stopped and later restarted
                 mInstanceState = TwoWayView.this.onSaveInstanceState();
             }
 
-
+            // Data is invalid so we should reset our state
             mOldItemCount = mItemCount;
             mItemCount = 0;
 
@@ -6816,13 +7311,17 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         SparseBooleanArray       checkState;
         LongSparseArray<Integer> checkIdState;
 
-
+        /**
+         * Constructor called from {@link TwoWayView#onSaveInstanceState()}
+         */
         SavedState( Parcelable superState )
         {
             super( superState );
         }
 
-
+        /**
+         * Constructor called from {@link #CREATOR}
+         */
         private SavedState( Parcel in )
         {
             super( in );
@@ -6910,8 +7409,9 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         {
             if ( mDataChanged )
             {
-
-
+                // Data has changed between when this SelectionNotifier
+                // was posted and now. We need to wait until the AdapterView
+                // has been synched to the new data.
                 if ( mAdapter != null )
                 {
                     post( this );
@@ -7111,7 +7611,9 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         private int mSelectedPosition;
         private int mAmountToScroll;
 
-
+        /**
+         * How {@link TwoWayView#arrowScrollFocused} returns its values.
+         */
         void populate( int selectedPosition, int amountToScroll )
         {
             mSelectedPosition = selectedPosition;
@@ -7139,13 +7641,13 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             final int position = getPositionForView( host );
             final ListAdapter adapter = getAdapter();
 
-
+            // Cannot perform actions on invalid items
             if ( position == INVALID_POSITION || adapter == null )
             {
                 return;
             }
 
-
+            // Cannot perform actions on disabled items
             if ( !isEnabled() || !adapter.isEnabled( position ) )
             {
                 return;
@@ -7185,13 +7687,13 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             final int position = getPositionForView( host );
             final ListAdapter adapter = getAdapter();
 
-
+            // Cannot perform actions on invalid items
             if ( position == INVALID_POSITION || adapter == null )
             {
                 return false;
             }
 
-
+            // Cannot perform actions on disabled items
             if ( !isEnabled() || !adapter.isEnabled( position ) )
             {
                 return false;

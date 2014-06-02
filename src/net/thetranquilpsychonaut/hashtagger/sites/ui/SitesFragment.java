@@ -597,7 +597,7 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
         }
         else
         {
-            viewHolder.sitesEmptyView.setText( "No results found. Try again?" );
+            viewHolder.sitesEmptyView.setText( String.format( "No results found for %s. Try again?", getEnteredHashtag() ) );
         }
         postNextTimedSearch();
     }

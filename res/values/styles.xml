@@ -4,19 +4,25 @@
         <item name="sitesListRowStyle">@style/sitesListRowStyle</item>
         <item name="sitesFooterStyle">@style/sitesFooterStyle</item>
         <item name="newResultsBarStyle">@style/newResultsBarStyle</item>
+        <item name="GPlusDetailViewStyle">@style/GPlusDetailViewStyle</item>
     </style>
 
     <style name="TextView_Default">
-        <item name="android:padding">@dimen/default_text_padding</item>
+        <item name="android:padding">5dp</item>
     </style>
 
-    <style name="ErrorText">
+    <style name="TextView_Small" parent="TextView_Default">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/text_faded</item>
+    </style>
+
+    <style name="ErrorText" parent="TextView_Default">
         <item name="android:textSize">20sp</item>
         <item name="android:lineSpacingMultiplier">1.2</item>
         <item name="android:textColor">@color/error_red</item>
     </style>
 
-    <style name="LoginButton">
+    <style name="LoginButton_Text">
         <item name="android:textStyle">bold</item>
         <item name="android:paddingRight">10dp</item>
         <item name="android:textColor">@android:color/white</item>
@@ -40,14 +46,12 @@
         <item name="android:textSize">15sp</item>
     </style>
 
-    <style name="DateText" parent="TextView_Default">
-        <item name="android:textSize">10sp</item>
-        <item name="android:textColor">@color/text_faded</item>
+    <style name="DateText" parent="TextView_Small">
         <item name="android:maxLines">1</item>
     </style>
 
-    <style name="TwitterScreenName" parent="DateText">
-
+    <style name="TwitterScreenName" parent="TextView_Small">
+        <item name="android:maxLines">1</item>
     </style>
 
     <style name="sitesListRowStyle" parent="AppTheme">
@@ -60,6 +64,11 @@
 
     <style name="newResultsBarStyle" parent="AppTheme">
         <item name="android:background">#cc000000</item>
+    </style>
+
+
+    <style name="GPlusDetailViewStyle">
+        <item name="android:background">@drawable/selector_picture_frame</item>
     </style>
 
     <style name="sitesButtonStyle" parent="android:Widget.Holo.Light.Button.Borderless.Small">
@@ -95,18 +104,39 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="Link">
+    <style name="Link" parent="TextView_Default">
         <item name="android:textColor">@android:color/holo_blue_dark</item>
         <item name="android:background">@drawable/selector_link_background</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
-        <item name="android:padding">@dimen/link_padding</item>
     </style>
 
     <style name="SavedHashtagText" parent="TextView_Default">
         <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="Details_Title" parent="TextView_Default">
+        <item name="android:textStyle">bold</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="Details_Description" parent="TextView_Small">
+        <item name="android:maxLines">3</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="Album_Count" parent="TextView_Small">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="DialogAnim">
+        <item name="android:windowEnterAnimation">@android:anim/slide_in_left</item>
+        <item name="android:windowExitAnimation">@android:anim/slide_out_right</item>
     </style>
 
     <!-- Styles for ButtonToast -->

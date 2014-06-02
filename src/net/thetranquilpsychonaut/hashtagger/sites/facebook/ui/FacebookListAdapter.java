@@ -15,9 +15,10 @@ import java.util.List;
 public class FacebookListAdapter extends SitesListAdapter
 {
     public static final int POST_TYPE_NORMAL = 0;
-    public static final int POST_TYPE_MEDIA  = 1;
-    public static final int POST_TYPE_LINK   = 2;
-    public static final int POST_TYPE_COUNT  = 3;
+    public static final int POST_TYPE_PHOTO  = 1;
+    public static final int POST_TYPE_VIDEO  = 2;
+    public static final int POST_TYPE_LINK   = 3;
+    public static final int POST_TYPE_COUNT  = 4;
 
     protected FacebookListAdapter( Context context, int textViewResourceId, List<?> objects, List<Integer> resultTypes )
     {
@@ -47,16 +48,22 @@ public class FacebookListAdapter extends SitesListAdapter
                     convertView = new FacebookNormalRow( context );
                 }
                 break;
-            case POST_TYPE_MEDIA:
-                if ( null == convertView || !( convertView instanceof FacebookMediaRow ) )
+            case POST_TYPE_PHOTO:
+                if ( null == convertView || !( convertView instanceof FacebookPhotoRow ) )
                 {
-                    convertView = new FacebookMediaRow( context );
+                    convertView = new FacebookPhotoRow( context );
+                }
+                break;
+            case POST_TYPE_VIDEO:
+                if ( null == convertView || !( convertView instanceof FacebookDetailRow ) )
+                {
+                    convertView = new FacebookDetailRow( context );
                 }
                 break;
             case POST_TYPE_LINK:
-                if ( null == convertView || !( convertView instanceof FacebookLinkRow ) )
+                if ( null == convertView || !( convertView instanceof FacebookDetailRow ) )
                 {
-                    convertView = new FacebookLinkRow( context );
+                    convertView = new FacebookDetailRow( context );
                 }
                 break;
         }
@@ -66,14 +73,16 @@ public class FacebookListAdapter extends SitesListAdapter
     public static int getPostType( Post post )
     {
         int postType = POST_TYPE_NORMAL;
-        boolean hasMedia = ( "video".equals( post.getType() ) || "photo".equals( post.getType() ) );
-        boolean hasLink = "link".equals( post.getType() );
 
-        if ( hasMedia )
+        if ( "photo".equals( post.getType() ) )
         {
-            postType = POST_TYPE_MEDIA;
+            postType = POST_TYPE_PHOTO;
         }
-        else if ( hasLink )
+        else if ( "video".equals( post.getType() ) )
+        {
+            postType = POST_TYPE_VIDEO;
+        }
+        else if ( "link".equals( post.getType() ) )
         {
             postType = POST_TYPE_LINK;
         }

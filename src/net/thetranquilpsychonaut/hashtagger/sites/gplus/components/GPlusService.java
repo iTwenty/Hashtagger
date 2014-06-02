@@ -114,7 +114,12 @@ public class GPlusService extends SitesService
                     .setClientSecrets( GPlusConfig.SECRETS )
                     .build();
             credential.setAccessToken( tokenResponse.getAccessToken() );
-            Person me = new Plus.Builder( httpTransport, jsonFactory, credential ).setApplicationName( GPlusConfig.APP_NAME ).build().people().get( "me" ).execute();
+            Person me = new Plus.Builder( httpTransport, jsonFactory, credential )
+                    .setApplicationName( GPlusConfig.APP_NAME )
+                    .build()
+                    .people()
+                    .get( "me" )
+                    .execute();
             userName = me.getDisplayName();
         }
         catch ( IOException e )

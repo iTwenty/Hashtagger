@@ -1,7 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -9,26 +8,29 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewImageActivity;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+
+import java.util.ArrayList;
 
 /**
  * Created by itwenty on 5/1/14.
  */
-public class TwitterMediaRow extends TwitterListRow implements View.OnClickListener
+public class TwitterPhotoRow extends TwitterListRow implements View.OnClickListener
 {
     private ImageView imgvMediaThumb;
 
-    protected TwitterMediaRow( Context context )
+    protected TwitterPhotoRow( Context context )
     {
         super( context );
     }
 
-    protected TwitterMediaRow( Context context, AttributeSet attrs )
+    protected TwitterPhotoRow( Context context, AttributeSet attrs )
     {
         super( context, attrs );
     }
 
-    protected TwitterMediaRow( Context context, AttributeSet attrs, int defStyle )
+    protected TwitterPhotoRow( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
     }
@@ -36,7 +38,7 @@ public class TwitterMediaRow extends TwitterListRow implements View.OnClickListe
     @Override
     protected void init( Context context )
     {
-        inflate( context, R.layout.twitter_media_row, this );
+        inflate( context, R.layout.twitter_photo_row, this );
         imgvMediaThumb = ( ImageView ) findViewById( R.id.imgv_thumbnail );
         imgvMediaThumb.setOnClickListener( this );
         super.init( context );
@@ -75,8 +77,8 @@ public class TwitterMediaRow extends TwitterListRow implements View.OnClickListe
     @Override
     public void onClick( View v )
     {
-        Intent intent = new Intent( getContext(), ViewImageActivity.class );
-        intent.putExtra( ViewImageActivity.IMAGE_URL_KEY, status.getMediaEntities()[0].getMediaURL() + ":large" );
-        getContext().startActivity( intent );
+        ArrayList<String> imageUrls = new ArrayList<String>( 1 );
+        imageUrls.add( Helper.getTwitterLargePhotoUrl( status.getMediaEntities()[0].getMediaURL() ) );
+        ViewAlbumActivity.createAndStartActivity( getContext(), imageUrls, 0 );
     }
 }

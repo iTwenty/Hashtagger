@@ -22,7 +22,7 @@ public class FacebookDetailActivity extends SitesDetailActivity
     private Post           post;
     private int            postType;
 
-    private FacebookMediaView facebookMediaView = null;
+    private FacebookDetailView facebookMediaView = null;
 
     @Override
     protected void onCreate( Bundle savedInstanceState )
@@ -46,16 +46,6 @@ public class FacebookDetailActivity extends SitesDetailActivity
         tvMessage.setText( post.getMessage() );
         Helper.linkifyFacebook( tvMessage );
         tvMessage.setMovementMethod( LinkMovementMethod.getInstance() );
-        if ( postType == FacebookListAdapter.POST_TYPE_MEDIA )
-        {
-            facebookMediaView = new FacebookMediaView( this );
-            facebookMediaView.setId( R.id.FacebookMediaView_Detail );
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams( RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT );
-            params.addRule( RelativeLayout.BELOW, R.id.tv_post_text );
-            params.addRule( RelativeLayout.CENTER_HORIZONTAL );
-            rlRoot.addView( facebookMediaView, params );
-            facebookMediaView.showMedia( this.post );
-        }
     }
 
     @Override

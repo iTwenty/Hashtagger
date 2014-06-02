@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/image">
+        <bitmap android:src="@drawable/play_button"/>
+    </item>
+    <item android:id="@+id/play">
+        <bitmap android:src="@drawable/play_button"
+                android:gravity="center"/>
+    </item>
+</layer-list>

@@ -33,14 +33,14 @@ public class FacebookService extends SitesService
         {
             if ( !AccountPrefs.areFacebookDetailsPresent() )
             {
-                throw new FacebookException( "Facebook access token nor found" );
+                throw new FacebookException( "Facebook access token not found" );
             }
             Facebook facebook = new FacebookFactory( FacebookConfig.CONFIGURATION ).getInstance();
             facebook.setOAuthAccessToken( new AccessToken( AccountPrefs.getFacebookAccessToken() ) );
             switch ( searchType )
             {
                 case INITIAL:
-                    responseList = facebook.searchPosts( hashtag.replace( "#", "" ) );
+                    responseList = facebook.searchPosts( hashtag );
                     break;
                 case OLDER:
                     responseList = facebook.fetchNext( FacebookSearchHandler.oldestPage );
