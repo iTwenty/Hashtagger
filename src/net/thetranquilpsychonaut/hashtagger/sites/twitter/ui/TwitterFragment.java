@@ -122,7 +122,7 @@ public class TwitterFragment extends SitesFragment
     }
 
     @Override
-    protected void updateResultsAndTypes( SearchType searchType, List<?> searchResults )
+    protected void updateResultsAndTypes( int searchType, List<?> searchResults )
     {
         List<Status> newResults = ( List<Status> ) searchResults;
         List<Integer> newResultTypes = new ArrayList<Integer>( newResults.size() );

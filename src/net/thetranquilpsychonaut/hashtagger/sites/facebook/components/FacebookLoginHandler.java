@@ -42,7 +42,7 @@ public class FacebookLoginHandler extends SitesLoginHandler
     @Override
     public void onReceive( Context context, Intent intent )
     {
-        Result result = ( Result ) intent.getSerializableExtra( Result.RESULT_KEY );
+        int result = intent.getIntExtra( Result.RESULT_KEY, -1 );
         if ( result == Result.FAILURE )
         {
             facebookLoginListener.onError();

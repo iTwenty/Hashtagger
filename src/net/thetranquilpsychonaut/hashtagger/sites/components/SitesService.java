@@ -1,38 +1,98 @@
 package net.thetranquilpsychonaut.hashtagger.sites.components;
 
+import android.app.Service;
 import android.content.Intent;
+import android.os.*;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
 
-/**
- * Created by itwenty on 4/2/14.
- */
-public abstract class SitesService extends MyIntentService implements SearchActionName, LoginActionName
+public abstract class SitesService extends Service implements SearchActionName, LoginActionName
 {
     private static final String SITES_SERVICE_NAME = HashtaggerApp.NAMESPACE + "sites_service_name";
 
+    private volatile Looper         mServiceLooper;
+    private volatile ServiceHandler mServiceHandler;
+    private          String         mName;
+    private          boolean        mRedelivery;
+
+    private final class ServiceHandler extends Handler
+    {
+        public ServiceHandler( Looper looper )
+        {
+            super( looper );
+        }
+
+        @Override
+        public void handleMessage( Message msg )
+        {
+            onHandleIntent( ( Intent ) msg.obj );
+            stopSelf( msg.arg1 );
+        }
+    }
+
     public SitesService()
     {
-        super( SITES_SERVICE_NAME );
+        super();
+        mName = SITES_SERVICE_NAME;
+    }
+
+    public void setIntentRedelivery( boolean enabled )
+    {
+        mRedelivery = enabled;
     }
 
     @Override
+    public void onCreate()
+    {
+        super.onCreate();
+        HandlerThread thread = new HandlerThread( "IntentService[" + mName + "]" );
+        thread.start();
+        mServiceLooper = thread.getLooper();
+        mServiceHandler = new ServiceHandler( mServiceLooper );
+    }
+
+    @Override
+    public void onStart( Intent intent, int startId )
+    {
+        Message msg = mServiceHandler.obtainMessage();
+        msg.arg1 = startId;
+        msg.obj = intent;
+        mServiceHandler.removeCallbacksAndMessages( null );
+        mServiceHandler.sendMessage( msg );
+    }
+
+    @Override
+    public int onStartCommand( Intent intent, int flags, int startId )
+    {
+        onStart( intent, startId );
+        return mRedelivery ? START_REDELIVER_INTENT : START_NOT_STICKY;
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        mServiceLooper.quit();
+    }
+
+    @Override
+    public IBinder onBind( Intent intent )
+    {
+        return null;
+    }
+
     protected void onHandleIntent( Intent intent )
     {
-        ActionType actionType = ( ActionType ) intent.getSerializableExtra( ActionType.ACTION_TYPE_KEY );
+        int actionType = intent.getIntExtra( ActionType.ACTION_TYPE_KEY, -1 );
         Intent resultIntent = new Intent();
         if ( actionType == ActionType.SEARCH )
         {
             resultIntent = doSearch( intent );
             resultIntent.setAction( getSearchActionName() );
         }
-        else
+        else if ( actionType == ActionType.AUTH )
         {
-            if ( actionType == ActionType.AUTH )
-            {
-                resultIntent = doAuth( intent );
-                resultIntent.setAction( getLoginActionName() );
-            }
+            resultIntent = doAuth( intent );
+            resultIntent.setAction( getLoginActionName() );
         }
         resultIntent.addCategory( Intent.CATEGORY_DEFAULT );
         sendBroadcast( resultIntent );

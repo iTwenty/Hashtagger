@@ -22,23 +22,25 @@
         <item name="android:textColor">@color/error_red</item>
     </style>
 
-    <style name="LoginButton_Text">
+    <style name="LoginButton_Text" parent="TextView_Default">
         <item name="android:textStyle">bold</item>
         <item name="android:paddingRight">10dp</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
 
-    <style name="MainMessage">
+    <style name="MainMessage" parent="TextView_Default">
         <item name="android:lineSpacingMultiplier">1.2</item>
         <item name="android:maxLines">10</item>
+        <item name="android:paddingLeft">0dp</item>
         <item name="android:paddingTop">10dp</item>
         <item name="android:paddingBottom">10dp</item>
         <item name="android:paddingRight">10dp</item>
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="MainMessage_Detail">
+    <style name="MainMessage_Detail" parent="TextView_Default">
         <item name="android:lineSpacingMultiplier">1.2</item>
+        <item name="android:paddingLeft">0dp</item>
         <item name="android:paddingTop">10dp</item>
         <item name="android:paddingBottom">10dp</item>
         <item name="android:paddingRight">10dp</item>

@@ -53,8 +53,8 @@ public class FacebookSearchHandler extends SitesSearchHandler
             @Override
             public void run()
             {
-                final SearchType searchType = ( SearchType ) intent.getSerializableExtra( SearchType.SEARCH_TYPE_KEY );
-                Result resultType = ( Result ) intent.getSerializableExtra( Result.RESULT_KEY );
+                final int searchType = intent.getIntExtra( SearchType.SEARCH_TYPE_KEY, -1 );
+                int resultType = intent.getIntExtra( Result.RESULT_KEY, -1 );
                 if ( resultType == Result.FAILURE )
                 {
                     sitesSearchListener.onError( searchType );

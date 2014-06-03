@@ -546,42 +546,42 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
      */
 
     @Override
-    public void whileSearching( SearchType searchType )
+    public void whileSearching( int searchType )
     {
         switch ( searchType )
         {
-            case INITIAL:
+            case SearchType.INITIAL:
                 results.clear();
                 resultTypes.clear();
                 sitesListAdapter.notifyDataSetChanged();
                 showView( LOADING );
                 break;
-            case OLDER:
+            case SearchType.OLDER:
                 viewHolder.sitesFooterView.showView( SitesFooterView.LOADING );
                 break;
-            case NEWER:
+            case SearchType.NEWER:
                 viewHolder.srlReady.setRefreshing( true );
                 break;
-            case TIMED:
+            case SearchType.TIMED:
                 break;
         }
     }
 
     @Override
-    public void afterSearching( SearchType searchType, List<?> searchResults )
+    public void afterSearching( int searchType, List<?> searchResults )
     {
         switch ( searchType )
         {
-            case INITIAL:
+            case SearchType.INITIAL:
                 afterInitialSearch( searchResults );
                 break;
-            case OLDER:
+            case SearchType.OLDER:
                 afterOlderSearch( searchResults );
                 break;
-            case NEWER:
+            case SearchType.NEWER:
                 afterNewerSearch( searchResults );
                 break;
-            case TIMED:
+            case SearchType.TIMED:
                 afterTimedSearch( searchResults );
                 break;
         }
@@ -650,25 +650,25 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
         postNextTimedSearch();
     }
 
-    protected abstract void updateResultsAndTypes( SearchType searchType, List<?> searchResults );
+    protected abstract void updateResultsAndTypes( int searchType, List<?> searchResults );
 
     @Override
-    public void onError( SearchType searchType )
+    public void onError( int searchType )
     {
         switch ( searchType )
         {
-            case INITIAL:
+            case SearchType.INITIAL:
                 showView( READY );
                 viewHolder.sitesEmptyView.setText( "Something went wrong :( Try again?" );
                 break;
-            case OLDER:
+            case SearchType.OLDER:
                 viewHolder.sitesFooterView.showView( SitesFooterView.ERROR );
                 break;
-            case NEWER:
+            case SearchType.NEWER:
                 viewHolder.srlReady.setRefreshing( false );
                 Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_newer_results_error ), Toast.LENGTH_LONG ).show();
                 break;
-            case TIMED:
+            case SearchType.TIMED:
                 postNextTimedSearch();
                 break;
         }

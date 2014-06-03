@@ -26,7 +26,7 @@ public class TwitterService extends SitesService
     protected Intent doSearch( Intent searchIntent )
     {
         isSearchRunning = true;
-        final SearchType searchType = ( SearchType ) searchIntent.getSerializableExtra( SearchType.SEARCH_TYPE_KEY );
+        final int searchType = searchIntent.getIntExtra( SearchType.SEARCH_TYPE_KEY, -1 );
         final String hashtag = searchIntent.getStringExtra( HashtaggerApp.HASHTAG_KEY );
         Intent resultIntent = new Intent();
         resultIntent.putExtra( SearchType.SEARCH_TYPE_KEY, searchType );
@@ -49,17 +49,17 @@ public class TwitterService extends SitesService
 
             switch ( searchType )
             {
-                case INITIAL:
+                case SearchType.INITIAL:
                     query.setCount( HashtaggerApp.TWITTER_SEARCH_LIMIT );
                     break;
-                case OLDER:
+                case SearchType.OLDER:
                     query.setCount( HashtaggerApp.TWITTER_SEARCH_LIMIT );
                     query.setMaxId( TwitterSearchHandler.maxId );
                     break;
-                case NEWER:
+                case SearchType.NEWER:
                     query.setSinceId( TwitterSearchHandler.sinceId );
                     break;
-                case TIMED:
+                case SearchType.TIMED:
                     query.setSinceId( TwitterSearchHandler.sinceId );
             }
             queryResult = twitter.search( query );
@@ -68,7 +68,7 @@ public class TwitterService extends SitesService
         {
             Helper.debug( "Error while searching Twitter for " + hashtag + " : " + e.getMessage() );
         }
-        Result searchResult = null == queryResult ? Result.FAILURE : Result.SUCCESS;
+        int searchResult = null == queryResult ? Result.FAILURE : Result.SUCCESS;
         resultIntent.putExtra( Result.RESULT_KEY, searchResult );
         if ( searchResult == Result.SUCCESS )
         {
@@ -108,15 +108,15 @@ public class TwitterService extends SitesService
     @Override
     protected Intent doAuth( Intent intent )
     {
-        final AuthType authType = ( AuthType ) intent.getSerializableExtra( AuthType.AUTH_TYPE_KEY );
+        final int authType = intent.getIntExtra( AuthType.AUTH_TYPE_KEY, -1 );
         Intent resultIntent = new Intent();
         resultIntent.putExtra( AuthType.AUTH_TYPE_KEY, authType );
         switch ( authType )
         {
-            case REQUEST:
+            case AuthType.REQUEST:
                 resultIntent = doRequestAuth( resultIntent );
                 break;
-            case ACCESS:
+            case AuthType.ACCESS:
                 final RequestToken requestToken = ( RequestToken ) intent.getSerializableExtra( HashtaggerApp.TWITTER_REQUEST_TOKEN_KEY );
                 final String oauthVerifier = intent.getStringExtra( HashtaggerApp.TWITTER_OAUTH_VERIFIER_KEY );
                 resultIntent = doAccessAuth( resultIntent, requestToken, oauthVerifier );
@@ -139,7 +139,7 @@ public class TwitterService extends SitesService
         {
             Helper.debug( "Error while obtaining twitter request token : " + e.getMessage() );
         }
-        Result requestResult = null == requestToken ? Result.FAILURE : Result.SUCCESS;
+        int requestResult = null == requestToken ? Result.FAILURE : Result.SUCCESS;
         resultIntent.putExtra( Result.RESULT_KEY, requestResult );
         if ( requestResult == Result.SUCCESS )
         {
@@ -163,7 +163,7 @@ public class TwitterService extends SitesService
         {
             Helper.debug( "Error while obtaining twitter access token : " + e.getMessage() );
         }
-        Result accessResult = null == accessToken ? Result.FAILURE : Result.SUCCESS;
+        int accessResult = null == accessToken ? Result.FAILURE : Result.SUCCESS;
         resultIntent.putExtra( Result.RESULT_KEY, accessResult );
         if ( accessResult == Result.SUCCESS )
         {

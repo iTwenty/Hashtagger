@@ -24,7 +24,7 @@ public class FacebookService extends SitesService
     protected Intent doSearch( Intent searchIntent )
     {
         isSearchRunning = true;
-        final SearchType searchType = ( SearchType ) searchIntent.getSerializableExtra( SearchType.SEARCH_TYPE_KEY );
+        final int searchType = searchIntent.getIntExtra( SearchType.SEARCH_TYPE_KEY, -1 );
         final String hashtag = searchIntent.getStringExtra( HashtaggerApp.HASHTAG_KEY );
         Intent resultIntent = new Intent();
         resultIntent.putExtra( SearchType.SEARCH_TYPE_KEY, searchType );
@@ -39,16 +39,16 @@ public class FacebookService extends SitesService
             facebook.setOAuthAccessToken( new AccessToken( AccountPrefs.getFacebookAccessToken() ) );
             switch ( searchType )
             {
-                case INITIAL:
+                case SearchType.INITIAL:
                     responseList = facebook.searchPosts( hashtag );
                     break;
-                case OLDER:
+                case SearchType.OLDER:
                     responseList = facebook.fetchNext( FacebookSearchHandler.oldestPage );
                     break;
-                case NEWER:
+                case SearchType.NEWER:
                     responseList = facebook.fetchPrevious( FacebookSearchHandler.newestPage );
                     break;
-                case TIMED:
+                case SearchType.TIMED:
                     responseList = facebook.fetchPrevious( FacebookSearchHandler.newestPage );
                     break;
             }
@@ -57,7 +57,7 @@ public class FacebookService extends SitesService
         {
             Helper.debug( "Error while searching Facebook for " + hashtag + " : " + e.getMessage() );
         }
-        Result searchResult = null == responseList ? Result.FAILURE : Result.SUCCESS;
+        int searchResult = null == responseList ? Result.FAILURE : Result.SUCCESS;
         resultIntent.putExtra( Result.RESULT_KEY, searchResult );
         if ( searchResult == Result.SUCCESS )
         {
@@ -98,7 +98,7 @@ public class FacebookService extends SitesService
         {
             Helper.debug( "Failed to get Facebook access token" );
         }
-        Result accessResult = null == accessToken ? Result.FAILURE : Result.SUCCESS;
+        int accessResult = null == accessToken ? Result.FAILURE : Result.SUCCESS;
         resultIntent.putExtra( Result.RESULT_KEY, accessResult );
         if ( accessResult == Result.SUCCESS )
         {
@@ -122,7 +122,6 @@ public class FacebookService extends SitesService
 
     public static boolean isSearchRunning()
     {
-
         return isSearchRunning;
     }
 }

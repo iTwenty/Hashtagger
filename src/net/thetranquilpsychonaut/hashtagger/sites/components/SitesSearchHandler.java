@@ -16,11 +16,11 @@ public abstract class SitesSearchHandler extends BroadcastReceiver implements Se
 {
     public interface SitesSearchListener
     {
-        public void whileSearching( SearchType searchType );
+        public void whileSearching( int searchType );
 
-        public void afterSearching( SearchType searchType, List<?> results );
+        public void afterSearching( int searchType, List<?> results );
 
-        public void onError( SearchType searchType );
+        public void onError( int searchType );
     }
 
     protected SitesSearchListener sitesSearchListener;
@@ -30,14 +30,14 @@ public abstract class SitesSearchHandler extends BroadcastReceiver implements Se
         sitesSearchListener = listener;
     }
 
-    public void beginSearch( SearchType searchType, String hashtag )
+    public void beginSearch( int searchType, String hashtag )
     {
-        Intent searchIntent = new Intent( HashtaggerApp.app.getApplicationContext(), getServiceClass() );
+        Intent searchIntent = new Intent( HashtaggerApp.app, getServiceClass() );
         searchIntent.putExtra( ActionType.ACTION_TYPE_KEY, ActionType.SEARCH );
         searchIntent.putExtra( SearchType.SEARCH_TYPE_KEY, searchType );
         searchIntent.putExtra( HashtaggerApp.HASHTAG_KEY, hashtag );
         searchIntent = addExtraParameters( searchIntent );
-        HashtaggerApp.app.getApplicationContext().startService( searchIntent );
+        HashtaggerApp.app.startService( searchIntent );
         sitesSearchListener.whileSearching( searchType );
     }
 

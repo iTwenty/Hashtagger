@@ -33,7 +33,7 @@ public class GPlusService extends SitesService
     protected Intent doSearch( Intent searchIntent )
     {
         isSearchRunning = true;
-        final SearchType searchType = ( SearchType ) searchIntent.getSerializableExtra( SearchType.SEARCH_TYPE_KEY );
+        final int searchType = searchIntent.getIntExtra( SearchType.SEARCH_TYPE_KEY, -1 );
         final String hashtag = searchIntent.getStringExtra( HashtaggerApp.HASHTAG_KEY );
         Intent resultIntent = new Intent();
         resultIntent.putExtra( SearchType.SEARCH_TYPE_KEY, searchType );
@@ -57,12 +57,15 @@ public class GPlusService extends SitesService
                     .setApplicationName( GPlusConfig.APP_NAME )
                     .build();
             Plus.Activities.Search searchActivities = plus.activities().search( hashtag );
+            // Google+ API has no method to fetch results newer than specified token.
+            // So we simply let it do a normal search for NEWER and TIMED searchtypes
+            // and remove results we have already received in GPlusSearchHandler's onReceive()
             switch ( searchType )
             {
-                case INITIAL:
+                case SearchType.INITIAL:
                     searchActivities.setMaxResults( HashtaggerApp.GPLUS_SEARCH_LIMIT );
                     break;
-                case OLDER:
+                case SearchType.OLDER:
                     searchActivities.setMaxResults( HashtaggerApp.GPLUS_SEARCH_LIMIT );
                     searchActivities.setPageToken( GPlusSearchHandler.nextPageToken );
                     break;
@@ -75,7 +78,7 @@ public class GPlusService extends SitesService
         {
             Helper.debug( "Error while searching Google+ for " + hashtag + " : " + e.getMessage() );
         }
-        Result searchResult = null == results ? Result.FAILURE : Result.SUCCESS;
+        int searchResult = null == results ? Result.FAILURE : Result.SUCCESS;
         if ( searchResult == Result.SUCCESS )
         {
             if ( searchType != SearchType.NEWER && searchType != SearchType.TIMED )
@@ -126,7 +129,7 @@ public class GPlusService extends SitesService
         {
             Helper.debug( "Failed to get Google+ access token" + e.getMessage() );
         }
-        Result accessResult = null == tokenResponse ? Result.FAILURE : Result.SUCCESS;
+        int accessResult = null == tokenResponse ? Result.FAILURE : Result.SUCCESS;
         resultIntent.putExtra( Result.RESULT_KEY, accessResult );
         if ( accessResult == Result.SUCCESS )
         {

@@ -44,7 +44,7 @@ public class GPlusLoginHandler extends SitesLoginHandler
     public void onReceive( Context context, Intent intent )
     {
         Helper.debug( "GPlusLoginHandler onReceive" );
-        Result result = ( Result ) intent.getSerializableExtra( Result.RESULT_KEY );
+        int result = intent.getIntExtra( Result.RESULT_KEY, -1 );
         if ( result == Result.FAILURE )
         {
             gPlusLoginListener.onError();

@@ -47,19 +47,19 @@ public class GPlusSearchHandler extends SitesSearchHandler
             @Override
             public void run()
             {
-                final SearchType searchType = ( SearchType ) intent.getSerializableExtra( SearchType.SEARCH_TYPE_KEY );
-                Result resultType = ( Result ) intent.getSerializableExtra( Result.RESULT_KEY );
+                final int searchType = intent.getIntExtra( SearchType.SEARCH_TYPE_KEY, -1 );
+                int resultType = intent.getIntExtra( Result.RESULT_KEY, -1 );
                 if ( resultType == Result.FAILURE )
                 {
                     sitesSearchListener.onError( searchType );
                     return;
                 }
                 final List<Activity> results = GPlusData.SearchData.popSearchResults();
-                if ( searchType == searchType.INITIAL && !results.isEmpty() )
+                if ( searchType == SearchType.INITIAL && !results.isEmpty() )
                 {
                     newestActivity = results.get( 0 );
                 }
-                else if ( searchType == searchType.NEWER || searchType == searchType.TIMED )
+                else if ( searchType == SearchType.NEWER || searchType == SearchType.TIMED )
                 {
                     Iterator<Activity> iterator = results.iterator();
                     while ( iterator.hasNext() )
