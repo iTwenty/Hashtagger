@@ -36,7 +36,13 @@ public class GPlusSearchHandler extends SitesSearchHandler
     @Override
     public boolean isSearchRunning()
     {
-        return GPlusService.isIsSearchRunning();
+        return GPlusService.getIsServiceRunning();
+    }
+
+    @Override
+    public void cancelCurrentSearch()
+    {
+        GPlusService.setIsServiceRunning( false );
     }
 
     @Override

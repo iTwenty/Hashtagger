@@ -61,4 +61,6 @@ public abstract class SitesSearchHandler extends BroadcastReceiver implements Se
     }
 
     public abstract boolean isSearchRunning();
+
+    public abstract void cancelCurrentSearch();
 }

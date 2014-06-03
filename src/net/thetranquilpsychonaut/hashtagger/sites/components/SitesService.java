@@ -12,7 +12,6 @@ public abstract class SitesService extends Service implements SearchActionName, 
 
     private volatile Looper         mServiceLooper;
     private volatile ServiceHandler mServiceHandler;
-    private          String         mName;
     private          boolean        mRedelivery;
 
     private final class ServiceHandler extends Handler
@@ -25,15 +24,28 @@ public abstract class SitesService extends Service implements SearchActionName, 
         @Override
         public void handleMessage( Message msg )
         {
-            onHandleIntent( ( Intent ) msg.obj );
+            setServiceRunning( true );
+            Intent intent = ( Intent ) msg.obj;
+            int actionType = msg.what;
+            Intent resultIntent = new Intent();
+            if ( actionType == ActionType.SEARCH )
+            {
+                resultIntent = doSearch( intent );
+                resultIntent.setAction( getSearchActionName() );
+            }
+            else if ( actionType == ActionType.AUTH )
+            {
+                resultIntent = doAuth( intent );
+                resultIntent.setAction( getLoginActionName() );
+            }
+            resultIntent.addCategory( Intent.CATEGORY_DEFAULT );
+            if ( isServiceRunning() )
+            {
+                sendBroadcast( resultIntent );
+            }
+            setServiceRunning( false );
             stopSelf( msg.arg1 );
         }
-    }
-
-    public SitesService()
-    {
-        super();
-        mName = SITES_SERVICE_NAME;
     }
 
     public void setIntentRedelivery( boolean enabled )
@@ -45,7 +57,7 @@ public abstract class SitesService extends Service implements SearchActionName, 
     public void onCreate()
     {
         super.onCreate();
-        HandlerThread thread = new HandlerThread( "IntentService[" + mName + "]" );
+        HandlerThread thread = new HandlerThread( "IntentService[" + SITES_SERVICE_NAME + "]" );
         thread.start();
         mServiceLooper = thread.getLooper();
         mServiceHandler = new ServiceHandler( mServiceLooper );
@@ -57,7 +69,8 @@ public abstract class SitesService extends Service implements SearchActionName, 
         Message msg = mServiceHandler.obtainMessage();
         msg.arg1 = startId;
         msg.obj = intent;
-        mServiceHandler.removeCallbacksAndMessages( null );
+        msg.what = intent.getIntExtra( ActionType.ACTION_TYPE_KEY, -1 );
+        mServiceHandler.removeMessages( msg.what );
         mServiceHandler.sendMessage( msg );
     }
 
@@ -80,25 +93,11 @@ public abstract class SitesService extends Service implements SearchActionName, 
         return null;
     }
 
-    protected void onHandleIntent( Intent intent )
-    {
-        int actionType = intent.getIntExtra( ActionType.ACTION_TYPE_KEY, -1 );
-        Intent resultIntent = new Intent();
-        if ( actionType == ActionType.SEARCH )
-        {
-            resultIntent = doSearch( intent );
-            resultIntent.setAction( getSearchActionName() );
-        }
-        else if ( actionType == ActionType.AUTH )
-        {
-            resultIntent = doAuth( intent );
-            resultIntent.setAction( getLoginActionName() );
-        }
-        resultIntent.addCategory( Intent.CATEGORY_DEFAULT );
-        sendBroadcast( resultIntent );
-    }
-
     protected abstract Intent doSearch( Intent intent );
 
     protected abstract Intent doAuth( Intent intent );
+
+    protected abstract boolean isServiceRunning();
+
+    protected abstract void setServiceRunning( boolean running );
 }

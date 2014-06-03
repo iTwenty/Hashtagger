@@ -429,14 +429,8 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
         viewHolder.lvResultsList.setTag( null );
         viewHolder.srlReady.setRefreshing( false );
         viewHolder.sitesFooterView.showView( SitesFooterView.NORMAL );
-        new Handler( Looper.getMainLooper() ).post( new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                sitesSearchHandler.beginSearch( SearchType.INITIAL, getEnteredHashtag() );
-            }
-        } );
+        sitesSearchHandler.cancelCurrentSearch();
+        sitesSearchHandler.beginSearch( SearchType.INITIAL, getEnteredHashtag() );
     }
 
     public void showView( int activeView )
