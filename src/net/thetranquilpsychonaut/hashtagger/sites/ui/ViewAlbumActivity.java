@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.utils.SingleMediaScanner;
 import net.thetranquilpsychonaut.hashtagger.widgets.TextDrawable;
 import net.thetranquilpsychonaut.hashtagger.widgets.TouchImageView;
@@ -42,7 +43,6 @@ public class ViewAlbumActivity extends BaseActivity
     private AlbumPagerAdapter albumPagerAdapter;
     private TextDrawable      loading;
     private TextDrawable      error;
-    private Bitmap            currentBitmap;
 
     public static void createAndStartActivity( Context context, ArrayList<String> albumImageUrls, int selectedPosition )
     {
@@ -100,14 +100,14 @@ public class ViewAlbumActivity extends BaseActivity
         @Override
         public Object instantiateItem( ViewGroup container, int position )
         {
+            Helper.debug( "instantiateItem position " + position );
             TouchImageView touchImageView = new TouchImageView( container.getContext() );
-            // We create a new Target and load our fetched image into it rather than the imageview directly
-            // because we first need access to the raw bitmap to allow users to save it
-            MyTarget target = new MyTarget( touchImageView );
             touchImageView.setLayoutParams( new ViewGroup.LayoutParams( ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT ) );
             Picasso.with( container.getContext() )
                     .load( albumImageUrls.get( position ) )
-                    .into( target );
+                    .placeholder( loading )
+                    .error( error )
+                    .into( touchImageView );
             container.addView( touchImageView, 0 );
             return touchImageView;
         }
@@ -115,71 +115,57 @@ public class ViewAlbumActivity extends BaseActivity
         @Override
         public void destroyItem( ViewGroup container, int position, Object object )
         {
+            Helper.debug( "destroyItem position " + position );
             container.removeView( ( TouchImageView ) object );
-        }
-
-        private class MyTarget implements Target
-        {
-            TouchImageView view;
-
-            public MyTarget( TouchImageView view )
-            {
-                this.view = view;
-            }
-
-            @Override
-            public void onBitmapLoaded( Bitmap bitmap, Picasso.LoadedFrom loadedFrom )
-            {
-                ViewAlbumActivity.this.currentBitmap = bitmap;
-                view.setImageBitmap( bitmap );
-            }
-
-            @Override
-            public void onBitmapFailed( Drawable drawable )
-            {
-                view.setImageDrawable( error );
-            }
-
-            @Override
-            public void onPrepareLoad( Drawable drawable )
-            {
-                view.setImageDrawable( loading );
-            }
         }
     }
 
     public void doSaveImage( MenuItem item )
     {
-        if ( null == currentBitmap )
+        Picasso.with( this ).load( albumImageUrls.get( albumPager.getCurrentItem() ) ).into( new Target()
         {
-            Toast.makeText( this, "Image not loaded yet.", Toast.LENGTH_SHORT ).show();
-            return;
-        }
-        Bitmap newBitmap = currentBitmap.copy( currentBitmap.getConfig(), true );
-        if ( null == newBitmap )
-        {
-            Toast.makeText( this, "Failed to saved image", Toast.LENGTH_SHORT ).show();
-            return;
-        }
-        boolean success = false;
-        String fileName = String.valueOf( Calendar.getInstance().getTimeInMillis() ) + ".png";
-        File fileDir = new File( Environment.getExternalStorageDirectory() + "/Hashtagger" );
-        if ( !fileDir.exists() )
-        {
-            fileDir.mkdirs();
-        }
-        File imageFile = new File( fileDir, fileName );
-        try
-        {
-            OutputStream out = new FileOutputStream( imageFile );
-            newBitmap.compress( Bitmap.CompressFormat.PNG, 100, out );
-            new SingleMediaScanner( this, imageFile );
-            success = true;
-        }
-        catch ( FileNotFoundException e )
-        {
-            e.printStackTrace();
-        }
-        Toast.makeText( this, success ? "Image saved" : "Failed to saved image", Toast.LENGTH_SHORT ).show();
+            @Override
+            public void onBitmapLoaded( Bitmap bitmap, Picasso.LoadedFrom loadedFrom )
+            {
+                Bitmap newBitmap = bitmap.copy( bitmap.getConfig(), true );
+                if ( null == newBitmap )
+                {
+                    Toast.makeText( ViewAlbumActivity.this, "Failed to saved image", Toast.LENGTH_SHORT ).show();
+                    return;
+                }
+                boolean success = false;
+                String fileName = String.valueOf( Calendar.getInstance().getTimeInMillis() ) + ".png";
+                File fileDir = new File( Environment.getExternalStorageDirectory() + "/Hashtagger" );
+                if ( !fileDir.exists() )
+                {
+                    fileDir.mkdirs();
+                }
+                File imageFile = new File( fileDir, fileName );
+                try
+                {
+                    OutputStream out = new FileOutputStream( imageFile );
+                    newBitmap.compress( Bitmap.CompressFormat.PNG, 100, out );
+                    new SingleMediaScanner( ViewAlbumActivity.this, imageFile );
+                    success = true;
+                }
+                catch ( FileNotFoundException e )
+                {
+                    e.printStackTrace();
+                }
+                Toast.makeText( ViewAlbumActivity.this, success ? "Image saved" : "Failed to saved image", Toast.LENGTH_SHORT ).show();
+            }
+
+            @Override
+            public void onBitmapFailed( Drawable drawable )
+            {
+
+            }
+
+            @Override
+            public void onPrepareLoad( Drawable drawable )
+            {
+
+            }
+        } );
     }
 }
