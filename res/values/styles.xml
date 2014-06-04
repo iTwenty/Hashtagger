@@ -9,10 +9,11 @@
 
     <style name="TextView_Default">
         <item name="android:padding">5dp</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="TextView_Small" parent="TextView_Default">
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">8sp</item>
         <item name="android:textColor">@color/text_faded</item>
     </style>
 

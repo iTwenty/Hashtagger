@@ -172,7 +172,7 @@ public class ViewAlbumActivity extends BaseActivity
                 }
                 catch ( FileNotFoundException e )
                 {
-                    e.printStackTrace();
+                    Helper.debug( String.format( "Cannot open image file : %s", imageFile.getAbsolutePath()  ) );
                 }
                 showSaveImageToast( success ? SAVE_IMAGE_SUCCEEDED : SAVE_IMAGE_FAILED );
             }
