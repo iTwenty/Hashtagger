@@ -37,6 +37,11 @@ public class ViewAlbumActivity extends BaseActivity
     public static final String ALBUM_IMAGE_URLS_KEY  = "images";
     public static final String SELECTED_POSITION_KEY = "pos";
 
+    // Flags indicating what toast message to show on saving image
+    private static final int SAVE_IMAGE_FAILED = 0;
+    private static final int SAVE_IMAGE_SUCCEEDED = 1;
+    private static final int SAVE_IMAGE_NOT_LOADED = 2;
+
     private ViewPager         albumPager;
     private List<String>      albumImageUrls;
     private int               selectedPosition;
@@ -100,8 +105,8 @@ public class ViewAlbumActivity extends BaseActivity
         @Override
         public Object instantiateItem( ViewGroup container, int position )
         {
-            Helper.debug( "instantiateItem position " + position );
             TouchImageView touchImageView = new TouchImageView( container.getContext() );
+            touchImageView.setTag( position );
             touchImageView.setLayoutParams( new ViewGroup.LayoutParams( ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT ) );
             Picasso.with( container.getContext() )
                     .load( albumImageUrls.get( position ) )
@@ -115,13 +120,30 @@ public class ViewAlbumActivity extends BaseActivity
         @Override
         public void destroyItem( ViewGroup container, int position, Object object )
         {
-            Helper.debug( "destroyItem position " + position );
             container.removeView( ( TouchImageView ) object );
         }
     }
 
     public void doSaveImage( MenuItem item )
     {
+        TouchImageView currentView = ( TouchImageView ) albumPager.findViewWithTag( albumPager.getCurrentItem());
+
+        if ( null == currentView )
+        {
+            showSaveImageToast( SAVE_IMAGE_FAILED );
+            return;
+        }
+        Drawable drawable = currentView.getDrawable();
+        if ( null == drawable || error.equals( drawable ) )
+        {
+            showSaveImageToast( SAVE_IMAGE_FAILED );
+            return;
+        }
+        if ( loading.equals( drawable ) )
+        {
+            showSaveImageToast( SAVE_IMAGE_NOT_LOADED );
+            return;
+        }
         Picasso.with( this ).load( albumImageUrls.get( albumPager.getCurrentItem() ) ).into( new Target()
         {
             @Override
@@ -130,7 +152,7 @@ public class ViewAlbumActivity extends BaseActivity
                 Bitmap newBitmap = bitmap.copy( bitmap.getConfig(), true );
                 if ( null == newBitmap )
                 {
-                    Toast.makeText( ViewAlbumActivity.this, "Failed to saved image", Toast.LENGTH_SHORT ).show();
+                    showSaveImageToast( SAVE_IMAGE_FAILED );
                     return;
                 }
                 boolean success = false;
@@ -152,13 +174,13 @@ public class ViewAlbumActivity extends BaseActivity
                 {
                     e.printStackTrace();
                 }
-                Toast.makeText( ViewAlbumActivity.this, success ? "Image saved" : "Failed to saved image", Toast.LENGTH_SHORT ).show();
+                showSaveImageToast( success ? SAVE_IMAGE_SUCCEEDED : SAVE_IMAGE_FAILED );
             }
 
             @Override
             public void onBitmapFailed( Drawable drawable )
             {
-
+                showSaveImageToast( SAVE_IMAGE_FAILED );
             }
 
             @Override
@@ -167,5 +189,18 @@ public class ViewAlbumActivity extends BaseActivity
 
             }
         } );
+    }
+
+    private void showSaveImageToast( int code )
+    {
+        String message;
+        switch ( code )
+        {
+            case SAVE_IMAGE_SUCCEEDED: message = "Image saved"; break;
+            case SAVE_IMAGE_NOT_LOADED: message = "Image not loaded yet"; break;
+            case SAVE_IMAGE_FAILED: // Fall through
+            default: message = "Failed to save image"; break;
+        }
+        Toast.makeText( this, message, Toast.LENGTH_SHORT ).show();
     }
 }
