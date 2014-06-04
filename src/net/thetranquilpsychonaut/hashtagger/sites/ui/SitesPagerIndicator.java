@@ -14,17 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.thetranquilpsychonaut.hashtagger.widgets;
+package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
 import android.content.Context;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 
@@ -32,76 +29,28 @@ import net.thetranquilpsychonaut.hashtagger.R;
  * This widget implements the dynamic action bar tab behavior that can change
  * across different configurations or circumstances.
  */
-public class IconPagerIndicator extends LinearLayout implements OnPageChangeListener, View.OnClickListener
+public class SitesPagerIndicator extends ViewPagerIndicator implements View.OnClickListener
 {
-    private ViewPager vpViewPager;
 
-    public IconPagerIndicator( Context context )
+    public SitesPagerIndicator( Context context )
     {
-        this( context, null, 0 );
+        super( context );
     }
 
-    public IconPagerIndicator( Context context, AttributeSet attrs )
+    public SitesPagerIndicator( Context context, AttributeSet attrs )
     {
-        this( context, attrs, 0 );
+        super( context, attrs );
     }
 
-    public IconPagerIndicator( Context context, AttributeSet attrs, int defStyle )
+    public SitesPagerIndicator( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
-    }
-
-    public void setViewPager( ViewPager view )
-    {
-        if ( vpViewPager != null )
-        {
-            vpViewPager.setOnPageChangeListener( null );
-        }
-        vpViewPager = view;
-        view.setOnPageChangeListener( this );
-        setSelectedChild( vpViewPager.getCurrentItem() );
-    }
-
-    @Override
-    public void onPageScrolled( int position, float positionOffset, int positionOffsetPixels )
-    {
-    }
-
-    @Override
-    public void onPageSelected( int position )
-    {
-        setSelectedChild( position );
-    }
-
-    public void setSelectedChild( int position )
-    {
-        ImageButton child;
-        int childCount = getChildCount();
-        for ( int a = 0; a < childCount; ++a )
-        {
-            child = ( ImageButton ) getChildAt( a );
-            if ( a == position )
-            {
-                child.setColorFilter( getResources().getColor( ( Integer ) child.getTag() ) );
-            }
-            else
-            {
-                child.setColorFilter( null );
-            }
-        }
-    }
-
-    @Override
-    public void onPageScrollStateChanged( int state )
-    {
-
     }
 
     @Override
     public void onClick( View v )
     {
-        int childPosition = indexOfChild( v );
-        vpViewPager.setCurrentItem( childPosition );
+        getViewPager().setCurrentItem( indexOfChild( v ) );
     }
 
     public void addIcon( int iconType )

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_saved_hashtags_heading"
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Saved"/>
+
+    <ListView
+        android:layout_below="@id/tv_saved_hashtags_heading"
+        android:id="@+id/lv_saved_hashtags"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:divider="@null"
+        android:dividerHeight="5dp"/>
+
+    <TextView
+        android:id="@+id/tv_saved_hashtags_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/str_no_saved_hashtags"/>
+
+</RelativeLayout>

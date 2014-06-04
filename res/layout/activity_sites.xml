@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/ipi_sites_pager"/>
 
-    <net.thetranquilpsychonaut.hashtagger.widgets.IconPagerIndicator
+    <net.thetranquilpsychonaut.hashtagger.sites.ui.SitesPagerIndicator
         android:id="@id/ipi_sites_pager"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"

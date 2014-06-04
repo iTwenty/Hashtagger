@@ -24,6 +24,7 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.PageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.events.SavedHashtagDeletedEvent;
+import net.thetranquilpsychonaut.hashtagger.events.TwitterTrendsEvent;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsDBContract;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsProviderContract;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookFragment;
@@ -31,19 +32,18 @@ import net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterFragment;
 import net.thetranquilpsychonaut.hashtagger.utils.DefaultPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
-import net.thetranquilpsychonaut.hashtagger.widgets.IconPagerIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SitesActivity extends SavedHashtagsActivity
+public class SitesActivity extends NavDrawerActivity
 {
     public static String currentHashtag = null;
 
-    ViewPager          vpSitesPager;
-    IconPagerIndicator ipiSitesPager;
-    SitesAdapter       vpSitesPagerAdapter;
-    SearchView         svHashtag;
+    ViewPager           vpSitesPager;
+    SitesPagerIndicator ipiSitesPager;
+    SitesAdapter        vpSitesPagerAdapter;
+    SearchView          svHashtag;
 
     @Override
     public void onCreate( Bundle savedInstanceState )
@@ -53,7 +53,7 @@ public class SitesActivity extends SavedHashtagsActivity
         dlNavDrawer.addView( rl, 0 );
 
         vpSitesPager = ( ViewPager ) findViewById( R.id.vp_sites_pager );
-        ipiSitesPager = ( IconPagerIndicator ) findViewById( R.id.ipi_sites_pager );
+        ipiSitesPager = ( SitesPagerIndicator ) findViewById( R.id.ipi_sites_pager );
         vpSitesPagerAdapter = new SitesAdapter( getSupportFragmentManager(), new ArrayList<PageDescriptor>() );
         vpSitesPager.setAdapter( vpSitesPagerAdapter );
         vpSitesPager.setOffscreenPageLimit( 2 );
@@ -274,6 +274,12 @@ public class SitesActivity extends SavedHashtagsActivity
     public void onSavedHashtagDeleted( SavedHashtagDeletedEvent event )
     {
         super.onSavedHashtagDeleted( event );
+    }
+
+    @Subscribe
+    public void onTwitterTrendsFound( TwitterTrendsEvent event )
+    {
+        super.onTwitterTrendsFound( event );
     }
 
     public static final String getCurrentHashtag()

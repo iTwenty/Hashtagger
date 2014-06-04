@@ -26,8 +26,7 @@ import java.util.regex.Pattern;
  */
 public class Helper
 {
-    private static final String  FACEBOOK_PROFILE_PICTURE_URL = "http://graph.facebook.com/%s/picture?type=square";
-    private static final boolean DEBUG                        = true;
+    private static final boolean DEBUG = true;
 
     public static void debug( String s )
     {
@@ -45,11 +44,12 @@ public class Helper
         }
 
         return DateUtils.getRelativeDateTimeString(
-                HashtaggerApp.app.getApplicationContext(),
+                HashtaggerApp.app,
                 time,
                 DateUtils.SECOND_IN_MILLIS,
                 DateUtils.WEEK_IN_MILLIS,
-                DateUtils.FORMAT_ABBREV_ALL ).toString();
+                DateUtils.FORMAT_ABBREV_ALL )
+                .toString();
     }
 
     public static String getStringDate( Date date )
@@ -125,7 +125,7 @@ public class Helper
 
     public static String getFacebookProfilePictureUrl( String userId )
     {
-        return String.format( FACEBOOK_PROFILE_PICTURE_URL, userId );
+        return String.format( "http://graph.facebook.com/%s/picture?type=square", userId );
     }
 
     public static Uri getTwitterStatusUrl( Status status )
