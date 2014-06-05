@@ -41,6 +41,6 @@
     <Preference
         android:title="Clear search history"
         android:key="clear_search"
-        android:icon="@android:drawable/ic_menu_delete"/>
+        android:icon="@drawable/ic_action_discard"/>
 
 </PreferenceScreen>

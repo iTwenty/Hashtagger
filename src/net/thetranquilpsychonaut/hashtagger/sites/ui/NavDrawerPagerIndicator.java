@@ -32,7 +32,6 @@ public class NavDrawerPagerIndicator extends ViewPagerIndicator implements View.
         imgbSaved = ( ImageButton ) findViewById( R.id.tv_saved );
         imgbTrending.setOnClickListener( this );
         imgbSaved.setOnClickListener( this );
-
     }
 
     @Override

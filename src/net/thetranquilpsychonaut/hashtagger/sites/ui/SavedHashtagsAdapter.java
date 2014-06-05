@@ -33,7 +33,7 @@ public class SavedHashtagsAdapter extends CursorAdapter implements View.OnClickL
     @Override
     public View newView( final Context context, Cursor cursor, ViewGroup parent )
     {
-        View view = LayoutInflater.from( context ).inflate( R.layout.saved_hashtags_list_row, null );
+        View view = LayoutInflater.from( context ).inflate( R.layout.saved_hashtags_list_row, parent, false );
         ViewHolder holder = new ViewHolder();
         holder.tvSavedHashtag = ( TextView ) view.findViewById( R.id.tv_saved_hashtag );
         holder.imgbDeleteSavedHashtag = ( ImageButton ) view.findViewById( R.id.imgb_delete_saved_hashtag );

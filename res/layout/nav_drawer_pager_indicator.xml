@@ -12,7 +12,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:src="@drawable/trend"
-        style="?android:attr/buttonBarButtonStyle"/>
+        style="?android:attr/borderlessButtonStyle"/>
 
     <ImageButton
         android:id="@+id/tv_saved"
@@ -21,6 +21,6 @@
         android:layout_weight="1"
         android:gravity="center"
         android:src="@drawable/save"
-        style="?android:attr/buttonBarButtonStyle"/>
+        style="?android:attr/borderlessButtonStyle"/>
 
 </merge>

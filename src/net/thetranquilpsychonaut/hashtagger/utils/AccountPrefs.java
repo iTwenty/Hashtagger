@@ -9,7 +9,7 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
  */
 public final class AccountPrefs
 {
-    public static final String ACCOUNT_PREFS                   = "account_prefs";
+    private static final String ACCOUNT_PREFS                   = "account_prefs";
     public static final String TWITTER_ACCESS_TOKEN_KEY        = "twitter_access_token";
     public static final String TWITTER_ACCESS_TOKEN_SECRET_KEY = "twitter_access_token_secret";
     public static final String TWITTER_USER_NAME_KEY           = "twitter_user_name";
@@ -19,7 +19,10 @@ public final class AccountPrefs
     public static final String GPLUS_REFRESH_TOKEN_KEY         = "gplus_refresh_token";
     public static final String GPLUS_USER_NAME_KEY             = "gplus_user_name";
 
-    private static final SharedPreferences account_prefs = HashtaggerApp.app.getSharedPreferences( ACCOUNT_PREFS, Context.MODE_PRIVATE );
+    private static final SharedPreferences getAccountPrefs()
+    {
+        return HashtaggerApp.app.getSharedPreferences( ACCOUNT_PREFS, Context.MODE_PRIVATE );
+    }
 
     /**
      * ********** Twitter ***********
@@ -27,7 +30,7 @@ public final class AccountPrefs
 
     public static void removeTwitterDetails()
     {
-        account_prefs.edit()
+        getAccountPrefs().edit()
                 .remove( TWITTER_ACCESS_TOKEN_KEY )
                 .remove( TWITTER_ACCESS_TOKEN_SECRET_KEY )
                 .remove( TWITTER_USER_NAME_KEY )
@@ -36,12 +39,13 @@ public final class AccountPrefs
 
     public static boolean areTwitterDetailsPresent()
     {
-        return account_prefs.contains( TWITTER_ACCESS_TOKEN_KEY );
+        SharedPreferences s = getAccountPrefs();
+        return s.contains( TWITTER_ACCESS_TOKEN_KEY ) && s.contains( TWITTER_ACCESS_TOKEN_SECRET_KEY );
     }
 
     public static void addTwitterDetails( String accessToken, String accessTokenSecret, String userName )
     {
-        account_prefs.edit()
+        getAccountPrefs().edit()
                 .putString( TWITTER_ACCESS_TOKEN_KEY, accessToken )
                 .putString( TWITTER_ACCESS_TOKEN_SECRET_KEY, accessTokenSecret )
                 .putString( TWITTER_USER_NAME_KEY, userName )
@@ -50,24 +54,24 @@ public final class AccountPrefs
 
     public static String getTwitterAccessToken()
     {
-        return account_prefs.getString( TWITTER_ACCESS_TOKEN_KEY, "" );
+        return getAccountPrefs().getString( TWITTER_ACCESS_TOKEN_KEY, "" );
     }
 
     public static String getTwitterAccessTokenSecret()
     {
-        return account_prefs.getString( TWITTER_ACCESS_TOKEN_SECRET_KEY, "" );
+        return getAccountPrefs().getString( TWITTER_ACCESS_TOKEN_SECRET_KEY, "" );
     }
 
     public static String getTwitterUserName()
     {
-        return account_prefs.getString( TWITTER_USER_NAME_KEY, "" );
+        return getAccountPrefs().getString( TWITTER_USER_NAME_KEY, "" );
     }
 
     /* ************* Facebook *******************/
 
     public static void addFacebookDetails( String accessToken, String userName )
     {
-        account_prefs.edit()
+        getAccountPrefs().edit()
                 .putString( FACEBOOK_ACCESS_TOKEN_KEY, accessToken )
                 .putString( FACEBOOK_USER_NAME_KEY, userName )
                 .commit();
@@ -75,7 +79,7 @@ public final class AccountPrefs
 
     public static void removeFacebookDetails()
     {
-        account_prefs.edit()
+        getAccountPrefs().edit()
                 .remove( FACEBOOK_ACCESS_TOKEN_KEY )
                 .remove( FACEBOOK_USER_NAME_KEY )
                 .commit();
@@ -83,17 +87,17 @@ public final class AccountPrefs
 
     public static boolean areFacebookDetailsPresent()
     {
-        return account_prefs.contains( FACEBOOK_ACCESS_TOKEN_KEY );
+        return getAccountPrefs().contains( FACEBOOK_ACCESS_TOKEN_KEY );
     }
 
     public static String getFacebookAccessToken()
     {
-        return account_prefs.getString( FACEBOOK_ACCESS_TOKEN_KEY, "" );
+        return getAccountPrefs().getString( FACEBOOK_ACCESS_TOKEN_KEY, "" );
     }
 
     public static String getFacebookUserName()
     {
-        return account_prefs.getString( FACEBOOK_USER_NAME_KEY, "" );
+        return getAccountPrefs().getString( FACEBOOK_USER_NAME_KEY, "" );
     }
 
     /**
@@ -102,7 +106,7 @@ public final class AccountPrefs
 
     public static void addGPlusDetails( String accessToken, String refreshToken, String userName )
     {
-        account_prefs.edit()
+        getAccountPrefs().edit()
                 .putString( GPLUS_ACCESS_TOKEN_KEY, accessToken )
                 .putString( GPLUS_REFRESH_TOKEN_KEY, refreshToken )
                 .putString( GPLUS_USER_NAME_KEY, userName )
@@ -111,7 +115,7 @@ public final class AccountPrefs
 
     public static void removeGPlusDetails()
     {
-        account_prefs.edit()
+        getAccountPrefs().edit()
                 .remove( GPLUS_ACCESS_TOKEN_KEY )
                 .remove( GPLUS_REFRESH_TOKEN_KEY )
                 .remove( GPLUS_USER_NAME_KEY )
@@ -120,21 +124,21 @@ public final class AccountPrefs
 
     public static boolean areGPlusDetailsPresent()
     {
-        return account_prefs.contains( GPLUS_ACCESS_TOKEN_KEY );
+        return getAccountPrefs().contains( GPLUS_ACCESS_TOKEN_KEY );
     }
 
     public static String getGPlusAccessToken()
     {
-        return account_prefs.getString( GPLUS_ACCESS_TOKEN_KEY, "" );
+        return getAccountPrefs().getString( GPLUS_ACCESS_TOKEN_KEY, "" );
     }
 
     public static String getGPlusRefreshToken()
     {
-        return account_prefs.getString( GPLUS_REFRESH_TOKEN_KEY, "" );
+        return getAccountPrefs().getString( GPLUS_REFRESH_TOKEN_KEY, "" );
     }
 
     public static String getGPlusUserName()
     {
-        return account_prefs.getString( GPLUS_USER_NAME_KEY, "" );
+        return getAccountPrefs().getString( GPLUS_USER_NAME_KEY, "" );
     }
 }

@@ -14,10 +14,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.RelativeLayout;
-import android.widget.SearchView;
-import android.widget.Toast;
+import android.widget.*;
 import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtagSuggestionsProvider;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
@@ -254,13 +251,22 @@ public class SitesActivity extends NavDrawerActivity
     }
 
     @Override
-    public void onItemClick( AdapterView<?> parent, View view, int position, long id )
+    protected void onTrendingHashtagClick( AdapterView<?> parent, View view, int position, long id )
+    {
+        String selectedHashtag = ( ( TextView ) view ).getText().toString();
+        dlNavDrawer.closeDrawers();
+        Intent intent = new Intent( Intent.ACTION_SEARCH );
+        intent.putExtra( SearchManager.QUERY, selectedHashtag );
+        intent.setComponent( getComponentName() );
+        startActivity( intent );
+    }
+
+    @Override
+    protected void onSavedHashtagClick( AdapterView<?> parent, View view, int position, long id )
     {
         Cursor cursor = ( Cursor ) parent.getItemAtPosition( position );
         String selectedHashtag = cursor.getString( cursor.getColumnIndex( SavedHashtagsDBContract.SavedHashtags.COLUMN_HASHTAG ) );
-        // Close the drawer first
         dlNavDrawer.closeDrawers();
-        // We need to deliver the search intent manually in case a saved hashtag was selected
         Intent intent = new Intent( Intent.ACTION_SEARCH );
         intent.putExtra( SearchManager.QUERY, selectedHashtag );
         intent.setComponent( getComponentName() );

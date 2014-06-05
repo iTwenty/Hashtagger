@@ -1,11 +1,12 @@
 package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
 import android.app.ActionBar;
-import android.content.ContentValues;
+import android.content.*;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.os.Parcelable;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
@@ -29,12 +30,11 @@ import net.thetranquilpsychonaut.hashtagger.events.SavedHashtagDeletedEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterTrendsEvent;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsDBContract;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsProviderContract;
-import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterTrendsFetcher;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterTrendsService;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.widgets.buttontoast.ButtonToast;
 import net.thetranquilpsychonaut.hashtagger.widgets.buttontoast.Listeners;
 import net.thetranquilpsychonaut.hashtagger.widgets.buttontoast.OnClickWrapper;
-import twitter4j.Trends;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,12 +62,16 @@ public abstract class NavDrawerActivity extends FragmentActivity implements Load
     protected List<String>            trendingHashtags;
     protected ListView                lvTrendingHashtags;
     protected TextView                tvTrendingHashtagsEmpty;
+    protected TextView                tvTrendingHeading;
+    protected TwitterTrendsService    twitterTrendsService;
+    protected boolean                 isBoundToTrendsService;
+    protected TwitterTrendsConnection twitterTrendsConnection;
 
     @Override
     protected void onCreate( Bundle savedInstanceState )
     {
         super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_saved_hashtags );
+        setContentView( R.layout.activity_nav_drawer );
         dlNavDrawer = ( DrawerLayout ) findViewById( R.id.dl_nav_drawer );
         drawerToggle = new ActionBarDrawerToggle(
                 this,
@@ -87,19 +91,18 @@ public abstract class NavDrawerActivity extends FragmentActivity implements Load
 
         savedHashtagsAdapter = new SavedHashtagsAdapter( this, null );
 
-        trendingHashtags = new ArrayList<String>();
+        trendingHashtags = null == savedInstanceState ?
+                new ArrayList<String>() :
+                ( List<String> ) getLastCustomNonConfigurationInstance();
         trendingHashtagsAdapter = new TrendingHashtagsAdapter( this, trendingHashtags );
+        isBoundToTrendsService = false;
+        twitterTrendsConnection = new TwitterTrendsConnection();
 
         getSupportLoaderManager().initLoader( SAVED_HASHTAG_LOADER, null, this );
 
         actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled( true );
         actionBar.setHomeButtonEnabled( true );
-
-//        if ( null == savedInstanceState )
-//        {
-//            new TwitterTrendsFetcher();
-//        }
     }
 
     @Override
@@ -107,6 +110,18 @@ public abstract class NavDrawerActivity extends FragmentActivity implements Load
     {
         super.onPostCreate( savedInstanceState );
         drawerToggle.syncState();
+        if ( null == savedInstanceState )
+        {
+            navDrawerPager.post( new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    if ( null != twitterTrendsService )
+                        twitterTrendsService.fetchTrends();
+                }
+            } );
+        }
     }
 
     @Override
@@ -114,13 +129,20 @@ public abstract class NavDrawerActivity extends FragmentActivity implements Load
     {
         super.onStart();
         HashtaggerApp.bus.register( this );
+        Intent i = new Intent( this, TwitterTrendsService.class );
+        bindService( i, twitterTrendsConnection, Context.BIND_AUTO_CREATE );
     }
 
     @Override
     protected void onStop()
     {
-        HashtaggerApp.bus.unregister( this );
         super.onStop();
+        HashtaggerApp.bus.unregister( this );
+        if ( isBoundToTrendsService )
+        {
+            unbindService( twitterTrendsConnection );
+            isBoundToTrendsService = false;
+        }
     }
 
     @Override
@@ -128,6 +150,12 @@ public abstract class NavDrawerActivity extends FragmentActivity implements Load
     {
         super.onConfigurationChanged( newConfig );
         drawerToggle.onConfigurationChanged( newConfig );
+    }
+
+    @Override
+    public Object onRetainCustomNonConfigurationInstance()
+    {
+        return trendingHashtags;
     }
 
     @Override
@@ -191,15 +219,22 @@ public abstract class NavDrawerActivity extends FragmentActivity implements Load
     @Subscribe
     public void onTwitterTrendsFound( TwitterTrendsEvent event )
     {
-        int code = event.getCode();
-        if ( code == TwitterTrendsFetcher.TRENDS_FOUND )
+        int code = event.getStatus();
+        if ( code == TwitterTrendsService.TRENDS_FOUND )
         {
-            Trends trends = event.getTrends();
-            int size = trends.getTrends().length;
-            for ( int i = 0; i < size; ++i )
-            {
-                Helper.debug( trends.getTrends()[i].getName() );
-            }
+            List<String> trends = event.getTrends();
+            trendingHashtags.clear();
+            trendingHashtags.addAll( trends );
+            tvTrendingHeading.setText( String.format( "Trending in %s", event.getPlace() ) );
+            trendingHashtagsAdapter.notifyDataSetChanged();
+        }
+        else if ( code == TwitterTrendsService.TRENDS_NOT_AVAILABLE )
+        {
+            tvTrendingHashtagsEmpty.setText( "Trends not available" );
+        }
+        else if ( code == TwitterTrendsService.TWITTER_NOT_LOGGED_IN )
+        {
+            tvTrendingHashtagsEmpty.setText( "Log in to Twitter to see trending topics" );
         }
     }
 
@@ -212,7 +247,22 @@ public abstract class NavDrawerActivity extends FragmentActivity implements Load
     }
 
     @Override
-    public abstract void onItemClick( AdapterView<?> parent, View view, int position, long id );
+    public void onItemClick( AdapterView<?> parent, View view, int position, long id )
+    {
+        if ( parent.equals( lvSavedHashtags ) )
+        {
+            onSavedHashtagClick( parent, view, position, id );
+            return;
+        }
+        if ( parent.equals( lvTrendingHashtags ) )
+        {
+            onTrendingHashtagClick( parent, view, position, id );
+        }
+    }
+
+    protected abstract void onTrendingHashtagClick( AdapterView<?> parent, View view, int position, long id );
+
+    protected abstract void onSavedHashtagClick( AdapterView<?> parent, View view, int position, long id );
 
     private class NavDrawerPagerAdapter extends PagerAdapter
     {
@@ -238,8 +288,10 @@ public abstract class NavDrawerActivity extends FragmentActivity implements Load
                     view = LayoutInflater.from( container.getContext() ).inflate( R.layout.nav_drawer_trending, container, false );
                     lvTrendingHashtags = ( ListView ) view.findViewById( R.id.lv_trending );
                     tvTrendingHashtagsEmpty = ( TextView ) view.findViewById( R.id.tv_trending_empty );
+                    tvTrendingHeading = ( TextView ) view.findViewById( R.id.tv_trending_heading );
                     lvTrendingHashtags.setEmptyView( tvTrendingHashtagsEmpty );
                     lvTrendingHashtags.setAdapter( trendingHashtagsAdapter );
+                    lvTrendingHashtags.setOnItemClickListener( NavDrawerActivity.this );
                     break;
                 case 1:
                     view = LayoutInflater.from( container.getContext() ).inflate( R.layout.nav_drawer_saved, container, false );
@@ -258,6 +310,24 @@ public abstract class NavDrawerActivity extends FragmentActivity implements Load
         public void destroyItem( ViewGroup container, int position, Object object )
         {
             container.removeView( ( View ) object );
+        }
+    }
+
+    private class TwitterTrendsConnection implements ServiceConnection
+    {
+        @Override
+        public void onServiceConnected( ComponentName name, IBinder service )
+        {
+            Helper.debug( "onServiceConnected" );
+            TwitterTrendsService.TwitterTrendsBinder binder = ( TwitterTrendsService.TwitterTrendsBinder ) service;
+            twitterTrendsService = binder.getService();
+            isBoundToTrendsService = true;
+        }
+
+        @Override
+        public void onServiceDisconnected( ComponentName name )
+        {
+            isBoundToTrendsService = false;
         }
     }
 }

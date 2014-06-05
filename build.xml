@@ -59,8 +59,8 @@
         This is the place to put custom intermediary targets such as:
             -pre-build
             -pre-compile
-            -post-compile (This is typically used for code obfuscation.
-                           Compiled code location: ${out.classes.absolute.dir}
+            -post-compile (This is typically used for status obfuscation.
+                           Compiled status location: ${out.classes.absolute.dir}
                            If this is not done in place, override ${out.dex.input.absolute.dir})
             -post-package
             -post-build

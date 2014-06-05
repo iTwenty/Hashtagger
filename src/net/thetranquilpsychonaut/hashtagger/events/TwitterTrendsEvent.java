@@ -1,24 +1,24 @@
 package net.thetranquilpsychonaut.hashtagger.events;
 
-import twitter4j.Trends;
+import java.util.List;
 
 /**
  * Created by itwenty on 6/3/14.
  */
 public class TwitterTrendsEvent
 {
-    private Trends trends;
-    private String place;
-    private int    code;
+    private List<String> trends;
+    private String       place;
+    private int          status;
 
-    public TwitterTrendsEvent( Trends trends, String place, int code )
+    public TwitterTrendsEvent( List<String> trends, String place, int status )
     {
         this.trends = trends;
         this.place = place;
-        this.code = code;
+        this.status = status;
     }
 
-    public Trends getTrends()
+    public List<String> getTrends()
     {
         return trends;
     }
@@ -28,8 +28,8 @@ public class TwitterTrendsEvent
         return place;
     }
 
-    public int getCode()
+    public int getStatus()
     {
-        return code;
+        return status;
     }
 }

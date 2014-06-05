@@ -26,7 +26,8 @@
             android:id="@id/nav_drawer_pager_indicator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"/>
+            android:layout_alignParentBottom="true"
+            style="?android:attr/buttonBarStyle"/>
 
     </RelativeLayout>
 

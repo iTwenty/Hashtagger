@@ -14,6 +14,8 @@ import com.twitter.Autolink;
 import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import twitter4j.Status;
+import twitter4j.Trend;
+import twitter4j.Trends;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -164,6 +166,16 @@ public class Helper
         for ( String s : strings )
         {
             list.add( s );
+        }
+        return list;
+    }
+
+    public static ArrayList<String> createTrendsArrayList( Trends trends )
+    {
+        ArrayList<String> list = new ArrayList<String>( trends.getTrends().length );
+        for ( Trend t : trends.getTrends() )
+        {
+            list.add( t.getName() );
         }
         return list;
     }

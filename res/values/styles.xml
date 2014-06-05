@@ -124,7 +124,9 @@
     </style>
 
     <style name="SavedHashtagText" parent="TextView_Default">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="Details_Title" parent="TextView_Default">
