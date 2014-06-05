@@ -5,16 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tv_trending_heading"
-        style="?android:attr/listSeparatorTextViewStyle"
-        android:gravity="center"
+    <Spinner
+        android:id="@+id/sp_trending_choice"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Trending"/>
+        android:layout_height="wrap_content"/>
 
     <ListView
-        android:layout_below="@id/tv_trending_heading"
+        android:layout_below="@id/sp_trending_choice"
         android:id="@+id/lv_trending"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
@@ -27,7 +24,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="Trending hashtags will appear here."/>
+        android:text="Trending hashtags will appear here."
+        android:freezesText="true"/>
 
     <ProgressBar
         android:id="@+id/pgbr_trending"

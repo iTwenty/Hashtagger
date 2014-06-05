@@ -8,13 +8,13 @@ import java.util.List;
 public class TwitterTrendsEvent
 {
     private List<String> trends;
-    private String       place;
+    private int          trendingChoice;
     private int          status;
 
-    public TwitterTrendsEvent( List<String> trends, String place, int status )
+    public TwitterTrendsEvent( List<String> trends, int trendingChoice, int status )
     {
         this.trends = trends;
-        this.place = place;
+        this.trendingChoice = trendingChoice;
         this.status = status;
     }
 
@@ -23,9 +23,9 @@ public class TwitterTrendsEvent
         return trends;
     }
 
-    public String getPlace()
+    public int getTrendingChoice()
     {
-        return place;
+        return trendingChoice;
     }
 
     public int getStatus()

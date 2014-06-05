@@ -250,43 +250,28 @@ public class SitesActivity extends NavDrawerActivity
         }
     }
 
-    @Override
-    protected void onTrendingHashtagClick( AdapterView<?> parent, View view, int position, long id )
-    {
-        String selectedHashtag = ( ( TextView ) view ).getText().toString();
-        dlNavDrawer.closeDrawers();
-        Intent intent = new Intent( Intent.ACTION_SEARCH );
-        intent.putExtra( SearchManager.QUERY, selectedHashtag );
-        intent.setComponent( getComponentName() );
-        startActivity( intent );
-    }
-
-    @Override
-    protected void onSavedHashtagClick( AdapterView<?> parent, View view, int position, long id )
-    {
-        Cursor cursor = ( Cursor ) parent.getItemAtPosition( position );
-        String selectedHashtag = cursor.getString( cursor.getColumnIndex( SavedHashtagsDBContract.SavedHashtags.COLUMN_HASHTAG ) );
-        dlNavDrawer.closeDrawers();
-        Intent intent = new Intent( Intent.ACTION_SEARCH );
-        intent.putExtra( SearchManager.QUERY, selectedHashtag );
-        intent.setComponent( getComponentName() );
-        startActivity( intent );
-    }
-
-    // Do not remove this method even thought it seems to do nothing,
-    // Otto can't deliver SavedHashtagDeletedEvent to abstract superclass
-    // So we have to Subscribe in the concrete subclass
-    @Subscribe
-    public void onSavedHashtagDeleted( SavedHashtagDeletedEvent event )
-    {
-        super.onSavedHashtagDeleted( event );
-    }
-
-    @Subscribe
-    public void onTwitterTrendsFound( TwitterTrendsEvent event )
-    {
-        super.onTwitterTrendsFound( event );
-    }
+//    @Override
+//    protected void onTrendingHashtagClick( AdapterView<?> parent, View view, int position, long id )
+//    {
+//        String selectedHashtag = ( ( TextView ) view ).getText().toString();
+//        dlNavDrawer.closeDrawers();
+//        Intent intent = new Intent( Intent.ACTION_SEARCH );
+//        intent.putExtra( SearchManager.QUERY, selectedHashtag );
+//        intent.setComponent( getComponentName() );
+//        startActivity( intent );
+//    }
+//
+//    @Override
+//    protected void onSavedHashtagClick( AdapterView<?> parent, View view, int position, long id )
+//    {
+//        Cursor cursor = ( Cursor ) parent.getItemAtPosition( position );
+//        String selectedHashtag = cursor.getString( cursor.getColumnIndex( SavedHashtagsDBContract.SavedHashtags.COLUMN_HASHTAG ) );
+//        dlNavDrawer.closeDrawers();
+//        Intent intent = new Intent( Intent.ACTION_SEARCH );
+//        intent.putExtra( SearchManager.QUERY, selectedHashtag );
+//        intent.setComponent( getComponentName() );
+//        startActivity( intent );
+//    }
 
     public static final String getCurrentHashtag()
     {
