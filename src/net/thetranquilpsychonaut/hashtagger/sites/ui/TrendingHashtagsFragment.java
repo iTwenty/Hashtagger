@@ -177,7 +177,7 @@ public class TrendingHashtagsFragment extends Fragment implements AdapterView.On
             twitterTrendsService = binder.getService();
             if ( isFragmentFreshlyCreated )
             {
-                twitterTrendsService.fetchTrends( TrendsPrefs.getTrendsChoice() );
+                twitterTrendsService.fetchTrends( TwitterTrendsService.LOCAL );
             }
             isBoundToTrendsService = true;
         }

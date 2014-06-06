@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Toast;
 import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
@@ -93,17 +94,21 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
 
     private void doShare()
     {
-        doOpenInBrowser();
+
+        Toast.makeText( getContext(), "Sorry, Facebook shares are not implemented yet", Toast.LENGTH_SHORT ).show();
+        //doOpenInBrowser();
     }
 
     private void doComment()
     {
-        doOpenInBrowser();
+        Toast.makeText( getContext(), "Sorry, Facebook comments are not implemented yet", Toast.LENGTH_SHORT ).show();
+        //doOpenInBrowser();
     }
 
     private void doLike()
     {
-        doOpenInBrowser();
+        Toast.makeText( getContext(), "Sorry, Facebook likes are not implemented yet", Toast.LENGTH_SHORT ).show();
+        //doOpenInBrowser();
     }
 
     @Override

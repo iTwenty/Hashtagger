@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Toast;
 import com.google.api.services.plus.model.Activity;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.GPlusData;
@@ -78,24 +79,48 @@ public class GPlusButtons extends SitesButtons implements View.OnClickListener
         {
             doViewDetails();
         }
-        else
+        else if ( v.equals( ccbPlusOne ) )
         {
-            doOpenInBrowser();
+            doPlusOne();
         }
-    }
-
-    @Override
-    public void doOpenInBrowser()
-    {
-        Intent i = new Intent( Intent.ACTION_VIEW );
-        i.setData( Helper.getGPlusActivityUrl( activity ) );
-        getContext().startActivity( i );
+        else if ( v.equals( ccbComment ) )
+        {
+            doComment();
+        }
+        else if ( v.equals( ccbShare ) )
+        {
+            doShare();
+        }
     }
 
     private void doViewDetails()
     {
         Intent i = new Intent( getContext(), GPlusDetailActivity.class );
         GPlusData.ActivityData.pushActivity( this.activity );
+        getContext().startActivity( i );
+    }
+
+    private void doShare()
+    {
+        Toast.makeText( getContext(), "Sorry Google+ shares are not implemented yet", Toast.LENGTH_SHORT ).show();
+    }
+
+    private void doComment()
+    {
+        Toast.makeText( getContext(), "Sorry Google+ comments are not implemented yet", Toast.LENGTH_SHORT ).show();
+    }
+
+    private void doPlusOne()
+    {
+        Toast.makeText( getContext(), "Sorry +1'ing is not implemented yet", Toast.LENGTH_SHORT ).show();
+    }
+
+    @Override
+    public void doOpenInBrowser()
+    {
+        Toast.makeText( getContext(), "Sorry, that feature is not implemented yet", Toast.LENGTH_SHORT ).show();
+        Intent i = new Intent( Intent.ACTION_VIEW );
+        i.setData( Helper.getGPlusActivityUrl( activity ) );
         getContext().startActivity( i );
     }
 }
