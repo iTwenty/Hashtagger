@@ -30,15 +30,18 @@ public class TrendingHashtagsFragment extends Fragment implements AdapterView.On
     private static final String SPINNER_CHOICE_KEY = "sck";
     private static final String TRENDING_LIST_KEY  = "tl";
 
-    protected TrendingHashtagsAdapter    trendingHashtagsAdapter;
-    protected List<String>               trendingHashtags;
-    protected ListView                   lvTrendingHashtags;
-    protected TextView                   tvTrendingHashtagsEmpty;
-    protected Spinner                    spTrendingChoice;
+    protected TrendingHashtagsAdapter trendingHashtagsAdapter;
+    protected List<String>            trendingHashtags;
+    protected ListView                lvTrendingHashtags;
+    protected TextView                tvTrendingHashtagsEmpty;
+    protected Spinner                 spTrendingChoice;
     protected ArrayAdapter<CharSequence> trendingChoiceAdapter;
     protected TwitterTrendsService       twitterTrendsService;
     protected boolean                    isBoundToTrendsService;
     protected TwitterTrendsConnection    twitterTrendsConnection;
+
+    private boolean isSpinnerCreated = false;
+    private boolean isFragmentFreshlyCreated = false;
 
     @Override
     public void onCreate( Bundle savedInstanceState )
@@ -54,7 +57,7 @@ public class TrendingHashtagsFragment extends Fragment implements AdapterView.On
     @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
     {
-        View view = LayoutInflater.from( container.getContext() ).inflate( R.layout.fragment_trending_hashtags, container, false );
+        View view = inflater.inflate( R.layout.fragment_trending_hashtags, container, false );
         lvTrendingHashtags = ( ListView ) view.findViewById( R.id.lv_trending );
         tvTrendingHashtagsEmpty = ( TextView ) view.findViewById( R.id.tv_trending_empty );
         spTrendingChoice = ( Spinner ) view.findViewById( R.id.sp_trending_choice );
@@ -67,13 +70,8 @@ public class TrendingHashtagsFragment extends Fragment implements AdapterView.On
         lvTrendingHashtags.setEmptyView( tvTrendingHashtagsEmpty );
         lvTrendingHashtags.setAdapter( trendingHashtagsAdapter );
         lvTrendingHashtags.setOnItemClickListener( this );
+        isFragmentFreshlyCreated = null == savedInstanceState;
         return view;
-    }
-
-    @Override
-    public void onViewCreated( View view, Bundle savedInstanceState )
-    {
-        super.onViewCreated( view, savedInstanceState );
     }
 
     @Override
@@ -139,19 +137,18 @@ public class TrendingHashtagsFragment extends Fragment implements AdapterView.On
     @Override
     public void onItemSelected( AdapterView<?> parent, View view, int position, long id )
     {
-        if ( parent.equals( spTrendingChoice ) )
+        if ( parent.equals( spTrendingChoice ) && isSpinnerCreated )
         {
             switch ( position )
             {
-                case 1:
-                    TrendsPrefs.addTrendingChoice( TwitterTrendsService.GLOBAL );
-                    break;
+                case 1: twitterTrendsService.fetchTrends( TwitterTrendsService.GLOBAL ); break;
                 case 0: // fall through
-                default:
-                    TrendsPrefs.addTrendingChoice( TwitterTrendsService.LOCAL );
-                    break;
+                default: twitterTrendsService.fetchTrends( TwitterTrendsService.LOCAL ); break;
             }
-            return;
+        }
+        else
+        {
+            isSpinnerCreated = true;
         }
     }
 
@@ -169,6 +166,8 @@ public class TrendingHashtagsFragment extends Fragment implements AdapterView.On
             Helper.debug( "onServiceConnected" );
             TwitterTrendsService.TwitterTrendsBinder binder = ( TwitterTrendsService.TwitterTrendsBinder ) service;
             twitterTrendsService = binder.getService();
+            if ( isFragmentFreshlyCreated )
+                twitterTrendsService.fetchTrends( TrendsPrefs.getTrendsChoice() );
             isBoundToTrendsService = true;
         }
 

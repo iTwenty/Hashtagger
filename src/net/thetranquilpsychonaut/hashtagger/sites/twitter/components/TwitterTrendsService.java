@@ -71,15 +71,13 @@ public class TwitterTrendsService extends Service
         twitter.setOAuthAccessToken( new AccessToken( AccountPrefs.getTwitterAccessToken(), AccountPrefs.getTwitterAccessTokenSecret() ) );
     }
 
-    private void fetchNewTrends()
+    private void fetchNewLocalTrends()
     {
-        Helper.debug( "fetchNewTrends called" );
-        trendsChoice = TrendsPrefs.getTrendingChoice();
-        long trendsLastUpdated = TrendsPrefs.getTrendsLastUpdated();
-        if ( trendsLastUpdated != -1 && trendsLastUpdated + TRENDS_UPDATE_INTERVAL > System.currentTimeMillis() )
+        long localTrendsLastUpdated = TrendsPrefs.getLocalTrendsLastUpdated();
+        if ( localTrendsLastUpdated != -1 && localTrendsLastUpdated + TRENDS_UPDATE_INTERVAL > System.currentTimeMillis() )
         {
-            Helper.debug( "Stored trends are fresher than our update interval" );
-            event = new TwitterTrendsEvent( TrendsPrefs.getTrends(), trendsChoice, TRENDS_FOUND );
+            Helper.debug( "Stored local trends are fresher than our update interval" );
+            event = new TwitterTrendsEvent( TrendsPrefs.getLocalTrends(), trendsChoice, TRENDS_FOUND );
             notifyTrendsFound( event, true );
         }
         else
@@ -103,15 +101,15 @@ public class TwitterTrendsService extends Service
             else
             {
                 Helper.debug( "User not logged in to Twitter" );
-                if ( trendsLastUpdated != -1 && trendsLastUpdated + KEEP_OLD_TRENDS_DURATION > System.currentTimeMillis() )
+                if ( localTrendsLastUpdated != -1 && localTrendsLastUpdated + KEEP_OLD_TRENDS_DURATION > System.currentTimeMillis() )
                 {
-                    Helper.debug( "Old trends newer than three days found in SharedPreferences" );
-                    event = new TwitterTrendsEvent( TrendsPrefs.getTrends(), trendsChoice, TRENDS_FOUND );
+                    Helper.debug( "Stored local trends are fresher than our keep old trends duration" );
+                    event = new TwitterTrendsEvent( TrendsPrefs.getLocalTrends(), trendsChoice, TRENDS_FOUND );
                     notifyTrendsFound( event, true );
                 }
                 else
                 {
-                    Helper.debug( "Old trends not found or were older than three days" );
+                    Helper.debug( "Stored local trends not found or were older than three days" );
                     event = new TwitterTrendsEvent( null, trendsChoice, TWITTER_NOT_LOGGED_IN );
                     notifyTrendsFound( event, true );
                 }
@@ -167,24 +165,30 @@ public class TwitterTrendsService extends Service
                 else
                 {
                     Helper.debug( String.format( "No trends for country %s", countryLoc.getCountryName() ) );
-                    fetchGlobalTrends();
+                    event = new TwitterTrendsEvent( null, trendsChoice, TRENDS_NOT_AVAILABLE );
+                    notifyTrendsFound( event, true );
                 }
             }
             else
             {
                 Helper.debug( String.format( "No trends for country with ISO %s", countryIso ) );
-                fetchGlobalTrends();
+                event = new TwitterTrendsEvent( null, trendsChoice, TRENDS_NOT_AVAILABLE );
+                notifyTrendsFound( event, true );
             }
         }
         else
         {
             Helper.debug( "Could not find country ISO from SIM" );
-            fetchGlobalTrends();
+            event = new TwitterTrendsEvent( null, trendsChoice, TRENDS_NOT_AVAILABLE );
+            notifyTrendsFound( event, true );
         }
     }
 
-    public void fetchTrends()
+    public void fetchTrends( int trendsChoice )
     {
+        Helper.debug( "fetchTrends called" );
+        this.trendsChoice = trendsChoice;
+        TrendsPrefs.setTrendsChoice( trendsChoice );
         trendsFetcherHandler.post( trendsFetcherRunnable );
     }
 
@@ -192,18 +196,49 @@ public class TwitterTrendsService extends Service
     {
         Helper.debug( "fetchGlobalTrends called" );
         TwitterTrendsEvent tte;
-        Trends globalTrends = getTrendsForLocation( 1 );
-        if ( null == globalTrends )
+        long globalTrendsLastUpdated = TrendsPrefs.getGlobalTrendsLastUpdated();
+        if ( globalTrendsLastUpdated != -1 && globalTrendsLastUpdated + TRENDS_UPDATE_INTERVAL > System.currentTimeMillis() )
         {
-            Helper.debug( "Global trends unavailable. We are out of luck :/" );
-            tte = new TwitterTrendsEvent( null, trendsChoice, TRENDS_NOT_AVAILABLE );
-            notifyTrendsFound( tte, true );
+            Helper.debug( "Stored global trends are fresher than our update interval" );
+            event = new TwitterTrendsEvent( TrendsPrefs.getGlobalTrends(), trendsChoice, TRENDS_FOUND );
+            notifyTrendsFound( event, true );
         }
         else
         {
-            Helper.debug( "Global trends found" );
-            tte = new TwitterTrendsEvent( Helper.createTrendsArrayList( globalTrends ), trendsChoice, TRENDS_FOUND );
-            notifyTrendsFound( tte, true );
+            if ( AccountPrefs.areTwitterDetailsPresent() )
+            {
+                Helper.debug( "User is logged in to twitter" );
+                updateAccessToken();
+                Trends globalTrends = getTrendsForLocation( 1 );
+                if ( null != globalTrends )
+                {
+                    Helper.debug( "Global trends found" );
+                    tte = new TwitterTrendsEvent( Helper.createTrendsArrayList( globalTrends ), trendsChoice, TRENDS_FOUND );
+                    notifyTrendsFound( tte, false );
+                }
+                else
+                {
+                    Helper.debug( "Global trends not found" );
+                    tte = new TwitterTrendsEvent( null, trendsChoice, TRENDS_NOT_AVAILABLE );
+                    notifyTrendsFound( tte, true );
+                }
+            }
+            else
+            {
+                Helper.debug( "User not logged in to Twitter" );
+                if ( globalTrendsLastUpdated != -1 && globalTrendsLastUpdated + KEEP_OLD_TRENDS_DURATION > System.currentTimeMillis() )
+                {
+                    Helper.debug( "Stored global trends are fresher than our keep old trends duration" );
+                    event = new TwitterTrendsEvent( TrendsPrefs.getGlobalTrends(), trendsChoice, TRENDS_FOUND );
+                    notifyTrendsFound( event, true );
+                }
+                else
+                {
+                    Helper.debug( "Stored global trends not found or were older than three days" );
+                    event = new TwitterTrendsEvent( null, trendsChoice, TWITTER_NOT_LOGGED_IN );
+                    notifyTrendsFound( event, true );
+                }
+            }
         }
     }
 
@@ -216,12 +251,17 @@ public class TwitterTrendsService extends Service
         return countryIso;
     }
 
-    private void notifyTrendsFound( final TwitterTrendsEvent event, boolean local )
+    private void notifyTrendsFound( final TwitterTrendsEvent event, boolean cached )
     {
-        if ( event.getStatus() == TRENDS_FOUND && !local )
+        if ( event.getStatus() == TRENDS_FOUND && !cached )
         {
-            Helper.debug( "Trends found from net. Saving to SharedPreferences" );
-            TrendsPrefs.addTrends( event.getTrends() );
+            Helper.debug( "Trends found from net. Saving locally" );
+            switch ( event.getTrendingChoice() )
+            {
+                case 1: TrendsPrefs.setGlobalTrends( event.getTrends() ); break;
+                case 0: // fall through
+                default: TrendsPrefs.setLocalTrends( event.getTrends() ); break;
+            }
         }
         new Handler( Looper.getMainLooper() ).post( new Runnable()
         {
@@ -323,8 +363,12 @@ public class TwitterTrendsService extends Service
         public void run()
         {
             Helper.debug( "trendsFetcherRunnable running!" );
-            fetchNewTrends();
-            trendsFetcherHandler.postDelayed( this, TRENDS_UPDATE_INTERVAL );
+            switch ( trendsChoice )
+            {
+                case 1: fetchGlobalTrends(); break;
+                case 0: // fall through
+                default: fetchNewLocalTrends(); break;
+            }
         }
     }
 }
