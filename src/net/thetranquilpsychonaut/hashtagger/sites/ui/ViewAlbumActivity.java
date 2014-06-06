@@ -38,8 +38,8 @@ public class ViewAlbumActivity extends BaseActivity
     public static final String SELECTED_POSITION_KEY = "pos";
 
     // Flags indicating what toast message to show on saving image
-    private static final int SAVE_IMAGE_FAILED = 0;
-    private static final int SAVE_IMAGE_SUCCEEDED = 1;
+    private static final int SAVE_IMAGE_FAILED     = 0;
+    private static final int SAVE_IMAGE_SUCCEEDED  = 1;
     private static final int SAVE_IMAGE_NOT_LOADED = 2;
 
     private ViewPager         albumPager;
@@ -126,7 +126,7 @@ public class ViewAlbumActivity extends BaseActivity
 
     public void doSaveImage( MenuItem item )
     {
-        TouchImageView currentView = ( TouchImageView ) albumPager.findViewWithTag( albumPager.getCurrentItem());
+        TouchImageView currentView = ( TouchImageView ) albumPager.findViewWithTag( albumPager.getCurrentItem() );
 
         if ( null == currentView )
         {
@@ -172,7 +172,7 @@ public class ViewAlbumActivity extends BaseActivity
                 }
                 catch ( FileNotFoundException e )
                 {
-                    Helper.debug( String.format( "Cannot open image file : %s", imageFile.getAbsolutePath()  ) );
+                    Helper.debug( String.format( "Cannot open image file : %s", imageFile.getAbsolutePath() ) );
                 }
                 showSaveImageToast( success ? SAVE_IMAGE_SUCCEEDED : SAVE_IMAGE_FAILED );
             }
@@ -196,10 +196,16 @@ public class ViewAlbumActivity extends BaseActivity
         String message;
         switch ( code )
         {
-            case SAVE_IMAGE_SUCCEEDED: message = "Image saved"; break;
-            case SAVE_IMAGE_NOT_LOADED: message = "Image not loaded yet"; break;
+            case SAVE_IMAGE_SUCCEEDED:
+                message = "Image saved";
+                break;
+            case SAVE_IMAGE_NOT_LOADED:
+                message = "Image not loaded yet";
+                break;
             case SAVE_IMAGE_FAILED: // Fall through
-            default: message = "Failed to save image"; break;
+            default:
+                message = "Failed to save image";
+                break;
         }
         Toast.makeText( this, message, Toast.LENGTH_SHORT ).show();
     }

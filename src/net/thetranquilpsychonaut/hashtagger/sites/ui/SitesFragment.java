@@ -18,9 +18,11 @@ import android.view.*;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
+import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
+import net.thetranquilpsychonaut.hashtagger.events.SearchHashtagEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
 import net.thetranquilpsychonaut.hashtagger.utils.DefaultPrefs;
@@ -86,6 +88,7 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
     {
         super.onStart();
         sitesSearchHandler.registerReceiver();
+        HashtaggerApp.bus.register( this );
         if ( !sitesSearchHandler.isSearchRunning() )
         {
             if ( activeView == LOADING )
@@ -120,9 +123,10 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
     @Override
     public void onStop()
     {
+        super.onStop();
         timedSearchHandler.removeCallbacks( timedSearchRunner );
         sitesSearchHandler.unregisterReceiver();
-        super.onStop();
+        HashtaggerApp.bus.unregister( this );
     }
 
     @Override
@@ -209,7 +213,7 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
                 }
                 else
                 {
-                    searchHashtag();
+                    searchHashtag( null );
                 }
             }
         } );
@@ -412,7 +416,8 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
 
     protected abstract int getLogoResId();
 
-    protected void searchHashtag()
+    @Subscribe
+    public void searchHashtag( SearchHashtagEvent event )
     {
         if ( TextUtils.isEmpty( getEnteredHashtag() ) )
         {

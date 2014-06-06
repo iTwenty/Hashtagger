@@ -86,8 +86,10 @@ public abstract class NavDrawerActivity extends FragmentActivity
         {
             switch ( position )
             {
-                case 0: return new TrendingHashtagsFragment();
-                case 1: return new SavedHashtagsFragment();
+                case 0:
+                    return new TrendingHashtagsFragment();
+                case 1:
+                    return new SavedHashtagsFragment();
             }
             return null;
         }

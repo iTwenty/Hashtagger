@@ -7,6 +7,7 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.SimplePageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
+import net.thetranquilpsychonaut.hashtagger.events.SearchHashtagEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterFavoriteEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterReplyEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterRetweetEvent;
@@ -155,20 +156,6 @@ public class TwitterFragment extends SitesFragment
         return Helper.getTwitterStatusUrl( ( Status ) result );
     }
 
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-        HashtaggerApp.bus.register( this );
-    }
-
-    @Override
-    public void onPause()
-    {
-        HashtaggerApp.bus.unregister( this );
-        super.onPause();
-    }
-
     @Subscribe
     public void onRetweetDone( TwitterRetweetEvent event )
     {
@@ -209,5 +196,11 @@ public class TwitterFragment extends SitesFragment
         {
             Toast.makeText( getActivity(), "Failed to reply", Toast.LENGTH_SHORT ).show();
         }
+    }
+
+    @Subscribe
+    public void searchHashtag( SearchHashtagEvent event )
+    {
+        super.searchHashtag( event );
     }
 }

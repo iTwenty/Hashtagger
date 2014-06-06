@@ -23,11 +23,11 @@ import java.util.List;
  */
 public class TwitterTrendsService extends Service
 {
-    public static final long TRENDS_UPDATE_INTERVAL = 1000 * 60 * 60; // one hpur
+    public static final long TRENDS_UPDATE_INTERVAL   = 1000 * 60 * 60; // one hpur
     public static final long KEEP_OLD_TRENDS_DURATION = 1000 * 60 * 60 * 24 * 3; // 3 days
 
     // choice of selected location
-    public static final int LOCAL = 0;
+    public static final int LOCAL  = 0;
     public static final int GLOBAL = 1;
 
     // statuses for TwitterTrendsEvent
@@ -61,7 +61,9 @@ public class TwitterTrendsService extends Service
     {
         super.onDestroy();
         if ( null != trendsFetcherThread )
+        {
             trendsFetcherThread.quit();
+        }
         Helper.debug( "TwitterTrendsService destroyed" );
     }
 
@@ -127,19 +129,19 @@ public class TwitterTrendsService extends Service
             Trends trends = getTrendsForLocation( trendsLoc.getWoeid() );
             if ( null != trends )
             {
-                Helper.debug( String.format(  "Trends found for location %s", trends.getLocation().getName() ) );
+                Helper.debug( String.format( "Trends found for location %s", trends.getLocation().getName() ) );
                 event = new TwitterTrendsEvent( Helper.createTrendsArrayList( trends ), trendsChoice, TRENDS_FOUND );
                 notifyTrendsFound( event, false );
             }
             else
             {
-                Helper.debug( String.format(  "Trends not found for location %s", trendsLoc.getName() ) );
+                Helper.debug( String.format( "Trends not found for location %s", trendsLoc.getName() ) );
                 fetchTrendsForCountry();
             }
         }
         else
         {
-            Helper.debug( String.format(  "No location with trends info found close to %d %d", lastLoc.getLatitude(), lastLoc.getLongitude() ) );
+            Helper.debug( String.format( "No location with trends info found close to %d %d", lastLoc.getLatitude(), lastLoc.getLongitude() ) );
             fetchTrendsForCountry();
         }
     }
@@ -158,7 +160,7 @@ public class TwitterTrendsService extends Service
                 Trends trends = getTrendsForLocation( countryLoc.getWoeid() );
                 if ( null != trends )
                 {
-                    Helper.debug( String.format(  "Trends found for location %s", trends.getLocation().getName() ) );
+                    Helper.debug( String.format( "Trends found for location %s", trends.getLocation().getName() ) );
                     event = new TwitterTrendsEvent( Helper.createTrendsArrayList( trends ), trendsChoice, TRENDS_FOUND );
                     notifyTrendsFound( event, false );
                 }
@@ -258,9 +260,13 @@ public class TwitterTrendsService extends Service
             Helper.debug( "Trends found from net. Saving locally" );
             switch ( event.getTrendingChoice() )
             {
-                case 1: TrendsPrefs.setGlobalTrends( event.getTrends() ); break;
+                case 1:
+                    TrendsPrefs.setGlobalTrends( event.getTrends() );
+                    break;
                 case 0: // fall through
-                default: TrendsPrefs.setLocalTrends( event.getTrends() ); break;
+                default:
+                    TrendsPrefs.setLocalTrends( event.getTrends() );
+                    break;
             }
         }
         new Handler( Looper.getMainLooper() ).post( new Runnable()
@@ -365,9 +371,13 @@ public class TwitterTrendsService extends Service
             Helper.debug( "trendsFetcherRunnable running!" );
             switch ( trendsChoice )
             {
-                case 1: fetchGlobalTrends(); break;
+                case 1:
+                    fetchGlobalTrends();
+                    break;
                 case 0: // fall through
-                default: fetchNewLocalTrends(); break;
+                default:
+                    fetchNewLocalTrends();
+                    break;
             }
         }
     }

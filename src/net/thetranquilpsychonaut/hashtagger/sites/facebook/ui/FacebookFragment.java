@@ -1,11 +1,13 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.net.Uri;
+import com.squareup.otto.Subscribe;
 import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.SimplePageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
+import net.thetranquilpsychonaut.hashtagger.events.SearchHashtagEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.components.FacebookSearchHandler;
@@ -147,5 +149,11 @@ public class FacebookFragment extends SitesFragment
     protected Uri getResultUrl( Object result )
     {
         return Helper.getFacebookPostUrl( ( Post ) result );
+    }
+
+    @Subscribe
+    public void searchHashtag( SearchHashtagEvent event )
+    {
+        super.searchHashtag( event );
     }
 }

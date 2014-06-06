@@ -1,5 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
+import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -30,17 +31,17 @@ public class TrendingHashtagsFragment extends Fragment implements AdapterView.On
     private static final String SPINNER_CHOICE_KEY = "sck";
     private static final String TRENDING_LIST_KEY  = "tl";
 
-    protected TrendingHashtagsAdapter trendingHashtagsAdapter;
-    protected List<String>            trendingHashtags;
-    protected ListView                lvTrendingHashtags;
-    protected TextView                tvTrendingHashtagsEmpty;
-    protected Spinner                 spTrendingChoice;
+    protected TrendingHashtagsAdapter    trendingHashtagsAdapter;
+    protected List<String>               trendingHashtags;
+    protected ListView                   lvTrendingHashtags;
+    protected TextView                   tvTrendingHashtagsEmpty;
+    protected Spinner                    spTrendingChoice;
     protected ArrayAdapter<CharSequence> trendingChoiceAdapter;
     protected TwitterTrendsService       twitterTrendsService;
     protected boolean                    isBoundToTrendsService;
     protected TwitterTrendsConnection    twitterTrendsConnection;
 
-    private boolean isSpinnerCreated = false;
+    private boolean isSpinnerCreated         = false;
     private boolean isFragmentFreshlyCreated = false;
 
     @Override
@@ -108,8 +109,12 @@ public class TrendingHashtagsFragment extends Fragment implements AdapterView.On
     {
         if ( parent.equals( lvTrendingHashtags ) )
         {
-            Toast.makeText( parent.getContext(), "Clicked " + position, Toast.LENGTH_SHORT ).show();
-            return;
+            ( ( NavDrawerActivity ) getActivity() ).dlNavDrawer.closeDrawers();
+            String selectedHashtag = ( String ) parent.getItemAtPosition( position );
+            Intent intent = new Intent( Intent.ACTION_SEARCH );
+            intent.putExtra( SearchManager.QUERY, selectedHashtag );
+            intent.setComponent( new ComponentName( parent.getContext(), SitesActivity.class ) );
+            parent.getContext().startActivity( intent );
         }
     }
 
@@ -141,9 +146,13 @@ public class TrendingHashtagsFragment extends Fragment implements AdapterView.On
         {
             switch ( position )
             {
-                case 1: twitterTrendsService.fetchTrends( TwitterTrendsService.GLOBAL ); break;
+                case 1:
+                    twitterTrendsService.fetchTrends( TwitterTrendsService.GLOBAL );
+                    break;
                 case 0: // fall through
-                default: twitterTrendsService.fetchTrends( TwitterTrendsService.LOCAL ); break;
+                default:
+                    twitterTrendsService.fetchTrends( TwitterTrendsService.LOCAL );
+                    break;
             }
         }
         else
@@ -167,7 +176,9 @@ public class TrendingHashtagsFragment extends Fragment implements AdapterView.On
             TwitterTrendsService.TwitterTrendsBinder binder = ( TwitterTrendsService.TwitterTrendsBinder ) service;
             twitterTrendsService = binder.getService();
             if ( isFragmentFreshlyCreated )
+            {
                 twitterTrendsService.fetchTrends( TrendsPrefs.getTrendsChoice() );
+            }
             isBoundToTrendsService = true;
         }
 

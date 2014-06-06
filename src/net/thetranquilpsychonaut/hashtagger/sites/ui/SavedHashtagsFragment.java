@@ -1,6 +1,9 @@
 package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
+import android.app.SearchManager;
+import android.content.ComponentName;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
@@ -80,7 +82,16 @@ public class SavedHashtagsFragment extends Fragment implements AdapterView.OnIte
     @Override
     public void onItemClick( AdapterView<?> parent, View view, int position, long id )
     {
-        Toast.makeText( parent.getContext(), "Clicked " + position, Toast.LENGTH_SHORT ).show();
+        if ( parent.equals( lvSavedHashtags ) )
+        {
+            ( ( NavDrawerActivity ) getActivity() ).dlNavDrawer.closeDrawers();
+            Cursor cursor = ( Cursor ) parent.getItemAtPosition( position );
+            String selectedHashtag = cursor.getString( cursor.getColumnIndex( SavedHashtagsDBContract.SavedHashtags.COLUMN_HASHTAG ) );
+            Intent intent = new Intent( Intent.ACTION_SEARCH );
+            intent.putExtra( SearchManager.QUERY, selectedHashtag );
+            intent.setComponent( new ComponentName( parent.getContext(), SitesActivity.class ) );
+            parent.getContext().startActivity( intent );
+        }
     }
 
 

@@ -10,14 +10,14 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 public final class AccountPrefs
 {
     private static final String ACCOUNT_PREFS                   = "account_prefs";
-    public static final String TWITTER_ACCESS_TOKEN_KEY        = "twitter_access_token";
-    public static final String TWITTER_ACCESS_TOKEN_SECRET_KEY = "twitter_access_token_secret";
-    public static final String TWITTER_USER_NAME_KEY           = "twitter_user_name";
-    public static final String FACEBOOK_ACCESS_TOKEN_KEY       = "facebook_access_token";
-    public static final String FACEBOOK_USER_NAME_KEY          = "facebook_user_name";
-    public static final String GPLUS_ACCESS_TOKEN_KEY          = "gplus_access_token";
-    public static final String GPLUS_REFRESH_TOKEN_KEY         = "gplus_refresh_token";
-    public static final String GPLUS_USER_NAME_KEY             = "gplus_user_name";
+    public static final  String TWITTER_ACCESS_TOKEN_KEY        = "twitter_access_token";
+    public static final  String TWITTER_ACCESS_TOKEN_SECRET_KEY = "twitter_access_token_secret";
+    public static final  String TWITTER_USER_NAME_KEY           = "twitter_user_name";
+    public static final  String FACEBOOK_ACCESS_TOKEN_KEY       = "facebook_access_token";
+    public static final  String FACEBOOK_USER_NAME_KEY          = "facebook_user_name";
+    public static final  String GPLUS_ACCESS_TOKEN_KEY          = "gplus_access_token";
+    public static final  String GPLUS_REFRESH_TOKEN_KEY         = "gplus_refresh_token";
+    public static final  String GPLUS_USER_NAME_KEY             = "gplus_user_name";
 
     private static final SharedPreferences getAccountPrefs()
     {

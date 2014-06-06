@@ -2,10 +2,12 @@ package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 
 import android.net.Uri;
 import com.google.api.services.plus.model.Activity;
+import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.SimplePageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
+import net.thetranquilpsychonaut.hashtagger.events.SearchHashtagEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.GPlusSearchHandler;
@@ -149,5 +151,11 @@ public class GPlusFragment extends SitesFragment
     protected Uri getResultUrl( Object result )
     {
         return Helper.getGPlusActivityUrl( ( Activity ) result );
+    }
+
+    @Subscribe
+    public void searchHashtag( SearchHashtagEvent event )
+    {
+        super.searchHashtag( event );
     }
 }

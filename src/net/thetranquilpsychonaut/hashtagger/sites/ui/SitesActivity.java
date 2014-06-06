@@ -4,7 +4,6 @@ import android.app.SearchManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
@@ -13,15 +12,14 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.*;
-import com.squareup.otto.Subscribe;
+import android.widget.RelativeLayout;
+import android.widget.SearchView;
+import android.widget.Toast;
 import net.thetranquilpsychonaut.hashtagger.HashtagSuggestionsProvider;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.PageDescriptor;
-import net.thetranquilpsychonaut.hashtagger.events.SavedHashtagDeletedEvent;
-import net.thetranquilpsychonaut.hashtagger.events.TwitterTrendsEvent;
+import net.thetranquilpsychonaut.hashtagger.events.SearchHashtagEvent;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsDBContract;
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsProviderContract;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookFragment;
@@ -237,41 +235,8 @@ public class SitesActivity extends NavDrawerActivity
         SearchRecentSuggestions suggestions = new SearchRecentSuggestions( this, HashtagSuggestionsProvider.AUTHORITY, HashtagSuggestionsProvider.MODE );
         suggestions.saveRecentQuery( currentHashtag, null );
         setTitle( currentHashtag );
-        List<Fragment> fragments = getSupportFragmentManager().getFragments();
-        if ( null != fragments )
-        {
-            for ( Fragment f : fragments )
-            {
-                if ( f instanceof SitesFragment )
-                {
-                    ( ( SitesFragment ) f ).searchHashtag();
-                }
-            }
-        }
+        HashtaggerApp.bus.post( new SearchHashtagEvent() );
     }
-
-//    @Override
-//    protected void onTrendingHashtagClick( AdapterView<?> parent, View view, int position, long id )
-//    {
-//        String selectedHashtag = ( ( TextView ) view ).getText().toString();
-//        dlNavDrawer.closeDrawers();
-//        Intent intent = new Intent( Intent.ACTION_SEARCH );
-//        intent.putExtra( SearchManager.QUERY, selectedHashtag );
-//        intent.setComponent( getComponentName() );
-//        startActivity( intent );
-//    }
-//
-//    @Override
-//    protected void onSavedHashtagClick( AdapterView<?> parent, View view, int position, long id )
-//    {
-//        Cursor cursor = ( Cursor ) parent.getItemAtPosition( position );
-//        String selectedHashtag = cursor.getString( cursor.getColumnIndex( SavedHashtagsDBContract.SavedHashtags.COLUMN_HASHTAG ) );
-//        dlNavDrawer.closeDrawers();
-//        Intent intent = new Intent( Intent.ACTION_SEARCH );
-//        intent.putExtra( SearchManager.QUERY, selectedHashtag );
-//        intent.setComponent( getComponentName() );
-//        startActivity( intent );
-//    }
 
     public static final String getCurrentHashtag()
     {
