@@ -181,7 +181,7 @@ public class Helper
         return list;
     }
 
-    public static final String extractJsonStringfield( String jsonBody, String field )
+    public static final String extractJsonStringField( String jsonBody, String field )
     {
         return new JsonParser()
                 .parse( jsonBody )

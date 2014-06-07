@@ -35,7 +35,6 @@ import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.events.SearchHashtagEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
-import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
 import net.thetranquilpsychonaut.hashtagger.utils.DefaultPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.widgets.MySwipeRefreshLayout;
@@ -45,7 +44,7 @@ import java.util.List;
 /**
  * Created by itwenty on 2/26/14.
  */
-public abstract class SitesFragment extends Fragment implements AdapterView.OnItemClickListener, SitesSearchHandler.SitesSearchListener, SitesUserHandler.SitesUserListener, AdapterView.OnItemLongClickListener
+public abstract class SitesFragment extends Fragment implements AdapterView.OnItemClickListener, SitesSearchHandler.SitesSearchListener, AdapterView.OnItemLongClickListener
 {
     private static final String ACTIVE_VIEW_KEY        = "active_view";
     private static final String ACTIVE_FOOTER_VIEW_KEY = "active_footer_view";
@@ -59,7 +58,6 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
     private   ViewAnimator       vaSitesView;
     protected ViewHolder         viewHolder;
     protected SitesSearchHandler sitesSearchHandler;
-    protected SitesUserHandler   sitesUserHandler;
     protected List<?>            results;
     protected List<Integer>      resultTypes;
     protected SitesListAdapter   sitesListAdapter;
@@ -90,7 +88,6 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
         results = initResultsList();
         resultTypes = initResultTypesList();
         sitesListAdapter = initSitesListAdapter();
-        sitesUserHandler = initSitesUserHandler();
         sitesSearchHandler = initSitesSearchHandler();
     }
 
@@ -157,7 +154,7 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
     {
         super.onViewCreated( view, savedInstanceState );
         restoreViewStates( savedInstanceState );
-        if ( !sitesUserHandler.isUserLoggedIn() )
+        if ( !isUserLoggedIn() )
         {
             showView( LOGIN );
         }
@@ -359,7 +356,7 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
         }
     }
 
-    private String getEnteredHashtag()
+    protected String getEnteredHashtag()
     {
         return SitesActivity.currentHashtag;
     }
@@ -391,7 +388,7 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
                     @Override
                     public void onClick( DialogInterface dialog, int which )
                     {
-                        sitesUserHandler.logoutUser();
+                        logoutUser();
                     }
                 } )
                 .setNegativeButton( "No", new DialogInterface.OnClickListener()
@@ -410,10 +407,8 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
     @Override
     public void onPrepareOptionsMenu( Menu menu )
     {
-        menu.findItem( R.id.it_logout ).setVisible( sitesUserHandler.isUserLoggedIn() ? true : false );
+        menu.findItem( R.id.it_logout ).setVisible( isUserLoggedIn() ? true : false );
     }
-
-    protected abstract SitesUserHandler initSitesUserHandler();
 
     protected abstract SitesSearchHandler initSitesSearchHandler();
 
@@ -427,6 +422,12 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
 
     protected abstract int getLogoResId();
 
+    protected abstract boolean isUserLoggedIn();
+
+    protected abstract void removeUserDetails();
+
+    protected abstract String getUserName();
+
     @Subscribe
     public void searchHashtag( SearchHashtagEvent event )
     {
@@ -435,7 +436,7 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
             return;
         }
 
-        if ( !sitesUserHandler.isUserLoggedIn() )
+        if ( !isUserLoggedIn() )
         {
             viewHolder.btnLogin.animate().rotationXBy( 360 ).setDuration( 1000 ).start();
             return;
@@ -482,11 +483,10 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
     public void onUserLoggedIn()
     {
         showView( READY );
-        Toast.makeText( getActivity(), getResources().getString( getLoggedInToastTextId() ) + sitesUserHandler.getUserName(), Toast.LENGTH_LONG ).show();
+        Toast.makeText( getActivity(), getResources().getString( getLoggedInToastTextId() ) + getUserName(), Toast.LENGTH_LONG ).show();
         getActivity().invalidateOptionsMenu();
         showClickHashtagIfAlreadyEntered();
     }
-
 
     protected abstract int getLoggedInToastTextId();
 
@@ -509,7 +509,7 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
             Helper.showNoNetworkToast( getActivity() );
             return;
         }
-        if ( !sitesUserHandler.isUserLoggedIn() )
+        if ( !isUserLoggedIn() )
         {
             Toast.makeText( getActivity(), getResources().getString( R.string.str_not_logged_in ), Toast.LENGTH_LONG ).show();
             return;
@@ -543,7 +543,7 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
             Helper.showNoNetworkToast( getActivity() );
             return;
         }
-        if ( !sitesUserHandler.isUserLoggedIn() )
+        if ( !isUserLoggedIn() )
         {
             Toast.makeText( getActivity(), getResources().getString( R.string.str_not_logged_in ), Toast.LENGTH_LONG ).show();
             return;
@@ -687,8 +687,9 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
     /*
     *********************** for UserHandlerListener ****************
      */
-    public void onUserLoggedOut()
+    public void logoutUser()
     {
+        removeUserDetails();
         sitesListAdapter.clear();
         sitesListAdapter.notifyDataSetChanged();
         showView( LOGIN );

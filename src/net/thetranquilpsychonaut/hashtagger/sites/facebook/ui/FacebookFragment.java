@@ -9,12 +9,11 @@ import net.thetranquilpsychonaut.hashtagger.cwacpager.SimplePageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.events.SearchHashtagEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
-import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.components.FacebookSearchHandler;
-import net.thetranquilpsychonaut.hashtagger.sites.facebook.components.FacebookUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragmentData;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
+import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
 import java.util.ArrayList;
@@ -40,6 +39,24 @@ public class FacebookFragment extends SitesFragment
     }
 
     @Override
+    protected boolean isUserLoggedIn()
+    {
+        return AccountPrefs.areFacebookDetailsPresent();
+    }
+
+    @Override
+    protected void removeUserDetails()
+    {
+        AccountPrefs.removeFacebookDetails();
+    }
+
+    @Override
+    protected String getUserName()
+    {
+        return AccountPrefs.getFacebookUserName();
+    }
+
+    @Override
     protected int getLoginButtonBackgroundId()
     {
         return R.drawable.selector_facebook_icon_background;
@@ -62,12 +79,6 @@ public class FacebookFragment extends SitesFragment
     protected String getSiteName()
     {
         return HashtaggerApp.FACEBOOK;
-    }
-
-    @Override
-    protected SitesUserHandler initSitesUserHandler()
-    {
-        return new FacebookUserHandler( this );
     }
 
     @Override

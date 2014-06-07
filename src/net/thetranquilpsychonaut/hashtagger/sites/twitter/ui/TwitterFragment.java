@@ -12,12 +12,11 @@ import net.thetranquilpsychonaut.hashtagger.events.TwitterFavoriteEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterReplyEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterRetweetEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
-import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterSearchHandler;
-import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragmentData;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
+import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import twitter4j.Status;
 
@@ -44,6 +43,24 @@ public class TwitterFragment extends SitesFragment
     }
 
     @Override
+    protected boolean isUserLoggedIn()
+    {
+        return AccountPrefs.areTwitterDetailsPresent();
+    }
+
+    @Override
+    protected void removeUserDetails()
+    {
+        AccountPrefs.removeTwitterDetails();
+    }
+
+    @Override
+    protected String getUserName()
+    {
+        return AccountPrefs.getTwitterUserName();
+    }
+
+    @Override
     protected int getLoginButtonBackgroundId()
     {
         return R.drawable.selector_twitter_background;
@@ -66,12 +83,6 @@ public class TwitterFragment extends SitesFragment
     protected String getSiteName()
     {
         return HashtaggerApp.TWITTER;
-    }
-
-    @Override
-    protected SitesUserHandler initSitesUserHandler()
-    {
-        return new TwitterUserHandler( this );
     }
 
     @Override

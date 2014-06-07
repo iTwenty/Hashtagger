@@ -115,7 +115,7 @@ public class GPlusService extends SitesService
             OAuthRequest request = new OAuthRequest( Verb.GET, GPLUS_USERNAME_URL );
             service.signRequest( accessToken, request );
             Response response = request.send();
-            userName = Helper.extractJsonStringfield( response.getBody(), "displayName" );
+            userName = Helper.extractJsonStringField( response.getBody(), "displayName" );
         }
         catch ( Exception e )
         {

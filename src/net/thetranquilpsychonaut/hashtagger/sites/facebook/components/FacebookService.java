@@ -109,7 +109,7 @@ public class FacebookService extends SitesService
             OAuthRequest request = new OAuthRequest( Verb.GET, FACEBOOK_USERNAME_URL );
             service.signRequest( accessToken, request );
             Response response = request.send();
-            userName = Helper.extractJsonStringfield( response.getBody(), "name" );
+            userName = Helper.extractJsonStringField( response.getBody(), "name" );
         }
         catch ( Exception e )
         {

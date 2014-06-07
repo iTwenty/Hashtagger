@@ -52,7 +52,7 @@ public class GPlusLoginHandler extends SitesLoginHandler
         }
         Token accessToken = ( Token ) intent.getSerializableExtra( Result.RESULT_DATA );
         String userName = intent.getStringExtra( Result.RESULT_EXTRAS );
-        String refreshToken = Helper.extractJsonStringfield( accessToken.getRawResponse(), "refresh_token" );
+        String refreshToken = Helper.extractJsonStringField( accessToken.getRawResponse(), "refresh_token" );
         AccountPrefs.addGPlusDetails( accessToken.getToken(), refreshToken, userName );
         gPlusLoginListener.onUserLoggedIn();
     }

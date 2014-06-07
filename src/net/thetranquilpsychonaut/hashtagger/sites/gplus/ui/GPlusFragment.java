@@ -9,12 +9,11 @@ import net.thetranquilpsychonaut.hashtagger.cwacpager.SimplePageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.events.SearchHashtagEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
-import net.thetranquilpsychonaut.hashtagger.sites.components.SitesUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.GPlusSearchHandler;
-import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.GPlusUserHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragmentData;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
+import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
 import java.util.ArrayList;
@@ -26,12 +25,6 @@ import java.util.List;
 public class GPlusFragment extends SitesFragment
 {
     public static SimplePageDescriptor descriptor = new SimplePageDescriptor( HashtaggerApp.GPLUS, HashtaggerApp.GPLUS );
-
-    @Override
-    protected SitesUserHandler initSitesUserHandler()
-    {
-        return new GPlusUserHandler( this );
-    }
 
     @Override
     protected SitesSearchHandler initSitesSearchHandler()
@@ -68,6 +61,24 @@ public class GPlusFragment extends SitesFragment
     protected int getLogoResId()
     {
         return R.drawable.gplus_icon_flat;
+    }
+
+    @Override
+    protected boolean isUserLoggedIn()
+    {
+        return AccountPrefs.areGPlusDetailsPresent();
+    }
+
+    @Override
+    protected void removeUserDetails()
+    {
+        AccountPrefs.removeTwitterDetails();
+    }
+
+    @Override
+    protected String getUserName()
+    {
+        return AccountPrefs.getGPlusUserName();
     }
 
     @Override
