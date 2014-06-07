@@ -2,12 +2,13 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.components;
 
 import android.content.Context;
 import android.content.Intent;
-import facebook4j.auth.AccessToken;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookLoginActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
+import org.scribe.model.Token;
 
 /**
  * Created by itwenty on 4/7/14.
@@ -34,7 +35,7 @@ public class FacebookLoginHandler extends SitesLoginHandler
     {
         Intent accessIntent = new Intent( HashtaggerApp.app, FacebookService.class );
         accessIntent.putExtra( ActionType.ACTION_TYPE_KEY, ActionType.AUTH );
-        accessIntent.putExtra( HashtaggerApp.FACEBOOK_CODE_KEY, code );
+        accessIntent.putExtra( FacebookLoginActivity.FACEBOOK_CODE_KEY, code );
         HashtaggerApp.app.startService( accessIntent );
         facebookLoginListener.whileObtainingAccessToken();
     }
@@ -48,7 +49,7 @@ public class FacebookLoginHandler extends SitesLoginHandler
             facebookLoginListener.onError();
             return;
         }
-        AccessToken accessToken = ( AccessToken ) intent.getSerializableExtra( Result.RESULT_DATA );
+        Token accessToken = ( Token ) intent.getSerializableExtra( Result.RESULT_DATA );
         String userName = intent.getStringExtra( Result.RESULT_EXTRAS );
         AccountPrefs.addFacebookDetails( accessToken.getToken(), userName );
         facebookLoginListener.onUserLoggedIn();

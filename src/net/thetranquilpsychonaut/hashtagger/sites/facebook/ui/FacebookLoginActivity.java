@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import facebook4j.FacebookFactory;
-import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.config.FacebookConfig;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
@@ -19,6 +17,10 @@ import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesLoginActivity;
  */
 public class FacebookLoginActivity extends SitesLoginActivity implements FacebookLoginHandler.FacebookLoginListener
 {
+    public static final String FACEBOOK_CALLBACK_URL  = "http://localhost/";
+    public static final String FACEBOOK_CODE_KEY      = "code";
+    public static final String FACEBOOK_AUTHORIZE_URL = String.format( "https://www.facebook.com/dialog/oauth?client_id=%s&redirect_uri=%s", FacebookConfig.FACEBOOK_OAUTH_APP_ID, FACEBOOK_CALLBACK_URL );
+
     WebView wvFacebookLogin;
 
     @Override
@@ -30,14 +32,15 @@ public class FacebookLoginActivity extends SitesLoginActivity implements Faceboo
             @Override
             public boolean shouldOverrideUrlLoading( WebView view, String url )
             {
-                if ( !url.startsWith( HashtaggerApp.FACEBOOK_CALLBACK_URL ) )
+                if ( !url.startsWith( FACEBOOK_CALLBACK_URL ) )
                 {
                     return false;
                 }
                 Uri uri = Uri.parse( url );
-                if ( null != uri.getQueryParameter( HashtaggerApp.FACEBOOK_CODE_KEY ) )
+                if ( null != uri.getQueryParameter( FACEBOOK_CODE_KEY ) )
                 {
-                    ( ( FacebookLoginHandler ) sitesLoginHandler ).fetchAccessToken( uri.getQueryParameter( HashtaggerApp.FACEBOOK_CODE_KEY ) );
+                    String code = uri.getQueryParameter( FACEBOOK_CODE_KEY );
+                    ( ( FacebookLoginHandler ) sitesLoginHandler ).fetchAccessToken( code );
                 }
                 else
                 {
@@ -74,8 +77,7 @@ public class FacebookLoginActivity extends SitesLoginActivity implements Faceboo
         }
         else
         {
-            wvFacebookLogin.loadUrl( new FacebookFactory( FacebookConfig.CONFIGURATION ).getInstance()
-                    .getOAuthAuthorizationURL( HashtaggerApp.FACEBOOK_CALLBACK_URL ) );
+            wvFacebookLogin.loadUrl( FACEBOOK_AUTHORIZE_URL );
         }
     }
 

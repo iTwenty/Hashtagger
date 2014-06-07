@@ -8,7 +8,11 @@ import com.google.api.services.plus.model.Activity;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.*;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.AlbumThumbnail;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesActivity;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumThumbnailsFragment;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
 import java.util.ArrayList;

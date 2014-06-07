@@ -10,6 +10,7 @@ import android.util.Patterns;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.api.services.plus.model.Activity;
+import com.google.gson.JsonParser;
 import com.twitter.Autolink;
 import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
@@ -178,5 +179,15 @@ public class Helper
             list.add( t.getName() );
         }
         return list;
+    }
+
+    public static final String extractJsonStringfield( String jsonBody, String field )
+    {
+        return new JsonParser()
+                .parse( jsonBody )
+                .getAsJsonObject()
+                .get( field )
+                .toString()
+                .replaceAll( "\"", "" );
     }
 }

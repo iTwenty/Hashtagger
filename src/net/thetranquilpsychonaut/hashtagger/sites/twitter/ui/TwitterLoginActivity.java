@@ -5,12 +5,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
-import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterLoginHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesLoginActivity;
-import twitter4j.auth.RequestToken;
+import org.scribe.model.Token;
 
 /**
  * Created by itwenty on 3/17/14.
@@ -22,8 +21,12 @@ import twitter4j.auth.RequestToken;
  */
 public class TwitterLoginActivity extends SitesLoginActivity implements TwitterLoginHandler.TwitterLoginListener
 {
-    WebView      wvTwitterLogin;
-    RequestToken requestToken;
+    public static final String TWITTER_REQUEST_TOKEN_KEY  = "twitter_request_token_key";
+    public static final String TWITTER_CALLBACK_URL       = "twitter-login-callback:///";
+    public static final String TWITTER_OAUTH_VERIFIER_KEY = "oauth_verifier";
+
+    WebView wvTwitterLogin;
+    Token   requestToken;
 
     @Override
     protected View initMainView( Bundle savedInstanceState )
@@ -32,17 +35,14 @@ public class TwitterLoginActivity extends SitesLoginActivity implements TwitterL
         return wvTwitterLogin;
     }
 
-
     @Override
     protected void onViewsCreated( Bundle savedInstanceState )
     {
         setTitle( getString( R.string.str_title_activity_twitter_login ) );
-        // On first start we need to fetch the request token. On subsequent starts, we need to
-        // ensure that fetched request token is not lost.
         if ( null != savedInstanceState )
         {
             wvTwitterLogin.restoreState( savedInstanceState );
-            requestToken = ( RequestToken ) savedInstanceState.getSerializable( HashtaggerApp.TWITTER_REQUEST_TOKEN_KEY );
+            requestToken = ( Token ) savedInstanceState.getSerializable( TWITTER_REQUEST_TOKEN_KEY );
         }
         else
         {
@@ -71,9 +71,10 @@ public class TwitterLoginActivity extends SitesLoginActivity implements TwitterL
     private void handleIntent( Intent intent )
     {
         Uri uri = intent.getData();
-        if ( null != uri && uri.toString().startsWith( HashtaggerApp.TWITTER_CALLBACK_URL ) && null != uri.getQueryParameter( HashtaggerApp.TWITTER_OAUTH_VERIFIER_KEY ) )
+        if ( null != uri && uri.toString().startsWith( TWITTER_CALLBACK_URL ) && null != uri.getQueryParameter( TWITTER_OAUTH_VERIFIER_KEY ) )
         {
-            ( ( TwitterLoginHandler ) sitesLoginHandler ).fetchAccessToken( this.requestToken, uri.getQueryParameter( HashtaggerApp.TWITTER_OAUTH_VERIFIER_KEY ) );
+            String oauthVerifier = uri.getQueryParameter( TWITTER_OAUTH_VERIFIER_KEY );
+            ( ( TwitterLoginHandler ) sitesLoginHandler ).fetchAccessToken( this.requestToken, oauthVerifier );
         }
         else
         {
@@ -87,7 +88,7 @@ public class TwitterLoginActivity extends SitesLoginActivity implements TwitterL
     {
         super.onSaveInstanceState( outState );
         wvTwitterLogin.saveState( outState );
-        outState.putSerializable( HashtaggerApp.TWITTER_REQUEST_TOKEN_KEY, requestToken );
+        outState.putSerializable( TWITTER_REQUEST_TOKEN_KEY, requestToken );
     }
 
     @Override
@@ -104,11 +105,11 @@ public class TwitterLoginActivity extends SitesLoginActivity implements TwitterL
     }
 
     @Override
-    public void onObtainingReqToken( RequestToken requestToken )
+    public void onObtainingReqToken( Token requestToken, String authorizationUrl )
     {
         showMainView();
         this.requestToken = requestToken;
-        wvTwitterLogin.loadUrl( this.requestToken.getAuthorizationURL() );
+        wvTwitterLogin.loadUrl( authorizationUrl );
     }
 
     @Override

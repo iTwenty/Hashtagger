@@ -6,21 +6,24 @@ import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl;
-import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.config.GPlusConfig;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.GPlusLoginHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesLoginActivity;
 
-import java.util.Arrays;
-
 /**
  * Created by itwenty on 5/5/14.
  */
 public class GPlusLoginActivity extends SitesLoginActivity implements GPlusLoginHandler.GPlusLoginListener
 {
+    public static final  String GPLUS_CALLBACK_URL  = "http://localhost/";
+    public static final  String GPLUS_CODE_KEY      = "code";
+    public static final  String GPLUS_ACCESS_SCOPE  = "https://www.googleapis.com/auth/plus.login";
+    private static final String GPLUS_AUTHORIZE_URL =
+            String.format( "https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=%s&redirect_uri=%s&scope=%s",
+                    GPlusConfig.GPLUS_OAUTH_CLIENT_ID, GPLUS_CALLBACK_URL, GPLUS_ACCESS_SCOPE );
+
     WebView wvGPlusLogin;
 
     @Override
@@ -33,14 +36,15 @@ public class GPlusLoginActivity extends SitesLoginActivity implements GPlusLogin
             @Override
             public boolean shouldOverrideUrlLoading( WebView view, String url )
             {
-                if ( !url.startsWith( HashtaggerApp.GPLUS_CALLBACK_URL ) )
+                if ( !url.startsWith( GPLUS_CALLBACK_URL ) )
                 {
                     return false;
                 }
                 Uri uri = Uri.parse( url );
-                if ( null != uri.getQueryParameter( HashtaggerApp.GPLUS_CODE_KEY ) )
+                if ( null != uri.getQueryParameter( GPLUS_CODE_KEY ) )
                 {
-                    ( ( GPlusLoginHandler ) sitesLoginHandler ).fetchAccessToken( uri.getQueryParameter( HashtaggerApp.GPLUS_CODE_KEY ) );
+                    String code = uri.getQueryParameter( GPLUS_CODE_KEY );
+                    ( ( GPlusLoginHandler ) sitesLoginHandler ).fetchAccessToken( code );
                 }
                 else
                 {
@@ -77,11 +81,7 @@ public class GPlusLoginActivity extends SitesLoginActivity implements GPlusLogin
         }
         else
         {
-            String authUrl = new GoogleAuthorizationCodeRequestUrl(
-                    GPlusConfig.SECRETS,
-                    HashtaggerApp.GPLUS_CALLBACK_URL,
-                    Arrays.asList( HashtaggerApp.GPLUS_ACCESS_SCOPE ) ).build();
-            wvGPlusLogin.loadUrl( authUrl );
+            wvGPlusLogin.loadUrl( GPLUS_AUTHORIZE_URL );
         }
     }
 

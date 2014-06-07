@@ -2,7 +2,11 @@ package net.thetranquilpsychonaut.hashtagger.sites.components;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.*;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.IBinder;
+import android.os.Looper;
+import android.os.Message;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
 

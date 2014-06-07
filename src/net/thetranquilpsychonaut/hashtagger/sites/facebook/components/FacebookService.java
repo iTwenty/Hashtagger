@@ -1,15 +1,28 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.components;
 
 import android.content.Intent;
-import facebook4j.*;
+import facebook4j.Facebook;
+import facebook4j.FacebookException;
+import facebook4j.FacebookFactory;
+import facebook4j.Post;
+import facebook4j.ResponseList;
 import facebook4j.auth.AccessToken;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.config.FacebookConfig;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesService;
+import net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookLoginActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import org.scribe.builder.ServiceBuilder;
+import org.scribe.builder.api.FacebookApi;
+import org.scribe.model.OAuthRequest;
+import org.scribe.model.Response;
+import org.scribe.model.Token;
+import org.scribe.model.Verb;
+import org.scribe.model.Verifier;
+import org.scribe.oauth.OAuthService;
 
 import java.io.Serializable;
 
@@ -19,6 +32,7 @@ import java.io.Serializable;
 public class FacebookService extends SitesService
 {
     private volatile static boolean isServiceRunning;
+    private static final String FACEBOOK_USERNAME_URL = "https://graph.facebook.com/me?fields=name";
 
     @Override
     protected Intent doSearch( Intent searchIntent )
@@ -79,22 +93,27 @@ public class FacebookService extends SitesService
     @Override
     protected Intent doAuth( Intent intent )
     {
-        final String code = intent.getStringExtra( HashtaggerApp.FACEBOOK_CODE_KEY );
+        final String code = intent.getStringExtra( FacebookLoginActivity.FACEBOOK_CODE_KEY );
         Intent resultIntent = new Intent();
-        AccessToken accessToken = null;
+        Token accessToken = null;
         String userName = null;
         try
         {
-            Facebook facebook = new FacebookFactory( FacebookConfig.CONFIGURATION ).getInstance();
-            //Callback URL is needed for making a successful call.
-            facebook.setOAuthCallbackURL( HashtaggerApp.FACEBOOK_CALLBACK_URL );
-            accessToken = facebook.getOAuthAccessToken( code );
-            facebook.setOAuthAccessToken( accessToken );
-            userName = facebook.users().getMe().getName();
+            OAuthService service = new ServiceBuilder()
+                    .callback( FacebookLoginActivity.FACEBOOK_CALLBACK_URL )
+                    .provider( FacebookApi.class )
+                    .apiKey( FacebookConfig.FACEBOOK_OAUTH_APP_ID )
+                    .apiSecret( FacebookConfig.FACEBOOK_OAUTH_APP_SECRET )
+                    .build();
+            accessToken = service.getAccessToken( null, new Verifier( code ) );
+            OAuthRequest request = new OAuthRequest( Verb.GET, FACEBOOK_USERNAME_URL );
+            service.signRequest( accessToken, request );
+            Response response = request.send();
+            userName = Helper.extractJsonStringfield( response.getBody(), "name" );
         }
-        catch ( FacebookException e )
+        catch ( Exception e )
         {
-            Helper.debug( "Failed to get Facebook access token" );
+            Helper.debug( "Failed to get Facebook access token : " + e.getMessage() );
         }
         int accessResult = null == accessToken ? Result.FAILURE : Result.SUCCESS;
         resultIntent.putExtra( Result.RESULT_KEY, accessResult );

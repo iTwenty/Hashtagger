@@ -1,6 +1,5 @@
 package net.thetranquilpsychonaut.hashtagger.sites.gplus.components;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.services.plus.model.Activity;
 
 import java.util.Collections;
@@ -15,24 +14,6 @@ import java.util.Stack;
  */
 public class GPlusData
 {
-    public static class AuthData
-    {
-        private static Stack<GoogleTokenResponse> authData = new Stack<GoogleTokenResponse>();
-
-        public static void pushTokenResponse( GoogleTokenResponse tokenResponse )
-        {
-            authData.clear();
-            authData.push( tokenResponse );
-        }
-
-        public static GoogleTokenResponse popTokenResponse()
-        {
-            GoogleTokenResponse response = authData.isEmpty() ? null : authData.pop();
-            authData.clear();
-            return response;
-        }
-    }
-
     public static class SearchData
     {
         private static Stack<List<Activity>> searchData = new Stack<List<Activity>>();

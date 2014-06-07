@@ -2,13 +2,14 @@ package net.thetranquilpsychonaut.hashtagger.sites.gplus.components;
 
 import android.content.Context;
 import android.content.Intent;
-import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusLoginActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import org.scribe.model.Token;
 
 /**
  * Created by itwenty on 5/6/14.
@@ -35,7 +36,7 @@ public class GPlusLoginHandler extends SitesLoginHandler
     {
         Intent accessIntent = new Intent( HashtaggerApp.app, GPlusService.class );
         accessIntent.putExtra( ActionType.ACTION_TYPE_KEY, ActionType.AUTH );
-        accessIntent.putExtra( HashtaggerApp.GPLUS_CODE_KEY, code );
+        accessIntent.putExtra( GPlusLoginActivity.GPLUS_CODE_KEY, code );
         HashtaggerApp.app.startService( accessIntent );
         gPlusLoginListener.whileObtainingAccessToken();
     }
@@ -43,21 +44,16 @@ public class GPlusLoginHandler extends SitesLoginHandler
     @Override
     public void onReceive( Context context, Intent intent )
     {
-        Helper.debug( "GPlusLoginHandler onReceive" );
         int result = intent.getIntExtra( Result.RESULT_KEY, -1 );
         if ( result == Result.FAILURE )
         {
             gPlusLoginListener.onError();
             return;
         }
-        GoogleTokenResponse tokenResponse = GPlusData.AuthData.popTokenResponse();
-        if ( null == tokenResponse )
-        {
-            gPlusLoginListener.onError();
-            return;
-        }
+        Token accessToken = ( Token ) intent.getSerializableExtra( Result.RESULT_DATA );
         String userName = intent.getStringExtra( Result.RESULT_EXTRAS );
-        AccountPrefs.addGPlusDetails( tokenResponse.getAccessToken(), tokenResponse.getRefreshToken(), userName );
+        String refreshToken = Helper.extractJsonStringfield( accessToken.getRawResponse(), "refresh_token" );
+        AccountPrefs.addGPlusDetails( accessToken.getToken(), refreshToken, userName );
         gPlusLoginListener.onUserLoggedIn();
     }
 

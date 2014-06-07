@@ -7,11 +7,25 @@ import net.thetranquilpsychonaut.hashtagger.enums.AuthType;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesService;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterLoginActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
-import twitter4j.*;
+import org.scribe.builder.ServiceBuilder;
+import org.scribe.builder.api.TwitterApi;
+import org.scribe.exceptions.OAuthConnectionException;
+import org.scribe.model.OAuthRequest;
+import org.scribe.model.Response;
+import org.scribe.model.Token;
+import org.scribe.model.Verb;
+import org.scribe.model.Verifier;
+import org.scribe.oauth.OAuthService;
+import twitter4j.Query;
+import twitter4j.QueryResult;
+import twitter4j.Status;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
-import twitter4j.auth.RequestToken;
 
 import java.util.List;
 
@@ -21,6 +35,8 @@ import java.util.List;
 public class TwitterService extends SitesService
 {
     private volatile static boolean isServiceRunning;
+    private static final String TWITTER_USERNAME_URL = "https://api.twitter.com/1.1/account/verify_credentials.json";
+    private static final int    TWITTER_SEARCH_LIMIT = 20;
 
     @Override
     protected Intent doSearch( Intent searchIntent )
@@ -40,19 +56,17 @@ public class TwitterService extends SitesService
             Twitter twitter = new TwitterFactory( TwitterConfig.CONFIGURATION ).getInstance();
             twitter.setOAuthAccessToken( new AccessToken( AccountPrefs.getTwitterAccessToken(), AccountPrefs.getTwitterAccessTokenSecret() ) );
 
-             /*
-            for our initial search we dont need either max or since id.
-            Older search retrieves tweets with ids lower than the maxId
-            Newer search retrieves tweets with ids higher than the sinceId
-             */
+            // for our initial search we dont need either max or since id.
+            // Older search retrieves tweets with ids lower than the maxId
+            // Newer search retrieves tweets with ids higher than the sinceId
 
             switch ( searchType )
             {
                 case SearchType.INITIAL:
-                    query.setCount( HashtaggerApp.TWITTER_SEARCH_LIMIT );
+                    query.setCount( TWITTER_SEARCH_LIMIT );
                     break;
                 case SearchType.OLDER:
-                    query.setCount( HashtaggerApp.TWITTER_SEARCH_LIMIT );
+                    query.setCount( TWITTER_SEARCH_LIMIT );
                     query.setMaxId( TwitterSearchHandler.maxId );
                     break;
                 case SearchType.NEWER:
@@ -73,20 +87,25 @@ public class TwitterService extends SitesService
         {
             if ( !queryResult.getTweets().isEmpty() )
             {
-                /*
-                if our current search is the initial one, we set both the max and since ids for subsquent searches.
-                if our current search is older, we don't want it to change the sinceId for our next newer search.
-                if our current search is newer, we don't want it to change the maxId for our next older search.
-                 */
+                //  if our current search is the initial one,
+                //  we set both the max and since ids for subsquent searches.
+                //  if our current search is older,
+                //  we don't want it to change the sinceId for our next newer search.
+                //  if our current search is newer,
+                //  we don't want it to change the maxId for our next older search.
+
                 if ( searchType != SearchType.OLDER )
                 {
                     TwitterSearchHandler.sinceId = queryResult.getMaxId();
                 }
                 if ( searchType != SearchType.NEWER && searchType != SearchType.TIMED )
                 {
-                    TwitterSearchHandler.maxId = queryResult.getSinceId() == 0 ? getLowestId( queryResult.getTweets() ) : queryResult.getSinceId();
+                    TwitterSearchHandler.maxId = queryResult.getSinceId() == 0 ?
+                            getLowestId( queryResult.getTweets() ) :
+                            queryResult.getSinceId();
                 }
-                // In case the search was for older results, we remove the newest one as maxId parameter is inclusive
+                // In case the search was for older results,
+                // we remove the newest one as maxId parameter is inclusive
                 // and causes tweet to repeat.
                 if ( searchType == SearchType.OLDER )
                 {
@@ -115,49 +134,66 @@ public class TwitterService extends SitesService
                 resultIntent = doRequestAuth( resultIntent );
                 break;
             case AuthType.ACCESS:
-                final RequestToken requestToken = ( RequestToken ) intent.getSerializableExtra( HashtaggerApp.TWITTER_REQUEST_TOKEN_KEY );
-                final String oauthVerifier = intent.getStringExtra( HashtaggerApp.TWITTER_OAUTH_VERIFIER_KEY );
+                final Token requestToken = ( Token ) intent.getSerializableExtra( TwitterLoginActivity.TWITTER_REQUEST_TOKEN_KEY );
+                final String oauthVerifier = intent.getStringExtra( TwitterLoginActivity.TWITTER_OAUTH_VERIFIER_KEY );
                 resultIntent = doAccessAuth( resultIntent, requestToken, oauthVerifier );
                 break;
             default:
-                throw new RuntimeException( "Invalid authorization type" );
+                resultIntent.putExtra( Result.RESULT_KEY, Result.FAILURE );
         }
         return resultIntent;
     }
 
     private Intent doRequestAuth( Intent resultIntent )
     {
-        RequestToken requestToken = null;
+        Token token = null;
+        String authorizationUrl = null;
         try
         {
-            Twitter twitter = new TwitterFactory( TwitterConfig.CONFIGURATION ).getInstance();
-            requestToken = twitter.getOAuthRequestToken( HashtaggerApp.TWITTER_CALLBACK_URL );
+            OAuthService service = new ServiceBuilder()
+                    .provider( TwitterApi.SSL.class )
+                    .callback( TwitterLoginActivity.TWITTER_CALLBACK_URL )
+                    .apiKey( TwitterConfig.TWITTER_OAUTH_CONSUMER_KEY )
+                    .apiSecret( TwitterConfig.TWITTER_OAUTH_CONSUMER_SECRET )
+                    .build();
+            token = service.getRequestToken();
+            authorizationUrl = service.getAuthorizationUrl( token );
         }
-        catch ( TwitterException e )
+        catch ( OAuthConnectionException e )
         {
             Helper.debug( "Error while obtaining twitter request token : " + e.getMessage() );
         }
-        int requestResult = null == requestToken ? Result.FAILURE : Result.SUCCESS;
+        int requestResult = null == token ? Result.FAILURE : Result.SUCCESS;
         resultIntent.putExtra( Result.RESULT_KEY, requestResult );
         if ( requestResult == Result.SUCCESS )
         {
-            resultIntent.putExtra( Result.RESULT_DATA, requestToken );
+            resultIntent.putExtra( Result.RESULT_DATA, token );
+            resultIntent.putExtra( Result.RESULT_EXTRAS, authorizationUrl );
         }
         return resultIntent;
     }
 
-    private Intent doAccessAuth( Intent resultIntent, RequestToken requestToken, String oauthVerifier )
+    private Intent doAccessAuth( Intent resultIntent, Token requestToken, String oauthVerifier )
     {
-        AccessToken accessToken = null;
+        Token accessToken = null;
         String userName = null;
         try
         {
-            Twitter twitter = new TwitterFactory( TwitterConfig.CONFIGURATION ).getInstance();
-            accessToken = twitter.getOAuthAccessToken( requestToken, oauthVerifier );
-            twitter.setOAuthAccessToken( accessToken );
-            userName = twitter.verifyCredentials().getName();
+            OAuthService service = new ServiceBuilder()
+                    .provider( TwitterApi.SSL.class )
+                    .callback( TwitterLoginActivity.TWITTER_CALLBACK_URL )
+                    .apiKey( TwitterConfig.TWITTER_OAUTH_CONSUMER_KEY )
+                    .apiSecret( TwitterConfig.TWITTER_OAUTH_CONSUMER_SECRET )
+                    .build();
+            accessToken = service.getAccessToken( requestToken, new Verifier( oauthVerifier ) );
+
+            // Once we have the access token, we do a quick and dirty request to get the username
+            OAuthRequest request = new OAuthRequest( Verb.GET, TWITTER_USERNAME_URL );
+            service.signRequest( accessToken, request );
+            Response response = request.send();
+            userName = Helper.extractJsonStringfield( response.getBody(), "name" );
         }
-        catch ( TwitterException e )
+        catch ( Exception e )
         {
             Helper.debug( "Error while obtaining twitter access token : " + e.getMessage() );
         }

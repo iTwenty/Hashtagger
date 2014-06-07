@@ -7,9 +7,9 @@ import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
 import net.thetranquilpsychonaut.hashtagger.enums.AuthType;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterLoginActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
-import twitter4j.auth.AccessToken;
-import twitter4j.auth.RequestToken;
+import org.scribe.model.Token;
 
 /**
  * Created by itwenty on 3/15/14.
@@ -20,7 +20,7 @@ public class TwitterLoginHandler extends SitesLoginHandler
     {
         public void whileObtainingReqToken();
 
-        public void onObtainingReqToken( RequestToken requestToken );
+        public void onObtainingReqToken( Token requestToken, String authorizationUrl );
 
         public void whileObtainingAccessToken();
 
@@ -45,13 +45,13 @@ public class TwitterLoginHandler extends SitesLoginHandler
         twitterLoginListener.whileObtainingReqToken();
     }
 
-    public void fetchAccessToken( RequestToken requestToken, String oauthVerifier )
+    public void fetchAccessToken( Token requestToken, String oauthVerifier )
     {
         Intent accessIntent = new Intent( HashtaggerApp.app, TwitterService.class );
         accessIntent.putExtra( ActionType.ACTION_TYPE_KEY, ActionType.AUTH );
         accessIntent.putExtra( AuthType.AUTH_TYPE_KEY, AuthType.ACCESS );
-        accessIntent.putExtra( HashtaggerApp.TWITTER_REQUEST_TOKEN_KEY, requestToken );
-        accessIntent.putExtra( HashtaggerApp.TWITTER_OAUTH_VERIFIER_KEY, oauthVerifier );
+        accessIntent.putExtra( TwitterLoginActivity.TWITTER_REQUEST_TOKEN_KEY, requestToken );
+        accessIntent.putExtra( TwitterLoginActivity.TWITTER_OAUTH_VERIFIER_KEY, oauthVerifier );
         HashtaggerApp.app.startService( accessIntent );
         twitterLoginListener.whileObtainingAccessToken();
     }
@@ -69,13 +69,14 @@ public class TwitterLoginHandler extends SitesLoginHandler
         switch ( authType )
         {
             case AuthType.REQUEST:
-                RequestToken requestToken = ( RequestToken ) intent.getSerializableExtra( Result.RESULT_DATA );
-                twitterLoginListener.onObtainingReqToken( requestToken );
+                Token requestToken = ( Token ) intent.getSerializableExtra( Result.RESULT_DATA );
+                String authorizationUrl = intent.getStringExtra( Result.RESULT_EXTRAS );
+                twitterLoginListener.onObtainingReqToken( requestToken, authorizationUrl );
                 break;
             case AuthType.ACCESS:
-                AccessToken accessToken = ( AccessToken ) intent.getSerializableExtra( Result.RESULT_DATA );
+                Token accessToken = ( Token ) intent.getSerializableExtra( Result.RESULT_DATA );
                 String userName = intent.getStringExtra( Result.RESULT_EXTRAS );
-                AccountPrefs.addTwitterDetails( accessToken.getToken(), accessToken.getTokenSecret(), userName );
+                AccountPrefs.addTwitterDetails( accessToken.getToken(), accessToken.getSecret(), userName );
                 twitterLoginListener.onUserLoggedIn();
         }
     }
