@@ -32,7 +32,6 @@ import java.util.List;
 public class TwitterTrendsService extends Service
 {
     public static final long TRENDS_UPDATE_INTERVAL   = 1000 * 60 * 60; // one hpur
-    public static final long KEEP_OLD_TRENDS_DURATION = 1000 * 60 * 60 * 24 * 3; // 3 days
 
     // choice of selected location
     public static final int LOCAL  = 0;
@@ -111,18 +110,8 @@ public class TwitterTrendsService extends Service
             else
             {
                 Helper.debug( "User not logged in to Twitter" );
-                if ( localTrendsLastUpdated != -1 && localTrendsLastUpdated + KEEP_OLD_TRENDS_DURATION > System.currentTimeMillis() )
-                {
-                    Helper.debug( "Stored local trends are fresher than our keep old trends duration" );
-                    event = new TwitterTrendsEvent( TrendsPrefs.getLocalTrends(), trendsChoice, TRENDS_FOUND );
-                    notifyTrendsFound( event, true );
-                }
-                else
-                {
-                    Helper.debug( "Stored local trends not found or were older than three days" );
-                    event = new TwitterTrendsEvent( null, trendsChoice, TWITTER_NOT_LOGGED_IN );
-                    notifyTrendsFound( event, true );
-                }
+                event = new TwitterTrendsEvent( null, trendsChoice, TWITTER_NOT_LOGGED_IN );
+                notifyTrendsFound( event, true );
             }
         }
     }
@@ -236,18 +225,8 @@ public class TwitterTrendsService extends Service
             else
             {
                 Helper.debug( "User not logged in to Twitter" );
-                if ( globalTrendsLastUpdated != -1 && globalTrendsLastUpdated + KEEP_OLD_TRENDS_DURATION > System.currentTimeMillis() )
-                {
-                    Helper.debug( "Stored global trends are fresher than our keep old trends duration" );
-                    event = new TwitterTrendsEvent( TrendsPrefs.getGlobalTrends(), trendsChoice, TRENDS_FOUND );
-                    notifyTrendsFound( event, true );
-                }
-                else
-                {
-                    Helper.debug( "Stored global trends not found or were older than three days" );
-                    event = new TwitterTrendsEvent( null, trendsChoice, TWITTER_NOT_LOGGED_IN );
-                    notifyTrendsFound( event, true );
-                }
+                event = new TwitterTrendsEvent( null, trendsChoice, TWITTER_NOT_LOGGED_IN );
+                notifyTrendsFound( event, true );
             }
         }
     }

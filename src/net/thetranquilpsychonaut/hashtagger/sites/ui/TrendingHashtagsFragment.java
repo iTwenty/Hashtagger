@@ -128,9 +128,9 @@ public class TrendingHashtagsFragment extends Fragment implements AdapterView.On
         if ( code == TwitterTrendsService.TRENDS_FOUND )
         {
             List<String> trends = event.getTrends();
-            trendingHashtags.clear();
             trendingHashtags.addAll( trends );
             trendingHashtagsAdapter.notifyDataSetChanged();
+            tvTrendingHashtagsEmpty.setText( "Trending Hashtags will appear here" );
         }
         else if ( code == TwitterTrendsService.TRENDS_NOT_AVAILABLE )
         {
@@ -151,10 +151,14 @@ public class TrendingHashtagsFragment extends Fragment implements AdapterView.On
             {
                 case 1:
                     twitterTrendsService.fetchTrends( TwitterTrendsService.GLOBAL );
+                    tvTrendingHashtagsEmpty.setText( "Loading" );
+                    trendingHashtags.clear();
                     break;
                 case 0: // fall through
                 default:
                     twitterTrendsService.fetchTrends( TwitterTrendsService.LOCAL );
+                    tvTrendingHashtagsEmpty.setText( "Loading" );
+                    trendingHashtags.clear();
                     break;
             }
         }
