@@ -48,6 +48,7 @@ public class GPlusSearchHandler extends SitesSearchHandler
     @Override
     public void onReceive( Context context, final Intent intent )
     {
+        final Handler main = new Handler( Looper.getMainLooper() );
         new Thread( new Runnable()
         {
             @Override
@@ -57,7 +58,14 @@ public class GPlusSearchHandler extends SitesSearchHandler
                 int resultType = intent.getIntExtra( Result.RESULT_KEY, -1 );
                 if ( resultType == Result.FAILURE )
                 {
-                    sitesSearchListener.onError( searchType );
+                    main.post( new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            sitesSearchListener.onError( searchType );
+                        }
+                    } );
                     return;
                 }
                 final List<Activity> results = GPlusData.SearchData.popSearchResults();
@@ -87,7 +95,7 @@ public class GPlusSearchHandler extends SitesSearchHandler
                     activity.getObject().setOriginalContent( Html.fromHtml( activity.getObject().getContent() ).toString() );
                 }
 
-                new Handler( Looper.getMainLooper() ).post( new Runnable()
+                main.post( new Runnable()
                 {
                     @Override
                     public void run()

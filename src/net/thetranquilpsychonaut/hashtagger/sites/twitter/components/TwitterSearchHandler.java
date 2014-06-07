@@ -50,21 +50,28 @@ public class TwitterSearchHandler extends SitesSearchHandler
     @Override
     public void onReceive( Context context, final Intent intent )
     {
+        final Handler main = new Handler( Looper.getMainLooper() );
         new Thread( new Runnable()
         {
             @Override
             public void run()
             {
-
                 final int searchType = intent.getIntExtra( SearchType.SEARCH_TYPE_KEY, -1 );
                 int resultType = intent.getIntExtra( Result.RESULT_KEY, -1 );
                 if ( resultType == Result.FAILURE )
                 {
-                    sitesSearchListener.onError( searchType );
+                    main.post( new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            sitesSearchListener.onError( searchType );
+                        }
+                    } );
                     return;
                 }
                 final QueryResult result = ( QueryResult ) intent.getSerializableExtra( Result.RESULT_DATA );
-                new Handler( Looper.getMainLooper() ).post( new Runnable()
+                main.post( new Runnable()
                 {
                     @Override
                     public void run()

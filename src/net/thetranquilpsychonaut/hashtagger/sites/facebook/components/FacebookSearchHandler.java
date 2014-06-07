@@ -54,6 +54,7 @@ public class FacebookSearchHandler extends SitesSearchHandler
     @Override
     public void onReceive( Context context, final Intent intent )
     {
+        final Handler main = new Handler( Looper.getMainLooper() );
         new Thread( new Runnable()
         {
             @Override
@@ -63,7 +64,14 @@ public class FacebookSearchHandler extends SitesSearchHandler
                 int resultType = intent.getIntExtra( Result.RESULT_KEY, -1 );
                 if ( resultType == Result.FAILURE )
                 {
-                    sitesSearchListener.onError( searchType );
+                    main.post( new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            sitesSearchListener.onError( searchType );
+                        }
+                    } );
                     return;
                 }
                 final List<Post> results = ( List<Post> ) intent.getSerializableExtra( Result.RESULT_DATA );
@@ -75,7 +83,7 @@ public class FacebookSearchHandler extends SitesSearchHandler
                         iterator.remove();
                     }
                 }
-                new Handler( Looper.getMainLooper() ).post( new Runnable()
+                main.post( new Runnable()
                 {
                     @Override
                     public void run()
