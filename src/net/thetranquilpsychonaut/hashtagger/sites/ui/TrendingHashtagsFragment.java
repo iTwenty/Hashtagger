@@ -29,7 +29,9 @@ import java.util.List;
 /**
  * Created by itwenty on 6/5/14.
  */
-public class TrendingHashtagsFragment extends Fragment implements AdapterView.OnItemClickListener, AdapterView.OnItemSelectedListener
+public class TrendingHashtagsFragment extends Fragment implements
+        AdapterView.OnItemClickListener,
+        AdapterView.OnItemSelectedListener
 {
     private static final String SPINNER_CHOICE_KEY = "sck";
     private static final String TRENDING_LIST_KEY  = "tl";
@@ -66,11 +68,17 @@ public class TrendingHashtagsFragment extends Fragment implements AdapterView.On
         tvTrendingHashtagsEmpty = ( TextView ) view.findViewById( R.id.tv_trending_empty );
         spTrendingChoice = ( Spinner ) view.findViewById( R.id.sp_trending_choice );
         trendingHashtagsAdapter = new TrendingHashtagsAdapter( container.getContext(), trendingHashtags );
-        trendingChoiceAdapter = ArrayAdapter.createFromResource( container.getContext(), R.array.trendingSpinnerChoices, android.R.layout.simple_spinner_item );
+        trendingChoiceAdapter = ArrayAdapter.createFromResource( container.getContext(),
+                R.array.trendingSpinnerChoices,
+                android.R.layout.simple_spinner_item );
         trendingChoiceAdapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
         spTrendingChoice.setAdapter( trendingChoiceAdapter );
         spTrendingChoice.setOnItemSelectedListener( this );
-        spTrendingChoice.setSelection( null == savedInstanceState ? 0 : savedInstanceState.getInt( SPINNER_CHOICE_KEY ), false );
+        spTrendingChoice.setSelection(
+                null == savedInstanceState ?
+                        0 :
+                        savedInstanceState.getInt( SPINNER_CHOICE_KEY ),
+                false );
         lvTrendingHashtags.setEmptyView( tvTrendingHashtagsEmpty );
         lvTrendingHashtags.setAdapter( trendingHashtagsAdapter );
         lvTrendingHashtags.setOnItemClickListener( this );
@@ -182,7 +190,8 @@ public class TrendingHashtagsFragment extends Fragment implements AdapterView.On
         public void onServiceConnected( ComponentName name, IBinder service )
         {
             Helper.debug( "onServiceConnected" );
-            TwitterTrendsService.TwitterTrendsBinder binder = ( TwitterTrendsService.TwitterTrendsBinder ) service;
+            TwitterTrendsService.TwitterTrendsBinder binder =
+                    ( TwitterTrendsService.TwitterTrendsBinder ) service;
             twitterTrendsService = binder.getService();
             if ( isFragmentFreshlyCreated )
             {

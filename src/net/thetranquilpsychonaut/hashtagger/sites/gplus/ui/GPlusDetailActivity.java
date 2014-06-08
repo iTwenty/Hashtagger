@@ -62,7 +62,8 @@ public class GPlusDetailActivity extends SitesDetailActivity
         {
             showPhoto( savedInstanceState );
         }
-        else if ( activityType == GPlusListAdapter.ACTIVITY_TYPE_VIDEO || activityType == GPlusListAdapter.ACTIVITY_TYPE_LINK )
+        else if ( activityType == GPlusListAdapter.ACTIVITY_TYPE_VIDEO ||
+                activityType == GPlusListAdapter.ACTIVITY_TYPE_LINK )
         {
             showDetails( savedInstanceState );
         }
@@ -107,7 +108,11 @@ public class GPlusDetailActivity extends SitesDetailActivity
             @Override
             public void onClick( View v )
             {
-                ViewAlbumActivity.createAndStartActivity( v.getContext(), Helper.createStringArrayList( imageUrl ), 0 );
+                ViewAlbumActivity.createAndStartActivity(
+                        v.getContext(),
+                        activity.getActor().getDisplayName(),
+                        Helper.createStringArrayList( imageUrl ),
+                        0 );
             }
         } );
     }
@@ -128,14 +133,24 @@ public class GPlusDetailActivity extends SitesDetailActivity
         flPlaceHolder = ( FrameLayout ) viewStub.inflate();
         if ( getSupportFragmentManager().findFragmentByTag( ViewAlbumThumbnailsFragment.TAG ) == null )
         {
-            albumThumbnailUrls = new ArrayList<String>( activity.getObject().getAttachments().get( 0 ).getThumbnails().size() );
-            for ( Activity.PlusObject.Attachments.Thumbnails thumbnail : activity.getObject().getAttachments().get( 0 ).getThumbnails() )
+            albumThumbnailUrls = new ArrayList<String>(
+                    activity.getObject().getAttachments().get( 0 ).getThumbnails().size() );
+
+            for ( Activity.PlusObject.Attachments.Thumbnails thumbnail :
+                    activity.getObject().getAttachments().get( 0 ).getThumbnails() )
             {
                 albumThumbnailUrls.add( thumbnail.getImage().getUrl() );
             }
+
+            ViewAlbumThumbnailsFragment fragment = ViewAlbumThumbnailsFragment.newInstance(
+                    activity.getActor().getDisplayName(),
+                    ( ArrayList<String> ) albumThumbnailUrls,
+                    true,
+                    HashtaggerApp.GPLUS_VALUE );
+
             getSupportFragmentManager().beginTransaction()
                     .add( flPlaceHolder.getId(),
-                            ViewAlbumThumbnailsFragment.newInstance( ( ArrayList<String> ) albumThumbnailUrls, true, HashtaggerApp.GPLUS_VALUE ),
+                            fragment,
                             ViewAlbumThumbnailsFragment.TAG )
                     .commit();
         }

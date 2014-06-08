@@ -90,7 +90,7 @@ public class FacebookDetailActivity extends SitesDetailActivity
             @Override
             public void onClick( View v )
             {
-                ViewAlbumActivity.createAndStartActivity( v.getContext(), Helper.createStringArrayList( imageUrl ), 0 );
+                ViewAlbumActivity.createAndStartActivity( v.getContext(), post.getName(), Helper.createStringArrayList( imageUrl ), 0 );
             }
         } );
     }

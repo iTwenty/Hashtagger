@@ -78,7 +78,9 @@ public class FacebookPhotoRow extends FacebookListRow implements View.OnClickLis
         if ( v.equals( imgvThumbnail ) )
         {
             ViewAlbumActivity.createAndStartActivity( getContext(),
-                    Helper.createStringArrayList( Helper.getFacebookLargePhotoUrl( post.getPicture().toString() ) ), 0 );
+                    post.getName(),
+                    Helper.createStringArrayList( Helper.getFacebookLargePhotoUrl( post.getPicture().toString() ) ),
+                    0 );
         }
     }
 }

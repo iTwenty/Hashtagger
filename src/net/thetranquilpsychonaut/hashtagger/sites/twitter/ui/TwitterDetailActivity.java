@@ -87,7 +87,7 @@ public class TwitterDetailActivity extends SitesDetailActivity implements View.O
             @Override
             public void onClick( View v )
             {
-                ViewAlbumActivity.createAndStartActivity( v.getContext(), Helper.createStringArrayList( imageUrl ), 0 );
+                ViewAlbumActivity.createAndStartActivity( v.getContext(), "@" + status.getUser().getScreenName(), Helper.createStringArrayList( imageUrl ), 0 );
             }
         } );
     }
@@ -103,6 +103,6 @@ public class TwitterDetailActivity extends SitesDetailActivity implements View.O
     {
         ArrayList<String> imageUrls = new ArrayList<String>( 1 );
         imageUrls.add( Helper.getTwitterLargePhotoUrl( status.getMediaEntities()[0].getMediaURL() ) );
-        ViewAlbumActivity.createAndStartActivity( this, imageUrls, 0 );
+        ViewAlbumActivity.createAndStartActivity( this, "@" + status.getUser().getScreenName(), imageUrls, 0 );
     }
 }

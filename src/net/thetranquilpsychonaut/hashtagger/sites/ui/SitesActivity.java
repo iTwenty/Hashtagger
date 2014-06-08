@@ -46,7 +46,11 @@ public class SitesActivity extends NavDrawerActivity
     public void onCreate( Bundle savedInstanceState )
     {
         super.onCreate( savedInstanceState );
-        RelativeLayout rl = ( RelativeLayout ) getLayoutInflater().inflate( R.layout.activity_sites, null, false );
+        RelativeLayout rl = ( RelativeLayout ) getLayoutInflater().inflate(
+                R.layout.activity_sites,
+                null,
+                false );
+
         dlNavDrawer.addView( rl, 0 );
 
         vpSitesPager = ( ViewPager ) findViewById( R.id.vp_sites_pager );
@@ -191,8 +195,15 @@ public class SitesActivity extends NavDrawerActivity
         }
         ContentValues values = new ContentValues();
         values.put( SavedHashtagsDBContract.SavedHashtags.COLUMN_HASHTAG, currentHashtag );
-        Uri result = getContentResolver().insert( SavedHashtagsProviderContract.SavedHashtags.CONTENT_URI, values );
-        Toast.makeText( this, result == null ? "Failed to save hashtag " + currentHashtag : "Saved hashtag " + currentHashtag, Toast.LENGTH_SHORT ).show();
+        Uri result = getContentResolver()
+                .insert( SavedHashtagsProviderContract.SavedHashtags.CONTENT_URI, values );
+        Toast.makeText(
+                this,
+                result == null ?
+                        "Failed to save hashtag " + currentHashtag :
+                        "Saved hashtag " + currentHashtag,
+                Toast.LENGTH_SHORT )
+                .show();
     }
 
     public void doLaunchSettings( MenuItem item )
@@ -234,7 +245,10 @@ public class SitesActivity extends NavDrawerActivity
         // We have a hashtag, time to show the save option in the menu
         invalidateOptionsMenu();
         // Save the entered query for later search suggestion
-        SearchRecentSuggestions suggestions = new SearchRecentSuggestions( this, HashtagSuggestionsProvider.AUTHORITY, HashtagSuggestionsProvider.MODE );
+        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(
+                this,
+                HashtagSuggestionsProvider.AUTHORITY,
+                HashtagSuggestionsProvider.MODE );
         suggestions.saveRecentQuery( currentHashtag, null );
         setTitle( currentHashtag );
         new Handler( Looper.getMainLooper() ).post( new Runnable()

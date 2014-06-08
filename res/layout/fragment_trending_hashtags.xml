@@ -24,7 +24,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="Trending hashtags will appear here"
+        android:text="@string/str_trending_hashtags_empty"
         android:freezesText="true"/>
 
     <ProgressBar

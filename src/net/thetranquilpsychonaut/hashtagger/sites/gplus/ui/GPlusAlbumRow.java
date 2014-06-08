@@ -97,7 +97,7 @@ public class GPlusAlbumRow extends GPlusListRow implements View.OnClickListener
             if ( albumCount == 1 )
             {
                 String imageUrl = Helper.getGPlusAlbumImageUrl( activity.getObject().getAttachments().get( 0 ).getThumbnails().get( 0 ).getImage().getUrl() );
-                ViewAlbumActivity.createAndStartActivity( v.getContext(), Helper.createStringArrayList( imageUrl ), 0 );
+                ViewAlbumActivity.createAndStartActivity( v.getContext(), activity.getActor().getDisplayName(), Helper.createStringArrayList( imageUrl ), 0 );
             }
             else
             {
@@ -106,7 +106,7 @@ public class GPlusAlbumRow extends GPlusListRow implements View.OnClickListener
                 {
                     albumThumbnailUrls.add( thumbnail.getImage().getUrl() );
                 }
-                ViewAlbumThumbnailsFragment fragment = ViewAlbumThumbnailsFragment.newInstance( albumThumbnailUrls, false, HashtaggerApp.GPLUS_VALUE );
+                ViewAlbumThumbnailsFragment fragment = ViewAlbumThumbnailsFragment.newInstance( activity.getActor().getDisplayName(), albumThumbnailUrls, false, HashtaggerApp.GPLUS_VALUE );
                 fragment.show( ( ( SitesActivity ) getContext() ).getSupportFragmentManager(), ViewAlbumThumbnailsFragment.TAG );
             }
         }

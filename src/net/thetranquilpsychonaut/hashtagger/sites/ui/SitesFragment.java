@@ -44,7 +44,10 @@ import java.util.List;
 /**
  * Created by itwenty on 2/26/14.
  */
-public abstract class SitesFragment extends Fragment implements AdapterView.OnItemClickListener, SitesSearchHandler.SitesSearchListener, AdapterView.OnItemLongClickListener
+public abstract class SitesFragment extends Fragment implements
+        AdapterView.OnItemClickListener,
+        SitesSearchHandler.SitesSearchListener,
+        AdapterView.OnItemLongClickListener
 {
     private static final String ACTIVE_VIEW_KEY        = "active_view";
     private static final String ACTIVE_FOOTER_VIEW_KEY = "active_footer_view";
@@ -111,9 +114,9 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
             {
                 viewHolder.srlReady.setRefreshing( false );
             }
-            if ( viewHolder.sitesFooterView.getActiveView() == viewHolder.sitesFooterView.LOADING )
+            if ( viewHolder.sitesFooterView.getActiveView() == SitesFooterView.LOADING )
             {
-                viewHolder.sitesFooterView.showView( viewHolder.sitesFooterView.NORMAL );
+                viewHolder.sitesFooterView.showView( SitesFooterView.NORMAL );
             }
         }
         if ( !TextUtils.isEmpty( getEnteredHashtag() ) && !results.isEmpty() )
@@ -266,15 +269,19 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
 
                         // No need to override this method
                         @Override
-                        public void onScroll( AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount )
+                        public void onScroll( AbsListView view,
+                                              int firstVisibleItem,
+                                              int visibleItemCount,
+                                              int totalItemCount )
                         {
 
                         }
                     } );
                     // Now we actually perform the scroll upto results count
-                    // We need an offset certain pixels because without it, getFirstVisiblePosition()
-                    // reports one position less than the position actually visible, causing NewResultsBar count
-                    // to decrease by one.
+                    // We need an offset certain pixels because without it,
+                    // getFirstVisiblePosition() reports one position less
+                    // than the position actually visible,
+                    // causing NewResultsBar count to decrease by one.
                     viewHolder.lvResultsList.smoothScrollToPositionFromTop( resultCount, -5 );
                 }
                 else
@@ -456,7 +463,8 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
     public void showView( int activeView )
     {
         int currentIndex = vaSitesView.indexOfChild( vaSitesView.getCurrentView() );
-        if ( ( currentIndex == LOADING || currentIndex == READY ) && ( activeView == READY || activeView == LOADING ) )
+        if ( ( currentIndex == LOADING || currentIndex == READY ) &&
+                ( activeView == READY || activeView == LOADING ) )
         {
             vaSitesView.setInAnimation( fadeIn );
             vaSitesView.setOutAnimation( fadeOut );
@@ -486,7 +494,10 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
     public void onUserLoggedIn()
     {
         showView( READY );
-        Toast.makeText( getActivity(), getResources().getString( getLoggedInToastTextId() ) + getUserName(), Toast.LENGTH_LONG ).show();
+        Toast.makeText( getActivity(),
+                getResources().getString( getLoggedInToastTextId() ) + getUserName(),
+                Toast.LENGTH_LONG )
+                .show();
         getActivity().invalidateOptionsMenu();
         showClickHashtagIfAlreadyEntered();
     }
@@ -496,7 +507,10 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
     public void onLoginFailure()
     {
         showView( LOGIN );
-        Toast.makeText( getActivity(), getResources().getString( getLoginFailureToastTextId() ), Toast.LENGTH_LONG ).show();
+        Toast.makeText( getActivity(),
+                getResources().getString( getLoginFailureToastTextId() ),
+                Toast.LENGTH_LONG )
+                .show();
     }
 
     protected abstract int getLoginFailureToastTextId();
@@ -608,7 +622,8 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
         }
         else
         {
-            viewHolder.sitesEmptyView.setText( String.format( "No results found for %s. Try again?", getEnteredHashtag() ) );
+            viewHolder.sitesEmptyView.setText(
+                    String.format( "No results found for %s. Try again?", getEnteredHashtag() ) );
         }
         sitesListAdapter.notifyDataSetChanged();
         postNextTimedSearch();
@@ -633,12 +648,19 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
         viewHolder.srlReady.setRefreshing( false );
         if ( !searchResults.isEmpty() )
         {
-            int newFirstVisiblePositionIndex = viewHolder.lvResultsList.getFirstVisiblePosition() + searchResults.size();
-            int topOffset = null == viewHolder.lvResultsList.getChildAt( 0 ) ? 0 : viewHolder.lvResultsList.getChildAt( 0 ).getTop();
+            int newFirstVisiblePositionIndex =
+                    viewHolder.lvResultsList.getFirstVisiblePosition() + searchResults.size();
+
+            int topOffset = null == viewHolder.lvResultsList.getChildAt( 0 ) ?
+                    0 :
+                    viewHolder.lvResultsList.getChildAt( 0 ).getTop();
+
             updateResultsAndTypes( SearchType.NEWER, searchResults );
             viewHolder.lvResultsList.setSelectionFromTop( newFirstVisiblePositionIndex, topOffset );
             viewHolder.newResultsBar.setVisibility( View.VISIBLE );
-            viewHolder.newResultsBar.setResultsCount( viewHolder.newResultsBar.getResultsCount() + searchResults.size() );
+
+            viewHolder.newResultsBar.setResultsCount(
+                    viewHolder.newResultsBar.getResultsCount() + searchResults.size() );
         }
         else
         {
@@ -651,12 +673,19 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
     {
         if ( !searchResults.isEmpty() )
         {
-            int newFirstVisiblePositionIndex = viewHolder.lvResultsList.getFirstVisiblePosition() + searchResults.size();
-            int topOffset = null == viewHolder.lvResultsList.getChildAt( 0 ) ? 0 : viewHolder.lvResultsList.getChildAt( 0 ).getTop();
+            int newFirstVisiblePositionIndex =
+                    viewHolder.lvResultsList.getFirstVisiblePosition() + searchResults.size();
+
+            int topOffset = null == viewHolder.lvResultsList.getChildAt( 0 ) ?
+                    0 :
+                    viewHolder.lvResultsList.getChildAt( 0 ).getTop();
+
             updateResultsAndTypes( SearchType.TIMED, searchResults );
             viewHolder.lvResultsList.setSelectionFromTop( newFirstVisiblePositionIndex, topOffset );
             viewHolder.newResultsBar.setVisibility( View.VISIBLE );
-            viewHolder.newResultsBar.setResultsCount( viewHolder.newResultsBar.getResultsCount() + searchResults.size() );
+
+            viewHolder.newResultsBar.setResultsCount(
+                    viewHolder.newResultsBar.getResultsCount() + searchResults.size() );
         }
         sitesListAdapter.notifyDataSetChanged();
         postNextTimedSearch();
@@ -738,10 +767,13 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
             else
             {
                 // If the last selected position is visible on screen, then hide it first.
-                // If it's not visible, we don't do anything since adapter's getView method will take care of collapsing
-                if ( expandedPosition >= parent.getFirstVisiblePosition() && expandedPosition <= parent.getLastVisiblePosition() )
+                // If it's not visible, we don't do anything since
+                // adapter's getView method will take care of collapsing
+                if ( expandedPosition >= parent.getFirstVisiblePosition() &&
+                        expandedPosition <= parent.getLastVisiblePosition() )
                 {
-                    ( ( SitesListRow ) parent.getChildAt( expandedPosition - parent.getFirstVisiblePosition() ) ).collapseRow( true );
+                    ( ( SitesListRow ) parent.getChildAt( expandedPosition - parent.getFirstVisiblePosition() ) )
+                            .collapseRow( true );
                 }
                 // Then show the current selected position and set the tag
                 sitesListRow.expandRow( result, true, adapter );

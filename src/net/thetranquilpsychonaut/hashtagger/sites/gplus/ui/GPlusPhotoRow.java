@@ -86,7 +86,7 @@ public class GPlusPhotoRow extends GPlusListRow implements View.OnClickListener
             {
                 imageUrl = activity.getObject().getAttachments().get( 0 ).getImage().getUrl();
             }
-            ViewAlbumActivity.createAndStartActivity( getContext(), Helper.createStringArrayList( imageUrl ), 0 );
+            ViewAlbumActivity.createAndStartActivity( getContext(), activity.getActor().getDisplayName(), Helper.createStringArrayList( imageUrl ), 0 );
         }
     }
 }

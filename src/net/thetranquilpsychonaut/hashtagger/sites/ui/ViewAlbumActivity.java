@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +21,7 @@ import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.utils.SingleMediaScanner;
 import net.thetranquilpsychonaut.hashtagger.widgets.TextDrawable;
 import net.thetranquilpsychonaut.hashtagger.widgets.TouchImageView;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -34,6 +36,7 @@ import java.util.List;
  */
 public class ViewAlbumActivity extends BaseActivity
 {
+    public static final String USERNAME_KEY          = "usrnm";
     public static final String ALBUM_IMAGE_URLS_KEY  = "images";
     public static final String SELECTED_POSITION_KEY = "pos";
 
@@ -49,9 +52,10 @@ public class ViewAlbumActivity extends BaseActivity
     private TextDrawable      loading;
     private TextDrawable      error;
 
-    public static void createAndStartActivity( Context context, ArrayList<String> albumImageUrls, int selectedPosition )
+    public static void createAndStartActivity( Context context, String userName, ArrayList<String> albumImageUrls, int selectedPosition )
     {
         Intent i = new Intent( context, ViewAlbumActivity.class );
+        i.putExtra( USERNAME_KEY, userName );
         i.putStringArrayListExtra( ALBUM_IMAGE_URLS_KEY, albumImageUrls );
         i.putExtra( SELECTED_POSITION_KEY, selectedPosition );
         context.startActivity( i );
@@ -74,6 +78,10 @@ public class ViewAlbumActivity extends BaseActivity
             finish();
         }
         selectedPosition = getIntent().getIntExtra( SELECTED_POSITION_KEY, 0 );
+        String userName = getIntent().getStringExtra( USERNAME_KEY );
+        setTitle( TextUtils.isEmpty( userName ) ?
+                getResources().getString( R.string.app_name ) :
+                userName + "'s photo" + ( albumImageUrls.size() == 1 ? "" : "s" ) );
         albumPagerAdapter = new AlbumPagerAdapter();
         albumPager.setAdapter( albumPagerAdapter );
         albumPager.setCurrentItem( selectedPosition );

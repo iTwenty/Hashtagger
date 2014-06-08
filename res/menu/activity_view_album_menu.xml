@@ -5,7 +5,7 @@
     <item
         android:id="@+id/it_save_image"
         android:icon="@android:drawable/ic_menu_save"
-        android:title="Save Image"
+        android:title="@string/str_save_image"
         android:showAsAction="always"
         android:onClick="doSaveImage"/>
 

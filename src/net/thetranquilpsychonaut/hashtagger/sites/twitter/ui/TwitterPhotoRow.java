@@ -77,6 +77,7 @@ public class TwitterPhotoRow extends TwitterListRow implements View.OnClickListe
     {
         ViewAlbumActivity.createAndStartActivity(
                 getContext(),
+                "@" + status.getUser().getScreenName(),
                 Helper.createStringArrayList( Helper.getTwitterLargePhotoUrl( status.getMediaEntities()[0].getMediaURL() ) ),
                 0 );
     }

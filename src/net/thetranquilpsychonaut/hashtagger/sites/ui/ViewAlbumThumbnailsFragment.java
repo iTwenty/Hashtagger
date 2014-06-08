@@ -27,20 +27,26 @@ import java.util.List;
 public class ViewAlbumThumbnailsFragment extends DialogFragment implements AdapterView.OnItemClickListener
 {
     public static final String TAG                      = "ViewAlbumThumbnailsFragment";
+    public static final String USERNAME_KEY             = "usrnm";
     public static final String ALBUM_THUMBNAIL_URLS_KEY = "urls";
     public static final String EMBED_KEY                = "embed";
     public static final String SITE_VALUE_KEY           = "sval";
 
     private AdapterView            albumThumbnailsView;
+    private String                 userName;
     private List<String>           albumThumbnailUrls;
     private AlbumThumbnailsAdapter albumThumbnailsAdapter;
     private boolean                isEmbedded;
     private int                    siteValue;
 
-    public static ViewAlbumThumbnailsFragment newInstance( ArrayList<String> albumThumbnailUrls, boolean embed, int siteValue )
+    public static ViewAlbumThumbnailsFragment newInstance( String userName,
+                                                           ArrayList<String> albumThumbnailUrls,
+                                                           boolean embed,
+                                                           int siteValue )
     {
         ViewAlbumThumbnailsFragment f = new ViewAlbumThumbnailsFragment();
         Bundle b = new Bundle();
+        b.putString( USERNAME_KEY, userName );
         b.putStringArrayList( ALBUM_THUMBNAIL_URLS_KEY, albumThumbnailUrls );
         b.putBoolean( EMBED_KEY, embed );
         b.putInt( SITE_VALUE_KEY, siteValue );
@@ -57,6 +63,7 @@ public class ViewAlbumThumbnailsFragment extends DialogFragment implements Adapt
         {
             dismiss();
         }
+        userName = getArguments().getString( USERNAME_KEY );
         isEmbedded = getArguments().getBoolean( EMBED_KEY );
         siteValue = getArguments().getInt( SITE_VALUE_KEY );
         setStyle( STYLE_NO_FRAME, 0 );
@@ -78,12 +85,18 @@ public class ViewAlbumThumbnailsFragment extends DialogFragment implements Adapt
     {
         if ( isEmbedded )
         {
-            albumThumbnailsView = ( TwoWayView ) inflater.inflate( R.layout.fragment_album_thumbnails_strip, container, false );
+            albumThumbnailsView = ( TwoWayView ) inflater.inflate(
+                    R.layout.fragment_album_thumbnails_strip,
+                    container,
+                    false );
             ( ( TwoWayView ) albumThumbnailsView ).setItemMargin( Helper.convertDpToPx( 10 ) );
         }
         else
         {
-            albumThumbnailsView = ( GridView ) inflater.inflate( R.layout.fragment_album_thumbnails_grid, container, false );
+            albumThumbnailsView = ( GridView ) inflater.inflate(
+                    R.layout.fragment_album_thumbnails_grid,
+                    container,
+                    false );
         }
         albumThumbnailsView.setOnItemClickListener( this );
         return albumThumbnailsView;
@@ -112,7 +125,7 @@ public class ViewAlbumThumbnailsFragment extends DialogFragment implements Adapt
                 {
                     albumImageUrls.add( Helper.getGPlusAlbumImageUrl( thumbnailUrl ) );
                 }
-                ViewAlbumActivity.createAndStartActivity( getActivity(), albumImageUrls, position );
+                ViewAlbumActivity.createAndStartActivity( getActivity(), userName, albumImageUrls, position );
                 break;
         }
     }
@@ -153,7 +166,10 @@ public class ViewAlbumThumbnailsFragment extends DialogFragment implements Adapt
 
             if ( null == convertView )
             {
-                imageView = ( ImageView ) LayoutInflater.from( context ).inflate( R.layout.album_thumbnails_cell, parent, false );
+                imageView = ( ImageView ) LayoutInflater.from( context ).inflate(
+                        R.layout.album_thumbnails_cell,
+                        parent,
+                        false );
             }
             else
             {

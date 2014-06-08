@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/it_save_hashtag"
-        android:title="Save hashtag"
+        android:title="@string/str_save_hashtag"
         android:icon="@android:drawable/ic_menu_save"
         android:showAsAction="never"
         android:onClick="doSaveHashtag"
@@ -19,14 +19,14 @@
 
     <item
         android:id="@+id/it_settings"
-        android:title="Settings"
+        android:title="@string/str_settings"
         android:icon="@android:drawable/ic_menu_preferences"
         android:showAsAction="never"
         android:onClick="doLaunchSettings"/>
 
     <item
         android:id="@+id/it_logout"
-        android:title="Logout"
+        android:title="@string/str_logout"
         android:icon="@android:drawable/ic_menu_close_clear_cancel"
         android:visible="false"
         android:showAsAction="never"/>
