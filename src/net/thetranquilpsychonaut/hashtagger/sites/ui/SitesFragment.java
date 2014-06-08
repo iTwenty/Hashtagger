@@ -102,6 +102,9 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
             if ( activeView == LOADING )
             {
                 showView( READY );
+                results.clear();
+                resultTypes.clear();
+                sitesListAdapter.notifyDataSetChanged();
                 showClickHashtagIfAlreadyEntered();
             }
             if ( viewHolder.srlReady.isRefreshing() )
@@ -561,9 +564,6 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
         switch ( searchType )
         {
             case SearchType.INITIAL:
-                results.clear();
-                resultTypes.clear();
-                sitesListAdapter.notifyDataSetChanged();
                 showView( LOADING );
                 break;
             case SearchType.OLDER:
@@ -600,15 +600,17 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
     public void afterInitialSearch( List<?> searchResults )
     {
         showView( READY );
+        results.clear();
+        resultTypes.clear();
         if ( !searchResults.isEmpty() )
         {
             updateResultsAndTypes( SearchType.INITIAL, searchResults );
-            sitesListAdapter.notifyDataSetChanged();
         }
         else
         {
             viewHolder.sitesEmptyView.setText( String.format( "No results found for %s. Try again?", getEnteredHashtag() ) );
         }
+        sitesListAdapter.notifyDataSetChanged();
         postNextTimedSearch();
     }
 
@@ -618,12 +620,12 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
         if ( !searchResults.isEmpty() )
         {
             updateResultsAndTypes( SearchType.OLDER, searchResults );
-            sitesListAdapter.notifyDataSetChanged();
         }
         else
         {
             Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_no_older_results ), Toast.LENGTH_LONG ).show();
         }
+        sitesListAdapter.notifyDataSetChanged();
     }
 
     public void afterNewerSearch( List<?> searchResults )
@@ -634,7 +636,6 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
             int newFirstVisiblePositionIndex = viewHolder.lvResultsList.getFirstVisiblePosition() + searchResults.size();
             int topOffset = null == viewHolder.lvResultsList.getChildAt( 0 ) ? 0 : viewHolder.lvResultsList.getChildAt( 0 ).getTop();
             updateResultsAndTypes( SearchType.NEWER, searchResults );
-            sitesListAdapter.notifyDataSetChanged();
             viewHolder.lvResultsList.setSelectionFromTop( newFirstVisiblePositionIndex, topOffset );
             viewHolder.newResultsBar.setVisibility( View.VISIBLE );
             viewHolder.newResultsBar.setResultsCount( viewHolder.newResultsBar.getResultsCount() + searchResults.size() );
@@ -643,6 +644,7 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
         {
             Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_no_newer_results ), Toast.LENGTH_LONG ).show();
         }
+        sitesListAdapter.notifyDataSetChanged();
     }
 
     public void afterTimedSearch( List<?> searchResults )
@@ -652,11 +654,11 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
             int newFirstVisiblePositionIndex = viewHolder.lvResultsList.getFirstVisiblePosition() + searchResults.size();
             int topOffset = null == viewHolder.lvResultsList.getChildAt( 0 ) ? 0 : viewHolder.lvResultsList.getChildAt( 0 ).getTop();
             updateResultsAndTypes( SearchType.TIMED, searchResults );
-            sitesListAdapter.notifyDataSetChanged();
             viewHolder.lvResultsList.setSelectionFromTop( newFirstVisiblePositionIndex, topOffset );
             viewHolder.newResultsBar.setVisibility( View.VISIBLE );
             viewHolder.newResultsBar.setResultsCount( viewHolder.newResultsBar.getResultsCount() + searchResults.size() );
         }
+        sitesListAdapter.notifyDataSetChanged();
         postNextTimedSearch();
     }
 
