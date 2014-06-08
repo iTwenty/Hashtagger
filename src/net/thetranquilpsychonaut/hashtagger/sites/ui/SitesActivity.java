@@ -228,7 +228,7 @@ public class SitesActivity extends NavDrawerActivity
             return;
         }
 
-        currentHashtag = input.startsWith( "#" ) ? input : "#" + input;
+        currentHashtag = input;
         // We have a hashtag, time to show the save option in the menu
         invalidateOptionsMenu();
         // Save the entered query for later search suggestion

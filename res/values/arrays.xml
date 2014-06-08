@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="trendingSpinnerChoices">
-        <item>Trending near you</item>
+        <item>Trending near me</item>
         <item>Trending worldwide</item>
     </string-array>
 </resources>

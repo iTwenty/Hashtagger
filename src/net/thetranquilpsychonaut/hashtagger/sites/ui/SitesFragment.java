@@ -225,7 +225,7 @@ public abstract class SitesFragment extends Fragment implements AdapterView.OnIt
                 }
             }
         } );
-        viewHolder.sitesEmptyView.setText( "Enter a hashtag" );
+        viewHolder.sitesEmptyView.setText( "Feels a bit empty here. Try the search icon above?" );
         viewHolder.sitesEmptyView.setImage( getSketchLogoResId() );
     }
 

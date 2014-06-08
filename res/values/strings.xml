@@ -4,9 +4,8 @@
     <string name="str_twitter">Twitter</string>
     <string name="str_facebook">Facebook</string>
     <string name="str_instagram">Instagram</string>
-    <string name="str_hashtag_title">Search Hashtag</string>
-    <string name="str_hashtag_hint">Search Hashtag</string>
-    <string name="str_enter_hashtag">Enter a hashtag</string>
+    <string name="str_hashtag_title">Search for topic</string>
+    <string name="str_hashtag_hint">Search for topic</string>
     <string name="str_no_network">No network connection</string>
     <string name="str_retry">Retry</string>
     <string name="str_username">Username</string>

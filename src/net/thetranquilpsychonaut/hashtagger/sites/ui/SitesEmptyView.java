@@ -33,7 +33,6 @@ public class SitesEmptyView extends LinearLayout
         this.setOrientation( LinearLayout.VERTICAL );
         imgvEmpty = ( ImageView ) findViewById( R.id.imgv_empty );
         tvEmpty = ( TextView ) findViewById( R.id.tv_empty );
-        tvEmpty.setTypeface( Typeface.createFromAsset( context.getAssets(), "fonts/Song.ttf" ) );
     }
 
     public void setText( CharSequence text )

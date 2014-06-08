@@ -14,7 +14,8 @@
         android:layout_height="wrap_content"
         style="@style/TextView_Default"
         android:layout_gravity="center_horizontal"
-        android:textSize="20sp"
+        android:gravity="center"
+        android:textSize="16sp"
         android:freezesText="true"/>
 
 </merge>
