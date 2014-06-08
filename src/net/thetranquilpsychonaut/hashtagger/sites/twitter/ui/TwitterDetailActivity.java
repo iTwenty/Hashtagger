@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesDetailActivity;
@@ -63,10 +64,24 @@ public class TwitterDetailActivity extends SitesDetailActivity implements View.O
     {
         viewStub.setLayoutResource( R.layout.twitter_detail_activity_type_photo );
         imgvPhoto = ( ImageView ) viewStub.inflate();
+        imgvPhoto.setVisibility( View.GONE );
         final String imageUrl = Helper.getTwitterLargePhotoUrl( status.getMediaEntities()[0].getMediaURL() );
         Picasso.with( this )
                 .load( imageUrl )
-                .into( imgvPhoto );
+                .into( imgvPhoto, new Callback()
+                {
+                    @Override
+                    public void onSuccess()
+                    {
+                        imgvPhoto.setVisibility( View.VISIBLE );
+                    }
+
+                    @Override
+                    public void onError()
+                    {
+
+                    }
+                } );
         imgvPhoto.setOnClickListener( new View.OnClickListener()
         {
             @Override

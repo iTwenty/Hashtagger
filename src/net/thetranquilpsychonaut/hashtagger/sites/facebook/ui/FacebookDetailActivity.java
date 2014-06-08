@@ -7,6 +7,7 @@ import android.view.ViewStub;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.R;
@@ -66,10 +67,24 @@ public class FacebookDetailActivity extends SitesDetailActivity
     {
         viewStub.setLayoutResource( R.layout.facebook_detail_activity_type_photo );
         imgvPhoto = ( ImageView ) viewStub.inflate();
+        imgvPhoto.setVisibility( View.GONE );
         final String imageUrl = post.getPicture().toString();
         Picasso.with( this )
                 .load( imageUrl )
-                .into( imgvPhoto );
+                .into( imgvPhoto, new Callback()
+                {
+                    @Override
+                    public void onSuccess()
+                    {
+                        imgvPhoto.setVisibility( View.VISIBLE );
+                    }
+
+                    @Override
+                    public void onError()
+                    {
+
+                    }
+                } );
         imgvPhoto.setOnClickListener( new View.OnClickListener()
         {
             @Override

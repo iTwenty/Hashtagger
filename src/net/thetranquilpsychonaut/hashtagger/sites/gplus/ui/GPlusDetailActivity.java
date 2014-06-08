@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.google.api.services.plus.model.Activity;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
@@ -75,6 +76,7 @@ public class GPlusDetailActivity extends SitesDetailActivity
     {
         viewStub.setLayoutResource( R.layout.gplus_detail_activity_type_photo );
         imgvPhoto = ( ImageView ) viewStub.inflate();
+        imgvPhoto.setVisibility( View.GONE );
         final String imageUrl;
         if ( null != activity.getObject().getAttachments().get( 0 ).getFullImage() )
         {
@@ -86,7 +88,20 @@ public class GPlusDetailActivity extends SitesDetailActivity
         }
         Picasso.with( this )
                 .load( imageUrl )
-                .into( imgvPhoto );
+                .into( imgvPhoto, new Callback()
+                {
+                    @Override
+                    public void onSuccess()
+                    {
+                        imgvPhoto.setVisibility( View.VISIBLE );
+                    }
+
+                    @Override
+                    public void onError()
+                    {
+
+                    }
+                } );
         imgvPhoto.setOnClickListener( new View.OnClickListener()
         {
             @Override

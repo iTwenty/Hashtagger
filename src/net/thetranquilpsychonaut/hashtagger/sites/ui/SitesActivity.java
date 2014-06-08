@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -235,7 +237,14 @@ public class SitesActivity extends NavDrawerActivity
         SearchRecentSuggestions suggestions = new SearchRecentSuggestions( this, HashtagSuggestionsProvider.AUTHORITY, HashtagSuggestionsProvider.MODE );
         suggestions.saveRecentQuery( currentHashtag, null );
         setTitle( currentHashtag );
-        HashtaggerApp.bus.post( new SearchHashtagEvent() );
+        new Handler( Looper.getMainLooper() ).post( new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                HashtaggerApp.bus.post( new SearchHashtagEvent() );
+            }
+        } );
     }
 
     public static final String getCurrentHashtag()
