@@ -138,7 +138,7 @@ public class TwitterTrendsService extends Service
         }
         else
         {
-            Helper.debug( String.format( "No location with trends info found close to %d %d", lastLoc.getLatitude(), lastLoc.getLongitude() ) );
+            Helper.debug( String.format( "No location with trends info found close to %f %f", lastLoc.getLatitude(), lastLoc.getLongitude() ) );
             fetchTrendsForCountry();
         }
     }
