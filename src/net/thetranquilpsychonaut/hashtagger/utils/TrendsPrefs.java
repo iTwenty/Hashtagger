@@ -3,7 +3,6 @@ package net.thetranquilpsychonaut.hashtagger.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterTrendsService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,7 +19,6 @@ public class TrendsPrefs
     public static final String LOCAL_TRENDS_LAST_UPDATED_KEY  = "local_trends_last_updated";
     public static final String GLOBAL_TRENDS_KEY              = "global_trends";
     public static final String GLOBAL_TRENDS_LAST_UPDATED_KEY = "global_trends_last_updated";
-    public static final String TRENDS_CHOICE                  = "trends_choice";
 
     private static SharedPreferences getTrendsPrefs()
     {
@@ -64,20 +62,6 @@ public class TrendsPrefs
         getTrendsPrefs().edit()
                 .putStringSet( GLOBAL_TRENDS_KEY, new HashSet<String>( globalTrends ) )
                 .putLong( GLOBAL_TRENDS_LAST_UPDATED_KEY, System.currentTimeMillis() )
-                .commit();
-    }
-
-    // Trends choice
-
-    public static int getTrendsChoice()
-    {
-        return getTrendsPrefs().getInt( TRENDS_CHOICE, TwitterTrendsService.LOCAL );
-    }
-
-    public static void setTrendsChoice( int choice )
-    {
-        getTrendsPrefs().edit()
-                .putInt( TRENDS_CHOICE, choice )
                 .commit();
     }
 }
