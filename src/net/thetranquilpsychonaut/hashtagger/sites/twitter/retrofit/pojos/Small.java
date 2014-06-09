@@ -1,47 +1,53 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos;
 
-import com.google.gson.annotations.SerializedName;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.io.Serializable;
-
 /**
- * Created by itwenty on 6/8/14.
+ * Created by itwenty on 6/9/14.
  */
-public class SearchMetadata implements Serializable
+public class Small
 {
-    @SerializedName( "max_id_str" )
-    private String maxIdStr;
-
-    @SerializedName( "query" )
-    private String query;
-
-    @SerializedName( "count" )
-    private int count;
-
-    @SerializedName( "since_id_str" )
-    private String sinceIdStr;
-
-    public String getSinceIdStr()
+    public Small()
     {
-        return sinceIdStr;
+        Helper.debug( "Small" );
+    }
+    private int w;
+
+    private int h;
+
+    private String resize;
+
+    public int getW()
+    {
+        return w;
     }
 
-    public int getCount()
+    public void setW( int w )
     {
-        return count;
+        this.w = w;
     }
 
-    public String getQuery()
+    public int getH()
     {
-        return query;
+        return h;
     }
 
-    public String getMaxIdStr()
+    public void setH( int h )
     {
-        return maxIdStr;
+        this.h = h;
+    }
+
+    public String getResize()
+    {
+        return resize;
+    }
+
+    public void setResize( String resize )
+    {
+        this.resize = resize;
     }
 
     @Override

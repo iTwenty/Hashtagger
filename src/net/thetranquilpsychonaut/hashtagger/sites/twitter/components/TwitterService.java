@@ -7,8 +7,6 @@ import net.thetranquilpsychonaut.hashtagger.enums.AuthType;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesService;
-import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.TwitterRetrofitService;
-import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.TwitterSigningClient;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterLoginActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
@@ -21,7 +19,6 @@ import org.scribe.model.Token;
 import org.scribe.model.Verb;
 import org.scribe.model.Verifier;
 import org.scribe.oauth.OAuthService;
-import retrofit.RestAdapter;
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
@@ -40,17 +37,6 @@ public class TwitterService extends SitesService
     private volatile static boolean isServiceRunning;
     private static final String TWITTER_USERNAME_URL = "https://api.twitter.com/1.1/account/verify_credentials.json";
     private static final int    TWITTER_SEARCH_LIMIT = 20;
-    private static final TwitterRetrofitService svc;
-
-    static
-    {
-        RestAdapter adapter = new RestAdapter.Builder()
-                .setEndpoint( "https://api.twitter.com/" )
-                .setClient( new TwitterSigningClient() )
-                .build();
-
-        svc = adapter.create( TwitterRetrofitService.class );
-    }
 
     @Override
     protected Intent doSearch( Intent searchIntent )

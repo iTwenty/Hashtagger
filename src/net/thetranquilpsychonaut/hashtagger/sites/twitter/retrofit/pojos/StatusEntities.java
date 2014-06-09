@@ -1,43 +1,29 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos;
 
-import com.google.gson.annotations.SerializedName;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
- * Created by itwenty on 6/8/14.
+ * Created by itwenty on 6/9/14.
  */
-public class SearchResult implements Serializable
+public class StatusEntities
 {
-    private List<Status> statuses;
-
-    @SerializedName("search_metadata")
-    private SearchMetadata searchMetadata;
-
-    public List<Status> getStatuses()
+    public StatusEntities()
     {
-        return statuses;
+        Helper.debug( "StatusEntities" );
     }
+    private List<Media> media;
 
-    public void setStatuses( List<Status> statuses )
+    private List<Url> urls;
+
+    public List<Media> getMedia()
     {
-        this.statuses = statuses;
+        return media;
     }
-
-    public SearchMetadata getSearchMetadata()
-    {
-        return searchMetadata;
-    }
-
-    public void setSearchMetadata( SearchMetadata searchMetadata )
-    {
-        this.searchMetadata = searchMetadata;
-    }
-
 
     @Override
     public String toString()

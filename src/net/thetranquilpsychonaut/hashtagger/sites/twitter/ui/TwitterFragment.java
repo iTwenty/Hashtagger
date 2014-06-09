@@ -13,11 +13,18 @@ import net.thetranquilpsychonaut.hashtagger.events.TwitterReplyEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterRetweetEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterSearchHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterService;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.TwitterRetrofitService;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.SearchParams;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.SearchResult;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragmentData;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import twitter4j.Status;
 
 import java.util.ArrayList;
@@ -212,6 +219,19 @@ public class TwitterFragment extends SitesFragment
     @Subscribe
     public void searchHashtag( SearchHashtagEvent event )
     {
-        super.searchHashtag( event );
+        TwitterRetrofitService.api().searchTweets( new SearchParams( getEnteredHashtag() ).getParams(), new Callback<SearchResult>()
+        {
+            @Override
+            public void success( SearchResult searchResult, Response response )
+            {
+                Helper.debug( searchResult.toString() );
+            }
+
+            @Override
+            public void failure( RetrofitError retrofitError )
+            {
+
+            }
+        } );
     }
 }

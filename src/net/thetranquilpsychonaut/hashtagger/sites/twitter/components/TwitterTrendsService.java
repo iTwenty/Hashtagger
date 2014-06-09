@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class TwitterTrendsService extends Service
 {
-    public static final long TRENDS_UPDATE_INTERVAL   = 1000 * 60 * 60; // one hpur
+    public static final long TRENDS_UPDATE_INTERVAL = 1000 * 60 * 60; // one hpur
 
     // choice of selected location
     public static final int LOCAL  = 0;
