@@ -1,14 +1,18 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.components;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.config.TwitterConfig;
 import net.thetranquilpsychonaut.hashtagger.enums.AuthType;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesService;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.TwitterRetrofitService;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.SearchParams;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.SearchResult;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterLoginActivity;
-import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.TwitterApi;
@@ -19,13 +23,6 @@ import org.scribe.model.Token;
 import org.scribe.model.Verb;
 import org.scribe.model.Verifier;
 import org.scribe.oauth.OAuthService;
-import twitter4j.Query;
-import twitter4j.QueryResult;
-import twitter4j.Status;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
-import twitter4j.auth.AccessToken;
 
 import java.util.List;
 
@@ -45,17 +42,10 @@ public class TwitterService extends SitesService
         final String hashtag = searchIntent.getStringExtra( HashtaggerApp.HASHTAG_KEY );
         Intent resultIntent = new Intent();
         resultIntent.putExtra( SearchType.SEARCH_TYPE_KEY, searchType );
-        Query query = new Query( hashtag );
-        QueryResult queryResult = null;
+        SearchParams params = new SearchParams( hashtag );
+        SearchResult searchResult = null;
         try
         {
-            if ( !AccountPrefs.areTwitterDetailsPresent() )
-            {
-                throw new TwitterException( "Twitter access token not found" );
-            }
-            Twitter twitter = new TwitterFactory( TwitterConfig.CONFIGURATION ).getInstance();
-            twitter.setOAuthAccessToken( new AccessToken( AccountPrefs.getTwitterAccessToken(), AccountPrefs.getTwitterAccessTokenSecret() ) );
-
             // for our initial search we dont need either max or since id.
             // Older search retrieves tweets with ids lower than the maxId
             // Newer search retrieves tweets with ids higher than the sinceId
@@ -63,29 +53,29 @@ public class TwitterService extends SitesService
             switch ( searchType )
             {
                 case SearchType.INITIAL:
-                    query.setCount( TWITTER_SEARCH_LIMIT );
+                    params.setCount( TWITTER_SEARCH_LIMIT );
                     break;
                 case SearchType.OLDER:
-                    query.setCount( TWITTER_SEARCH_LIMIT );
-                    query.setMaxId( TwitterSearchHandler.maxId );
+                    params.setCount( TWITTER_SEARCH_LIMIT );
+                    params.setMaxId( TwitterSearchHandler.maxId );
                     break;
                 case SearchType.NEWER:
-                    query.setSinceId( TwitterSearchHandler.sinceId );
+                    params.setSinceId( TwitterSearchHandler.sinceId );
                     break;
                 case SearchType.TIMED:
-                    query.setSinceId( TwitterSearchHandler.sinceId );
+                    params.setSinceId( TwitterSearchHandler.sinceId );
             }
-            queryResult = twitter.search( query );
+            searchResult = TwitterRetrofitService.api().searchTweets( params.getParams() );
         }
-        catch ( TwitterException e )
+        catch ( Exception e )
         {
             Helper.debug( "Error while searching Twitter for " + hashtag + " : " + e.getMessage() );
         }
-        int searchResult = null == queryResult ? Result.FAILURE : Result.SUCCESS;
-        resultIntent.putExtra( Result.RESULT_KEY, searchResult );
-        if ( searchResult == Result.SUCCESS )
+        int result = null == searchResult ? Result.FAILURE : Result.SUCCESS;
+        resultIntent.putExtra( Result.RESULT_KEY, result );
+        if ( result == Result.SUCCESS )
         {
-            if ( !queryResult.getTweets().isEmpty() )
+            if ( !searchResult.getStatuses().isEmpty() )
             {
                 //  if our current search is the initial one,
                 //  we set both the max and since ids for subsquent searches.
@@ -96,30 +86,31 @@ public class TwitterService extends SitesService
 
                 if ( searchType != SearchType.OLDER )
                 {
-                    TwitterSearchHandler.sinceId = queryResult.getMaxId();
+                    TwitterSearchHandler.sinceId = searchResult.getSearchMetadata().getMaxIdStr();
                 }
                 if ( searchType != SearchType.NEWER && searchType != SearchType.TIMED )
                 {
-                    TwitterSearchHandler.maxId = queryResult.getSinceId() == 0 ?
-                            getLowestId( queryResult.getTweets() ) :
-                            queryResult.getSinceId();
+                    TwitterSearchHandler.maxId =
+                            TextUtils.equals( searchResult.getSearchMetadata().getSinceIdStr(), "0" ) ?
+                                    getLowestId( searchResult.getStatuses() ) :
+                                    searchResult.getSearchMetadata().getSinceIdStr();
                 }
                 // In case the search was for older results,
                 // we remove the newest one as maxId parameter is inclusive
                 // and causes tweet to repeat.
                 if ( searchType == SearchType.OLDER )
                 {
-                    queryResult.getTweets().remove( 0 );
+                    searchResult.getStatuses().remove( 0 );
                 }
             }
-            resultIntent.putExtra( Result.RESULT_DATA, queryResult );
+            resultIntent.putExtra( Result.RESULT_DATA, searchResult );
         }
         return resultIntent;
     }
 
-    private long getLowestId( List<Status> list )
+    private String getLowestId( List<Status> list )
     {
-        return list.get( list.size() - 1 ).getId();
+        return list.get( list.size() - 1 ).getIdStr();
     }
 
     @Override

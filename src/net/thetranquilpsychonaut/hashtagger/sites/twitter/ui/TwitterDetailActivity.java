@@ -10,10 +10,10 @@ import android.widget.TextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesDetailActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
-import twitter4j.Status;
 
 import java.util.ArrayList;
 
@@ -65,7 +65,7 @@ public class TwitterDetailActivity extends SitesDetailActivity implements View.O
         viewStub.setLayoutResource( R.layout.twitter_detail_activity_type_photo );
         imgvPhoto = ( ImageView ) viewStub.inflate();
         imgvPhoto.setVisibility( View.GONE );
-        final String imageUrl = Helper.getTwitterLargePhotoUrl( status.getMediaEntities()[0].getMediaURL() );
+        final String imageUrl = Helper.getTwitterLargePhotoUrl( status.getEntities().getMedia().get( 0 ).getUrl() );
         Picasso.with( this )
                 .load( imageUrl )
                 .into( imgvPhoto, new Callback()
@@ -102,7 +102,7 @@ public class TwitterDetailActivity extends SitesDetailActivity implements View.O
     public void onClick( View v )
     {
         ArrayList<String> imageUrls = new ArrayList<String>( 1 );
-        imageUrls.add( Helper.getTwitterLargePhotoUrl( status.getMediaEntities()[0].getMediaURL() ) );
+        imageUrls.add( Helper.getTwitterLargePhotoUrl( status.getEntities().getMedia().get( 0 ).getUrl() ) );
         ViewAlbumActivity.createAndStartActivity( this, "@" + status.getUser().getScreenName(), imageUrls, 0 );
     }
 }

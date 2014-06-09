@@ -62,7 +62,7 @@ public class TwitterLinkRow extends TwitterListRow implements View.OnClickListen
     public void updateRow( Object result )
     {
         super.updateRow( result );
-        tvTwitterLink.setText( status.getURLEntities()[0].getExpandedURL() );
+        tvTwitterLink.setText( status.getEntities().getUrls().get( 0 ).getExpandedUrl() );
     }
 
     @Override
@@ -71,7 +71,7 @@ public class TwitterLinkRow extends TwitterListRow implements View.OnClickListen
         if ( v.equals( tvTwitterLink ) )
         {
             Intent intent = new Intent( Intent.ACTION_VIEW );
-            intent.setData( Uri.parse( status.getURLEntities()[0].getExpandedURL() ) );
+            intent.setData( Uri.parse( status.getEntities().getUrls().get( 0 ).getExpandedUrl() ) );
             getContext().startActivity( intent );
         }
     }

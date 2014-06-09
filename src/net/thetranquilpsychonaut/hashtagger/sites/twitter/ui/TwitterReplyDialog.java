@@ -21,17 +21,17 @@ public class TwitterReplyDialog extends DialogFragment implements TextWatcher, V
 {
     public static final String TAG = "twitter_reply_dialog";
     String   inReplyToScreenName;
-    long     inReplyToStatusId;
+    String     inReplyToStatusId;
     EditText edtReplyText;
     TextView tvCharCounter;
     TextView tvReplyProgress;
 
-    public static TwitterReplyDialog newInstance( String inReplyToScreenName, long inReplyToStatusId )
+    public static TwitterReplyDialog newInstance( String inReplyToScreenName, String inReplyToStatusId )
     {
         TwitterReplyDialog dialog = new TwitterReplyDialog();
         Bundle args = new Bundle();
         args.putString( "reply_to_screen_name", inReplyToScreenName );
-        args.putLong( "reply_to_status_id", inReplyToStatusId );
+        args.putString( "reply_to_status_id", inReplyToStatusId );
         dialog.setArguments( args );
         return dialog;
     }
@@ -40,7 +40,7 @@ public class TwitterReplyDialog extends DialogFragment implements TextWatcher, V
     public Dialog onCreateDialog( Bundle savedInstanceState )
     {
         this.inReplyToScreenName = getArguments().getString( "reply_to_screen_name" );
-        this.inReplyToStatusId = getArguments().getLong( "reply_to_status_id" );
+        this.inReplyToStatusId = getArguments().getString( "reply_to_status_id" );
         View layout = getActivity().getLayoutInflater().inflate( R.layout.dialog_twitter_reply, null );
         AlertDialog dialog = new AlertDialog.Builder( getActivity() )
                 .setView( layout )

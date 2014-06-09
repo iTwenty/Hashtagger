@@ -5,12 +5,13 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by itwenty on 6/9/14.
  */
-public class StatusEntities
+public class StatusEntities implements Serializable
 {
     public StatusEntities()
     {
@@ -23,6 +24,11 @@ public class StatusEntities
     public List<Media> getMedia()
     {
         return media;
+    }
+
+    public List<Url> getUrls()
+    {
+        return urls;
     }
 
     @Override

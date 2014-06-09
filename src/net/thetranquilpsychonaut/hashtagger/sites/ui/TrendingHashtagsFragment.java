@@ -2,7 +2,6 @@ package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
 import android.app.SearchManager;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -20,8 +19,6 @@ import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterTrendsEvent;
-import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterTrendsService;
-import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +39,7 @@ public class TrendingHashtagsFragment extends Fragment implements
     protected TextView                   tvTrendingHashtagsEmpty;
     protected Spinner                    spTrendingChoice;
     protected ArrayAdapter<CharSequence> trendingChoiceAdapter;
-    protected TwitterTrendsService       twitterTrendsService;
+    //protected TwitterTrendsService       twitterTrendsService;
     protected boolean                    isBoundToTrendsService;
     protected TwitterTrendsConnection    twitterTrendsConnection;
 
@@ -91,8 +88,8 @@ public class TrendingHashtagsFragment extends Fragment implements
     {
         super.onStart();
         HashtaggerApp.bus.register( this );
-        Intent i = new Intent( getActivity(), TwitterTrendsService.class );
-        getActivity().bindService( i, twitterTrendsConnection, Context.BIND_AUTO_CREATE );
+        //Intent i = new Intent( getActivity(), TwitterTrendsService.class );
+        //getActivity().bindService( i, twitterTrendsConnection, Context.BIND_AUTO_CREATE );
     }
 
     @Override
@@ -102,7 +99,7 @@ public class TrendingHashtagsFragment extends Fragment implements
         HashtaggerApp.bus.unregister( this );
         if ( isBoundToTrendsService )
         {
-            getActivity().unbindService( twitterTrendsConnection );
+            //getActivity().unbindService( twitterTrendsConnection );
             isBoundToTrendsService = false;
         }
     }
@@ -132,22 +129,22 @@ public class TrendingHashtagsFragment extends Fragment implements
     @Subscribe
     public void onTwitterTrendsFound( TwitterTrendsEvent event )
     {
-        int code = event.getStatus();
-        if ( code == TwitterTrendsService.TRENDS_FOUND )
-        {
-            List<String> trends = event.getTrends();
-            trendingHashtags.addAll( trends );
-            trendingHashtagsAdapter.notifyDataSetChanged();
-            tvTrendingHashtagsEmpty.setText( "Trending hashtags will appear here" );
-        }
-        else if ( code == TwitterTrendsService.TRENDS_NOT_AVAILABLE )
-        {
-            tvTrendingHashtagsEmpty.setText( "Trends not available" );
-        }
-        else if ( code == TwitterTrendsService.TWITTER_NOT_LOGGED_IN )
-        {
-            tvTrendingHashtagsEmpty.setText( "Log in to Twitter to see trending topics" );
-        }
+//        int code = event.getStatus();
+//        if ( code == TwitterTrendsService.TRENDS_FOUND )
+//        {
+//            List<String> trends = event.getTrends();
+//            trendingHashtags.addAll( trends );
+//            trendingHashtagsAdapter.notifyDataSetChanged();
+//            tvTrendingHashtagsEmpty.setText( "Trending hashtags will appear here" );
+//        }
+//        else if ( code == TwitterTrendsService.TRENDS_NOT_AVAILABLE )
+//        {
+//            tvTrendingHashtagsEmpty.setText( "Trends not available" );
+//        }
+//        else if ( code == TwitterTrendsService.TWITTER_NOT_LOGGED_IN )
+//        {
+//            tvTrendingHashtagsEmpty.setText( "Log in to Twitter to see trending topics" );
+//        }
     }
 
     @Override
@@ -155,22 +152,22 @@ public class TrendingHashtagsFragment extends Fragment implements
     {
         if ( parent.equals( spTrendingChoice ) && isSpinnerCreated )
         {
-            switch ( position )
-            {
-                case 1:
-                    twitterTrendsService.fetchTrends( TwitterTrendsService.GLOBAL );
-                    tvTrendingHashtagsEmpty.setText( "Loading" );
-                    trendingHashtags.clear();
-                    trendingHashtagsAdapter.notifyDataSetChanged();
-                    break;
-                case 0: // fall through
-                default:
-                    twitterTrendsService.fetchTrends( TwitterTrendsService.LOCAL );
-                    tvTrendingHashtagsEmpty.setText( "Loading" );
-                    trendingHashtags.clear();
-                    trendingHashtagsAdapter.notifyDataSetChanged();
-                    break;
-            }
+//            switch ( position )
+//            {
+//                case 1:
+//                    twitterTrendsService.fetchTrends( TwitterTrendsService.GLOBAL );
+//                    tvTrendingHashtagsEmpty.setText( "Loading" );
+//                    trendingHashtags.clear();
+//                    trendingHashtagsAdapter.notifyDataSetChanged();
+//                    break;
+//                case 0: // fall through
+//                default:
+//                    twitterTrendsService.fetchTrends( TwitterTrendsService.LOCAL );
+//                    tvTrendingHashtagsEmpty.setText( "Loading" );
+//                    trendingHashtags.clear();
+//                    trendingHashtagsAdapter.notifyDataSetChanged();
+//                    break;
+//            }
         }
         else
         {
@@ -189,14 +186,14 @@ public class TrendingHashtagsFragment extends Fragment implements
         @Override
         public void onServiceConnected( ComponentName name, IBinder service )
         {
-            Helper.debug( "onServiceConnected" );
-            TwitterTrendsService.TwitterTrendsBinder binder =
-                    ( TwitterTrendsService.TwitterTrendsBinder ) service;
-            twitterTrendsService = binder.getService();
-            if ( isFragmentFreshlyCreated )
-            {
-                twitterTrendsService.fetchTrends( TwitterTrendsService.LOCAL );
-            }
+//            Helper.debug( "onServiceConnected" );
+//            TwitterTrendsService.TwitterTrendsBinder binder =
+//                    ( TwitterTrendsService.TwitterTrendsBinder ) service;
+//            twitterTrendsService = binder.getService();
+//            if ( isFragmentFreshlyCreated )
+//            {
+//                twitterTrendsService.fetchTrends( TwitterTrendsService.LOCAL );
+//            }
             isBoundToTrendsService = true;
         }
 

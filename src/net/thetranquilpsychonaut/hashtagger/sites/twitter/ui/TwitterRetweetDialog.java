@@ -13,14 +13,14 @@ import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterActi
 public class TwitterRetweetDialog extends DialogFragment
 {
     public static final String TAG = "twitter_retweet_dialog";
-    long retweetId;
+    String retweetId;
     int  position;
 
-    public static TwitterRetweetDialog newInstance( long retweetId, int position )
+    public static TwitterRetweetDialog newInstance( String retweetId, int position )
     {
         TwitterRetweetDialog dialog = new TwitterRetweetDialog();
         Bundle args = new Bundle();
-        args.putLong( "retweet_id", retweetId );
+        args.putString( "retweet_id", retweetId );
         args.putInt( "position", position );
         dialog.setArguments( args );
         return dialog;
@@ -29,7 +29,7 @@ public class TwitterRetweetDialog extends DialogFragment
     @Override
     public Dialog onCreateDialog( Bundle savedInstanceState )
     {
-        this.retweetId = getArguments().getLong( "retweet_id" );
+        this.retweetId = getArguments().getString( "retweet_id" );
         this.position = getArguments().getInt( "position" );
         AlertDialog dialog = new AlertDialog.Builder( getActivity() )
                 .setTitle( "Retweet" )

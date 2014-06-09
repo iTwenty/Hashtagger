@@ -65,7 +65,7 @@ public class TwitterPhotoRow extends TwitterListRow implements View.OnClickListe
     {
         super.updateRow( result );
         Picasso.with( getContext() )
-                .load( status.getMediaEntities()[0].getMediaURL() + ":thumb" )
+                .load( status.getEntities().getMedia().get( 0 ).getMediaUrl() + ":thumb" )
                 .error( R.drawable.drawable_image_loading )
                 .fit()
                 .centerCrop()
@@ -78,7 +78,9 @@ public class TwitterPhotoRow extends TwitterListRow implements View.OnClickListe
         ViewAlbumActivity.createAndStartActivity(
                 getContext(),
                 "@" + status.getUser().getScreenName(),
-                Helper.createStringArrayList( Helper.getTwitterLargePhotoUrl( status.getMediaEntities()[0].getMediaURL() ) ),
+                Helper.createStringArrayList(
+                        Helper.getTwitterLargePhotoUrl(
+                                status.getEntities().getMedia().get( 0 ).getMediaUrl() ) ),
                 0 );
     }
 }

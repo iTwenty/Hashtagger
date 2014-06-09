@@ -8,7 +8,7 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
-import twitter4j.QueryResult;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.SearchResult;
 
 /**
  * Created by itwenty on 3/13/14.
@@ -20,8 +20,8 @@ public class TwitterSearchHandler extends SitesSearchHandler
     tweet ids are time based i.e later tweets have higher ids than older tweets.
     */
 
-    static long maxId;
-    static long sinceId;
+    static String maxId;
+    static String sinceId;
 
     public TwitterSearchHandler( SitesSearchListener listener )
     {
@@ -70,13 +70,13 @@ public class TwitterSearchHandler extends SitesSearchHandler
                     } );
                     return;
                 }
-                final QueryResult result = ( QueryResult ) intent.getSerializableExtra( Result.RESULT_DATA );
+                final SearchResult result = ( SearchResult ) intent.getSerializableExtra( Result.RESULT_DATA );
                 main.post( new Runnable()
                 {
                     @Override
                     public void run()
                     {
-                        sitesSearchListener.afterSearching( searchType, result.getTweets() );
+                        sitesSearchListener.afterSearching( searchType, result.getStatuses() );
                     }
                 } );
             }

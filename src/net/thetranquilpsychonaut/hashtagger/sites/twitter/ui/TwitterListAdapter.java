@@ -3,9 +3,9 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
-import twitter4j.Status;
 
 import java.util.List;
 
@@ -69,11 +69,11 @@ public class TwitterListAdapter extends SitesListAdapter
     {
         int statusType = STATUS_TYPE_NORMAL;
 
-        if ( status.getMediaEntities().length > 0 )
+        if ( null != status.getEntities().getMedia() && status.getEntities().getMedia().size() > 0 )
         {
             statusType = STATUS_TYPE_PHOTO;
         }
-        else if ( status.getURLEntities().length > 0 )
+        else if ( null != status.getEntities().getUrls() && status.getEntities().getUrls().size() > 0 )
         {
             statusType = STATUS_TYPE_LINK;
         }

@@ -9,10 +9,11 @@ import android.widget.Toast;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterAction;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton;
-import twitter4j.Status;
+
 
 /**
  * Created by itwenty on 4/16/14.
@@ -133,7 +134,7 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
             Helper.showNoNetworkToast( getContext() );
             return;
         }
-        new TwitterAction().executeFavoriteAction( status.getId(), status.isFavorited(), ( Integer ) this.getTag() );
+        new TwitterAction().executeFavoriteAction( status.getIdStr(), status.isFavorited(), ( Integer ) this.getTag() );
     }
 
     private void doRetweet()
@@ -148,7 +149,7 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
             Helper.showNoNetworkToast( getContext() );
             return;
         }
-        TwitterRetweetDialog dialog = TwitterRetweetDialog.newInstance( status.getId(), ( Integer ) this.getTag() );
+        TwitterRetweetDialog dialog = TwitterRetweetDialog.newInstance( status.getIdStr(), ( Integer ) this.getTag() );
         dialog.show( ( ( FragmentActivity ) getContext() ).getFragmentManager(), TwitterRetweetDialog.TAG );
     }
 
@@ -159,7 +160,7 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
             Helper.showNoNetworkToast( getContext() );
             return;
         }
-        TwitterReplyDialog dialog = TwitterReplyDialog.newInstance( status.getUser().getScreenName(), status.getId() );
+        TwitterReplyDialog dialog = TwitterReplyDialog.newInstance( status.getUser().getScreenName(), status.getIdStr() );
         dialog.show( ( ( FragmentActivity ) getContext() ).getFragmentManager(), TwitterReplyDialog.TAG );
     }
 

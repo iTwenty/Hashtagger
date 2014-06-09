@@ -6,17 +6,21 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.io.Serializable;
+import java.util.Date;
+
 /**
  * Created by itwenty on 6/9/14.
  */
-public class Status
+public class Status implements Serializable
 {
     public Status()
     {
         Helper.debug( "Status" );
     }
+
     @SerializedName( "created_at" )
-    private String createdAt;
+    private Date createdAt;
 
     @SerializedName( "id_str" )
     private String idStr;
@@ -169,14 +173,21 @@ public class Status
         this.idStr = idStr;
     }
 
-    public String getCreatedAt()
+    public Date getCreatedAt()
     {
         return createdAt;
     }
 
-    public void setCreatedAt( String createdAt )
+    public void setCreatedAt( Date createdAt )
     {
         this.createdAt = createdAt;
+    }
+
+    public boolean isRetweet()
+    {
+        if ( null == retweetedStatus )
+            return false;
+        return true;
     }
 
     @Override

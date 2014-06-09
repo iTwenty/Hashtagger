@@ -14,9 +14,7 @@ import com.google.gson.JsonParser;
 import com.twitter.Autolink;
 import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import twitter4j.Status;
-import twitter4j.Trend;
-import twitter4j.Trends;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -133,7 +131,7 @@ public class Helper
 
     public static Uri getTwitterStatusUrl( Status status )
     {
-        return Uri.parse( "http://twitter.com/" + status.getUser().getId() + "/status/" + status.getId() );
+        return Uri.parse( "http://twitter.com/" + status.getUser().getIdStr() + "/status/" + status.getIdStr() );
     }
 
     public static Uri getFacebookPostUrl( Post post )
@@ -171,15 +169,15 @@ public class Helper
         return list;
     }
 
-    public static ArrayList<String> createTrendsArrayList( Trends trends )
-    {
-        ArrayList<String> list = new ArrayList<String>( trends.getTrends().length );
-        for ( Trend t : trends.getTrends() )
-        {
-            list.add( t.getName() );
-        }
-        return list;
-    }
+//    public static ArrayList<String> createTrendsArrayList( Trends trends )
+//    {
+//        ArrayList<String> list = new ArrayList<String>( trends.getTrends().length );
+//        for ( Trend t : trends.getTrends() )
+//        {
+//            list.add( t.getName() );
+//        }
+//        return list;
+//    }
 
     public static final String extractJsonStringField( String jsonBody, String field )
     {
