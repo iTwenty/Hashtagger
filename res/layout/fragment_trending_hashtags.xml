@@ -25,6 +25,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:text="@string/str_trending_hashtags_empty"
+        style="@style/TextView_Default"
         android:freezesText="true"/>
 
     <ProgressBar

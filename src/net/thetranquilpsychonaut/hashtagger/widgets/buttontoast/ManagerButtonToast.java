@@ -1,5 +1,7 @@
 package net.thetranquilpsychonaut.hashtagger.widgets.buttontoast;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
@@ -96,7 +98,9 @@ class ManagerButtonToast extends Handler
         {
             try
             {
+                toastView.setAlpha( 0f );
                 viewGroup.addView( toastView );
+                toastView.animate().alpha( 1f ).setDuration( 500 ).start();
             }
             catch ( IllegalStateException e )
             {
@@ -116,7 +120,14 @@ class ManagerButtonToast extends Handler
     {
         if ( !buttonToast.isShowing() )
         {
-            mList.remove( buttonToast );
+            buttonToast.getView().animate().alpha( 0f ).setDuration( 500 ).setListener( new AnimatorListenerAdapter()
+            {
+                @Override
+                public void onAnimationEnd( Animator animation )
+                {
+                    mList.remove( buttonToast );
+                }
+            } ).start();
             return;
         }
 
