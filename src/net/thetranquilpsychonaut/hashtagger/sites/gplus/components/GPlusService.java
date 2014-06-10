@@ -109,7 +109,7 @@ public class GPlusService extends SitesService
                     .callback( GPlusLoginActivity.GPLUS_CALLBACK_URL )
                     .apiKey( GPlusConfig.GPLUS_OAUTH_CLIENT_ID )
                     .apiSecret( GPlusConfig.GPLUS_OAUTH_CLIENT_SECRET )
-                    .scope( GPlusLoginActivity.GPLUS_ACCESS_SCOPE )
+                    .scope( GPlusConfig.GPLUS_ACCESS_SCOPE )
                     .build();
             accessToken = service.getAccessToken( null, new Verifier( code ) );
             OAuthRequest request = new OAuthRequest( Verb.GET, GPLUS_USERNAME_URL );

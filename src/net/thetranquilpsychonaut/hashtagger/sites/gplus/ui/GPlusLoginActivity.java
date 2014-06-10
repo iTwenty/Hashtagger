@@ -19,10 +19,9 @@ public class GPlusLoginActivity extends SitesLoginActivity implements GPlusLogin
 {
     public static final  String GPLUS_CALLBACK_URL  = "http://localhost/";
     public static final  String GPLUS_CODE_KEY      = "code";
-    public static final  String GPLUS_ACCESS_SCOPE  = "https://www.googleapis.com/auth/plus.login";
     private static final String GPLUS_AUTHORIZE_URL =
             String.format( "https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=%s&redirect_uri=%s&scope=%s",
-                    GPlusConfig.GPLUS_OAUTH_CLIENT_ID, GPLUS_CALLBACK_URL, GPLUS_ACCESS_SCOPE );
+                    GPlusConfig.GPLUS_OAUTH_CLIENT_ID, GPLUS_CALLBACK_URL, GPlusConfig.GPLUS_ACCESS_SCOPE );
 
     WebView wvGPlusLogin;
 

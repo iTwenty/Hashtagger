@@ -40,9 +40,8 @@ public class Twitter
                             .create();
 
                     RestAdapter adapter = new RestAdapter.Builder()
-                            .setEndpoint( Twitter.ENDPOINT )
+                            .setEndpoint( ENDPOINT )
                             .setClient( new TwitterSigningClient() )
-                            .setLogLevel( RestAdapter.LogLevel.FULL )
                             .setConverter( new GsonConverter( gson ) )
                             .build();
 
