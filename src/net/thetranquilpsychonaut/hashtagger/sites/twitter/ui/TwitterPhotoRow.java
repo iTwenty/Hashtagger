@@ -10,6 +10,7 @@ import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 
 /**
  * Created by itwenty on 5/1/14.
@@ -49,9 +50,9 @@ public class TwitterPhotoRow extends TwitterListRow implements View.OnClickListe
     }
 
     @Override
-    protected TextView initStatusText()
+    protected LinkifiedTextView initStatusText()
     {
-        return ( TextView ) findViewById( R.id.tv_status_text );
+        return ( LinkifiedTextView ) findViewById( R.id.tv_status_text );
     }
 
     @Override

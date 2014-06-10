@@ -9,6 +9,8 @@ import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.SearchResult;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
+import net.thetranquilpsychonaut.hashtagger.utils.Linkifier;
 
 /**
  * Created by itwenty on 3/13/14.
@@ -71,6 +73,14 @@ public class TwitterSearchHandler extends SitesSearchHandler
                     return;
                 }
                 final SearchResult result = ( SearchResult ) intent.getSerializableExtra( Result.RESULT_DATA );
+                for ( Status status : result.getStatuses() )
+                {
+                    status.setLinkedText( Linkifier.getLinkedTwitterText( status.getText() ) );
+                    if ( status.isRetweet() )
+                    {
+                        status.getRetweetedStatus().setLinkedText( Linkifier.getLinkedTwitterText( status.getRetweetedStatus().getText() ) );
+                    }
+                }
                 main.post( new Runnable()
                 {
                     @Override

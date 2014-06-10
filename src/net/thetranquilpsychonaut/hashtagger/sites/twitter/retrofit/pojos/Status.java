@@ -1,10 +1,16 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos;
 
+import android.text.Spannable;
 import com.google.gson.annotations.SerializedName;
+import net.thetranquilpsychonaut.hashtagger.utils.Linkifier;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.io.IOException;
+import java.io.NotActiveException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -21,7 +27,9 @@ public class Status implements Serializable
 
     private String text;
 
-    @SerializedName("in_reply_to_status_id_str")
+    private transient Spannable linkedText;
+
+    @SerializedName( "in_reply_to_status_id_str" )
     private String inReplyToStatusIdStr;
 
     @SerializedName("in_reply_to_user_id_str")
@@ -186,6 +194,16 @@ public class Status implements Serializable
         return true;
     }
 
+    public Spannable getLinkedText()
+    {
+        return linkedText;
+    }
+
+    public void setLinkedText( Spannable linkedText )
+    {
+        this.linkedText = linkedText;
+    }
+
     @Override
     public String toString()
     {
@@ -202,5 +220,11 @@ public class Status implements Serializable
     public boolean equals( Object other )
     {
         return EqualsBuilder.reflectionEquals( this, other );
+    }
+
+    private void readObject( ObjectInputStream inputStream ) throws IOException, ClassNotFoundException
+    {
+        inputStream.defaultReadObject();
+        linkedText = Linkifier.getLinkedTwitterText( text );
     }
 }

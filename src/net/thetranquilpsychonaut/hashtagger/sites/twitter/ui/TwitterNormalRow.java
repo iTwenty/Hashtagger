@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
+import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 
 /**
  * Created by itwenty on 5/1/14.
@@ -40,9 +41,9 @@ public class TwitterNormalRow extends TwitterListRow
     }
 
     @Override
-    protected TextView initStatusText()
+    protected LinkifiedTextView initStatusText()
     {
-        return ( TextView ) findViewById( R.id.tv_status_text );
+        return ( LinkifiedTextView ) findViewById( R.id.tv_status_text );
     }
 
     @Override

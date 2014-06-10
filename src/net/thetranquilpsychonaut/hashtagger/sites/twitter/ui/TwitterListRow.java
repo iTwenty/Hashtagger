@@ -1,19 +1,21 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.content.Context;
+import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 import android.widget.TextView;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
+import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 
 /**
  * Created by itwenty on 5/30/14.
  */
 public abstract class TwitterListRow extends SitesListRow
 {
-    protected TwitterHeader twitterHeader;
-    protected TextView      tvStatusText;
-    protected Status        status;
+    protected TwitterHeader     twitterHeader;
+    protected LinkifiedTextView tvStatusText;
+    protected Status            status;
 
     protected TwitterListRow( Context context )
     {
@@ -40,13 +42,13 @@ public abstract class TwitterListRow extends SitesListRow
 
     protected abstract TwitterHeader initTwitterHeader();
 
-    protected abstract TextView initStatusText();
+    protected abstract LinkifiedTextView initStatusText();
 
     @Override
     public void updateRow( Object result )
     {
         this.status = ( Status ) result;
         twitterHeader.showHeader( status );
-        tvStatusText.setText( status.isRetweet() ? status.getRetweetedStatus().getText() : status.getText() );
+        tvStatusText.setText( status.isRetweet() ? status.getRetweetedStatus().getLinkedText() : status.getLinkedText() );
     }
 }
