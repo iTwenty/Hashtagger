@@ -1,7 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos;
 
 import com.google.gson.annotations.SerializedName;
-import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -14,34 +13,29 @@ import java.util.Date;
  */
 public class Status implements Serializable
 {
-    public Status()
-    {
-        Helper.debug( "Status" );
-    }
-
-    @SerializedName( "created_at" )
+    @SerializedName("created_at")
     private Date createdAt;
 
-    @SerializedName( "id_str" )
+    @SerializedName("id_str")
     private String idStr;
 
     private String text;
 
-    @SerializedName( "in_reply_to_status_id_str" )
+    @SerializedName("in_reply_to_status_id_str")
     private String inReplyToStatusIdStr;
 
-    @SerializedName( "in_reply_to_user_id_str" )
+    @SerializedName("in_reply_to_user_id_str")
     private String inReplyToUserIdStr;
 
-    @SerializedName( "in_reply_to_screen_name" )
+    @SerializedName("in_reply_to_screen_name")
     private String inReplyToScreenName;
 
     private User user;
 
-    @SerializedName( "retweet_count" )
+    @SerializedName("retweet_count")
     private int retweetCount;
 
-    @SerializedName( "favorite_count" )
+    @SerializedName("favorite_count")
     private int favoriteCount;
 
     private StatusEntities entities;
@@ -50,7 +44,7 @@ public class Status implements Serializable
 
     private boolean retweeted;
 
-    @SerializedName( "retweeted_status" )
+    @SerializedName("retweeted_status")
     private Status retweetedStatus;
 
     public Status getRetweetedStatus()
@@ -186,7 +180,9 @@ public class Status implements Serializable
     public boolean isRetweet()
     {
         if ( null == retweetedStatus )
+        {
             return false;
+        }
         return true;
     }
 

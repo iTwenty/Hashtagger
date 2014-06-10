@@ -14,7 +14,7 @@ public class TwitterRetweetDialog extends DialogFragment
 {
     public static final String TAG = "twitter_retweet_dialog";
     String retweetId;
-    int  position;
+    int    position;
 
     public static TwitterRetweetDialog newInstance( String retweetId, int position )
     {

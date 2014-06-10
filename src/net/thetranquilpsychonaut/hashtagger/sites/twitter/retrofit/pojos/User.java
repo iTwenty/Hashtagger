@@ -1,7 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos;
 
 import com.google.gson.annotations.SerializedName;
-import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -13,19 +12,15 @@ import java.io.Serializable;
  */
 public class User implements Serializable
 {
-    public User()
-    {
-        Helper.debug( "User" );
-    }
-    @SerializedName( "id_str" )
+    @SerializedName("id_str")
     private String idStr;
 
     private String name;
 
-    @SerializedName( "screen_name" )
+    @SerializedName("screen_name")
     private String screenName;
 
-    @SerializedName( "profile_image_url" )
+    @SerializedName("profile_image_url")
     private String profileImageUrl;
 
     public String getIdStr()

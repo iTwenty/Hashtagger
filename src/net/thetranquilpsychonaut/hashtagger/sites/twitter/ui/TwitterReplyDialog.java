@@ -21,7 +21,7 @@ public class TwitterReplyDialog extends DialogFragment implements TextWatcher, V
 {
     public static final String TAG = "twitter_reply_dialog";
     String   inReplyToScreenName;
-    String     inReplyToStatusId;
+    String   inReplyToStatusId;
     EditText edtReplyText;
     TextView tvCharCounter;
     TextView tvReplyProgress;

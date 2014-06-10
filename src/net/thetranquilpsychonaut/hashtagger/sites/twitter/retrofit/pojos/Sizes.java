@@ -1,6 +1,5 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos;
 
-import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -12,15 +11,11 @@ import java.io.Serializable;
  */
 public class Sizes implements Serializable
 {
-    public Sizes()
-    {
-        Helper.debug( "Sizes" );
-    }
-    private Small   small;
+    private Small small;
 
-    private Large   large;
+    private Large large;
 
-    private Thumb   thumb;
+    private Thumb thumb;
 
     private Medium medium;
 

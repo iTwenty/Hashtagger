@@ -1,43 +1,38 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos;
 
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.Expose;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.io.Serializable;
-
-/**
- * Created by itwenty on 6/9/14.
- */
-public class Url implements Serializable
+public class Trend
 {
+
+    @Expose
+    private String name;
+    @Expose
+    private String query;
+    @Expose
     private String url;
 
-    @SerializedName( "expanded_url" )
-    private String expandedUrl;
-
-    @SerializedName( "display_url" )
-    private String displayUrl;
-
-    public String getDisplayUrl()
+    public String getName()
     {
-        return displayUrl;
+        return name;
     }
 
-    public void setDisplayUrl( String displayUrl )
+    public void setName( String name )
     {
-        this.displayUrl = displayUrl;
+        this.name = name;
     }
 
-    public String getExpandedUrl()
+    public String getQuery()
     {
-        return expandedUrl;
+        return query;
     }
 
-    public void setExpandedUrl( String expandedUrl )
+    public void setQuery( String query )
     {
-        this.expandedUrl = expandedUrl;
+        this.query = query;
     }
 
     public String getUrl()
@@ -67,4 +62,5 @@ public class Url implements Serializable
     {
         return EqualsBuilder.reflectionEquals( this, other );
     }
+
 }

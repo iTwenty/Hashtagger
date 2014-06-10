@@ -4,26 +4,30 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.io.Serializable;
-import java.util.List;
-
-/**
- * Created by itwenty on 6/9/14.
- */
-public class StatusEntities implements Serializable
+public class TrendLocationShort
 {
-    private List<Media> media;
 
-    private List<Url> urls;
+    private String  name;
+    private Integer woeid;
 
-    public List<Media> getMedia()
+    public String getName()
     {
-        return media;
+        return name;
     }
 
-    public List<Url> getUrls()
+    public void setName( String name )
     {
-        return urls;
+        this.name = name;
+    }
+
+    public Integer getWoeid()
+    {
+        return woeid;
+    }
+
+    public void setWoeid( Integer woeid )
+    {
+        this.woeid = woeid;
     }
 
     @Override
@@ -43,4 +47,5 @@ public class StatusEntities implements Serializable
     {
         return EqualsBuilder.reflectionEquals( this, other );
     }
+
 }

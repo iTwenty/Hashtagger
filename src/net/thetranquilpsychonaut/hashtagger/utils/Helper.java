@@ -15,6 +15,8 @@ import com.twitter.Autolink;
 import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Trend;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Trends;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -169,15 +171,15 @@ public class Helper
         return list;
     }
 
-//    public static ArrayList<String> createTrendsArrayList( Trends trends )
-//    {
-//        ArrayList<String> list = new ArrayList<String>( trends.getTrends().length );
-//        for ( Trend t : trends.getTrends() )
-//        {
-//            list.add( t.getName() );
-//        }
-//        return list;
-//    }
+    public static ArrayList<String> createTrendsArrayList( Trends trends )
+    {
+        ArrayList<String> list = new ArrayList<String>( trends.getTrends().size() );
+        for ( Trend t : trends.getTrends() )
+        {
+            list.add( t.getName() );
+        }
+        return list;
+    }
 
     public static final String extractJsonStringField( String jsonBody, String field )
     {

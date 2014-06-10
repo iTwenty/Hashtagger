@@ -4,7 +4,7 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterFavoriteEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterReplyEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterRetweetEvent;
-import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.TwitterRetrofitService;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.Twitter;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -17,7 +17,7 @@ public class TwitterAction
 {
     public void executeReplyAction( String reply, String inReplyToUserId )
     {
-        TwitterRetrofitService.api().replyToStatus( reply, inReplyToUserId, new Callback<Status>()
+        Twitter.api().replyToStatus( reply, inReplyToUserId, new Callback<Status>()
         {
             @Override
             public void success( Status status, Response response )
@@ -35,7 +35,7 @@ public class TwitterAction
 
     public void executeRetweetAction( String retweetId, final int position )
     {
-        TwitterRetrofitService.api().retweetStatus( retweetId, new Callback<Status>()
+        Twitter.api().retweetStatus( retweetId, new Callback<Status>()
         {
             @Override
             public void success( Status status, Response response )
@@ -70,11 +70,11 @@ public class TwitterAction
 
         if ( isFavorited )
         {
-            TwitterRetrofitService.api().destroyFavorite( statusId, cb );
+            Twitter.api().destroyFavorite( statusId, cb );
         }
         else
         {
-            TwitterRetrofitService.api().createFavorite( statusId, cb );
+            Twitter.api().createFavorite( statusId, cb );
         }
     }
 }

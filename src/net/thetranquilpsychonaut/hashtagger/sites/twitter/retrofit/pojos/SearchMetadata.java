@@ -12,16 +12,16 @@ import java.io.Serializable;
  */
 public class SearchMetadata implements Serializable
 {
-    @SerializedName( "max_id_str" )
+    @SerializedName("max_id_str")
     private String maxIdStr;
 
-    @SerializedName( "query" )
+    @SerializedName("query")
     private String query;
 
-    @SerializedName( "count" )
+    @SerializedName("count")
     private int count;
 
-    @SerializedName( "since_id_str" )
+    @SerializedName("since_id_str")
     private String sinceIdStr;
 
     public String getSinceIdStr()

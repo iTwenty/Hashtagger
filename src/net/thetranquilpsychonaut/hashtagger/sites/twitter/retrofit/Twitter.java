@@ -4,23 +4,25 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.SearchResult;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.TrendLocation;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Trends;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
-import retrofit.http.Field;
-import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
+import retrofit.http.Query;
 import retrofit.http.QueryMap;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by itwenty on 6/7/14.
  */
-public class TwitterRetrofitService
+public class Twitter
 {
     public static final     String ENDPOINT = "https://api.twitter.com/";
     private static volatile Api    api      = null;
@@ -29,17 +31,18 @@ public class TwitterRetrofitService
     {
         if ( null == api )
         {
-            synchronized ( TwitterRetrofitService.class )
+            synchronized ( Twitter.class )
             {
                 if ( null == api )
                 {
                     Gson gson = new GsonBuilder()
-                            .registerTypeAdapter( Date.class, new TwitterStatusDateDeserializer() )
+                            .registerTypeAdapter( Date.class, new TwitterDateDeserializer() )
                             .create();
 
                     RestAdapter adapter = new RestAdapter.Builder()
-                            .setEndpoint( TwitterRetrofitService.ENDPOINT )
+                            .setEndpoint( Twitter.ENDPOINT )
                             .setClient( new TwitterSigningClient() )
+                            .setLogLevel( RestAdapter.LogLevel.FULL )
                             .setConverter( new GsonConverter( gson ) )
                             .build();
 
@@ -52,27 +55,35 @@ public class TwitterRetrofitService
 
     public static interface Api
     {
-        @GET( "/1.1/search/tweets.json" )
+        @GET("/1.1/search/tweets.json")
         public SearchResult searchTweets( @QueryMap Map<String, String> params );
 
-        @FormUrlEncoded
-        @POST( "/1.1/statuses/update.json" )
+        @POST("/1.1/statuses/update.json")
         public void replyToStatus(
-                @Field( "status" ) String statusText,
-                @Field( "in_reply_to_status_id" ) String  inReplyToStatusId,
+                @Query("status") String statusText,
+                @Query("in_reply_to_status_id") String inReplyToStatusId,
                 Callback<Status> callback );
 
-        @POST( "/1.1/statuses/retweet/{id}.json" )
-        public void retweetStatus( @Path( "id" ) String statusId, Callback<Status> callback );
+        @POST("/1.1/statuses/retweet/{id}.json")
+        public void retweetStatus( @Path("id") String statusId, Callback<Status> callback );
 
-        @FormUrlEncoded
-        @POST( "/1.1/favorites/create.json" )
-        public void createFavorite( @Field( "id" ) String statusId,
+        @POST("/1.1/favorites/create.json")
+        public void createFavorite( @Query( "id" ) String statusId,
                                     Callback<Status> callback );
 
-        @FormUrlEncoded
-        @POST( "/1.1/favorites/destroy.json" )
-        public void destroyFavorite( @Field( "id" ) String statusId,
-                                    Callback<Status> callback );
+        @POST("/1.1/favorites/destroy.json")
+        public void destroyFavorite( @Query("id") String statusId,
+                                     Callback<Status> callback );
+
+        @GET( "/1.1/trends/closest.json" )
+        public List<TrendLocation> getClosestTrendLocations(
+                @Query( "lat" ) double latitude,
+                @Query( "long" ) double longitude );
+
+        @GET( "/1.1/trends/available.json" )
+        public List<TrendLocation> getAvailableTrends();
+
+        @GET( "/1.1/trends/place.json" )
+        public List<Trends> getTrendsForPlace( @Query( "id" ) int woeid );
     }
 }

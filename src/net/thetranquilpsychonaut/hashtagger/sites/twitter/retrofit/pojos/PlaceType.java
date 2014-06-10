@@ -4,26 +4,29 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.io.Serializable;
-import java.util.List;
-
-/**
- * Created by itwenty on 6/9/14.
- */
-public class StatusEntities implements Serializable
+public class PlaceType
 {
-    private List<Media> media;
+    private int    code;
+    private String name;
 
-    private List<Url> urls;
-
-    public List<Media> getMedia()
+    public int getCode()
     {
-        return media;
+        return code;
     }
 
-    public List<Url> getUrls()
+    public void setCode( int code )
     {
-        return urls;
+        this.code = code;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName( String name )
+    {
+        this.name = name;
     }
 
     @Override

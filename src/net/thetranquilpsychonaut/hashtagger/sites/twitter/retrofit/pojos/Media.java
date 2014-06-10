@@ -1,7 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos;
 
 import com.google.gson.annotations.SerializedName;
-import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -13,26 +12,21 @@ import java.io.Serializable;
  */
 public class Media implements Serializable
 {
-    public Media()
-    {
-        Helper.debug( "Media" );
-    }
+    @SerializedName("id_str")
+    private String idStr;
 
-    @SerializedName( "id_str" )
-    private String  idStr;
-
-    @SerializedName( "media_url" )
+    @SerializedName("media_url")
     private String mediaUrl;
 
-    @SerializedName( "media_url_https" )
+    @SerializedName("media_url_https")
     private String mediaUrlHttps;
 
     private String url;
 
-    @SerializedName( "display_url" )
+    @SerializedName("display_url")
     private String displayUrl;
 
-    @SerializedName( "expanded_url" )
+    @SerializedName("expanded_url")
     private String expandedUrl;
 
     private String type;

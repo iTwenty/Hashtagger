@@ -8,7 +8,7 @@ import net.thetranquilpsychonaut.hashtagger.enums.AuthType;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesService;
-import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.TwitterRetrofitService;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.Twitter;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.SearchParams;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.SearchResult;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
@@ -65,7 +65,7 @@ public class TwitterService extends SitesService
                 case SearchType.TIMED:
                     params.setSinceId( TwitterSearchHandler.sinceId );
             }
-            searchResult = TwitterRetrofitService.api().searchTweets( params.getParams() );
+            searchResult = Twitter.api().searchTweets( params.getParams() );
         }
         catch ( Exception e )
         {

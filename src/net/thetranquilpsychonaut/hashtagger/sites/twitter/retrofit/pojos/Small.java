@@ -1,6 +1,5 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos;
 
-import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -12,10 +11,6 @@ import java.io.Serializable;
  */
 public class Small implements Serializable
 {
-    public Small()
-    {
-        Helper.debug( "Small" );
-    }
     private int w;
 
     private int h;
