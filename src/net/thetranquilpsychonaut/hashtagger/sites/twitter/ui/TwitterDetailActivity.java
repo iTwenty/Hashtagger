@@ -1,7 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.os.Bundle;
-import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.ViewStub;
@@ -52,7 +51,6 @@ public class TwitterDetailActivity extends SitesDetailActivity implements View.O
         this.statusType = TwitterListAdapter.getStatusType( status );
         twitterHeader.showHeader( status );
         String statusText = status.isRetweet() ? status.getRetweetedStatus().getText() : status.getText();
-        tvStatusText.setText( Html.fromHtml( Helper.getLinkedStatusText( statusText ) ) );
         tvStatusText.setMovementMethod( LinkMovementMethod.getInstance() );
         if ( statusType == TwitterListAdapter.STATUS_TYPE_PHOTO )
         {

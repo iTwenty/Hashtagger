@@ -9,8 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesDetailActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
@@ -51,7 +51,6 @@ public class FacebookDetailActivity extends SitesDetailActivity
         this.postType = FacebookListAdapter.getPostType( this.post );
         facebookHeader.showHeader( post );
         tvPostText.setText( post.getMessage() );
-        Helper.linkifyFacebook( tvPostText );
         tvPostText.setMovementMethod( LinkMovementMethod.getInstance() );
         if ( postType == FacebookListAdapter.POST_TYPE_PHOTO )
         {

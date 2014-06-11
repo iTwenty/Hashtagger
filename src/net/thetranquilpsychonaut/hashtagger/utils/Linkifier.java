@@ -8,6 +8,8 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
 import android.text.style.URLSpan;
+import android.text.util.Linkify;
+import android.util.Patterns;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
@@ -15,12 +17,30 @@ import com.twitter.Autolink;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesActivity;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Created by itwenty on 6/10/14.
  */
-public class Linkifier
+public final class Linkifier
 {
-    private static Autolink twitterTextLinker = new Autolink();
+    private Linkifier()
+    {
+        throw new RuntimeException( "Class Linkifier must not be instantiated" );
+    }
+
+    private static final Autolink                twitterTextLinker = new Autolink();
+    private static final Linkify.TransformFilter filter            = new Linkify.TransformFilter()
+    {
+        @Override
+        public String transformUrl( Matcher match, String url )
+        {
+            return match.group();
+        }
+    };
+    private static final Pattern                 hashtagPattern    = Pattern.compile( "#([A-Za-z0-9_-]+)" );
+    private static final String                  hashtagScheme     = "http://www.facebook.com/hashtag/";
 
     public static Spannable getLinkedTwitterText( String text )
     {
@@ -32,6 +52,14 @@ public class Linkifier
     public static Spannable getLinkedGPlusText( String text )
     {
         SpannableString ss = new SpannableString( Html.fromHtml( text ) );
+        return stripUnderlines( ss );
+    }
+
+    public static Spannable getLinkedFacebookText( String message )
+    {
+        SpannableString ss = new SpannableString( message );
+        Linkify.addLinks( ss, hashtagPattern, hashtagScheme, null, filter );
+        Linkify.addLinks( ss, Patterns.WEB_URL, null, null, filter );
         return stripUnderlines( ss );
     }
 

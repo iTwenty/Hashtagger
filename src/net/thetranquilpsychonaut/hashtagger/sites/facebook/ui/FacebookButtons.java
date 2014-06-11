@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Toast;
-import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton;
@@ -50,9 +50,9 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
         ccbComment.setOnClickListener( this );
         ccbShare.setOnClickListener( this );
         ccbViewDetails.setOnClickListener( this );
-        ccbLike.setText( post.getLikes().getCount() != null && post.getLikes().getCount() != 0 ? String.valueOf( post.getLikes().getCount() ) : "" );
-        ccbComment.setText( post.getComments().getCount() != null && post.getComments().getCount() != 0 ? String.valueOf( post.getComments().getCount() ) : "" );
-        ccbShare.setText( post.getSharesCount() != null && post.getSharesCount() != 0 ? String.valueOf( post.getSharesCount() ) : "" );
+        ccbLike.setText( post.getLikes() != null && !Helper.isNullOrEmpty( post.getLikes().getData() ) ? String.valueOf( post.getLikes().getData().size() ) : "" );
+        ccbComment.setText( post.getComments() != null && !Helper.isNullOrEmpty( post.getComments().getData() ) ? String.valueOf( post.getComments().getData().size() ) : "" );
+        ccbShare.setText( post.getShares() != null && post.getShares().getCount() != 0 ? String.valueOf( post.getShares().getCount() ) : "" );
     }
 
     @Override
@@ -88,7 +88,7 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
     private void doViewDetails()
     {
         Intent i = new Intent( getContext(), FacebookDetailActivity.class );
-        i.putExtra( FacebookDetailActivity.POST_KEY, ( java.io.Serializable ) post );
+        i.putExtra( FacebookDetailActivity.POST_KEY, post );
         getContext().startActivity( i );
     }
 

@@ -1,6 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
-import facebook4j.Post;
+import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 

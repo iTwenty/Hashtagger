@@ -4,12 +4,12 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 
 /**
  * Created by itwenty on 5/2/14.
@@ -49,9 +49,9 @@ public class FacebookPhotoRow extends FacebookListRow implements View.OnClickLis
     }
 
     @Override
-    protected TextView initPostText()
+    protected LinkifiedTextView initPostText()
     {
-        return ( TextView ) findViewById( R.id.tv_post_text );
+        return ( LinkifiedTextView ) findViewById( R.id.tv_post_text );
     }
 
     @Override

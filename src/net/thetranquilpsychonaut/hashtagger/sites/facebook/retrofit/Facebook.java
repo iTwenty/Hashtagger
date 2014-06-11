@@ -1,8 +1,8 @@
-package net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit;
+package net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.ActivityFeed;
+import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.SearchResult;
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
 import retrofit.http.GET;
@@ -12,28 +12,29 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Created by itwenty on 6/10/14.
+ * Created by itwenty on 6/11/14.
  */
-public class GPlus
+public class Facebook
 {
-    public static final String ENDPOINT = " https://www.googleapis.com/plus/v1/";
+    public static final String ENDPOINT = "https://graph.facebook.com/";
     private static volatile Api api;
 
     public static Api api()
     {
+
         if ( null == api )
         {
-            synchronized ( GPlus.class )
+            synchronized ( Facebook.class )
             {
                 if ( null == api )
                 {
                     Gson gson = new GsonBuilder()
-                            .registerTypeAdapter( Date.class, new GPlusDateDeserializer() )
+                            .registerTypeAdapter( Date.class, new FacebookDateDeserializer() )
                             .create();
 
                     RestAdapter adapter = new RestAdapter.Builder()
                             .setEndpoint( ENDPOINT )
-                            .setClient( new GPlusSigningClient() )
+                            .setClient( new FacebookSigningClient() )
                             .setConverter( new GsonConverter( gson ) )
                             .build();
 
@@ -46,7 +47,7 @@ public class GPlus
 
     public static interface Api
     {
-        @GET( "/activities" )
-        public ActivityFeed searchActivities( @QueryMap Map<String, String> params );
+        @GET( "/v1.0/search?type=post" )
+        public SearchResult searchPosts( @QueryMap Map<String, String> params );
     }
 }
