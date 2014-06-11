@@ -3,17 +3,17 @@ package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.TextView;
-import com.google.api.services.plus.model.Activity;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Thumbnail;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.AlbumThumbnail;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumThumbnailsFragment;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 
 import java.util.ArrayList;
 
@@ -56,9 +56,9 @@ public class GPlusAlbumRow extends GPlusListRow implements View.OnClickListener
     }
 
     @Override
-    protected TextView initActivityText()
+    protected LinkifiedTextView initActivityText()
     {
-        return ( TextView ) findViewById( R.id.tv_activity_text );
+        return ( LinkifiedTextView ) findViewById( R.id.tv_activity_text );
     }
 
     @Override
@@ -102,7 +102,7 @@ public class GPlusAlbumRow extends GPlusListRow implements View.OnClickListener
             else
             {
                 ArrayList<String> albumThumbnailUrls = new ArrayList<String>( activity.getObject().getAttachments().get( 0 ).getThumbnails().size() );
-                for ( Activity.PlusObject.Attachments.Thumbnails thumbnail : activity.getObject().getAttachments().get( 0 ).getThumbnails() )
+                for ( Thumbnail thumbnail : activity.getObject().getAttachments().get( 0 ).getThumbnails() )
                 {
                     albumThumbnailUrls.add( thumbnail.getImage().getUrl() );
                 }

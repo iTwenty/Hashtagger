@@ -5,9 +5,8 @@ import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Toast;
-import com.google.api.services.plus.model.Activity;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.GPlusData;
+import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton;
@@ -96,7 +95,7 @@ public class GPlusButtons extends SitesButtons implements View.OnClickListener
     private void doViewDetails()
     {
         Intent i = new Intent( getContext(), GPlusDetailActivity.class );
-        GPlusData.ActivityData.pushActivity( this.activity );
+        i.putExtra( GPlusDetailActivity.ACTIVITY_KEY, activity );
         getContext().startActivity( i );
     }
 

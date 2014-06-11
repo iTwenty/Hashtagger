@@ -4,12 +4,14 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class Thumbnail
+import java.io.Serializable;
+
+public class Thumbnail implements Serializable
 {
 
-    private String   url;
-    private String   description;
-    private Image image;
+    private String url;
+    private String description;
+    private Image  image;
 
     public String getUrl()
     {

@@ -67,22 +67,22 @@ public class Twitter
         public void retweetStatus( @Path("id") String statusId, Callback<Status> callback );
 
         @POST("/1.1/favorites/create.json")
-        public void createFavorite( @Query( "id" ) String statusId,
+        public void createFavorite( @Query("id") String statusId,
                                     Callback<Status> callback );
 
         @POST("/1.1/favorites/destroy.json")
         public void destroyFavorite( @Query("id") String statusId,
                                      Callback<Status> callback );
 
-        @GET( "/1.1/trends/closest.json" )
+        @GET("/1.1/trends/closest.json")
         public List<TrendLocation> getClosestTrendLocations(
-                @Query( "lat" ) double latitude,
-                @Query( "long" ) double longitude );
+                @Query("lat") double latitude,
+                @Query("long") double longitude );
 
-        @GET( "/1.1/trends/available.json" )
+        @GET("/1.1/trends/available.json")
         public List<TrendLocation> getAvailableTrends();
 
-        @GET( "/1.1/trends/place.json" )
-        public List<Trends> getTrendsForPlace( @Query( "id" ) int woeid );
+        @GET("/1.1/trends/place.json")
+        public List<Trends> getTrendsForPlace( @Query("id") int woeid );
     }
 }

@@ -4,14 +4,17 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class Activity
+import java.io.Serializable;
+import java.util.Date;
+
+public class Activity implements Serializable
 {
 
     private String      kind;
     private String      etag;
     private String      title;
-    private String      published;
-    private String      updated;
+    private Date        published;
+    private Date        updated;
     private String      id;
     private String      url;
     private Actor       actor;
@@ -60,22 +63,22 @@ public class Activity
         this.title = title;
     }
 
-    public String getPublished()
+    public Date getPublished()
     {
         return published;
     }
 
-    public void setPublished( String published )
+    public void setPublished( Date published )
     {
         this.published = published;
     }
 
-    public String getUpdated()
+    public Date getUpdated()
     {
         return updated;
     }
 
-    public void setUpdated( String updated )
+    public void setUpdated( Date updated )
     {
         this.updated = updated;
     }

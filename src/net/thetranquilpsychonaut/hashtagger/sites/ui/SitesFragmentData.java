@@ -1,7 +1,7 @@
 package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
-import com.google.api.services.plus.model.Activity;
 import facebook4j.Post;
+import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 
 import java.util.List;

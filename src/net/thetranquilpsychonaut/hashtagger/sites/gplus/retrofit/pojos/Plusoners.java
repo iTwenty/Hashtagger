@@ -4,11 +4,13 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class Plusoners
+import java.io.Serializable;
+
+public class Plusoners implements Serializable
 {
 
-    private int totalItems;
-    private String  selfLink;
+    private int    totalItems;
+    private String selfLink;
 
     public int getTotalItems()
     {

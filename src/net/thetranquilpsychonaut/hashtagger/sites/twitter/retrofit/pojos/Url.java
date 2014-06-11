@@ -14,10 +14,10 @@ public class Url implements Serializable
 {
     private String url;
 
-    @SerializedName( "expanded_url" )
+    @SerializedName("expanded_url")
     private String expandedUrl;
 
-    @SerializedName( "display_url" )
+    @SerializedName("display_url")
     private String displayUrl;
 
     public String getDisplayUrl()

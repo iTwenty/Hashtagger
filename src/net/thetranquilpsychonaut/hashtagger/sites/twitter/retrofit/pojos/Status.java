@@ -8,8 +8,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.io.IOException;
-import java.io.NotActiveException;
-import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.Date;
@@ -29,7 +27,7 @@ public class Status implements Serializable
 
     private transient Spannable linkedText;
 
-    @SerializedName( "in_reply_to_status_id_str" )
+    @SerializedName("in_reply_to_status_id_str")
     private String inReplyToStatusIdStr;
 
     @SerializedName("in_reply_to_user_id_str")

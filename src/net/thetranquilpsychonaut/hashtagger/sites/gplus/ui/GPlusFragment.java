@@ -1,7 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 
 import android.net.Uri;
-import com.google.api.services.plus.model.Activity;
 import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
@@ -10,6 +9,7 @@ import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.events.SearchHashtagEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.GPlusSearchHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragmentData;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
@@ -72,7 +72,7 @@ public class GPlusFragment extends SitesFragment
     @Override
     protected void removeUserDetails()
     {
-        AccountPrefs.removeTwitterDetails();
+        AccountPrefs.removeGPlusDetails();
     }
 
     @Override

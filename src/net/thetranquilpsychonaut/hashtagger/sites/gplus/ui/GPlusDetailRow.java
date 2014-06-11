@@ -2,9 +2,9 @@ package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.TextView;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
+import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 
 /**
  * Created by itwenty on 5/14/14.
@@ -43,9 +43,9 @@ public class GPlusDetailRow extends GPlusListRow
     }
 
     @Override
-    protected TextView initActivityText()
+    protected LinkifiedTextView initActivityText()
     {
-        return ( TextView ) findViewById( R.id.tv_activity_text );
+        return ( LinkifiedTextView ) findViewById( R.id.tv_activity_text );
     }
 
     @Override

@@ -29,6 +29,12 @@ public class Linkifier
         return stripUnderlines( ss );
     }
 
+    public static Spannable getLinkedGPlusText( String text )
+    {
+        SpannableString ss = new SpannableString( Html.fromHtml( text ) );
+        return stripUnderlines( ss );
+    }
+
     private static Spannable stripUnderlines( Spannable spannable )
     {
         URLSpan[] spans = spannable.getSpans( 0, spannable.length(), URLSpan.class );

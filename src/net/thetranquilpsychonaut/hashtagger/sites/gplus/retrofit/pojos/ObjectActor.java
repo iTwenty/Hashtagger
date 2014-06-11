@@ -4,12 +4,14 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class ObjectActor
+import java.io.Serializable;
+
+public class ObjectActor implements Serializable
 {
 
-    private String id;
-    private String displayName;
-    private String url;
+    private String     id;
+    private String     displayName;
+    private String     url;
     private ActorImage image;
 
     public String getId()

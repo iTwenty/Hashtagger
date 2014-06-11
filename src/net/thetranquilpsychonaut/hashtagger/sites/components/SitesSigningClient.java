@@ -54,16 +54,45 @@ public abstract class SitesSigningClient extends OkClient
         {
             throw new IOException( "User not logged in" );
         }
+
+        // First, sign the request
         OAuthRequest oAuthRequest = new OAuthRequest( getVerbForMethod( request.getMethod() ), request.getUrl() );
         signingService.signRequest( getAccessToken(), oAuthRequest );
-        Map<String, String> headers = oAuthRequest.getHeaders();
-        List<Header> newHeaders = new ArrayList<Header>( headers.size() );
-        for ( Map.Entry<String, String> header : headers.entrySet() )
+
+        // Then switch the old headers with signed headers
+        Map<String, String> signedHeadersMap = oAuthRequest.getHeaders();
+        List<Header> signedHeaders = new ArrayList<Header>( signedHeadersMap.size() );
+        for ( Map.Entry<String, String> header : signedHeadersMap.entrySet() )
         {
-            newHeaders.add( new Header( header.getKey(), header.getValue() ) );
+            signedHeaders.add( new Header( header.getKey(), header.getValue() ) );
         }
-        Request signedRequest = new Request( request.getMethod(), request.getUrl(), newHeaders, request.getBody() );
-        return super.execute( signedRequest );
+
+        // Switch old url with new url
+        String signedUrl = oAuthRequest.getCompleteUrl();
+
+        // Make new request with signed headers and url
+        Request signedRequest = new Request( request.getMethod(), signedUrl, signedHeaders, request.getBody() );
+
+        // We need to check status of response in case it failed due to access token expiry
+        Response response = super.execute( signedRequest );
+
+        // 401 most likely indicates that access token has expired.
+        // Time to refresh and resend the request
+        if ( response.getStatus() == 401 && accessTokenCanExpire() )
+        {
+            // Do ensure that updateAccessToken() stores the value
+            // of the updated access token in AccountPrefs.
+            updateAccessToken();
+            return execute( request );
+        }
+        return response;
+    }
+
+    protected abstract boolean accessTokenCanExpire();
+
+    protected void updateAccessToken() throws IOException
+    {
+
     }
 
     protected abstract Token getAccessToken();

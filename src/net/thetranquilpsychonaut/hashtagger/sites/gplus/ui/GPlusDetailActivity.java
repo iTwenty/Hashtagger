@@ -8,12 +8,12 @@ import android.view.ViewStub;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.google.api.services.plus.model.Activity;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.GPlusData;
+import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
+import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Thumbnail;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesDetailActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumThumbnailsFragment;
@@ -27,6 +27,7 @@ import java.util.List;
  */
 public class GPlusDetailActivity extends SitesDetailActivity
 {
+    public static final String ACTIVITY_KEY = "activity";
     private TextView    tvActivityText;
     private GPlusHeader gPlusHeader;
     private Activity    activity;
@@ -45,11 +46,11 @@ public class GPlusDetailActivity extends SitesDetailActivity
         tvActivityText = ( TextView ) findViewById( R.id.tv_activity_text );
         gPlusHeader = ( GPlusHeader ) findViewById( R.id.gplus_header );
         viewStub = ( ViewStub ) findViewById( R.id.gplus_view_stub );
-        activity = GPlusData.ActivityData.popActivity();
-        if ( null == activity )
+        if ( null == getIntent() )
         {
-            activity = ( Activity ) getLastCustomNonConfigurationInstance();
+            finish();
         }
+        activity = ( Activity ) getIntent().getSerializableExtra( ACTIVITY_KEY );
         if ( null == activity )
         {
             finish();
@@ -136,8 +137,7 @@ public class GPlusDetailActivity extends SitesDetailActivity
             albumThumbnailUrls = new ArrayList<String>(
                     activity.getObject().getAttachments().get( 0 ).getThumbnails().size() );
 
-            for ( Activity.PlusObject.Attachments.Thumbnails thumbnail :
-                    activity.getObject().getAttachments().get( 0 ).getThumbnails() )
+            for ( Thumbnail thumbnail : activity.getObject().getAttachments().get( 0 ).getThumbnails() )
             {
                 albumThumbnailUrls.add( thumbnail.getImage().getUrl() );
             }
@@ -154,12 +154,6 @@ public class GPlusDetailActivity extends SitesDetailActivity
                             ViewAlbumThumbnailsFragment.TAG )
                     .commit();
         }
-    }
-
-    @Override
-    public Object onRetainCustomNonConfigurationInstance()
-    {
-        return this.activity;
     }
 
     @Override

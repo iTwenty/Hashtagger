@@ -4,10 +4,11 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Access
+public class Access implements Serializable
 {
 
     private String kind;

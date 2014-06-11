@@ -113,6 +113,13 @@ public final class AccountPrefs
                 .commit();
     }
 
+    public static void updateGPlusAccessToken( String accessToken )
+    {
+        getAccountPrefs().edit()
+                .putString( GPLUS_ACCESS_TOKEN_KEY, accessToken )
+                .commit();
+    }
+
     public static void removeGPlusDetails()
     {
         getAccountPrefs().edit()

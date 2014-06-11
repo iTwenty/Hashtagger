@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public class SearchParams
 {
-    private enum ResultType
+    public static enum ResultType
     {
         mixed, recent, popular
     }

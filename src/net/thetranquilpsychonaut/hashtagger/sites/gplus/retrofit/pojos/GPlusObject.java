@@ -1,13 +1,18 @@
 package net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos;
 
+import android.text.Spannable;
+import net.thetranquilpsychonaut.hashtagger.utils.Linkifier;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GPlusObject
+public class GPlusObject implements Serializable
 {
 
     private String      objectType;
@@ -19,6 +24,8 @@ public class GPlusObject
     private Replies     replies;
     private Plusoners   plusoners;
     private Resharers   resharers;
+
+    private transient Spannable linkedText;
     private List<Attachment> attachments = new ArrayList<Attachment>();
 
     public String getObjectType()
@@ -121,6 +128,16 @@ public class GPlusObject
         this.attachments = attachments;
     }
 
+    public Spannable getLinkedText()
+    {
+        return linkedText;
+    }
+
+    public void setLinkedText( Spannable linkedText )
+    {
+        this.linkedText = linkedText;
+    }
+
     @Override
     public String toString()
     {
@@ -137,6 +154,12 @@ public class GPlusObject
     public boolean equals( java.lang.Object other )
     {
         return EqualsBuilder.reflectionEquals( this, other );
+    }
+
+    private void readObject( ObjectInputStream inputStream ) throws IOException, ClassNotFoundException
+    {
+        inputStream.defaultReadObject();
+        linkedText = Linkifier.getLinkedGPlusText( content );
     }
 
 }

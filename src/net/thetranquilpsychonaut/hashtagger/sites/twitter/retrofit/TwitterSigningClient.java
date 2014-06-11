@@ -37,6 +37,12 @@ public class TwitterSigningClient extends SitesSigningClient
     }
 
     @Override
+    protected boolean accessTokenCanExpire()
+    {
+        return false;
+    }
+
+    @Override
     protected Token getAccessToken()
     {
         return new Token( AccountPrefs.getTwitterAccessToken(), AccountPrefs.getTwitterAccessTokenSecret() );

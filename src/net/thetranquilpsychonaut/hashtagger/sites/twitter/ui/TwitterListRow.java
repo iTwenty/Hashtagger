@@ -1,9 +1,7 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.content.Context;
-import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
-import android.widget.TextView;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;

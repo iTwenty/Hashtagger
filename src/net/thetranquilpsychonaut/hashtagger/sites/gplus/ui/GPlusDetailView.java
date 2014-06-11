@@ -11,21 +11,22 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.google.api.services.plus.model.Activity;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
+import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Attachment;
 
 /**
  * Created by itwenty on 5/14/14.
  */
 public class GPlusDetailView extends RelativeLayout implements Callback, View.OnClickListener
 {
-    private ImageView                       imgvThumbnail;
-    private TextView                        tvTitle;
-    private TextView                        tvDescription;
-    private LayerDrawable                   videoDrawable;
-    private Activity.PlusObject.Attachments attachment;
+    private ImageView     imgvThumbnail;
+    private TextView      tvTitle;
+    private TextView      tvDescription;
+    private LayerDrawable videoDrawable;
+    private Attachment    attachment;
 
     public GPlusDetailView( Context context )
     {
