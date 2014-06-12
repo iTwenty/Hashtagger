@@ -8,14 +8,14 @@ import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 public class TwitterFavoriteEvent
 {
     int     position;
-    Status  status;
+    boolean wasFavorited;
     boolean success;
 
-    public TwitterFavoriteEvent( boolean success, int position, Status status )
+    public TwitterFavoriteEvent( boolean success, int position, boolean wasFavorited )
     {
         this.position = position;
-        this.status = status;
         this.success = success;
+        this.wasFavorited = wasFavorited;
     }
 
     public int getPosition()
@@ -23,13 +23,13 @@ public class TwitterFavoriteEvent
         return position;
     }
 
-    public Status getStatus()
-    {
-        return status;
-    }
-
     public boolean getSuccess()
     {
         return success;
+    }
+
+    public boolean wasFavorited()
+    {
+        return wasFavorited;
     }
 }

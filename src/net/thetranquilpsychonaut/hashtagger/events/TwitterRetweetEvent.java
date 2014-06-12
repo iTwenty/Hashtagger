@@ -9,24 +9,17 @@ import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 public class TwitterRetweetEvent
 {
     int     position;
-    Status  status;
     boolean success;
 
-    public TwitterRetweetEvent( boolean success, int position, Status status )
+    public TwitterRetweetEvent( boolean success, int position )
     {
         this.position = position;
-        this.status = status;
         this.success = success;
     }
 
     public int getPosition()
     {
         return position;
-    }
-
-    public Status getStatus()
-    {
-        return status;
     }
 
     public boolean getSuccess()

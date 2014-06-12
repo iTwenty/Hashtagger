@@ -172,7 +172,7 @@ public class TwitterFragment extends SitesFragment
     {
         if ( event.getSuccess() )
         {
-            ( ( List<Status> ) results ).set( event.getPosition(), event.getStatus() );
+            ( ( List<Status> ) results ).get( event.getPosition() ).setRetweeted( true );
             sitesListAdapter.notifyDataSetChanged();
             Toast.makeText( getActivity(), "Retweeted like a champ!", Toast.LENGTH_SHORT ).show();
         }
@@ -187,7 +187,7 @@ public class TwitterFragment extends SitesFragment
     {
         if ( event.getSuccess() )
         {
-            ( ( List<Status> ) results ).set( event.getPosition(), event.getStatus() );
+            ( ( List<Status> ) results ).get( event.getPosition() ).setFavorited( !event.wasFavorited() );
             sitesListAdapter.notifyDataSetChanged();
         }
         else

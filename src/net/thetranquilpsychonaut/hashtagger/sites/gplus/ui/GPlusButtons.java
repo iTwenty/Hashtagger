@@ -37,8 +37,11 @@ public class GPlusButtons extends SitesButtons implements View.OnClickListener
         super( context, attrs, defStyle );
         inflate( context, R.layout.gplus_buttons, this );
         ccbPlusOne = ( CenterContentButton ) findViewById( R.id.ccb_plusone );
+        ccbPlusOne.setEnabled( false );
         ccbComment = ( CenterContentButton ) findViewById( R.id.ccb_comment );
+        ccbComment.setEnabled( false );
         ccbShare = ( CenterContentButton ) findViewById( R.id.ccb_share );
+        ccbShare.setEnabled( false );
         ccbViewDetails = ( CenterContentButton ) findViewById( R.id.ccb_view_details );
     }
 

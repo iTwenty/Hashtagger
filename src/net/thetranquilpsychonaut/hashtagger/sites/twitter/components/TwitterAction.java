@@ -40,31 +40,31 @@ public class TwitterAction
             @Override
             public void success( Status status, Response response )
             {
-                HashtaggerApp.bus.post( new TwitterRetweetEvent( true, position, status ) );
+                HashtaggerApp.bus.post( new TwitterRetweetEvent( true, position ) );
             }
 
             @Override
             public void failure( RetrofitError retrofitError )
             {
-                HashtaggerApp.bus.post( new TwitterRetweetEvent( false, position, null ) );
+                HashtaggerApp.bus.post( new TwitterRetweetEvent( false, position ) );
             }
         } );
     }
 
-    public void executeFavoriteAction( String statusId, boolean isFavorited, final int position )
+    public void executeFavoriteAction( String statusId, final boolean isFavorited, final int position )
     {
         Callback<Status> cb = new Callback<Status>()
         {
             @Override
             public void success( Status status, Response response )
             {
-                HashtaggerApp.bus.post( new TwitterFavoriteEvent( true, position, status ) );
+                HashtaggerApp.bus.post( new TwitterFavoriteEvent( true, position, isFavorited ) );
             }
 
             @Override
             public void failure( RetrofitError retrofitError )
             {
-                HashtaggerApp.bus.post( new TwitterFavoriteEvent( false, position, null ) );
+                HashtaggerApp.bus.post( new TwitterFavoriteEvent( false, position, isFavorited ) );
             }
         };
 
