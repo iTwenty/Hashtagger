@@ -161,5 +161,4 @@ public class GPlusObject implements Serializable
         inputStream.defaultReadObject();
         linkedText = Linkifier.getLinkedGPlusText( content );
     }
-
 }

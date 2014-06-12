@@ -47,7 +47,7 @@ public class Facebook
 
     public static interface Api
     {
-        @GET( "/v1.0/search?type=post" )
+        @GET("/v1.0/search?type=post")
         public SearchResult searchPosts( @QueryMap Map<String, String> params );
     }
 }

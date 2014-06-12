@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
+    <net.thetranquilpsychonaut.hashtagger.widgets.VideoThumbnail
         android:id="@+id/imgv_thumbnail"
         android:layout_width="75dp"
         android:layout_height="75dp"/>

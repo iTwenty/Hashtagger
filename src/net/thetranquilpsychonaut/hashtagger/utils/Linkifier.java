@@ -7,6 +7,7 @@ import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.util.Patterns;
@@ -44,6 +45,10 @@ public final class Linkifier
 
     public static Spannable getLinkedTwitterText( String text )
     {
+        if ( TextUtils.isEmpty( text ) )
+        {
+            return new SpannableString( "" );
+        }
         String htmlText = twitterTextLinker.autoLink( text );
         SpannableString ss = new SpannableString( Html.fromHtml( htmlText ) );
         return stripUnderlines( ss );
@@ -51,12 +56,20 @@ public final class Linkifier
 
     public static Spannable getLinkedGPlusText( String text )
     {
+        if ( TextUtils.isEmpty( text ) )
+        {
+            return new SpannableString( "" );
+        }
         SpannableString ss = new SpannableString( Html.fromHtml( text ) );
         return stripUnderlines( ss );
     }
 
     public static Spannable getLinkedFacebookText( String message )
     {
+        if ( TextUtils.isEmpty( message ) )
+        {
+            return new SpannableString( "" );
+        }
         SpannableString ss = new SpannableString( message );
         Linkify.addLinks( ss, hashtagPattern, hashtagScheme, null, filter );
         Linkify.addLinks( ss, Patterns.WEB_URL, null, null, filter );

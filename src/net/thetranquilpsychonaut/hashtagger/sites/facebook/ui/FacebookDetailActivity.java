@@ -1,35 +1,35 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesDetailActivity;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.BaseActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
+import net.thetranquilpsychonaut.hashtagger.widgets.VideoThumbnail;
 
 /**
  * Created by itwenty on 5/18/14.
  */
-public class FacebookDetailActivity extends SitesDetailActivity
+public class FacebookDetailActivity extends BaseActivity
 {
     public static final String POST_KEY = "post";
 
-    private FacebookHeader facebookHeader;
-    private TextView       tvPostText;
-    private Post           post;
-    private int            postType;
+    private FacebookHeader    facebookHeader;
+    private LinkifiedTextView tvPostText;
+    private Post              post;
+    private int               postType;
 
-    private ViewStub           viewStub;
-    private ImageView          imgvPhoto;
-    private FacebookDetailView facebookDetailView;
+    private ViewStub       viewStub;
+    private VideoThumbnail videoThumbnail;
 
     @Override
     protected void onCreate( Bundle savedInstanceState )
@@ -37,7 +37,7 @@ public class FacebookDetailActivity extends SitesDetailActivity
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_facebook_detail );
         facebookHeader = ( FacebookHeader ) findViewById( R.id.facebook_header );
-        tvPostText = ( TextView ) findViewById( R.id.tv_post_text );
+        tvPostText = ( LinkifiedTextView ) findViewById( R.id.tv_post_text );
         viewStub = ( ViewStub ) findViewById( R.id.facebook_view_stub );
         if ( null == getIntent() )
         {
@@ -50,32 +50,38 @@ public class FacebookDetailActivity extends SitesDetailActivity
         }
         this.postType = FacebookListAdapter.getPostType( this.post );
         facebookHeader.showHeader( post );
-        tvPostText.setText( post.getMessage() );
-        tvPostText.setMovementMethod( LinkMovementMethod.getInstance() );
-        if ( postType == FacebookListAdapter.POST_TYPE_PHOTO )
+        tvPostText.setText( post.getLinkedText() );
+        if ( postType == FacebookListAdapter.POST_TYPE_MEDIA )
         {
-            showPhoto( savedInstanceState );
-        }
-        if ( postType == FacebookListAdapter.POST_TYPE_VIDEO || postType == FacebookListAdapter.POST_TYPE_LINK )
-        {
-            showDetails( savedInstanceState );
+            showMedia( savedInstanceState );
         }
     }
 
-    private void showPhoto( Bundle savedInstanceState )
+    private void showMedia( Bundle savedInstancState )
     {
-        viewStub.setLayoutResource( R.layout.facebook_detail_activity_type_photo );
-        imgvPhoto = ( ImageView ) viewStub.inflate();
-        imgvPhoto.setVisibility( View.GONE );
-        final String imageUrl = post.getPicture().toString();
+        viewStub.setLayoutResource( R.layout.facebook_detail_activity_type_video );
+        FrameLayout temp = ( FrameLayout ) viewStub.inflate();
+        videoThumbnail = ( VideoThumbnail ) temp.getChildAt( 0 );
+        videoThumbnail.setVisibility( View.GONE );
         Picasso.with( this )
-                .load( imageUrl )
-                .into( imgvPhoto, new Callback()
+                .load( post.getPicture() )
+                .error( R.drawable.facebook_sketch )
+                .centerCrop()
+                .fit()
+                .into( videoThumbnail.getVideoThumbnail(), new Callback()
                 {
                     @Override
                     public void onSuccess()
                     {
-                        imgvPhoto.setVisibility( View.VISIBLE );
+                        videoThumbnail.setVisibility( View.VISIBLE );
+                        if ( "photo".equals( post.getType() ) )
+                        {
+                            videoThumbnail.showPlayButton( false );
+                        }
+                        else if ( "video".equals( post.getType() ) )
+                        {
+                            videoThumbnail.showPlayButton( true );
+                        }
                     }
 
                     @Override
@@ -84,27 +90,25 @@ public class FacebookDetailActivity extends SitesDetailActivity
 
                     }
                 } );
-        imgvPhoto.setOnClickListener( new View.OnClickListener()
+        videoThumbnail.setOnClickListener( new View.OnClickListener()
         {
             @Override
             public void onClick( View v )
             {
-                ViewAlbumActivity.createAndStartActivity( v.getContext(), post.getName(), Helper.createStringArrayList( imageUrl ), 0 );
+                if ( "photo".equals( post.getType() ) )
+                {
+                    ViewAlbumActivity.createAndStartActivity( v.getContext(),
+                            post.getName(),
+                            Helper.createStringArrayList( Helper.getFacebookLargePhotoUrl( post.getPicture().toString() ) ),
+                            0 );
+                }
+                if ( "video".equals( post.getType() ) )
+                {
+                    Intent i = new Intent( Intent.ACTION_VIEW );
+                    i.setData( Uri.parse( post.getLink() ) );
+                    v.getContext().startActivity( i );
+                }
             }
         } );
-    }
-
-    private void showDetails( Bundle savedInstancState )
-    {
-        viewStub.setLayoutResource( R.layout.facebook_detail_activity_type_video_or_link );
-        FrameLayout temp = ( FrameLayout ) viewStub.inflate();
-        facebookDetailView = ( FacebookDetailView ) temp.getChildAt( 0 );
-        facebookDetailView.showDetails( post );
-    }
-
-    @Override
-    protected TextView getLinkedTextView()
-    {
-        return tvPostText;
     }
 }

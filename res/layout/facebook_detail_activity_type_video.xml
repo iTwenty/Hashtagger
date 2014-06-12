@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookDetailView
-        android:id="@+id/facebook_detail_view"
+    <net.thetranquilpsychonaut.hashtagger.widgets.VideoThumbnail
+        android:id="@+id/facebook_video_thumbnail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

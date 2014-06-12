@@ -3,12 +3,10 @@ package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.squareup.picasso.Callback;
@@ -16,17 +14,17 @@ import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Attachment;
+import net.thetranquilpsychonaut.hashtagger.widgets.VideoThumbnail;
 
 /**
  * Created by itwenty on 5/14/14.
  */
 public class GPlusDetailView extends RelativeLayout implements Callback, View.OnClickListener
 {
-    private ImageView     imgvThumbnail;
-    private TextView      tvTitle;
-    private TextView      tvDescription;
-    private LayerDrawable videoDrawable;
-    private Attachment    attachment;
+    private VideoThumbnail imgvThumbnail;
+    private TextView       tvTitle;
+    private TextView       tvDescription;
+    private Attachment     attachment;
 
     public GPlusDetailView( Context context )
     {
@@ -42,10 +40,9 @@ public class GPlusDetailView extends RelativeLayout implements Callback, View.On
     {
         super( context, attrs, defStyle );
         inflate( context, R.layout.gplus_detail_view, this );
-        imgvThumbnail = ( ImageView ) findViewById( R.id.imgv_thumbnail );
+        imgvThumbnail = ( VideoThumbnail ) findViewById( R.id.imgv_thumbnail );
         tvTitle = ( TextView ) findViewById( R.id.tv_title );
         tvDescription = ( TextView ) findViewById( R.id.tv_description );
-        videoDrawable = ( LayerDrawable ) getContext().getResources().getDrawable( R.drawable.video );
         this.setOnClickListener( this );
     }
 
@@ -60,7 +57,7 @@ public class GPlusDetailView extends RelativeLayout implements Callback, View.On
                     .fit()
                     .centerCrop()
                     .noFade()
-                    .into( imgvThumbnail, this );
+                    .into( imgvThumbnail.getVideoThumbnail(), this );
         }
         else
         {
@@ -69,7 +66,7 @@ public class GPlusDetailView extends RelativeLayout implements Callback, View.On
                     .fit()
                     .centerCrop()
                     .noFade()
-                    .into( imgvThumbnail, this );
+                    .into( imgvThumbnail.getVideoThumbnail(), this );
         }
         tvTitle.setText( attachment.getDisplayName() );
         if ( TextUtils.isEmpty( attachment.getContent() ) )
@@ -84,18 +81,16 @@ public class GPlusDetailView extends RelativeLayout implements Callback, View.On
         }
     }
 
-    private void overlayPlayButton()
-    {
-        videoDrawable.setDrawableByLayerId( R.id.image, imgvThumbnail.getDrawable() );
-        imgvThumbnail.setImageDrawable( videoDrawable );
-    }
-
     @Override
     public void onSuccess()
     {
         if ( "video".equals( attachment.getObjectType() ) )
         {
-            overlayPlayButton();
+            imgvThumbnail.showPlayButton( true );
+        }
+        else
+        {
+            imgvThumbnail.showPlayButton( false );
         }
     }
 

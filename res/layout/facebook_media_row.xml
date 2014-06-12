@@ -27,7 +27,7 @@
             tools:text="line1\nline2\nline3\nline4\nline5\nline6"
             style="@style/MainMessage"/>
 
-        <ImageView
+        <net.thetranquilpsychonaut.hashtagger.widgets.VideoThumbnail
             android:id="@id/imgv_thumbnail"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"

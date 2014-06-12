@@ -1,23 +1,21 @@
 package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 
 import android.os.Bundle;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Thumbnail;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesDetailActivity;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.BaseActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumThumbnailsFragment;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,13 +23,13 @@ import java.util.List;
 /**
  * Created by itwenty on 5/16/14.
  */
-public class GPlusDetailActivity extends SitesDetailActivity
+public class GPlusDetailActivity extends BaseActivity
 {
     public static final String ACTIVITY_KEY = "activity";
-    private TextView    tvActivityText;
-    private GPlusHeader gPlusHeader;
-    private Activity    activity;
-    private int         activityType;
+    private LinkifiedTextView tvActivityText;
+    private GPlusHeader       gPlusHeader;
+    private Activity          activity;
+    private int               activityType;
 
     private ViewStub        viewStub;
     private ImageView       imgvPhoto;
@@ -43,7 +41,7 @@ public class GPlusDetailActivity extends SitesDetailActivity
     {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_gplus_detail );
-        tvActivityText = ( TextView ) findViewById( R.id.tv_activity_text );
+        tvActivityText = ( LinkifiedTextView ) findViewById( R.id.tv_activity_text );
         gPlusHeader = ( GPlusHeader ) findViewById( R.id.gplus_header );
         viewStub = ( ViewStub ) findViewById( R.id.gplus_view_stub );
         if ( null == getIntent() )
@@ -57,8 +55,7 @@ public class GPlusDetailActivity extends SitesDetailActivity
         }
         activityType = GPlusListAdapter.getActivityType( activity );
         gPlusHeader.showHeader( activity );
-        tvActivityText.setText( Html.fromHtml( activity.getObject().getContent() ) );
-        tvActivityText.setMovementMethod( LinkMovementMethod.getInstance() );
+        tvActivityText.setText( activity.getObject().getLinkedText() );
         if ( activityType == GPlusListAdapter.ACTIVITY_TYPE_PHOTO )
         {
             showPhoto( savedInstanceState );
@@ -154,11 +151,5 @@ public class GPlusDetailActivity extends SitesDetailActivity
                             ViewAlbumThumbnailsFragment.TAG )
                     .commit();
         }
-    }
-
-    @Override
-    protected TextView getLinkedTextView()
-    {
-        return tvActivityText;
     }
 }

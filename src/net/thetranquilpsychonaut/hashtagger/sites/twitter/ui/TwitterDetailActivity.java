@@ -1,31 +1,28 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.os.Bundle;
-import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageView;
-import android.widget.TextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesDetailActivity;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.BaseActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
-
-import java.util.ArrayList;
+import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 
 /**
  * Created by itwenty on 5/10/14.
  */
-public class TwitterDetailActivity extends SitesDetailActivity implements View.OnClickListener
+public class TwitterDetailActivity extends BaseActivity
 {
     public static final String STATUS_KEY = "status";
-    private TextView      tvStatusText;
-    private TwitterHeader twitterHeader;
-    private Status        status;
-    private int           statusType;
+    private LinkifiedTextView tvStatusText;
+    private TwitterHeader     twitterHeader;
+    private Status            status;
+    private int               statusType;
 
     private ViewStub  viewStub;
     private ImageView imgvPhoto;
@@ -36,7 +33,7 @@ public class TwitterDetailActivity extends SitesDetailActivity implements View.O
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_twitter_detail );
         setTitle( "Tweet" );
-        tvStatusText = ( TextView ) findViewById( R.id.tv_status_text );
+        tvStatusText = ( LinkifiedTextView ) findViewById( R.id.tv_status_text );
         twitterHeader = ( TwitterHeader ) findViewById( R.id.twitter_header );
         viewStub = ( ViewStub ) findViewById( R.id.twitter_view_stub );
         if ( null == getIntent() )
@@ -50,8 +47,7 @@ public class TwitterDetailActivity extends SitesDetailActivity implements View.O
         }
         this.statusType = TwitterListAdapter.getStatusType( status );
         twitterHeader.showHeader( status );
-        String statusText = status.isRetweet() ? status.getRetweetedStatus().getText() : status.getText();
-        tvStatusText.setMovementMethod( LinkMovementMethod.getInstance() );
+        tvStatusText.setText( status.getLinkedText() );
         if ( statusType == TwitterListAdapter.STATUS_TYPE_PHOTO )
         {
             showPhoto( savedInstanceState );
@@ -88,19 +84,5 @@ public class TwitterDetailActivity extends SitesDetailActivity implements View.O
                 ViewAlbumActivity.createAndStartActivity( v.getContext(), "@" + status.getUser().getScreenName(), Helper.createStringArrayList( imageUrl ), 0 );
             }
         } );
-    }
-
-    @Override
-    protected TextView getLinkedTextView()
-    {
-        return tvStatusText;
-    }
-
-    @Override
-    public void onClick( View v )
-    {
-        ArrayList<String> imageUrls = new ArrayList<String>( 1 );
-        imageUrls.add( Helper.getTwitterLargePhotoUrl( status.getEntities().getMedia().get( 0 ).getUrl() ) );
-        ViewAlbumActivity.createAndStartActivity( this, "@" + status.getUser().getScreenName(), imageUrls, 0 );
     }
 }

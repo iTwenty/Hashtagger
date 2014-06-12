@@ -23,7 +23,7 @@
             android:layout_toLeftOf="@+id/album_thumbnail"
             style="@style/MainMessage"/>
 
-        <net.thetranquilpsychonaut.hashtagger.sites.ui.AlbumThumbnail
+        <net.thetranquilpsychonaut.hashtagger.widgets.AlbumThumbnail
             android:id="@id/album_thumbnail"
             android:layout_width="75dp"
             android:layout_height="75dp"

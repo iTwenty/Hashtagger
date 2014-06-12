@@ -16,13 +16,13 @@ public class Comment implements Serializable
     private String  id;
     private From    from;
     private String  message;
-    @SerializedName( "can_remove" )
+    @SerializedName("can_remove")
     private boolean canRemove;
-    @SerializedName( "created_time" )
+    @SerializedName("created_time")
     private Date    createdTime;
-    @SerializedName( "like_count" )
+    @SerializedName("like_count")
     private int     likeCount;
-    @SerializedName( "user_likes" )
+    @SerializedName("user_likes")
     private boolean userLikes;
 
     public String getId()

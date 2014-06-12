@@ -1,34 +1,36 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
+import net.thetranquilpsychonaut.hashtagger.widgets.VideoThumbnail;
 
 /**
  * Created by itwenty on 5/2/14.
  */
-public class FacebookPhotoRow extends FacebookListRow implements View.OnClickListener
+public class FacebookMediaRow extends FacebookListRow implements View.OnClickListener
 {
-    private ImageView imgvThumbnail;
+    private VideoThumbnail imgvThumbnail;
 
-    protected FacebookPhotoRow( Context context )
+    protected FacebookMediaRow( Context context )
     {
         super( context );
     }
 
-    protected FacebookPhotoRow( Context context, AttributeSet attrs )
+    protected FacebookMediaRow( Context context, AttributeSet attrs )
     {
         super( context, attrs );
     }
 
-    protected FacebookPhotoRow( Context context, AttributeSet attrs, int defStyle )
+    protected FacebookMediaRow( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
     }
@@ -36,8 +38,8 @@ public class FacebookPhotoRow extends FacebookListRow implements View.OnClickLis
     @Override
     protected void init( Context context )
     {
-        inflate( context, R.layout.facebook_photo_row, this );
-        imgvThumbnail = ( ImageView ) findViewById( R.id.imgv_thumbnail );
+        inflate( context, R.layout.facebook_media_row, this );
+        imgvThumbnail = ( VideoThumbnail ) findViewById( R.id.imgv_thumbnail );
         imgvThumbnail.setOnClickListener( this );
         super.init( context );
     }
@@ -65,11 +67,11 @@ public class FacebookPhotoRow extends FacebookListRow implements View.OnClickLis
     {
         super.updateRow( result );
         Picasso.with( getContext() )
-                .load( post.getPicture().toString() )
+                .load( post.getPicture() )
                 .error( R.drawable.drawable_image_loading )
                 .fit()
                 .centerCrop()
-                .into( imgvThumbnail );
+                .into( imgvThumbnail.getVideoThumbnail() );
     }
 
     @Override
@@ -77,10 +79,19 @@ public class FacebookPhotoRow extends FacebookListRow implements View.OnClickLis
     {
         if ( v.equals( imgvThumbnail ) )
         {
-            ViewAlbumActivity.createAndStartActivity( getContext(),
-                    post.getName(),
-                    Helper.createStringArrayList( Helper.getFacebookLargePhotoUrl( post.getPicture().toString() ) ),
-                    0 );
+            if ( "photo".equals( post.getType() ) )
+            {
+                ViewAlbumActivity.createAndStartActivity( getContext(),
+                        post.getName(),
+                        Helper.createStringArrayList( Helper.getFacebookLargePhotoUrl( post.getPicture().toString() ) ),
+                        0 );
+            }
+            if ( "video".equals( post.getType() ) )
+            {
+                Intent i = new Intent( Intent.ACTION_VIEW );
+                i.setData( Uri.parse( post.getLink() ) );
+                getContext().startActivity( i );
+            }
         }
     }
 }

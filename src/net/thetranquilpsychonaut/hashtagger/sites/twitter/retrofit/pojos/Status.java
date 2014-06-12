@@ -2,10 +2,13 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos;
 
 import android.text.Spannable;
 import com.google.gson.annotations.SerializedName;
+import net.thetranquilpsychonaut.hashtagger.utils.Linkifier;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -216,10 +219,10 @@ public class Status implements Serializable
     {
         return EqualsBuilder.reflectionEquals( this, other );
     }
-//
-//    private void readObject( ObjectInputStream inputStream ) throws IOException, ClassNotFoundException
-//    {
-//        inputStream.defaultReadObject();
-//        linkedText = Linkifier.getLinkedTwitterText( text );
-//    }
+
+    private void readObject( ObjectInputStream inputStream ) throws IOException, ClassNotFoundException
+    {
+        inputStream.defaultReadObject();
+        linkedText = Linkifier.getLinkedTwitterText( text );
+    }
 }

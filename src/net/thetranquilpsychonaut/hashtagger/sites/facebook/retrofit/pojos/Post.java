@@ -2,10 +2,13 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos;
 
 import android.text.Spannable;
 import com.google.gson.annotations.SerializedName;
+import net.thetranquilpsychonaut.hashtagger.utils.Linkifier;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -24,13 +27,13 @@ public class Post implements Serializable
     private String caption;
     private String source;
     private String type;
-    @SerializedName( "object_id" )
+    @SerializedName("object_id")
     private
     String objectId;
-    @SerializedName( "created_time" )
+    @SerializedName("created_time")
     private
     Date   createdTime;
-    @SerializedName( "updated_time" )
+    @SerializedName("updated_time")
     private
     Date   updatedTime;
     private Likes    likes;
@@ -225,5 +228,11 @@ public class Post implements Serializable
     public boolean equals( Object other )
     {
         return EqualsBuilder.reflectionEquals( this, other );
+    }
+
+    private void readObject( ObjectInputStream inputStream ) throws IOException, ClassNotFoundException
+    {
+        inputStream.defaultReadObject();
+        linkedText = Linkifier.getLinkedFacebookText( message );
     }
 }

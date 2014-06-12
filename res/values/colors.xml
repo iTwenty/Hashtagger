@@ -17,4 +17,5 @@
     <color name="sites_button_pressed">#99999999</color>
     <color name="error_red">#ff4444</color>
     <color name="login_button_pressed">#77ff8800</color>
+    <color name="translucent_black">#aa000000</color>
 </resources>

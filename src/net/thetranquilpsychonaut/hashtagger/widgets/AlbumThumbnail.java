@@ -1,4 +1,4 @@
-package net.thetranquilpsychonaut.hashtagger.sites.ui;
+package net.thetranquilpsychonaut.hashtagger.widgets;
 
 import android.content.Context;
 import android.util.AttributeSet;

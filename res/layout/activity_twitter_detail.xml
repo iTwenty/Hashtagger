@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <TextView
+        <net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView
             android:id="@+id/tv_status_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

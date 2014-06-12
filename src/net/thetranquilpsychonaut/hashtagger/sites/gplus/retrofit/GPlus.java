@@ -46,7 +46,7 @@ public class GPlus
 
     public static interface Api
     {
-        @GET( "/activities" )
+        @GET("/activities")
         public ActivityFeed searchActivities( @QueryMap Map<String, String> params );
     }
 }
