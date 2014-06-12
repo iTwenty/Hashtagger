@@ -85,8 +85,8 @@ public class SitesActivity extends NavDrawerActivity
         int[] savedSitePositions = getSavedSitePositions();
         ipiSitesPager.removeAllViews();
         int twitterPosition = savedSitePositions[HashtaggerApp.TWITTER_VALUE];
-        int facebookPosition = savedSitePositions[HashtaggerApp.FACEBOOK_VALUE];
         int gPlusPosition = savedSitePositions[HashtaggerApp.GPLUS_VALUE];
+        int facebookPosition = savedSitePositions[HashtaggerApp.FACEBOOK_VALUE];
         if ( twitterPosition == -1 )
         {
             vpSitesPagerAdapter.remove( TwitterFragment.descriptor );
@@ -101,22 +101,6 @@ public class SitesActivity extends NavDrawerActivity
             else
             {
                 vpSitesPagerAdapter.insert( TwitterFragment.descriptor, twitterPosition );
-            }
-        }
-        if ( facebookPosition == -1 )
-        {
-            vpSitesPagerAdapter.remove( FacebookFragment.descriptor );
-        }
-        else
-        {
-            ipiSitesPager.addIcon( HashtaggerApp.FACEBOOK_VALUE );
-            if ( vpSitesPagerAdapter.contains( FacebookFragment.descriptor ) )
-            {
-                vpSitesPagerAdapter.move( FacebookFragment.descriptor, facebookPosition );
-            }
-            else
-            {
-                vpSitesPagerAdapter.insert( FacebookFragment.descriptor, facebookPosition );
             }
         }
         if ( gPlusPosition == -1 )
@@ -135,6 +119,22 @@ public class SitesActivity extends NavDrawerActivity
                 vpSitesPagerAdapter.insert( GPlusFragment.descriptor, gPlusPosition );
             }
         }
+        if ( facebookPosition == -1 )
+        {
+            vpSitesPagerAdapter.remove( FacebookFragment.descriptor );
+        }
+        else
+        {
+            ipiSitesPager.addIcon( HashtaggerApp.FACEBOOK_VALUE );
+            if ( vpSitesPagerAdapter.contains( FacebookFragment.descriptor ) )
+            {
+                vpSitesPagerAdapter.move( FacebookFragment.descriptor, facebookPosition );
+            }
+            else
+            {
+                vpSitesPagerAdapter.insert( FacebookFragment.descriptor, facebookPosition );
+            }
+        }
         ipiSitesPager.setSelectedChild( vpSitesPager.getCurrentItem() );
     }
 
@@ -143,8 +143,8 @@ public class SitesActivity extends NavDrawerActivity
         int[] positions = new int[HashtaggerApp.TOTAL_SITES_COUNT];
         int activePosition = 0;
         positions[HashtaggerApp.TWITTER_VALUE] = DefaultPrefs.twitterActive ? activePosition++ : -1;
-        positions[HashtaggerApp.FACEBOOK_VALUE] = DefaultPrefs.facebookActive ? activePosition++ : -1;
         positions[HashtaggerApp.GPLUS_VALUE] = DefaultPrefs.gPlusActive ? activePosition++ : -1;
+        positions[HashtaggerApp.FACEBOOK_VALUE] = DefaultPrefs.facebookActive ? activePosition++ : -1;
         return positions;
     }
 

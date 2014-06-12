@@ -17,15 +17,15 @@ public final class SitesFragmentData
         public static List<Integer> statusTypes;
     }
 
-    public static final class Facebook
-    {
-        public static List<Post>    posts;
-        public static List<Integer> postTypes;
-    }
-
     public static final class GPlus
     {
         public static List<Activity> activities;
         public static List<Integer>  activityTypes;
+    }
+
+    public static final class Facebook
+    {
+        public static List<Post>    posts;
+        public static List<Integer> postTypes;
     }
 }

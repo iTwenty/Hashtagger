@@ -14,15 +14,15 @@
             android:defaultValue="true"/>
 
         <CheckBoxPreference
-            android:title="Facebook"
-            android:key="site_facebook"
-            android:icon="@drawable/facebook_icon_flat"
-            android:defaultValue="true"/>
-
-        <CheckBoxPreference
             android:title="Google+"
             android:key="site_gplus"
             android:icon="@drawable/gplus_icon_flat"
+            android:defaultValue="true"/>
+
+        <CheckBoxPreference
+            android:title="Facebook"
+            android:key="site_facebook"
+            android:icon="@drawable/facebook_icon_flat"
             android:defaultValue="true"/>
 
     </PreferenceCategory>

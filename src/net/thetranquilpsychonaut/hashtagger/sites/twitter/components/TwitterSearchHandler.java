@@ -17,14 +17,6 @@ import net.thetranquilpsychonaut.hashtagger.utils.Linkifier;
  */
 public class TwitterSearchHandler extends SitesSearchHandler
 {
-    /*
-    max and since ids are used to navigate through the tweets timeline.
-    tweet ids are time based i.e later tweets have higher ids than older tweets.
-    */
-
-    static String maxId;
-    static String sinceId;
-
     public TwitterSearchHandler( SitesSearchListener listener )
     {
         super( listener );

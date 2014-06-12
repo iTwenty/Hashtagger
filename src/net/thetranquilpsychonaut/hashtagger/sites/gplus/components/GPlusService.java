@@ -24,6 +24,8 @@ import org.scribe.oauth.OAuthService;
  */
 public class GPlusService extends SitesService
 {
+    public static  String   nextPageToken;
+
     private volatile static boolean isServiceRunning;
     private static final int    GPLUS_SEARCH_LIMIT = 20;
     private static final String GPLUS_USERNAME_URL = "https://www.googleapis.com/plus/v1/people/me?fields=displayName";
@@ -49,7 +51,7 @@ public class GPlusService extends SitesService
                     break;
                 case SearchType.OLDER:
                     params.setMaxResults( GPLUS_SEARCH_LIMIT );
-                    params.setPageToken( GPlusSearchHandler.nextPageToken );
+                    params.setPageToken( nextPageToken );
                     break;
                 default:
                     break;
@@ -66,7 +68,7 @@ public class GPlusService extends SitesService
         {
             if ( searchType != SearchType.NEWER && searchType != SearchType.TIMED )
             {
-                GPlusSearchHandler.nextPageToken = results.getNextPageToken();
+                nextPageToken = results.getNextPageToken();
             }
             resultIntent.putExtra( Result.RESULT_DATA, results );
         }

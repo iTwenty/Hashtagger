@@ -31,6 +31,14 @@ import java.util.List;
  */
 public class TwitterService extends SitesService
 {
+    /*
+    max and since ids are used to navigate through the tweets timeline.
+    tweet ids are time based i.e later tweets have higher ids than older tweets.
+    */
+
+    private static String maxId;
+    private static String sinceId;
+
     private volatile static boolean isServiceRunning;
     private static final String TWITTER_USERNAME_URL = "https://api.twitter.com/1.1/account/verify_credentials.json";
     private static final int    TWITTER_SEARCH_LIMIT = 20;
@@ -57,13 +65,13 @@ public class TwitterService extends SitesService
                     break;
                 case SearchType.OLDER:
                     params.setCount( TWITTER_SEARCH_LIMIT );
-                    params.setMaxId( TwitterSearchHandler.maxId );
+                    params.setMaxId( maxId );
                     break;
                 case SearchType.NEWER:
-                    params.setSinceId( TwitterSearchHandler.sinceId );
+                    params.setSinceId( sinceId );
                     break;
                 case SearchType.TIMED:
-                    params.setSinceId( TwitterSearchHandler.sinceId );
+                    params.setSinceId( sinceId );
             }
             searchResult = Twitter.api().searchTweets( params.getParams() );
         }
@@ -86,12 +94,11 @@ public class TwitterService extends SitesService
 
                 if ( searchType != SearchType.OLDER )
                 {
-                    TwitterSearchHandler.sinceId = searchResult.getSearchMetadata().getMaxIdStr();
+                    sinceId = searchResult.getSearchMetadata().getMaxIdStr();
                 }
                 if ( searchType != SearchType.NEWER && searchType != SearchType.TIMED )
                 {
-                    TwitterSearchHandler.maxId =
-                            TextUtils.equals( searchResult.getSearchMetadata().getSinceIdStr(), "0" ) ?
+                    maxId = TextUtils.equals( searchResult.getSearchMetadata().getSinceIdStr(), "0" ) ?
                                     getLowestId( searchResult.getStatuses() ) :
                                     searchResult.getSearchMetadata().getSinceIdStr();
                 }

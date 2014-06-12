@@ -26,13 +26,13 @@ public class SitesAdapter extends ArrayPagerAdapter<SitesFragment>
         {
             return new TwitterFragment();
         }
-        if ( pageDescriptor.equals( FacebookFragment.descriptor ) )
-        {
-            return new FacebookFragment();
-        }
         if ( pageDescriptor.equals( GPlusFragment.descriptor ) )
         {
             return new GPlusFragment();
+        }
+        if ( pageDescriptor.equals( FacebookFragment.descriptor ) )
+        {
+            return new FacebookFragment();
         }
         return null;
     }

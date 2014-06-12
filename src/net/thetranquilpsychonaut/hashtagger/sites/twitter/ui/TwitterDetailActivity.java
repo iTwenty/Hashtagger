@@ -59,7 +59,8 @@ public class TwitterDetailActivity extends BaseActivity
         viewStub.setLayoutResource( R.layout.twitter_detail_activity_type_photo );
         imgvPhoto = ( ImageView ) viewStub.inflate();
         imgvPhoto.setVisibility( View.GONE );
-        final String imageUrl = Helper.getTwitterLargePhotoUrl( status.getEntities().getMedia().get( 0 ).getUrl() );
+        final String imageUrl = Helper.getTwitterLargePhotoUrl( status.getEntities().getMedia().get( 0 ).getMediaUrl() );
+        Helper.debug( imageUrl );
         Picasso.with( this )
                 .load( imageUrl )
                 .into( imgvPhoto, new Callback()
@@ -73,7 +74,6 @@ public class TwitterDetailActivity extends BaseActivity
                     @Override
                     public void onError()
                     {
-
                     }
                 } );
         imgvPhoto.setOnClickListener( new View.OnClickListener()

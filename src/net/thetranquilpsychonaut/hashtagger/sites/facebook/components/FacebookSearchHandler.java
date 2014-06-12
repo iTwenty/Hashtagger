@@ -11,6 +11,7 @@ import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.SearchResult;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.utils.Linkifier;
 
 import java.util.Iterator;
@@ -70,8 +71,10 @@ public class FacebookSearchHandler extends SitesSearchHandler
                 Iterator<Post> iterator = searchResult.getData().iterator();
                 while ( iterator.hasNext() )
                 {
-                    if ( TextUtils.isEmpty( iterator.next().getMessage() ) )
+                    Post post = iterator.next();
+                    if ( TextUtils.isEmpty( post.getMessage() ) )
                     {
+                        Helper.debug( "Facebook post with empty message removed. ID is : " + post.getId() );
                         iterator.remove();
                     }
                 }

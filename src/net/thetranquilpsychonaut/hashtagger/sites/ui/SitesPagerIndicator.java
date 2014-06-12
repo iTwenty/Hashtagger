@@ -65,14 +65,15 @@ public class SitesPagerIndicator extends ViewPagerIndicator implements View.OnCl
                 imageButton.setImageDrawable( getResources().getDrawable( R.drawable.twitter_logo ) );
                 imageButton.setTag( R.color.twitter_logo_blue );
                 break;
-            case HashtaggerApp.FACEBOOK_VALUE:
-                imageButton.setImageDrawable( getResources().getDrawable( R.drawable.facebook_logo ) );
-                imageButton.setTag( R.color.facebook_blue );
-                break;
             case HashtaggerApp.GPLUS_VALUE:
                 imageButton.setImageDrawable( getResources().getDrawable( R.drawable.gplus_logo ) );
                 imageButton.setTag( R.color.gplus_red );
                 break;
+            case HashtaggerApp.FACEBOOK_VALUE:
+                imageButton.setImageDrawable( getResources().getDrawable( R.drawable.facebook_logo ) );
+                imageButton.setTag( R.color.facebook_blue );
+                break;
+
         }
         imageButton.setOnClickListener( this );
         addView( imageButton );

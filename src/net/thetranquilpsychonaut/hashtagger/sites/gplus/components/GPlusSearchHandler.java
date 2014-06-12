@@ -19,7 +19,6 @@ import java.util.Iterator;
  */
 public class GPlusSearchHandler extends SitesSearchHandler
 {
-    public static  String   nextPageToken;
     private static Activity newestActivity;
 
     public GPlusSearchHandler( SitesSearchListener listener )

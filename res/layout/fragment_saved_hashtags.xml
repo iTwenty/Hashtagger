@@ -27,6 +27,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:gravity="center"
+        style="@style/TextView_Default"
         android:text="@string/str_no_saved_hashtags"/>
 
 </RelativeLayout>
