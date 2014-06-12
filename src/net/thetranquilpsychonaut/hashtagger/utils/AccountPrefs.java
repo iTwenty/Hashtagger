@@ -13,11 +13,11 @@ public final class AccountPrefs
     public static final  String TWITTER_ACCESS_TOKEN_KEY        = "twitter_access_token";
     public static final  String TWITTER_ACCESS_TOKEN_SECRET_KEY = "twitter_access_token_secret";
     public static final  String TWITTER_USER_NAME_KEY           = "twitter_user_name";
-    public static final  String FACEBOOK_ACCESS_TOKEN_KEY       = "facebook_access_token";
-    public static final  String FACEBOOK_USER_NAME_KEY          = "facebook_user_name";
     public static final  String GPLUS_ACCESS_TOKEN_KEY          = "gplus_access_token";
     public static final  String GPLUS_REFRESH_TOKEN_KEY         = "gplus_refresh_token";
     public static final  String GPLUS_USER_NAME_KEY             = "gplus_user_name";
+    public static final  String FACEBOOK_ACCESS_TOKEN_KEY       = "facebook_access_token";
+    public static final  String FACEBOOK_USER_NAME_KEY          = "facebook_user_name";
 
     private static final SharedPreferences getAccountPrefs()
     {
@@ -67,39 +67,6 @@ public final class AccountPrefs
         return getAccountPrefs().getString( TWITTER_USER_NAME_KEY, "" );
     }
 
-    /* ************* Facebook *******************/
-
-    public static void addFacebookDetails( String accessToken, String userName )
-    {
-        getAccountPrefs().edit()
-                .putString( FACEBOOK_ACCESS_TOKEN_KEY, accessToken )
-                .putString( FACEBOOK_USER_NAME_KEY, userName )
-                .commit();
-    }
-
-    public static void removeFacebookDetails()
-    {
-        getAccountPrefs().edit()
-                .remove( FACEBOOK_ACCESS_TOKEN_KEY )
-                .remove( FACEBOOK_USER_NAME_KEY )
-                .commit();
-    }
-
-    public static boolean areFacebookDetailsPresent()
-    {
-        return getAccountPrefs().contains( FACEBOOK_ACCESS_TOKEN_KEY );
-    }
-
-    public static String getFacebookAccessToken()
-    {
-        return getAccountPrefs().getString( FACEBOOK_ACCESS_TOKEN_KEY, "" );
-    }
-
-    public static String getFacebookUserName()
-    {
-        return getAccountPrefs().getString( FACEBOOK_USER_NAME_KEY, "" );
-    }
-
     /**
      * ********************* Google+ *************************
      */
@@ -147,5 +114,38 @@ public final class AccountPrefs
     public static String getGPlusUserName()
     {
         return getAccountPrefs().getString( GPLUS_USER_NAME_KEY, "" );
+    }
+
+    /* ************* Facebook *******************/
+
+    public static void addFacebookDetails( String accessToken, String userName )
+    {
+        getAccountPrefs().edit()
+                .putString( FACEBOOK_ACCESS_TOKEN_KEY, accessToken )
+                .putString( FACEBOOK_USER_NAME_KEY, userName )
+                .commit();
+    }
+
+    public static void removeFacebookDetails()
+    {
+        getAccountPrefs().edit()
+                .remove( FACEBOOK_ACCESS_TOKEN_KEY )
+                .remove( FACEBOOK_USER_NAME_KEY )
+                .commit();
+    }
+
+    public static boolean areFacebookDetailsPresent()
+    {
+        return getAccountPrefs().contains( FACEBOOK_ACCESS_TOKEN_KEY );
+    }
+
+    public static String getFacebookAccessToken()
+    {
+        return getAccountPrefs().getString( FACEBOOK_ACCESS_TOKEN_KEY, "" );
+    }
+
+    public static String getFacebookUserName()
+    {
+        return getAccountPrefs().getString( FACEBOOK_USER_NAME_KEY, "" );
     }
 }

@@ -47,8 +47,11 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
     {
         this.post = ( Post ) result;
         ccbLike.setOnClickListener( this );
+        ccbLike.setEnabled( false );
         ccbComment.setOnClickListener( this );
+        ccbComment.setEnabled( false );
         ccbShare.setOnClickListener( this );
+        ccbShare.setEnabled( false );
         ccbViewDetails.setOnClickListener( this );
         ccbLike.setText( post.getLikes() != null && !Helper.isNullOrEmpty( post.getLikes().getData() ) ? String.valueOf( post.getLikes().getData().size() ) : "" );
         ccbComment.setText( post.getComments() != null && !Helper.isNullOrEmpty( post.getComments().getData() ) ? String.valueOf( post.getComments().getData().size() ) : "" );

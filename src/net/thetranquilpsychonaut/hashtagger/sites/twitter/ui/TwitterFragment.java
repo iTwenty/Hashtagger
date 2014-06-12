@@ -31,15 +31,15 @@ public class TwitterFragment extends SitesFragment
     public static SimplePageDescriptor descriptor = new SimplePageDescriptor( HashtaggerApp.TWITTER, HashtaggerApp.TWITTER );
 
     @Override
-    protected int getSketchLogoResId()
-    {
-        return R.drawable.twitter_sketch;
-    }
-
-    @Override
     protected int getLogoResId()
     {
         return R.drawable.twitter_icon_flat;
+    }
+
+    @Override
+    protected int getPlainLogoResId()
+    {
+        return R.drawable.twitter_icon_plain;
     }
 
     @Override

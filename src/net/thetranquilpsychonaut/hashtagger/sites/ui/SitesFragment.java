@@ -231,9 +231,10 @@ public abstract class SitesFragment extends Fragment implements
                 }
             }
         } );
-        viewHolder.sitesEmptyView.setText( "Feels a bit empty here. Try the search icon above?" );
-        viewHolder.sitesEmptyView.setImage( getSketchLogoResId() );
+        viewHolder.sitesEmptyView.setText( "Try the search icon above." );
+        viewHolder.sitesEmptyView.setImage( getPlainLogoResId() );
     }
+
 
     private void initNewResultsBar( View viewReady )
     {
@@ -428,9 +429,9 @@ public abstract class SitesFragment extends Fragment implements
 
     protected abstract List<Integer> initResultTypesList();
 
-    protected abstract int getSketchLogoResId();
-
     protected abstract int getLogoResId();
+
+    protected abstract int getPlainLogoResId();
 
     protected abstract boolean isUserLoggedIn();
 

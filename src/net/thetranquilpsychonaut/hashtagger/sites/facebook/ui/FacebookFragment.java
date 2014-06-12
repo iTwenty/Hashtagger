@@ -27,15 +27,15 @@ public class FacebookFragment extends SitesFragment
     public static SimplePageDescriptor descriptor = new SimplePageDescriptor( HashtaggerApp.FACEBOOK, HashtaggerApp.FACEBOOK );
 
     @Override
-    protected int getSketchLogoResId()
-    {
-        return R.drawable.facebook_sketch;
-    }
-
-    @Override
     protected int getLogoResId()
     {
         return R.drawable.facebook_icon_flat;
+    }
+
+    @Override
+    protected int getPlainLogoResId()
+    {
+        return R.drawable.facebook_icon_plain;
     }
 
     @Override

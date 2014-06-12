@@ -1,6 +1,7 @@
 package net.thetranquilpsychonaut.hashtagger.sites.components;
 
 import android.text.TextUtils;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.Api;
 import org.scribe.model.OAuthRequest;

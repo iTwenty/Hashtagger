@@ -52,15 +52,15 @@ public class GPlusFragment extends SitesFragment
     }
 
     @Override
-    protected int getSketchLogoResId()
-    {
-        return R.drawable.gplus_sketch;
-    }
-
-    @Override
     protected int getLogoResId()
     {
         return R.drawable.gplus_icon_flat;
+    }
+
+    @Override
+    protected int getPlainLogoResId()
+    {
+        return R.drawable.gplus_icon_plain;
     }
 
     @Override

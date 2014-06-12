@@ -63,9 +63,10 @@ public class FacebookDetailActivity extends BaseActivity
         FrameLayout temp = ( FrameLayout ) viewStub.inflate();
         videoThumbnail = ( VideoThumbnail ) temp.getChildAt( 0 );
         videoThumbnail.setVisibility( View.GONE );
+        final String imageUrl = Helper.getFacebookLargePhotoUrl( post.getPicture() );
         Picasso.with( this )
-                .load( post.getPicture() )
-                .error( R.drawable.facebook_sketch )
+                .load( imageUrl )
+                .error( R.drawable.facebook_icon_plain )
                 .centerCrop()
                 .fit()
                 .into( videoThumbnail.getVideoThumbnail(), new Callback()
@@ -99,7 +100,7 @@ public class FacebookDetailActivity extends BaseActivity
                 {
                     ViewAlbumActivity.createAndStartActivity( v.getContext(),
                             post.getName(),
-                            Helper.createStringArrayList( Helper.getFacebookLargePhotoUrl( post.getPicture().toString() ) ),
+                            Helper.createStringArrayList( imageUrl ),
                             0 );
                 }
                 if ( "video".equals( post.getType() ) )

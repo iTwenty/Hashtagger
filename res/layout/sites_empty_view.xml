@@ -4,8 +4,8 @@
 
     <ImageView
         android:id="@+id/imgv_empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_gravity="center"/>
 
     <TextView
