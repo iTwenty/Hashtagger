@@ -14,7 +14,7 @@
         android:id="@+id/imgv_play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/play_button"
+        android:src="@drawable/play"
         android:layout_gravity="center"/>
 
 </merge>

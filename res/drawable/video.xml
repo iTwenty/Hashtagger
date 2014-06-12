@@ -6,7 +6,7 @@
         <shape android:shape="rectangle"/>
     </item>
     <item android:id="@+id/play">
-        <bitmap android:src="@drawable/play_button"
+        <bitmap android:src="@drawable/play"
                 android:gravity="center"/>
     </item>
 </layer-list>
