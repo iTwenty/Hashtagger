@@ -94,41 +94,6 @@ public final class Helper
         Toast.makeText( context, "Connect to a network first", Toast.LENGTH_SHORT ).show();
     }
 
-    public static String getFacebookProfilePictureUrl( String userId )
-    {
-        return String.format( "http://graph.facebook.com/%s/picture?type=square", userId );
-    }
-
-    public static Uri getTwitterStatusUrl( Status status )
-    {
-        return Uri.parse( "http://twitter.com/" + status.getUser().getIdStr() + "/status/" + status.getIdStr() );
-    }
-
-    public static Uri getFacebookPostUrl( Post post )
-    {
-        return Uri.parse( "http://facebook.com/" + post.getId() );
-    }
-
-    public static Uri getGPlusActivityUrl( Activity activity )
-    {
-        return Uri.parse( activity.getUrl() );
-    }
-
-    public static String getFacebookLargePhotoUrl( String smallPhotoUrl )
-    {
-        return smallPhotoUrl.replaceAll( "_s.|_t.", "_o." );
-    }
-
-    public static String getGPlusAlbumImageUrl( String albumThumbnailUrl )
-    {
-        return albumThumbnailUrl.replaceAll( "/w\\d+-h\\d+.*/", "/" );
-    }
-
-    public static String getTwitterLargePhotoUrl( String smallPhotoUrl )
-    {
-        return smallPhotoUrl.replaceAll( ":thumb$|:small$|:medium$|:large$|$", ":large" );
-    }
-
     public static ArrayList<String> createStringArrayList( String... strings )
     {
         ArrayList<String> list = new ArrayList<String>( strings.length );

@@ -14,12 +14,13 @@ import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Attachment;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 import net.thetranquilpsychonaut.hashtagger.widgets.VideoThumbnail;
 
 /**
  * Created by itwenty on 5/14/14.
  */
-public class GPlusDetailView extends RelativeLayout implements Callback, View.OnClickListener
+public class GPlusDetailView extends RelativeLayout implements View.OnClickListener
 {
     private VideoThumbnail imgvThumbnail;
     private TextView       tvTitle;
@@ -52,12 +53,12 @@ public class GPlusDetailView extends RelativeLayout implements Callback, View.On
         if ( null != attachment.getImage() )
         {
             Picasso.with( getContext() )
-                    .load( attachment.getImage().getUrl() )
+                    .load( UrlModifier.getGPlusSmallPhotoUrl( attachment.getImage().getUrl() ) )
                     .error( R.drawable.gplus_icon_plain )
                     .fit()
                     .centerCrop()
                     .noFade()
-                    .into( imgvThumbnail.getVideoThumbnail(), this );
+                    .into( imgvThumbnail.getVideoThumbnail() );
         }
         else
         {
@@ -66,8 +67,9 @@ public class GPlusDetailView extends RelativeLayout implements Callback, View.On
                     .fit()
                     .centerCrop()
                     .noFade()
-                    .into( imgvThumbnail.getVideoThumbnail(), this );
+                    .into( imgvThumbnail.getVideoThumbnail() );
         }
+        imgvThumbnail.showPlayButton( TextUtils.equals( "video", attachment.getObjectType() ) );
         tvTitle.setText( attachment.getDisplayName() );
         if ( TextUtils.isEmpty( attachment.getContent() ) )
         {
@@ -82,29 +84,10 @@ public class GPlusDetailView extends RelativeLayout implements Callback, View.On
     }
 
     @Override
-    public void onSuccess()
-    {
-        if ( "video".equals( attachment.getObjectType() ) )
-        {
-            imgvThumbnail.showPlayButton( true );
-        }
-        else
-        {
-            imgvThumbnail.showPlayButton( false );
-        }
-    }
-
-    @Override
-    public void onError()
-    {
-
-    }
-
-    @Override
     public void onClick( View v )
     {
         Intent intent = new Intent( Intent.ACTION_VIEW );
-        if ( "video".equals( attachment.getObjectType() ) )
+        if ( TextUtils.equals( "video", attachment.getObjectType() ) )
         {
             intent.setData( Uri.parse( attachment.getEmbed().getUrl() ) );
         }

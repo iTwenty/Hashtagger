@@ -3,6 +3,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.FrameLayout;
@@ -13,6 +14,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.BaseActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 import net.thetranquilpsychonaut.hashtagger.widgets.VideoThumbnail;
 
@@ -63,7 +65,7 @@ public class FacebookDetailActivity extends BaseActivity
         FrameLayout temp = ( FrameLayout ) viewStub.inflate();
         videoThumbnail = ( VideoThumbnail ) temp.getChildAt( 0 );
         videoThumbnail.setVisibility( View.GONE );
-        final String imageUrl = Helper.getFacebookLargePhotoUrl( post.getPicture() );
+        final String imageUrl = UrlModifier.getFacebookLargePhotoUrl( post.getPicture() );
         Picasso.with( this )
                 .load( imageUrl )
                 .error( R.drawable.facebook_icon_plain )
@@ -75,14 +77,7 @@ public class FacebookDetailActivity extends BaseActivity
                     public void onSuccess()
                     {
                         videoThumbnail.setVisibility( View.VISIBLE );
-                        if ( "photo".equals( post.getType() ) )
-                        {
-                            videoThumbnail.showPlayButton( false );
-                        }
-                        else if ( "video".equals( post.getType() ) )
-                        {
-                            videoThumbnail.showPlayButton( true );
-                        }
+                        videoThumbnail.showPlayButton( TextUtils.equals( "video", post.getType() ) );
                     }
 
                     @Override
@@ -96,14 +91,14 @@ public class FacebookDetailActivity extends BaseActivity
             @Override
             public void onClick( View v )
             {
-                if ( "photo".equals( post.getType() ) )
+                if ( TextUtils.equals( "photo", post.getType() ) )
                 {
                     ViewAlbumActivity.createAndStartActivity( v.getContext(),
                             post.getName(),
                             Helper.createStringArrayList( imageUrl ),
                             0 );
                 }
-                if ( "video".equals( post.getType() ) )
+                if ( TextUtils.equals( "video", post.getType() ) )
                 {
                     Intent i = new Intent( Intent.ACTION_VIEW );
                     i.setData( Uri.parse( post.getLink() ) );

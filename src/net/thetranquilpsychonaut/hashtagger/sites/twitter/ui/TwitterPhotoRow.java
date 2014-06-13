@@ -9,6 +9,7 @@ import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 
 /**
@@ -79,7 +80,7 @@ public class TwitterPhotoRow extends TwitterListRow implements View.OnClickListe
                 getContext(),
                 "@" + status.getUser().getScreenName(),
                 Helper.createStringArrayList(
-                        Helper.getTwitterLargePhotoUrl(
+                        UrlModifier.getTwitterLargePhotoUrl(
                                 status.getEntities().getMedia().get( 0 ).getMediaUrl() ) ),
                 0 );
     }

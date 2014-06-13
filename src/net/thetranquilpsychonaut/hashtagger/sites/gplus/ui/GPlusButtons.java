@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Toast;
+import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.events.PlusOneClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
-import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 import net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton;
 
 /**
@@ -37,7 +39,6 @@ public class GPlusButtons extends SitesButtons implements View.OnClickListener
         super( context, attrs, defStyle );
         inflate( context, R.layout.gplus_buttons, this );
         ccbPlusOne = ( CenterContentButton ) findViewById( R.id.ccb_plusone );
-        ccbPlusOne.setEnabled( false );
         ccbComment = ( CenterContentButton ) findViewById( R.id.ccb_comment );
         ccbComment.setEnabled( false );
         ccbShare = ( CenterContentButton ) findViewById( R.id.ccb_share );
@@ -114,7 +115,8 @@ public class GPlusButtons extends SitesButtons implements View.OnClickListener
 
     private void doPlusOne()
     {
-        Toast.makeText( getContext(), "Sorry +1'ing is not implemented yet", Toast.LENGTH_SHORT ).show();
+        HashtaggerApp.bus.post( new PlusOneClickedEvent( ( Integer ) this.getTag() ) );
+        //Toast.makeText( getContext(), "Sorry +1'ing is not implemented yet", Toast.LENGTH_SHORT ).show();
     }
 
     @Override
@@ -122,7 +124,7 @@ public class GPlusButtons extends SitesButtons implements View.OnClickListener
     {
         Toast.makeText( getContext(), "Sorry, that feature is not implemented yet", Toast.LENGTH_SHORT ).show();
         Intent i = new Intent( Intent.ACTION_VIEW );
-        i.setData( Helper.getGPlusActivityUrl( activity ) );
+        i.setData( UrlModifier.getGPlusActivityUrl( activity ) );
         getContext().startActivity( i );
     }
 }

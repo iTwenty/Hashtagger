@@ -18,7 +18,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragmentData;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
-import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -164,7 +164,7 @@ public class TwitterFragment extends SitesFragment
     @Override
     protected Uri getResultUrl( Object result )
     {
-        return Helper.getTwitterStatusUrl( ( Status ) result );
+        return UrlModifier.getTwitterStatusUrl( ( Status ) result );
     }
 
     @Subscribe

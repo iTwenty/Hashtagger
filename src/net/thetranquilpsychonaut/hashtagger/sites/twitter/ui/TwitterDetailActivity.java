@@ -11,6 +11,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.BaseActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 
 /**
@@ -59,7 +60,7 @@ public class TwitterDetailActivity extends BaseActivity
         viewStub.setLayoutResource( R.layout.twitter_detail_activity_type_photo );
         imgvPhoto = ( ImageView ) viewStub.inflate();
         imgvPhoto.setVisibility( View.GONE );
-        final String imageUrl = Helper.getTwitterLargePhotoUrl( status.getEntities().getMedia().get( 0 ).getMediaUrl() );
+        final String imageUrl = UrlModifier.getTwitterLargePhotoUrl( status.getEntities().getMedia().get( 0 ).getMediaUrl() );
         Helper.debug( imageUrl );
         Picasso.with( this )
                 .load( imageUrl )

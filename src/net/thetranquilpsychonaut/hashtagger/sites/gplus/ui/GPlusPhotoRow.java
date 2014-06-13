@@ -9,6 +9,7 @@ import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 
 /**
@@ -65,7 +66,7 @@ public class GPlusPhotoRow extends GPlusListRow implements View.OnClickListener
     {
         super.updateRow( result );
         Picasso.with( getContext() )
-                .load( activity.getObject().getAttachments().get( 0 ).getImage().getUrl() )
+                .load( UrlModifier.getGPlusSmallPhotoUrl( activity.getObject().getAttachments().get( 0 ).getImage().getUrl() ) )
                 .error( R.drawable.drawable_image_loading )
                 .fit()
                 .centerCrop()

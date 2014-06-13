@@ -35,7 +35,6 @@ public class Facebook
                     RestAdapter adapter = new RestAdapter.Builder()
                             .setEndpoint( ENDPOINT )
                             .setClient( new FacebookSigningClient() )
-                            .setLogLevel( RestAdapter.LogLevel.FULL )
                             .setConverter( new GsonConverter( gson ) )
                             .build();
 

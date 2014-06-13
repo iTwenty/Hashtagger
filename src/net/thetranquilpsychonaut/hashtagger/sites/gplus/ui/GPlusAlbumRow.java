@@ -12,6 +12,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumThumbnailsFragment;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 import net.thetranquilpsychonaut.hashtagger.widgets.AlbumThumbnail;
 import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 
@@ -96,7 +97,7 @@ public class GPlusAlbumRow extends GPlusListRow implements View.OnClickListener
         {
             if ( albumCount == 1 )
             {
-                String imageUrl = Helper.getGPlusAlbumImageUrl( activity.getObject().getAttachments().get( 0 ).getThumbnails().get( 0 ).getImage().getUrl() );
+                String imageUrl = UrlModifier.getGPlusLargePhotoUrl( activity.getObject().getAttachments().get( 0 ).getThumbnails().get( 0 ).getImage().getUrl() );
                 ViewAlbumActivity.createAndStartActivity( v.getContext(), activity.getActor().getDisplayName(), Helper.createStringArrayList( imageUrl ), 0 );
             }
             else

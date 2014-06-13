@@ -15,6 +15,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.ui.BaseActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumThumbnailsFragment;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 
 import java.util.ArrayList;
@@ -83,7 +84,7 @@ public class GPlusDetailActivity extends BaseActivity
         }
         else
         {
-            imageUrl = activity.getObject().getAttachments().get( 0 ).getImage().getUrl();
+            imageUrl = UrlModifier.getFacebookLargePhotoUrl( activity.getObject().getAttachments().get( 0 ).getImage().getUrl() );
         }
         Picasso.with( this )
                 .load( imageUrl )

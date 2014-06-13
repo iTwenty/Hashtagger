@@ -12,6 +12,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterActi
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 import net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton;
 
 
@@ -169,7 +170,7 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
     public void doOpenInBrowser()
     {
         Intent i = new Intent( Intent.ACTION_VIEW );
-        i.setData( Helper.getTwitterStatusUrl( status ) );
+        i.setData( UrlModifier.getTwitterStatusUrl( status ) );
         getContext().startActivity( i );
     }
 }

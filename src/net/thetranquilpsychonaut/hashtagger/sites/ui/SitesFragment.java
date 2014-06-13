@@ -24,7 +24,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.FrameLayout;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -34,9 +34,11 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.events.SearchHashtagEvent;
+import net.thetranquilpsychonaut.hashtagger.events.SitesActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.utils.DefaultPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.widgets.MyListView;
 import net.thetranquilpsychonaut.hashtagger.widgets.MySwipeRefreshLayout;
 
 import java.util.List;
@@ -58,7 +60,7 @@ public abstract class SitesFragment extends Fragment implements
     private static final int LOADING = 1;
     private static final int LOGIN   = 2;
 
-    private   ViewAnimator       vaSitesView;
+    protected ViewAnimator       vaSitesView;
     protected ViewHolder         viewHolder;
     protected SitesSearchHandler sitesSearchHandler;
     protected List<?>            results;
@@ -69,7 +71,8 @@ public abstract class SitesFragment extends Fragment implements
     protected Animation          fadeIn;
     protected Animation          fadeOut;
 
-    protected int activeView = READY;
+    protected Rect           tmpRect    = new Rect();
+    protected int            activeView = READY;
 
     private class TimedSearchRunner implements Runnable
     {
@@ -174,6 +177,7 @@ public abstract class SitesFragment extends Fragment implements
         initSitesEmptyView( viewReady );
         initNewResultsBar( viewReady );
         initResultsListView( viewReady );
+        initSitesActionsFragmentContainer( viewReady );
         return viewReady;
     }
 
@@ -295,13 +299,18 @@ public abstract class SitesFragment extends Fragment implements
 
     private void initResultsListView( View viewReady )
     {
-        viewHolder.lvResultsList = ( ListView ) viewReady.findViewById( R.id.lv_results_list );
+        viewHolder.lvResultsList = ( MyListView ) viewReady.findViewById( R.id.lv_results_list );
         viewHolder.lvResultsList.addFooterView( viewHolder.sitesFooterView, null, false );
         viewHolder.lvResultsList.setAdapter( sitesListAdapter );
         viewHolder.lvResultsList.setEmptyView( viewHolder.sitesEmptyView );
         viewHolder.lvResultsList.setOnItemClickListener( this );
         viewHolder.lvResultsList.setOnItemLongClickListener( this );
         viewHolder.lvResultsList.setOnScrollListener( viewHolder.newResultsBar );
+    }
+
+    private void initSitesActionsFragmentContainer( View viewReady )
+    {
+        viewHolder.sitesActionsFragmentContainer = ( FrameLayout ) viewReady.findViewById( R.id.sites_actions_fragment_container );
     }
 
     private View initViewLoading( LayoutInflater inflater )
@@ -525,11 +534,13 @@ public abstract class SitesFragment extends Fragment implements
         if ( !HashtaggerApp.isNetworkConnected() )
         {
             Helper.showNoNetworkToast( getActivity() );
+            viewHolder.srlReady.setRefreshing( false );
             return;
         }
         if ( !isUserLoggedIn() )
         {
             Toast.makeText( getActivity(), getResources().getString( R.string.str_not_logged_in ), Toast.LENGTH_LONG ).show();
+            viewHolder.srlReady.setRefreshing( false );
             return;
         }
         sitesSearchHandler.beginSearch( SearchType.NEWER, hashtag );
@@ -718,7 +729,7 @@ public abstract class SitesFragment extends Fragment implements
 
     /*
     *********************** for UserHandlerListener ****************
-     */
+    */
     public void logoutUser()
     {
         removeUserDetails();
@@ -785,9 +796,8 @@ public abstract class SitesFragment extends Fragment implements
 
     private void scrollIfHidden( View view )
     {
-        Rect r = new Rect();
-        view.getLocalVisibleRect( r );
-        int hiddenHeight = view.getHeight() - r.height();
+        view.getLocalVisibleRect( tmpRect );
+        int hiddenHeight = view.getHeight() - tmpRect.height();
         if ( ( hiddenHeight > 0 ) &&
                 ( viewHolder.lvResultsList.getLastVisiblePosition() == viewHolder.lvResultsList.getPositionForView( view ) ) )
         {
@@ -832,13 +842,34 @@ public abstract class SitesFragment extends Fragment implements
 
     protected abstract Uri getResultUrl( Object result );
 
+    @Subscribe
+    public void onSitesActionClicked( SitesActionClickedEvent event )
+    {
+        if ( event.shouldShowDialog() )
+        {
+            SitesActionsFragment saf = getSitesActionsFragment( viewHolder.lvResultsList.getItemAtPosition( event.getPosition() ) );
+            saf.show( getActivity().getSupportFragmentManager(), getSitesActionsFragmentTag() );
+        }
+    }
+
+    protected String getSitesActionsFragmentTag()
+    {
+        return "";
+    }
+
+    protected SitesActionsFragment getSitesActionsFragment( Object result )
+    {
+        return null;
+    }
+
     protected static class ViewHolder
     {
-        public ListView             lvResultsList;
+        public MyListView           lvResultsList;
         public SitesEmptyView       sitesEmptyView;
         public SitesFooterView      sitesFooterView;
         public MySwipeRefreshLayout srlReady;
         public NewResultsBar        newResultsBar;
+        public FrameLayout          sitesActionsFragmentContainer;
         public ProgressBar          pgbrLoadingResults;
         public Button               btnLogin;
     }

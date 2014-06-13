@@ -9,6 +9,7 @@ import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 import net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton;
 
 /**
@@ -118,7 +119,7 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
     public void doOpenInBrowser()
     {
         Intent i = new Intent( Intent.ACTION_VIEW );
-        i.setData( Helper.getFacebookPostUrl( post ) );
+        i.setData( UrlModifier.getFacebookPostUrl( post ) );
         getContext().startActivity( i );
     }
 }

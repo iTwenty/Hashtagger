@@ -7,14 +7,16 @@ import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.SimplePageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.events.SearchHashtagEvent;
+import net.thetranquilpsychonaut.hashtagger.events.SitesActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.GPlusSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesActionsFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragmentData;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
-import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -161,12 +163,31 @@ public class GPlusFragment extends SitesFragment
     @Override
     protected Uri getResultUrl( Object result )
     {
-        return Helper.getGPlusActivityUrl( ( Activity ) result );
+        return UrlModifier.getGPlusActivityUrl( ( Activity ) result );
     }
 
     @Subscribe
     public void searchHashtag( SearchHashtagEvent event )
     {
         super.searchHashtag( event );
+    }
+
+    @Subscribe
+    public void onSitesActionClicked( SitesActionClickedEvent event )
+    {
+        super.onSitesActionClicked( event );
+    }
+
+    @Override
+    protected SitesActionsFragment getSitesActionsFragment( Object result )
+    {
+        Activity activity = ( Activity ) result;
+        return GPlusActionsFragment.newInstance( activity );
+    }
+
+    @Override
+    protected String getSitesActionsFragmentTag()
+    {
+        return "GPlusActionsFragment";
     }
 }

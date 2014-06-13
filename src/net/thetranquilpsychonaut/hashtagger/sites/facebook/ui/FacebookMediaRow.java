@@ -3,6 +3,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import com.squareup.picasso.Picasso;
@@ -10,6 +11,7 @@ import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 import net.thetranquilpsychonaut.hashtagger.widgets.VideoThumbnail;
 
@@ -72,6 +74,7 @@ public class FacebookMediaRow extends FacebookListRow implements View.OnClickLis
                 .fit()
                 .centerCrop()
                 .into( imgvThumbnail.getVideoThumbnail() );
+        imgvThumbnail.showPlayButton( TextUtils.equals( "video", post.getType() ) );
     }
 
     @Override
@@ -79,14 +82,14 @@ public class FacebookMediaRow extends FacebookListRow implements View.OnClickLis
     {
         if ( v.equals( imgvThumbnail ) )
         {
-            if ( "photo".equals( post.getType() ) )
+            if ( TextUtils.equals( "photo", post.getType() ) )
             {
                 ViewAlbumActivity.createAndStartActivity( getContext(),
                         post.getName(),
-                        Helper.createStringArrayList( Helper.getFacebookLargePhotoUrl( post.getPicture().toString() ) ),
+                        Helper.createStringArrayList( UrlModifier.getFacebookLargePhotoUrl( post.getPicture().toString() ) ),
                         0 );
             }
-            if ( "video".equals( post.getType() ) )
+            if ( TextUtils.equals( "video", post.getType() ) )
             {
                 Intent i = new Intent( Intent.ACTION_VIEW );
                 i.setData( Uri.parse( post.getLink() ) );

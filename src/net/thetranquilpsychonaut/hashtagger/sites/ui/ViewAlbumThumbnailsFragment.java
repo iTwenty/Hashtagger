@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 import net.thetranquilpsychonaut.hashtagger.widgets.TwoWayView;
 
 import java.util.ArrayList;
@@ -123,7 +124,7 @@ public class ViewAlbumThumbnailsFragment extends DialogFragment implements Adapt
                 ArrayList<String> albumImageUrls = new ArrayList<String>( albumThumbnailUrls.size() );
                 for ( String thumbnailUrl : albumThumbnailUrls )
                 {
-                    albumImageUrls.add( Helper.getGPlusAlbumImageUrl( thumbnailUrl ) );
+                    albumImageUrls.add( UrlModifier.getGPlusLargePhotoUrl( thumbnailUrl ) );
                 }
                 ViewAlbumActivity.createAndStartActivity( getActivity(), userName, albumImageUrls, position );
                 break;
