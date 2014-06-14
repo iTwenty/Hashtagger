@@ -27,6 +27,7 @@ public abstract class SitesSigningClient extends OkClient
 
     public SitesSigningClient()
     {
+        super();
         ServiceBuilder sb = new ServiceBuilder()
                 .provider( getProviderClass() )
                 .apiKey( getApiKey() )
@@ -70,6 +71,7 @@ public abstract class SitesSigningClient extends OkClient
 
         // Switch old url with new url
         String signedUrl = oAuthRequest.getCompleteUrl();
+        Helper.debug( signedUrl );
 
         // Make new request with signed headers and url
         Request signedRequest = new Request( request.getMethod(), signedUrl, signedHeaders, request.getBody() );

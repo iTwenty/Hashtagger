@@ -3,9 +3,12 @@ package net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.ActivityFeed;
+import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.PeopleFeed;
+import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
 import retrofit.http.GET;
+import retrofit.http.Path;
 import retrofit.http.QueryMap;
 
 import java.util.Date;
@@ -48,5 +51,12 @@ public class GPlus
     {
         @GET("/activities")
         public ActivityFeed searchActivities( @QueryMap Map<String, String> params );
+
+        @GET( "/activities/{activityId}/people/{collection}" )
+        public void listByActivity(
+                @Path( "activityId" ) String activityId,
+                @Path( "collection" ) String collection,
+                @QueryMap Map<String, String> listByActivityParams,
+                Callback<PeopleFeed> callback );
     }
 }
