@@ -1,5 +1,7 @@
 package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.PagerAdapter;
@@ -9,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -33,7 +36,7 @@ import java.util.List;
 /**
  * Created by itwenty on 6/13/14.
  */
-public class GPlusActionsFragment extends DialogFragment
+public class GPlusActionsFragment extends DialogFragment implements AdapterView.OnItemClickListener
 {
     public static final String TAG = "GPlusActionsFragment";
 
@@ -175,6 +178,7 @@ public class GPlusActionsFragment extends DialogFragment
         lvPlusOnersEmpty.setText( "Loading" );
         lvPlusOners.setEmptyView( lvPlusOnersEmpty );
         lvPlusOners.setAdapter( plusonersAdapter );
+        lvPlusOners.setOnItemClickListener( this );
         container.addView( v );
         return v;
     }
@@ -187,6 +191,7 @@ public class GPlusActionsFragment extends DialogFragment
         lvResharersEmpty.setText( "Loading" );
         lvResharers.setEmptyView( lvResharersEmpty );
         lvResharers.setAdapter( resharersAdapter );
+        lvResharers.setOnItemClickListener( this );
         container.addView( v );
         return v;
     }
@@ -232,6 +237,15 @@ public class GPlusActionsFragment extends DialogFragment
                 lvResharersEmpty.setText( "Failed to load resharers" );
             }
         }
+    }
+
+    @Override
+    public void onItemClick( AdapterView<?> parent, View view, int position, long id )
+    {
+        Person person = ( Person ) parent.getItemAtPosition( position );
+        Intent i = new Intent( Intent.ACTION_VIEW );
+        i.setData( Uri.parse( person.getUrl() ) );
+        startActivity( i );
     }
 
     private class GPlusActionsPagerAdapter extends PagerAdapter

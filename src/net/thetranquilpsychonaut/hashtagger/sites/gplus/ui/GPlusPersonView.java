@@ -1,10 +1,7 @@
 package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,7 +12,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Person;
 /**
  * Created by itwenty on 6/14/14.
  */
-public class GPlusPersonView extends RelativeLayout implements View.OnClickListener
+public class GPlusPersonView extends RelativeLayout
 {
     private ImageView personImage;
     private TextView  personName;
@@ -37,7 +34,6 @@ public class GPlusPersonView extends RelativeLayout implements View.OnClickListe
         inflate( context, R.layout.gplus_person_view, this );
         personImage = ( ImageView ) findViewById( R.id.person_image );
         personName = ( TextView ) findViewById( R.id.person_name );
-        this.setOnClickListener( this );
     }
 
     public void update( Person person )
@@ -49,16 +45,5 @@ public class GPlusPersonView extends RelativeLayout implements View.OnClickListe
                 .fit()
                 .into( personImage );
         personName.setText( person.getDisplayName() );
-    }
-
-    @Override
-    public void onClick( View v )
-    {
-        if ( null != person )
-        {
-            Intent i = new Intent( Intent.ACTION_VIEW );
-            i.setData( Uri.parse( person.getUrl() ) );
-            getContext().startActivity( i );
-        }
     }
 }
