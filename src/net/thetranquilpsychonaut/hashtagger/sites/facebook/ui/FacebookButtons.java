@@ -4,8 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.Toast;
+import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.events.FacebookActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
@@ -73,15 +74,15 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
     {
         if ( v.equals( ccbLike ) )
         {
-            doLike();
+            HashtaggerApp.bus.post( new FacebookActionClickedEvent( post, FacebookActionClickedEvent.ACTION_LIKE ) );
         }
         else if ( v.equals( ccbComment ) )
         {
-            doComment();
+            HashtaggerApp.bus.post( new FacebookActionClickedEvent( post, FacebookActionClickedEvent.ACTION_COMMENT ) );
         }
         else if ( v.equals( ccbShare ) )
         {
-            doShare();
+            HashtaggerApp.bus.post( new FacebookActionClickedEvent( post, FacebookActionClickedEvent.ACTION_SHARE ) );
         }
         else if ( v.equals( ccbViewDetails ) )
         {
@@ -94,25 +95,6 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
         Intent i = new Intent( getContext(), FacebookDetailActivity.class );
         i.putExtra( FacebookDetailActivity.POST_KEY, post );
         getContext().startActivity( i );
-    }
-
-    private void doShare()
-    {
-
-        Toast.makeText( getContext(), "Sorry, Facebook shares are not implemented yet", Toast.LENGTH_SHORT ).show();
-        //doOpenInBrowser();
-    }
-
-    private void doComment()
-    {
-        Toast.makeText( getContext(), "Sorry, Facebook comments are not implemented yet", Toast.LENGTH_SHORT ).show();
-        //doOpenInBrowser();
-    }
-
-    private void doLike()
-    {
-        Toast.makeText( getContext(), "Sorry, Facebook likes are not implemented yet", Toast.LENGTH_SHORT ).show();
-        //doOpenInBrowser();
     }
 
     @Override

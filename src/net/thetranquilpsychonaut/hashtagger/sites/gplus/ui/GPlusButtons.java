@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Toast;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.events.PlusOneClickedEvent;
+import net.thetranquilpsychonaut.hashtagger.events.GPlusActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
@@ -40,9 +40,7 @@ public class GPlusButtons extends SitesButtons implements View.OnClickListener
         inflate( context, R.layout.gplus_buttons, this );
         ccbPlusOne = ( CenterContentButton ) findViewById( R.id.ccb_plusone );
         ccbComment = ( CenterContentButton ) findViewById( R.id.ccb_comment );
-        ccbComment.setEnabled( false );
         ccbShare = ( CenterContentButton ) findViewById( R.id.ccb_share );
-        ccbShare.setEnabled( false );
         ccbViewDetails = ( CenterContentButton ) findViewById( R.id.ccb_view_details );
     }
 
@@ -87,15 +85,15 @@ public class GPlusButtons extends SitesButtons implements View.OnClickListener
         }
         else if ( v.equals( ccbPlusOne ) )
         {
-            doPlusOne();
+            HashtaggerApp.bus.post( new GPlusActionClickedEvent( activity, GPlusActionClickedEvent.ACTION_PLUS_ONE ) );
         }
         else if ( v.equals( ccbComment ) )
         {
-            doComment();
+            HashtaggerApp.bus.post( new GPlusActionClickedEvent( activity, GPlusActionClickedEvent.ACTION_REPLY ) );
         }
         else if ( v.equals( ccbShare ) )
         {
-            doShare();
+            HashtaggerApp.bus.post( new GPlusActionClickedEvent( activity, GPlusActionClickedEvent.ACTION_RESHARE ) );
         }
     }
 
@@ -104,22 +102,6 @@ public class GPlusButtons extends SitesButtons implements View.OnClickListener
         Intent i = new Intent( getContext(), GPlusDetailActivity.class );
         i.putExtra( GPlusDetailActivity.ACTIVITY_KEY, activity );
         getContext().startActivity( i );
-    }
-
-    private void doShare()
-    {
-        Toast.makeText( getContext(), "Sorry Google+ shares are not implemented yet", Toast.LENGTH_SHORT ).show();
-    }
-
-    private void doComment()
-    {
-        Toast.makeText( getContext(), "Sorry Google+ comments are not implemented yet", Toast.LENGTH_SHORT ).show();
-    }
-
-    private void doPlusOne()
-    {
-        HashtaggerApp.bus.post( new PlusOneClickedEvent( ( Integer ) this.getTag() ) );
-        //Toast.makeText( getContext(), "Sorry +1'ing is not implemented yet", Toast.LENGTH_SHORT ).show();
     }
 
     @Override

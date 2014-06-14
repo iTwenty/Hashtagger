@@ -34,7 +34,6 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.events.SearchHashtagEvent;
-import net.thetranquilpsychonaut.hashtagger.events.SitesActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.utils.DefaultPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
@@ -841,26 +840,6 @@ public abstract class SitesFragment extends Fragment implements
     protected abstract String getResultText( Object result );
 
     protected abstract Uri getResultUrl( Object result );
-
-    @Subscribe
-    public void onSitesActionClicked( SitesActionClickedEvent event )
-    {
-        if ( event.shouldShowDialog() )
-        {
-            SitesActionsFragment saf = getSitesActionsFragment( viewHolder.lvResultsList.getItemAtPosition( event.getPosition() ) );
-            saf.show( getActivity().getSupportFragmentManager(), getSitesActionsFragmentTag() );
-        }
-    }
-
-    protected String getSitesActionsFragmentTag()
-    {
-        return "";
-    }
-
-    protected SitesActionsFragment getSitesActionsFragment( Object result )
-    {
-        return null;
-    }
 
     protected static class ViewHolder
     {

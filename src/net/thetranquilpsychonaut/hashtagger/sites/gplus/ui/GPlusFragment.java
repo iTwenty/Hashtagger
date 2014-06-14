@@ -6,12 +6,11 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.SimplePageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
+import net.thetranquilpsychonaut.hashtagger.events.GPlusActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.events.SearchHashtagEvent;
-import net.thetranquilpsychonaut.hashtagger.events.SitesActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.GPlusSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesActionsFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragmentData;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
@@ -173,21 +172,9 @@ public class GPlusFragment extends SitesFragment
     }
 
     @Subscribe
-    public void onSitesActionClicked( SitesActionClickedEvent event )
+    public void onGPlusActionClicked( GPlusActionClickedEvent event )
     {
-        super.onSitesActionClicked( event );
-    }
-
-    @Override
-    protected SitesActionsFragment getSitesActionsFragment( Object result )
-    {
-        Activity activity = ( Activity ) result;
-        return GPlusActionsFragment.newInstance( activity );
-    }
-
-    @Override
-    protected String getSitesActionsFragmentTag()
-    {
-        return "GPlusActionsFragment";
+        GPlusActionsFragment fragment = GPlusActionsFragment.newInstance( event.getActivity(), event.getActionType() );
+        fragment.show( getChildFragmentManager(), fragment.TAG );
     }
 }

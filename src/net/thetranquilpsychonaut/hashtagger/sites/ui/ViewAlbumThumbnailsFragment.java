@@ -77,6 +77,7 @@ public class ViewAlbumThumbnailsFragment extends DialogFragment implements Adapt
         if ( !isEmbedded )
         {
             d.getWindow().setWindowAnimations( android.R.style.Animation_Dialog );
+            d.setCanceledOnTouchOutside( true );
         }
         return d;
     }

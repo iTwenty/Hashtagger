@@ -8,16 +8,19 @@ import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.SimplePageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.events.SearchHashtagEvent;
+import net.thetranquilpsychonaut.hashtagger.events.TwitterActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterFavoriteEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterReplyEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterRetweetEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterAction;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragmentData;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 
 import java.util.ArrayList;
@@ -165,6 +168,63 @@ public class TwitterFragment extends SitesFragment
     protected Uri getResultUrl( Object result )
     {
         return UrlModifier.getTwitterStatusUrl( ( Status ) result );
+    }
+
+    @Subscribe
+    public void onTwitterActionClicked( TwitterActionClickedEvent event )
+    {
+        Status status = event.getStatus();
+        switch ( event.getActionType() )
+        {
+            case TwitterActionClickedEvent.ACTION_REPLY:
+                doReply( status );
+                break;
+            case TwitterActionClickedEvent.ACTION_RETWEET:
+                doRetweet( status );
+                break;
+            case TwitterActionClickedEvent.ACTION_FAVORITE:
+                doFavorite( status );
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void doReply( Status status )
+    {
+        if ( !HashtaggerApp.isNetworkConnected() )
+        {
+            Helper.showNoNetworkToast( getActivity() );
+            return;
+        }
+        TwitterReplyDialog dialog = TwitterReplyDialog.newInstance( status.getUser().getScreenName(), status.getIdStr() );
+        dialog.show( getChildFragmentManager(), TwitterReplyDialog.TAG );
+    }
+
+    private void doRetweet( Status status )
+    {
+        if ( status.isRetweeted() )
+        {
+            Toast.makeText( getActivity(), "You have already retweeted this", Toast.LENGTH_SHORT ).show();
+            return;
+        }
+        if ( !HashtaggerApp.isNetworkConnected() )
+        {
+            Helper.showNoNetworkToast( getActivity() );
+            return;
+        }
+        TwitterRetweetDialog dialog = TwitterRetweetDialog.newInstance( status.getIdStr(), results.indexOf( status ) );
+        dialog.show( getChildFragmentManager(), TwitterRetweetDialog.TAG );
+    }
+
+    private void doFavorite( Status status )
+    {
+        if ( !HashtaggerApp.isNetworkConnected() )
+        {
+            Helper.showNoNetworkToast( getActivity() );
+            return;
+        }
+        new TwitterAction().executeFavoriteAction( status.getIdStr(), status.isFavorited(), results.indexOf( status ) );
     }
 
     @Subscribe

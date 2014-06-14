@@ -2,16 +2,13 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.Toast;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterAction;
+import net.thetranquilpsychonaut.hashtagger.events.TwitterActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
-import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 import net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton;
 
@@ -105,15 +102,15 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
     {
         if ( v.equals( ccbReply ) )
         {
-            doReply();
+            HashtaggerApp.bus.post( new TwitterActionClickedEvent( status, TwitterActionClickedEvent.ACTION_REPLY ) );
         }
         if ( v.equals( ccbRetweet ) )
         {
-            doRetweet();
+            HashtaggerApp.bus.post( new TwitterActionClickedEvent( status, TwitterActionClickedEvent.ACTION_RETWEET ) );
         }
         if ( v.equals( ccbFavorite ) )
         {
-            doFavorite();
+            HashtaggerApp.bus.post( new TwitterActionClickedEvent( status, TwitterActionClickedEvent.ACTION_FAVORITE ) );
         }
         if ( v.equals( ccbViewDetails ) )
         {
@@ -127,44 +124,6 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
         i.putExtra( TwitterDetailActivity.STATUS_KEY, status );
         getContext().startActivity( i );
     }
-
-    private void doFavorite()
-    {
-        if ( !HashtaggerApp.isNetworkConnected() )
-        {
-            Helper.showNoNetworkToast( getContext() );
-            return;
-        }
-        new TwitterAction().executeFavoriteAction( status.getIdStr(), status.isFavorited(), ( Integer ) this.getTag() );
-    }
-
-    private void doRetweet()
-    {
-        if ( status.isRetweeted() )
-        {
-            Toast.makeText( getContext(), "You have already retweeted this", Toast.LENGTH_SHORT ).show();
-            return;
-        }
-        if ( !HashtaggerApp.isNetworkConnected() )
-        {
-            Helper.showNoNetworkToast( getContext() );
-            return;
-        }
-        TwitterRetweetDialog dialog = TwitterRetweetDialog.newInstance( status.getIdStr(), ( Integer ) this.getTag() );
-        dialog.show( ( ( FragmentActivity ) getContext() ).getFragmentManager(), TwitterRetweetDialog.TAG );
-    }
-
-    private void doReply()
-    {
-        if ( !HashtaggerApp.isNetworkConnected() )
-        {
-            Helper.showNoNetworkToast( getContext() );
-            return;
-        }
-        TwitterReplyDialog dialog = TwitterReplyDialog.newInstance( status.getUser().getScreenName(), status.getIdStr() );
-        dialog.show( ( ( FragmentActivity ) getContext() ).getFragmentManager(), TwitterReplyDialog.TAG );
-    }
-
 
     @Override
     public void doOpenInBrowser()

@@ -52,10 +52,10 @@ public class GPlus
         @GET("/activities")
         public ActivityFeed searchActivities( @QueryMap Map<String, String> params );
 
-        @GET( "/activities/{activityId}/people/{collection}" )
+        @GET("/activities/{activityId}/people/{collection}")
         public void listByActivity(
-                @Path( "activityId" ) String activityId,
-                @Path( "collection" ) String collection,
+                @Path("activityId") String activityId,
+                @Path("collection") String collection,
                 @QueryMap Map<String, String> listByActivityParams,
                 Callback<PeopleFeed> callback );
     }

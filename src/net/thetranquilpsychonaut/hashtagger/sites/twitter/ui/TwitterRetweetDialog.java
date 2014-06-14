@@ -2,9 +2,9 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterAction;
 
 /**

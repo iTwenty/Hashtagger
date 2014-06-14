@@ -1,25 +1,27 @@
 package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.events.GPlusActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.events.PeopleFeedEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.GPlus;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.ListByActivityParams;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.PeopleFeed;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Person;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesActionsFragment;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -31,14 +33,17 @@ import java.util.List;
 /**
  * Created by itwenty on 6/13/14.
  */
-public class GPlusActionsFragment extends SitesActionsFragment
+public class GPlusActionsFragment extends DialogFragment
 {
+    public static final String TAG = "GPlusActionsFragment";
+
     private static final String PLUSONERS_KEY = "ps";
     private static final String RESHARERS_KEY = "rs";
 
     private ViewPager                gPlusActionsPager;
     private GPlusActionsPagerAdapter gPlusActionsPagerAdapter;
     private Activity                 activity;
+    private int                      actionType;
 
     private List<Person>   plusoners;
     private ListView       lvPlusOners;
@@ -50,11 +55,12 @@ public class GPlusActionsFragment extends SitesActionsFragment
     private TextView       lvResharersEmpty;
     private PersonsAdapter resharersAdapter;
 
-    public static final GPlusActionsFragment newInstance( Activity activity )
+    public static final GPlusActionsFragment newInstance( Activity activity, int actionType )
     {
         GPlusActionsFragment f = new GPlusActionsFragment();
         Bundle b = new Bundle();
         b.putSerializable( "activity", activity );
+        b.putInt( "actionType", actionType );
         f.setArguments( b );
         return f;
     }
@@ -64,6 +70,7 @@ public class GPlusActionsFragment extends SitesActionsFragment
     {
         super.onCreate( savedInstanceState );
         activity = ( Activity ) getArguments().getSerializable( "activity" );
+        actionType = getArguments().getInt( "actionType" );
         gPlusActionsPagerAdapter = new GPlusActionsPagerAdapter();
         plusoners = null == savedInstanceState ?
                 new ArrayList<Person>() :
@@ -80,6 +87,11 @@ public class GPlusActionsFragment extends SitesActionsFragment
     {
         gPlusActionsPager = ( ViewPager ) inflater.inflate( R.layout.fragment_gplus_actions, container, false );
         gPlusActionsPager.setAdapter( gPlusActionsPagerAdapter );
+        getDialog().requestWindowFeature( Window.FEATURE_NO_TITLE );
+        if ( actionType == GPlusActionClickedEvent.ACTION_RESHARE )
+        {
+            gPlusActionsPager.setCurrentItem( 1 );
+        }
         return gPlusActionsPager;
     }
 
