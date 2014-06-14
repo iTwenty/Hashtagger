@@ -11,7 +11,6 @@
     <android.support.v4.view.PagerTitleStrip
         android:id="@+id/gplus_actions_pager_title_strip"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:background="@drawable/picture_frame"/>
+        android:layout_width="match_parent"/>
 
 </android.support.v4.view.ViewPager>

@@ -14,13 +14,14 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.events.FacebookActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Comment;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.From;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -62,8 +63,12 @@ public class FacebookActionsFragment extends DialogFragment implements AdapterVi
         post = ( Post ) getArguments().getSerializable( "post" );
         actionType = getArguments().getInt( "actionType" );
         facebookActionsPagerAdapter = new FacebookActionsPagerAdapter();
-        likes = post.getLikes().getData();
-        comments = post.getComments().getData();
+        likes = null == post.getLikes() || Helper.isNullOrEmpty( post.getLikes().getData() ) ?
+                Collections.<From>emptyList() :
+                post.getLikes().getData();
+        comments = null == post.getComments() || Helper.isNullOrEmpty( post.getComments().getData() ) ?
+                Collections.<Comment>emptyList() :
+                post.getComments().getData();
         likesAdapter = new LikesAdapter( likes );
         commentsAdapter = new CommentsAdapter( comments );
     }
@@ -79,31 +84,6 @@ public class FacebookActionsFragment extends DialogFragment implements AdapterVi
             facebookActionsPager.setCurrentItem( 1 );
         }
         return facebookActionsPager;
-    }
-
-    @Override
-    public void onViewCreated( View view, Bundle savedInstanceState )
-    {
-        super.onViewCreated( view, savedInstanceState );
-        if ( null == savedInstanceState )
-        {
-            likes = post.getLikes().getData();
-            comments = post.getComments().getData();
-        }
-    }
-
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-        HashtaggerApp.bus.register( this );
-    }
-
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-        HashtaggerApp.bus.unregister( this );
     }
 
     private Object initLikes( ViewGroup container )
@@ -227,16 +207,16 @@ public class FacebookActionsFragment extends DialogFragment implements AdapterVi
         @Override
         public View getView( int position, View convertView, ViewGroup parent )
         {
-            FacebookCommentView view;
+            FacebookLikeView view;
             if ( null == convertView )
             {
-                view = new FacebookCommentView( parent.getContext() );
+                view = new FacebookLikeView( parent.getContext() );
             }
             else
             {
-                view = ( FacebookCommentView ) convertView;
+                view = ( FacebookLikeView ) convertView;
             }
-            view.update( ( Comment ) getItem( position ) );
+            view.update( ( From ) getItem( position ) );
             return view;
         }
     }
@@ -269,19 +249,20 @@ public class FacebookActionsFragment extends DialogFragment implements AdapterVi
             return position;
         }
 
+
         @Override
         public View getView( int position, View convertView, ViewGroup parent )
         {
-            FacebookLikeView view;
+            FacebookCommentView view;
             if ( null == convertView )
             {
-                view = new FacebookLikeView( parent.getContext() );
+                view = new FacebookCommentView( parent.getContext() );
             }
             else
             {
-                view = ( FacebookLikeView ) convertView;
+                view = ( FacebookCommentView ) convertView;
             }
-            view.update( ( From ) getItem( position ) );
+            view.update( ( Comment ) getItem( position ) );
             return view;
         }
     }
