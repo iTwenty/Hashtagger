@@ -1,6 +1,7 @@
 package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.FrameLayout;
@@ -78,13 +79,13 @@ public class GPlusDetailActivity extends BaseActivity
         imgvPhoto = ( ImageView ) viewStub.inflate();
         imgvPhoto.setVisibility( View.GONE );
         final String imageUrl;
-        if ( null != activity.getObject().getAttachments().get( 0 ).getFullImage() )
+        if ( !TextUtils.isEmpty( activity.getObject().getAttachments().get( 0 ).getFullImage().getUrl() ) )
         {
             imageUrl = activity.getObject().getAttachments().get( 0 ).getFullImage().getUrl();
         }
         else
         {
-            imageUrl = UrlModifier.getFacebookLargePhotoUrl( activity.getObject().getAttachments().get( 0 ).getImage().getUrl() );
+            imageUrl = activity.getObject().getAttachments().get( 0 ).getImage().getUrl();
         }
         Picasso.with( this )
                 .load( imageUrl )

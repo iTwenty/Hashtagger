@@ -120,7 +120,8 @@ public class ViewAlbumActivity extends BaseActivity
                     .placeholder( loading )
                     .error( error )
                     .into( touchImageView );
-            container.addView( touchImageView, 0 );
+            Helper.debug( "Loading image from URL : " + albumImageUrls.get( position ) );
+            container.addView( touchImageView );
             return touchImageView;
         }
 

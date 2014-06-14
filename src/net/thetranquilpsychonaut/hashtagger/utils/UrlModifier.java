@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 public final class UrlModifier
 {
     private static final Pattern FB_INTERNAL_URL_PATTERN = Pattern.compile( "_s.|_t." );
-    private static final Pattern GPLUS_URL_PATTERN       = Pattern.compile( "w\\d+-h\\d+" );
+    private static final Pattern GPLUS_URL_PATTERN       = Pattern.compile( "w\\d+-h\\d+(.*?/)" );
     private static final Pattern TWITTER_URL_PATTERN     = Pattern.compile( ":thumb$|:small$|:medium$|:large$|$" );
 
     private UrlModifier()
@@ -70,14 +70,14 @@ public final class UrlModifier
         return newUrl;
     }
 
-    public static String getGPlusLargePhotoUrl( String smallPhotoUrl )
+    public static String getGPlusFullAlbumImageUrl( String albumThumbnailUrl )
     {
-        return GPLUS_URL_PATTERN.matcher( smallPhotoUrl ).replaceAll( "w2000-h2000" );
+        return GPLUS_URL_PATTERN.matcher( albumThumbnailUrl ).replaceAll( "" );
     }
 
     public static String getGPlusSmallPhotoUrl( String largePhotoUrl )
     {
-        return GPLUS_URL_PATTERN.matcher( largePhotoUrl ).replaceAll( "w200-h200" );
+        return GPLUS_URL_PATTERN.matcher( largePhotoUrl ).replaceAll( "w200-h200$1" );
     }
 
     public static String getTwitterLargePhotoUrl( String smallPhotoUrl )

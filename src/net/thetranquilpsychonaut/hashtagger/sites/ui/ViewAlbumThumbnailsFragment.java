@@ -125,7 +125,7 @@ public class ViewAlbumThumbnailsFragment extends DialogFragment implements Adapt
                 ArrayList<String> albumImageUrls = new ArrayList<String>( albumThumbnailUrls.size() );
                 for ( String thumbnailUrl : albumThumbnailUrls )
                 {
-                    albumImageUrls.add( UrlModifier.getGPlusLargePhotoUrl( thumbnailUrl ) );
+                    albumImageUrls.add( UrlModifier.getGPlusFullAlbumImageUrl( thumbnailUrl ) );
                 }
                 ViewAlbumActivity.createAndStartActivity( getActivity(), userName, albumImageUrls, position );
                 break;

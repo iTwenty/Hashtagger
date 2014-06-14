@@ -97,7 +97,7 @@ public class GPlusAlbumRow extends GPlusListRow implements View.OnClickListener
         {
             if ( albumCount == 1 )
             {
-                String imageUrl = UrlModifier.getGPlusLargePhotoUrl( activity.getObject().getAttachments().get( 0 ).getThumbnails().get( 0 ).getImage().getUrl() );
+                String imageUrl = UrlModifier.getGPlusFullAlbumImageUrl( activity.getObject().getAttachments().get( 0 ).getThumbnails().get( 0 ).getImage().getUrl() );
                 ViewAlbumActivity.createAndStartActivity( v.getContext(), activity.getActor().getDisplayName(), Helper.createStringArrayList( imageUrl ), 0 );
             }
             else
