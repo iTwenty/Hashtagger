@@ -3,6 +3,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.ActivityFeed;
+import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.CommentFeed;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.PeopleFeed;
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -58,5 +59,11 @@ public class GPlus
                 @Path("collection") String collection,
                 @QueryMap Map<String, String> listByActivityParams,
                 Callback<PeopleFeed> callback );
+
+        @GET( "/activities/{activityId}/comments" )
+        public void listComments(
+                @Path( "activityId" ) String activityId,
+                @QueryMap Map<String, String> commentsListParams,
+                Callback<CommentFeed> callback );
     }
 }
