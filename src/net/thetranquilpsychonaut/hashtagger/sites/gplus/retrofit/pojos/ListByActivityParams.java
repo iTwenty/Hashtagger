@@ -7,10 +7,10 @@ import net.thetranquilpsychonaut.hashtagger.sites.retrofit.MapParams;
  */
 public class ListByActivityParams extends MapParams
 {
-    public static final String PLUSONERS = "plusoners";
-    public static final String RESHARERS = "resharers";
+    public static final  String PLUSONERS       = "plusoners";
+    public static final  String RESHARERS       = "resharers";
     private static final String MAX_RESULTS_KEY = "maxResults";
-    private static final String PAGE_TOKEN_KEY = "pageToken";
+    private static final String PAGE_TOKEN_KEY  = "pageToken";
 
     public ListByActivityParams setMaxResults( int maxResults )
     {

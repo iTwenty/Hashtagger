@@ -9,7 +9,7 @@ public class PeopleFeedEvent
 {
     private PeopleFeed peopleFeed;
     private boolean    success;
-    private String collection;
+    private String     collection;
 
     public PeopleFeedEvent( PeopleFeed peopleFeed, boolean success, String collection )
     {

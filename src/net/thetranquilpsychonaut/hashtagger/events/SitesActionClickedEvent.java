@@ -6,7 +6,7 @@ package net.thetranquilpsychonaut.hashtagger.events;
 public abstract class SitesActionClickedEvent
 {
     private boolean shouldShowDialog;
-    private int position;
+    private int     position;
 
     public SitesActionClickedEvent( boolean shouldShowDialog, int position )
     {

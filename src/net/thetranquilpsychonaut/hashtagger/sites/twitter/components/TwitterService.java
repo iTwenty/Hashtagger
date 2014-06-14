@@ -99,8 +99,8 @@ public class TwitterService extends SitesService
                 if ( searchType != SearchType.NEWER && searchType != SearchType.TIMED )
                 {
                     maxId = TextUtils.equals( searchResult.getSearchMetadata().getSinceIdStr(), "0" ) ?
-                                    getLowestId( searchResult.getStatuses() ) :
-                                    searchResult.getSearchMetadata().getSinceIdStr();
+                            getLowestId( searchResult.getStatuses() ) :
+                            searchResult.getSearchMetadata().getSinceIdStr();
                 }
                 // In case the search was for older results,
                 // we remove the newest one as maxId parameter is inclusive

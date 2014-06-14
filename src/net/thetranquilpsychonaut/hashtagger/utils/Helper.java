@@ -1,16 +1,12 @@
 package net.thetranquilpsychonaut.hashtagger.utils;
 
 import android.content.Context;
-import android.net.Uri;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.Toast;
 import com.google.gson.JsonParser;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
-import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
-import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Trend;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Trends;
 

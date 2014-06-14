@@ -24,7 +24,7 @@ import org.scribe.oauth.OAuthService;
  */
 public class GPlusService extends SitesService
 {
-    public static  String   nextPageToken;
+    public static String nextPageToken;
 
     private volatile static boolean isServiceRunning;
     private static final int    GPLUS_SEARCH_LIMIT = 20;

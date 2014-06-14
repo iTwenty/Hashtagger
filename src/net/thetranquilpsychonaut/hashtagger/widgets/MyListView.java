@@ -36,7 +36,9 @@ public class MyListView extends ListView
     public boolean dispatchTouchEvent( MotionEvent ev )
     {
         if ( ev.getAction() == MotionEvent.ACTION_MOVE && !scrollable )
+        {
             return false;
+        }
         return super.dispatchTouchEvent( ev );
     }
 
@@ -44,7 +46,9 @@ public class MyListView extends ListView
     public boolean dispatchGenericMotionEvent( MotionEvent ev )
     {
         if ( ev.getAction() == MotionEvent.ACTION_SCROLL && !scrollable )
+        {
             return false;
+        }
         return super.dispatchGenericMotionEvent( ev );
     }
 }

@@ -71,8 +71,8 @@ public abstract class SitesFragment extends Fragment implements
     protected Animation          fadeIn;
     protected Animation          fadeOut;
 
-    protected Rect           tmpRect    = new Rect();
-    protected int            activeView = READY;
+    protected Rect tmpRect    = new Rect();
+    protected int  activeView = READY;
 
     private class TimedSearchRunner implements Runnable
     {

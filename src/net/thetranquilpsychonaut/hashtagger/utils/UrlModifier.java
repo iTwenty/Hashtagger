@@ -16,8 +16,8 @@ import java.util.regex.Pattern;
 public final class UrlModifier
 {
     private static final Pattern FB_INTERNAL_URL_PATTERN = Pattern.compile( "_s.|_t." );
-    private static final Pattern GPLUS_URL_PATTERN = Pattern.compile( "w\\d+-h\\d+" );
-    private static final Pattern TWITTER_URL_PATTERN = Pattern.compile(  ":thumb$|:small$|:medium$|:large$|$" );
+    private static final Pattern GPLUS_URL_PATTERN       = Pattern.compile( "w\\d+-h\\d+" );
+    private static final Pattern TWITTER_URL_PATTERN     = Pattern.compile( ":thumb$|:small$|:medium$|:large$|$" );
 
     private UrlModifier()
     {
@@ -47,7 +47,10 @@ public final class UrlModifier
     public static String getFacebookLargePhotoUrl( String smallPhotoUrl )
     {
         String newUrl = FB_INTERNAL_URL_PATTERN.matcher( smallPhotoUrl ).replaceAll( "_o." );
-        if ( TextUtils.equals( smallPhotoUrl, newUrl ) && smallPhotoUrl.contains( "fbexternal" ) );
+        if ( TextUtils.equals( smallPhotoUrl, newUrl ) && smallPhotoUrl.contains( "fbexternal" ) )
+        {
+            ;
+        }
         {
             Uri uri = Uri.parse( smallPhotoUrl );
             String imageUrl = uri.getQueryParameter( "url" );
