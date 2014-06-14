@@ -110,12 +110,14 @@ public class GPlusActionsFragment extends DialogFragment
                         @Override
                         public void success( PeopleFeed peopleFeed, Response response )
                         {
+                            // Subscriber : GPlusActionsFragment : onActionDone()
                             HashtaggerApp.bus.post( new PeopleFeedEvent( peopleFeed, true, ListByActivityParams.PLUSONERS ) );
                         }
 
                         @Override
                         public void failure( RetrofitError retrofitError )
                         {
+                            // Subscriber : GPlusActionsFragment : onActionDone()
                             HashtaggerApp.bus.post( new PeopleFeedEvent( null, false, ListByActivityParams.PLUSONERS ) );
                         }
                     } );
@@ -129,12 +131,14 @@ public class GPlusActionsFragment extends DialogFragment
                         @Override
                         public void success( PeopleFeed peopleFeed, Response response )
                         {
+                            // Subscriber : GPlusActionsFragment : onActionDone()
                             HashtaggerApp.bus.post( new PeopleFeedEvent( peopleFeed, true, ListByActivityParams.RESHARERS ) );
                         }
 
                         @Override
                         public void failure( RetrofitError retrofitError )
                         {
+                            // Subscriber : GPlusActionsFragment : onActionDone()
                             HashtaggerApp.bus.post( new PeopleFeedEvent( null, false, ListByActivityParams.RESHARERS ) );
                         }
                     } );

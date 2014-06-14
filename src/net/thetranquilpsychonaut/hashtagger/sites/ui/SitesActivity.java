@@ -256,6 +256,7 @@ public class SitesActivity extends NavDrawerActivity
             @Override
             public void run()
             {
+                // Subscriber : SitesFragment : searchHashtag()
                 HashtaggerApp.bus.post( new SearchHashtagEvent() );
             }
         } );

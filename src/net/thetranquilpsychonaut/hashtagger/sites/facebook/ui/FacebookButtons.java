@@ -74,14 +74,17 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
     {
         if ( v.equals( ccbLike ) )
         {
+            // Subscriber : FacebookFragment : onFacebookActionClicked()
             HashtaggerApp.bus.post( new FacebookActionClickedEvent( post, FacebookActionClickedEvent.ACTION_LIKE ) );
         }
         else if ( v.equals( ccbComment ) )
         {
+            // Subscriber : FacebookFragment : onFacebookActionClicked()
             HashtaggerApp.bus.post( new FacebookActionClickedEvent( post, FacebookActionClickedEvent.ACTION_COMMENT ) );
         }
         else if ( v.equals( ccbShare ) )
         {
+            // Subscriber : FacebookFragment : onFacebookActionClicked()
             HashtaggerApp.bus.post( new FacebookActionClickedEvent( post, FacebookActionClickedEvent.ACTION_SHARE ) );
         }
         else if ( v.equals( ccbViewDetails ) )

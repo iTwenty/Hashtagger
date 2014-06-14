@@ -72,6 +72,7 @@ public class SavedHashtagsAdapter extends CursorAdapter implements View.OnClickL
                 null,
                 null );
 
+        //Subscriber : SavedHashtagsFragment : onSavedHashtagDeleted()
         HashtaggerApp.bus.post( new SavedHashtagDeletedEvent( deletedHashtag ) );
     }
 }

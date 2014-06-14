@@ -22,12 +22,14 @@ public class TwitterAction
             @Override
             public void success( Status status, Response response )
             {
+                // Subscriber : TwitterFragment : onReplyDone()
                 HashtaggerApp.bus.post( new TwitterReplyEvent( true ) );
             }
 
             @Override
             public void failure( RetrofitError retrofitError )
             {
+                // Subscriber : TwitterFragment : onReplyDone()
                 HashtaggerApp.bus.post( new TwitterReplyEvent( false ) );
             }
         } );
@@ -40,12 +42,14 @@ public class TwitterAction
             @Override
             public void success( Status status, Response response )
             {
+                // Subscriber : TwitterFragment : onRetweetDone()
                 HashtaggerApp.bus.post( new TwitterRetweetEvent( true, position ) );
             }
 
             @Override
             public void failure( RetrofitError retrofitError )
             {
+                // Subscriber : TwitterFragment : onRetweetDone()
                 HashtaggerApp.bus.post( new TwitterRetweetEvent( false, position ) );
             }
         } );
@@ -58,12 +62,14 @@ public class TwitterAction
             @Override
             public void success( Status status, Response response )
             {
+                // Subscriber : TwitterFragment : onFavoriteDone()
                 HashtaggerApp.bus.post( new TwitterFavoriteEvent( true, position, isFavorited ) );
             }
 
             @Override
             public void failure( RetrofitError retrofitError )
             {
+                // Subscriber : TwitterFragment : onFavoriteDone()
                 HashtaggerApp.bus.post( new TwitterFavoriteEvent( false, position, isFavorited ) );
             }
         };

@@ -248,6 +248,7 @@ public class TwitterTrendsService extends Service
             @Override
             public void run()
             {
+                // Subscriber : TrendingHashtagsFragment : onTwitterTrendsFound()
                 HashtaggerApp.bus.post( event );
             }
         } );

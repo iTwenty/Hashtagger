@@ -85,14 +85,17 @@ public class GPlusButtons extends SitesButtons implements View.OnClickListener
         }
         else if ( v.equals( ccbPlusOne ) )
         {
+            // Subscriber : GPlusFragment : onGPlusActionClicked()
             HashtaggerApp.bus.post( new GPlusActionClickedEvent( activity, GPlusActionClickedEvent.ACTION_PLUS_ONE ) );
         }
         else if ( v.equals( ccbComment ) )
         {
+            // Subscriber : GPlusFragment : onGPlusActionClicked()
             HashtaggerApp.bus.post( new GPlusActionClickedEvent( activity, GPlusActionClickedEvent.ACTION_REPLY ) );
         }
         else if ( v.equals( ccbShare ) )
         {
+            // Subscriber : GPlusFragment : onGPlusActionClicked()
             HashtaggerApp.bus.post( new GPlusActionClickedEvent( activity, GPlusActionClickedEvent.ACTION_RESHARE ) );
         }
     }

@@ -102,14 +102,17 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
     {
         if ( v.equals( ccbReply ) )
         {
+            // Subscriber : TwitterFragment : onTwitterActionClicked()
             HashtaggerApp.bus.post( new TwitterActionClickedEvent( status, TwitterActionClickedEvent.ACTION_REPLY ) );
         }
         if ( v.equals( ccbRetweet ) )
         {
+            // Subscriber : TwitterFragment : onTwitterActionClicked()
             HashtaggerApp.bus.post( new TwitterActionClickedEvent( status, TwitterActionClickedEvent.ACTION_RETWEET ) );
         }
         if ( v.equals( ccbFavorite ) )
         {
+            // Subscriber : TwitterFragment : onTwitterActionClicked()
             HashtaggerApp.bus.post( new TwitterActionClickedEvent( status, TwitterActionClickedEvent.ACTION_FAVORITE ) );
         }
         if ( v.equals( ccbViewDetails ) )
