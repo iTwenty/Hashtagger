@@ -1,7 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.net.Uri;
-import android.widget.Toast;
 import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
@@ -173,6 +172,7 @@ public class FacebookFragment extends SitesFragment
     @Subscribe
     public void onFacebookActionClicked( FacebookActionClickedEvent event )
     {
-        Toast.makeText( getActivity(), event.getPost().getName(), Toast.LENGTH_SHORT ).show();
+        FacebookActionsFragment fragment = FacebookActionsFragment.newInstance( event.getPost(), event.getActionType() );
+        fragment.show( getChildFragmentManager(), FacebookActionsFragment.TAG );
     }
 }
