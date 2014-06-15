@@ -1,9 +1,5 @@
 package net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import java.io.Serializable;
 
 public class Actor implements Serializable
@@ -63,24 +59,6 @@ public class Actor implements Serializable
     public void setImage( ActorImage image )
     {
         this.image = image;
-    }
-
-    @Override
-    public String toString()
-    {
-        return ToStringBuilder.reflectionToString( this );
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return HashCodeBuilder.reflectionHashCode( this );
-    }
-
-    @Override
-    public boolean equals( java.lang.Object other )
-    {
-        return EqualsBuilder.reflectionEquals( this, other );
     }
 
 }

@@ -1,9 +1,5 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 public class PlaceType
 {
     private int    code;
@@ -27,23 +23,5 @@ public class PlaceType
     public void setName( String name )
     {
         this.name = name;
-    }
-
-    @Override
-    public String toString()
-    {
-        return ToStringBuilder.reflectionToString( this );
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return HashCodeBuilder.reflectionHashCode( this );
-    }
-
-    @Override
-    public boolean equals( Object other )
-    {
-        return EqualsBuilder.reflectionEquals( this, other );
     }
 }
