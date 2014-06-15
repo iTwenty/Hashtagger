@@ -56,13 +56,25 @@ public class GPlusButtons extends SitesButtons implements View.OnClickListener
         {
             ccbPlusOne.setText( String.valueOf( activity.getObject().getPlusoners().getTotalItems() ) );
         }
+        else
+        {
+            ccbPlusOne.setText( "" );
+        }
         if ( activity.getObject().getReplies().getTotalItems() != 0 )
         {
             ccbComment.setText( String.valueOf( activity.getObject().getReplies().getTotalItems() ) );
         }
+        else
+        {
+            ccbComment.setText( "" );
+        }
         if ( activity.getObject().getResharers().getTotalItems() != 0 )
         {
             ccbShare.setText( String.valueOf( activity.getObject().getResharers().getTotalItems() ) );
+        }
+        else
+        {
+            ccbShare.setText( "" );
         }
     }
 

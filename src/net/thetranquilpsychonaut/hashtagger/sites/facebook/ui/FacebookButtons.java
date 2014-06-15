@@ -52,9 +52,30 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
         ccbComment.setOnClickListener( this );
         ccbShare.setOnClickListener( this );
         ccbViewDetails.setOnClickListener( this );
-        ccbLike.setText( post.getLikes() != null && !Helper.isNullOrEmpty( post.getLikes().getData() ) ? String.valueOf( post.getLikes().getData().size() ) : "" );
-        ccbComment.setText( post.getComments() != null && !Helper.isNullOrEmpty( post.getComments().getData() ) ? String.valueOf( post.getComments().getData().size() ) : "" );
-        ccbShare.setText( post.getShares() != null && post.getShares().getCount() != 0 ? String.valueOf( post.getShares().getCount() ) : "" );
+        if ( null != post.getLikes() && !Helper.isNullOrEmpty( post.getLikes().getData() ) )
+        {
+            ccbLike.setText( String.valueOf( post.getLikes().getData().size() ) );
+        }
+        else
+        {
+            ccbLike.setText( "" );
+        }
+        if ( null != post.getComments() && !Helper.isNullOrEmpty( post.getComments().getData() ) )
+        {
+            ccbComment.setText( String.valueOf( post.getComments().getData().size() ) );
+        }
+        else
+        {
+            ccbComment.setText( "" );
+        }
+        if ( null != post.getShares() && post.getShares().getCount() != 0 )
+        {
+            ccbShare.setText( String.valueOf( post.getShares().getCount() ) );
+        }
+        else
+        {
+            ccbShare.setText( "" );
+        }
     }
 
     @Override
