@@ -60,9 +60,9 @@ public class GPlus
                 @QueryMap Map<String, String> listByActivityParams,
                 Callback<PeopleFeed> callback );
 
-        @GET( "/activities/{activityId}/comments" )
+        @GET("/activities/{activityId}/comments")
         public void listComments(
-                @Path( "activityId" ) String activityId,
+                @Path("activityId") String activityId,
                 @QueryMap Map<String, String> commentsListParams,
                 Callback<CommentFeed> callback );
     }

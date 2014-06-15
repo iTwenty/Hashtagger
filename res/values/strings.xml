@@ -47,4 +47,11 @@
     <string name="str_save_image">Save Image</string>
     <string name="str_open_in_browser">Open in browser</string>
     <string name="str_share">Share</string>
+    <string name="str_loading">Loading</string>
+    <string name="str_no_plusoners">No +1\'ers</string>
+    <string name="str_no_replies">No replies</string>
+    <string name="str_no_resharers">No resharers</string>
+    <string name="str_load_plusoners_error">Failed to load +1\'ers</string>
+    <string name="str_load_resharers_error">Failed to load resharers</string>
+    <string name="str_load_replies_error">Failed to load replies</string>
 </resources>

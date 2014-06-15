@@ -7,8 +7,7 @@
 
     <ImageView
         android:id="@+id/person_image"
-        android:layout_width="50dp"
-        android:layout_height="50dp"/>
+        style="@style/ActionsProfileImage"/>
 
     <TextView
         android:id="@+id/person_name"

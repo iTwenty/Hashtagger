@@ -49,6 +49,11 @@
         <item name="android:textSize">15sp</item>
     </style>
 
+    <style name="Comment" parent="TextView_Default">
+        <item name="android:maxLines">5</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
     <style name="DateText" parent="TextView_Small">
         <item name="android:maxLines">1</item>
     </style>
@@ -100,6 +105,12 @@
         <item name="android:layout_width">50dp</item>
         <item name="android:layout_height">50dp</item>
         <item name="android:scaleType">fitCenter</item>
+    </style>
+
+    <style name="ActionsProfileImage">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_margin">5dp</item>
     </style>
 
     <style name="FullImage" parent="FrameImage">

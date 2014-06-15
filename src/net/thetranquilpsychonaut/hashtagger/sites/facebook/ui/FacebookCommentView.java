@@ -36,7 +36,6 @@ public class FacebookCommentView extends RelativeLayout
         fromImage = ( ImageView ) findViewById( R.id.from_image );
         fromName = ( TextView ) findViewById( R.id.from_name );
         message = ( TextView ) findViewById( R.id.message );
-
     }
 
     public void update( Comment comment )

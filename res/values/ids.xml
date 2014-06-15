@@ -1,7 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="GPlusMediaView_Detail" type="id"/>
-    <item name="GPlusAlbumView_Detail" type="id"/>
-    <item name="FacebookMediaView_Detail" type="id"/>
-    <item name="ViewAlbumFragment" type="id"/>
 </resources>

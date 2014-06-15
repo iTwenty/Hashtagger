@@ -45,6 +45,6 @@ public class GPlusCommentView extends RelativeLayout
                 .centerCrop()
                 .into( actorImage );
         actorName.setText( comment.getActor().getDisplayName() );
-        content.setText( comment.getObject().getContent() );
+        content.setText( comment.getObject().getOriginalContent() );
     }
 }

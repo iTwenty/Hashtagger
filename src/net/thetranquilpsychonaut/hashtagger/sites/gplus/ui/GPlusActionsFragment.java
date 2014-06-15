@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -125,66 +126,41 @@ public class GPlusActionsFragment extends DialogFragment implements AdapterView.
         super.onViewCreated( view, savedInstanceState );
         if ( null == savedInstanceState )
         {
-            GPlus.api().listByActivity(
-                    activity.getId(),
-                    ListByActivityParams.PLUSONERS,
-                    null,
-                    new Callback<PeopleFeed>()
+            gPlusActionsPager.post( new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    if ( activity.getObject().getPlusoners().getTotalItems() != 0 )
                     {
-                        @Override
-                        public void success( PeopleFeed peopleFeed, Response response )
-                        {
-                            // Subscriber : GPlusActionsFragment : onListByActivityDone()
-                            HashtaggerApp.bus.post( new PeopleFeedEvent( peopleFeed, true, ListByActivityParams.PLUSONERS ) );
-                        }
+                        lvPlusOnersEmpty.setText( getResources().getString( R.string.str_loading ) );
+                        GPlus.api().listByActivity(
+                                activity.getId(),
+                                ListByActivityParams.PLUSONERS,
+                                null,
+                                new PeopleFeedCallback( ListByActivityParams.PLUSONERS ) );
+                    }
 
-                        @Override
-                        public void failure( RetrofitError retrofitError )
-                        {
-                            // Subscriber : GPlusActionsFragment : onListByActivityDone()
-                            HashtaggerApp.bus.post( new PeopleFeedEvent( null, false, ListByActivityParams.PLUSONERS ) );
-                        }
-                    } );
-
-            GPlus.api().listByActivity(
-                    activity.getId(),
-                    ListByActivityParams.RESHARERS,
-                    null,
-                    new Callback<PeopleFeed>()
+                    if ( activity.getObject().getResharers().getTotalItems() != 0 )
                     {
-                        @Override
-                        public void success( PeopleFeed peopleFeed, Response response )
-                        {
-                            // Subscriber : GPlusActionsFragment : onListByActivityDone()
-                            HashtaggerApp.bus.post( new PeopleFeedEvent( peopleFeed, true, ListByActivityParams.RESHARERS ) );
-                        }
+                        lvResharersEmpty.setText( getResources().getString( R.string.str_loading ) );
+                        GPlus.api().listByActivity(
+                                activity.getId(),
+                                ListByActivityParams.RESHARERS,
+                                null,
+                                new PeopleFeedCallback( ListByActivityParams.RESHARERS ) );
+                    }
 
-                        @Override
-                        public void failure( RetrofitError retrofitError )
-                        {
-                            // Subscriber : GPlusActionsFragment : onListByActivityDone()
-                            HashtaggerApp.bus.post( new PeopleFeedEvent( null, false, ListByActivityParams.RESHARERS ) );
-                        }
-                    } );
-            GPlus.api().listComments(
-                    activity.getId(),
-                    null,
-                    new Callback<CommentFeed>()
+                    if ( activity.getObject().getReplies().getTotalItems() != 0 )
                     {
-                        @Override
-                        public void success( CommentFeed feed, Response response )
-                        {
-                            // Subscriber : GPlusActionsFragment : onListCommentsDone()
-                            HashtaggerApp.bus.post( new CommentFeedEvent( feed, true ) );
-                        }
-
-                        @Override
-                        public void failure( RetrofitError retrofitError )
-                        {
-                            // Subscriber : GPlusActionsFragment : onListCommentsDone()
-                            HashtaggerApp.bus.post( new CommentFeedEvent( null, false ) );
-                        }
-                    } );
+                        lvCommentsEmpty.setText( getResources().getString( R.string.str_loading ) );
+                        GPlus.api().listComments(
+                                activity.getId(),
+                                null,
+                                new CommentFeedCallback() );
+                    }
+                }
+            } );
         }
     }
 
@@ -216,7 +192,7 @@ public class GPlusActionsFragment extends DialogFragment implements AdapterView.
         View v = LayoutInflater.from( container.getContext() ).inflate( R.layout.gplus_actions_plusoners, container, false );
         lvPlusOners = ( ListView ) v.findViewById( R.id.lv_plusoners );
         lvPlusOnersEmpty = ( TextView ) v.findViewById( R.id.lv_plusoners_empty );
-        lvPlusOnersEmpty.setText( "Loading" );
+        lvPlusOnersEmpty.setText( getResources().getString( R.string.str_no_plusoners ) );
         lvPlusOners.setEmptyView( lvPlusOnersEmpty );
         lvPlusOners.setAdapter( plusonersAdapter );
         lvPlusOners.setOnItemClickListener( this );
@@ -229,7 +205,7 @@ public class GPlusActionsFragment extends DialogFragment implements AdapterView.
         View v = LayoutInflater.from( container.getContext() ).inflate( R.layout.gplus_actions_comments, container, false );
         lvComments = ( ListView ) v.findViewById( R.id.lv_comments );
         lvCommentsEmpty = ( TextView ) v.findViewById( R.id.lv_comments_empty );
-        lvCommentsEmpty.setText( "Loading" );
+        lvCommentsEmpty.setText( getResources().getString( R.string.str_no_replies ) );
         lvComments.setEmptyView( lvCommentsEmpty );
         lvComments.setAdapter( commentsAdapter );
         lvComments.setOnItemClickListener( this );
@@ -242,7 +218,7 @@ public class GPlusActionsFragment extends DialogFragment implements AdapterView.
         View v = LayoutInflater.from( container.getContext() ).inflate( R.layout.gplus_actions_resharers, container, false );
         lvResharers = ( ListView ) v.findViewById( R.id.lv_resharers );
         lvResharersEmpty = ( TextView ) v.findViewById( R.id.lv_resharers_empty );
-        lvResharersEmpty.setText( "Loading" );
+        lvResharersEmpty.setText( getResources().getString( R.string.str_no_resharers ) );
         lvResharers.setEmptyView( lvResharersEmpty );
         lvResharers.setAdapter( resharersAdapter );
         lvResharers.setOnItemClickListener( this );
@@ -259,7 +235,7 @@ public class GPlusActionsFragment extends DialogFragment implements AdapterView.
             {
                 if ( Helper.isNullOrEmpty( event.getPeopleFeed().getItems() ) )
                 {
-                    lvPlusOnersEmpty.setText( "No +1'ers" );
+                    lvPlusOnersEmpty.setText( getResources().getString( R.string.str_no_plusoners ) );
                 }
                 else
                 {
@@ -271,7 +247,7 @@ public class GPlusActionsFragment extends DialogFragment implements AdapterView.
             {
                 if ( Helper.isNullOrEmpty( event.getPeopleFeed().getItems() ) )
                 {
-                    lvResharersEmpty.setText( "No resharers" );
+                    lvResharersEmpty.setText( getResources().getString( R.string.str_no_resharers ) );
                 }
                 else
                 {
@@ -284,11 +260,11 @@ public class GPlusActionsFragment extends DialogFragment implements AdapterView.
         {
             if ( TextUtils.equals( ListByActivityParams.RESHARERS, event.getCollection() ) )
             {
-                lvPlusOnersEmpty.setText( "Failed to load +1'ers" );
+                lvPlusOnersEmpty.setText( getResources().getString( R.string.str_load_plusoners_error ) );
             }
             else
             {
-                lvResharersEmpty.setText( "Failed to load resharers" );
+                lvResharersEmpty.setText( getResources().getString( R.string.str_load_resharers_error ) );
             }
         }
     }
@@ -300,7 +276,7 @@ public class GPlusActionsFragment extends DialogFragment implements AdapterView.
         {
             if ( Helper.isNullOrEmpty( event.getCommentFeed().getItems() ) )
             {
-                lvCommentsEmpty.setText( "No replies" );
+                lvCommentsEmpty.setText( getResources().getString( R.string.str_no_replies ) );
             }
             else
             {
@@ -310,7 +286,7 @@ public class GPlusActionsFragment extends DialogFragment implements AdapterView.
         }
         else
         {
-            lvCommentsEmpty.setText( "Failed to load replies" );
+            lvCommentsEmpty.setText( getResources().getString( R.string.str_load_replies_error ) );
         }
     }
 
@@ -464,6 +440,51 @@ public class GPlusActionsFragment extends DialogFragment implements AdapterView.
             }
             view.update( ( Comment ) getItem( position ) );
             return view;
+        }
+    }
+
+    private static class PeopleFeedCallback implements Callback<PeopleFeed>
+    {
+        private String collection;
+
+        public PeopleFeedCallback( String collection )
+        {
+            this.collection = collection;
+        }
+
+        @Override
+        public void success( PeopleFeed peopleFeed, Response response )
+        {
+            // Subscriber : GPlusActionsFragment : onListByActivityDone()
+            HashtaggerApp.bus.post( new PeopleFeedEvent( peopleFeed, true, collection ) );
+        }
+
+        @Override
+        public void failure( RetrofitError retrofitError )
+        {
+            // Subscriber : GPlusActionsFragment : onListByActivityDone()
+            HashtaggerApp.bus.post( new PeopleFeedEvent( null, false, collection ) );
+        }
+    }
+
+    private static class CommentFeedCallback implements Callback<CommentFeed>
+    {
+        @Override
+        public void success( CommentFeed feed, Response response )
+        {
+            for ( Comment comment : feed.getItems() )
+            {
+                comment.getObject().setOriginalContent( Html.fromHtml( comment.getObject().getContent() ).toString() );
+            }
+            // Subscriber : GPlusActionsFragment : onListCommentsDone()
+            HashtaggerApp.bus.post( new CommentFeedEvent( feed, true ) );
+        }
+
+        @Override
+        public void failure( RetrofitError retrofitError )
+        {
+            // Subscriber : GPlusActionsFragment : onListCommentsDone()
+            HashtaggerApp.bus.post( new CommentFeedEvent( null, false ) );
         }
     }
 }

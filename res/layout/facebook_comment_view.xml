@@ -7,8 +7,7 @@
 
     <ImageView
         android:id="@+id/from_image"
-        android:layout_width="50dp"
-        android:layout_height="50dp"/>
+        style="@style/ActionsProfileImage"/>
 
     <TextView
         android:id="@+id/from_name"
@@ -23,8 +22,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/from_name"
         android:layout_toRightOf="@id/from_image"
-        style="@style/TextView_Default"
-        android:maxLines="5"
-        android:ellipsize="end"/>
+        style="@style/Comment"/>
 
 </merge>

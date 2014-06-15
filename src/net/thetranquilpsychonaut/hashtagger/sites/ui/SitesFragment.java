@@ -25,6 +25,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -37,7 +38,6 @@ import net.thetranquilpsychonaut.hashtagger.events.SearchHashtagEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.utils.DefaultPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
-import net.thetranquilpsychonaut.hashtagger.widgets.MyListView;
 import net.thetranquilpsychonaut.hashtagger.widgets.MySwipeRefreshLayout;
 
 import java.util.List;
@@ -298,7 +298,7 @@ public abstract class SitesFragment extends Fragment implements
 
     private void initResultsListView( View viewReady )
     {
-        viewHolder.lvResultsList = ( MyListView ) viewReady.findViewById( R.id.lv_results_list );
+        viewHolder.lvResultsList = ( ListView ) viewReady.findViewById( R.id.lv_results_list );
         viewHolder.lvResultsList.addFooterView( viewHolder.sitesFooterView, null, false );
         viewHolder.lvResultsList.setAdapter( sitesListAdapter );
         viewHolder.lvResultsList.setEmptyView( viewHolder.sitesEmptyView );
@@ -843,7 +843,7 @@ public abstract class SitesFragment extends Fragment implements
 
     protected static class ViewHolder
     {
-        public MyListView           lvResultsList;
+        public ListView             lvResultsList;
         public SitesEmptyView       sitesEmptyView;
         public SitesFooterView      sitesFooterView;
         public MySwipeRefreshLayout srlReady;
