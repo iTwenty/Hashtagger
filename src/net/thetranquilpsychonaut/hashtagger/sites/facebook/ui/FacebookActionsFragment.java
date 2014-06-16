@@ -19,7 +19,11 @@ import net.thetranquilpsychonaut.hashtagger.events.FacebookActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Comment;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.From;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesActionsFragment;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerAdapter;
+import net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerIndicator;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,12 +31,13 @@ import java.util.List;
 /**
  * Created by itwenty on 6/13/14.
  */
-public class FacebookActionsFragment extends DialogFragment implements AdapterView.OnItemClickListener
+public class FacebookActionsFragment extends SitesActionsFragment implements AdapterView.OnItemClickListener
 {
     public static final String TAG = "FacebookActionsFragment";
 
     private ViewPager                   facebookActionsPager;
     private FacebookActionsPagerAdapter facebookActionsPagerAdapter;
+    private IconPagerIndicator          facebookActionsPagerIndicator;
     private Post                        post;
     private int                         actionType;
 
@@ -76,9 +81,11 @@ public class FacebookActionsFragment extends DialogFragment implements AdapterVi
     @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
     {
-        facebookActionsPager = ( ViewPager ) inflater.inflate( R.layout.fragment_facebook_actions, container, false );
+        View v = inflater.inflate( R.layout.fragment_facebook_actions, container, false );
+        facebookActionsPager = ( ViewPager ) v.findViewById( R.id.facebook_actions_pager );
+        facebookActionsPagerIndicator = ( IconPagerIndicator ) v.findViewById( R.id.facebook_actions_pager_indicator );
         facebookActionsPager.setAdapter( facebookActionsPagerAdapter );
-        getDialog().requestWindowFeature( Window.FEATURE_NO_TITLE );
+        facebookActionsPagerIndicator.setViewPager( facebookActionsPager );
         if ( actionType == FacebookActionClickedEvent.ACTION_COMMENT )
         {
             facebookActionsPager.setCurrentItem( 1 );
@@ -129,8 +136,31 @@ public class FacebookActionsFragment extends DialogFragment implements AdapterVi
         startActivity( i );
     }
 
-    private class FacebookActionsPagerAdapter extends PagerAdapter
+    @Override
+    public IconPagerIndicator getViewPagerIndicator()
     {
+        return facebookActionsPagerIndicator;
+    }
+
+    private class FacebookActionsPagerAdapter extends PagerAdapter implements IconPagerAdapter
+    {
+        @Override
+        public int getIconResId( int position )
+        {
+            switch ( position )
+            {
+                case 0: return R.drawable.facebook_like;
+                case 1: return R.drawable.facebook_comment;
+            }
+            return -1;
+        }
+
+        @Override
+        public int getSelectedColor( int position )
+        {
+            return R.color.orange;
+        }
+
         @Override
         public int getCount()
         {

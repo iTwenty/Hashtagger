@@ -3,7 +3,6 @@ package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
@@ -11,7 +10,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -29,6 +27,9 @@ import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.CommentFe
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.ListByActivityParams;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.PeopleFeed;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Person;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesActionsFragment;
+import net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerAdapter;
+import net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerIndicator;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -40,7 +41,7 @@ import java.util.List;
 /**
  * Created by itwenty on 6/13/14.
  */
-public class GPlusActionsFragment extends DialogFragment implements AdapterView.OnItemClickListener
+public class GPlusActionsFragment extends SitesActionsFragment implements AdapterView.OnItemClickListener
 {
     public static final String TAG = "GPlusActionsFragment";
 
@@ -50,6 +51,7 @@ public class GPlusActionsFragment extends DialogFragment implements AdapterView.
 
     private ViewPager                gPlusActionsPager;
     private GPlusActionsPagerAdapter gPlusActionsPagerAdapter;
+    private IconPagerIndicator       gPlusActionsPagerIndicator;
     private Activity                 activity;
     private int                      actionType;
 
@@ -102,9 +104,11 @@ public class GPlusActionsFragment extends DialogFragment implements AdapterView.
     @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
     {
-        gPlusActionsPager = ( ViewPager ) inflater.inflate( R.layout.fragment_gplus_actions, container, false );
+        View v = inflater.inflate( R.layout.fragment_gplus_actions, container, false );
+        gPlusActionsPager = ( ViewPager ) v.findViewById( R.id.gplus_actions_pager );
+        gPlusActionsPagerIndicator = ( IconPagerIndicator ) v.findViewById( R.id.gplus_actions_pager_indicator );
         gPlusActionsPager.setAdapter( gPlusActionsPagerAdapter );
-        getDialog().requestWindowFeature( Window.FEATURE_NO_TITLE );
+        gPlusActionsPagerIndicator.setViewPager( gPlusActionsPager );
         switch ( actionType )
         {
             case GPlusActionClickedEvent.ACTION_PLUS_ONE:
@@ -117,7 +121,7 @@ public class GPlusActionsFragment extends DialogFragment implements AdapterView.
                 gPlusActionsPager.setCurrentItem( 2 );
                 break;
         }
-        return gPlusActionsPager;
+        return v;
     }
 
     @Override
@@ -302,7 +306,13 @@ public class GPlusActionsFragment extends DialogFragment implements AdapterView.
         }
     }
 
-    private class GPlusActionsPagerAdapter extends PagerAdapter
+    @Override
+    public IconPagerIndicator getViewPagerIndicator()
+    {
+        return gPlusActionsPagerIndicator;
+    }
+
+    private class GPlusActionsPagerAdapter extends PagerAdapter implements IconPagerAdapter
     {
         @Override
         public int getCount()
@@ -350,6 +360,24 @@ public class GPlusActionsFragment extends DialogFragment implements AdapterView.
         public void destroyItem( ViewGroup container, int position, Object object )
         {
             container.removeView( ( View ) object );
+        }
+
+        @Override
+        public int getIconResId( int position )
+        {
+            switch ( position )
+            {
+                case 0: return R.drawable.gplus_one;
+                case 1: return R.drawable.facebook_comment;
+                case 2: return R.drawable.facebook_share;
+            }
+            return -1;
+        }
+
+        @Override
+        public int getSelectedColor( int position )
+        {
+            return R.color.orange;
         }
     }
 

@@ -4,6 +4,7 @@ import android.net.Uri;
 import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.cwacpager.PageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.SimplePageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.events.GPlusActionClickedEvent;
@@ -25,7 +26,7 @@ import java.util.List;
  */
 public class GPlusFragment extends SitesFragment
 {
-    public static SimplePageDescriptor descriptor = new SimplePageDescriptor( HashtaggerApp.GPLUS, HashtaggerApp.GPLUS );
+    public static final SimplePageDescriptor DESCRIPTOR = new SimplePageDescriptor( HashtaggerApp.GPLUS, HashtaggerApp.GPLUS );
 
     @Override
     protected SitesSearchHandler initSitesSearchHandler()
@@ -80,6 +81,12 @@ public class GPlusFragment extends SitesFragment
     protected String getUserName()
     {
         return AccountPrefs.getGPlusUserName();
+    }
+
+    @Override
+    public PageDescriptor getPageDescriptor()
+    {
+        return DESCRIPTOR;
     }
 
     @Override

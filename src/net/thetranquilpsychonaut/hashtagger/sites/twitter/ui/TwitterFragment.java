@@ -5,6 +5,7 @@ import android.widget.Toast;
 import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.cwacpager.PageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.SimplePageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.events.SearchHashtagEvent;
@@ -31,7 +32,7 @@ import java.util.List;
  */
 public class TwitterFragment extends SitesFragment
 {
-    public static SimplePageDescriptor descriptor = new SimplePageDescriptor( HashtaggerApp.TWITTER, HashtaggerApp.TWITTER );
+    public static final SimplePageDescriptor DESCRIPTOR = new SimplePageDescriptor( HashtaggerApp.TWITTER, HashtaggerApp.TWITTER );
 
     @Override
     protected int getLogoResId()
@@ -61,6 +62,12 @@ public class TwitterFragment extends SitesFragment
     protected String getUserName()
     {
         return AccountPrefs.getTwitterUserName();
+    }
+
+    @Override
+    public PageDescriptor getPageDescriptor()
+    {
+        return DESCRIPTOR;
     }
 
     @Override

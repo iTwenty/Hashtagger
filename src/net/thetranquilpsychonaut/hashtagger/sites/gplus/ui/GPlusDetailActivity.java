@@ -4,19 +4,23 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewStub;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.events.GPlusActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Thumbnail;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.BaseActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumThumbnailsFragment;
+import net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerIndicator;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
+import net.thetranquilpsychonaut.hashtagger.widgets.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,16 +31,13 @@ import java.util.List;
 public class GPlusDetailActivity extends BaseActivity
 {
     public static final String ACTIVITY_KEY = "activity";
-    private LinkifiedTextView tvActivityText;
-    private GPlusHeader       gPlusHeader;
-    private Activity          activity;
-    private int               activityType;
-
-    private ViewStub        viewStub;
-    private ImageView       imgvPhoto;
-    private GPlusDetailView gPlusDetailView;
-    private FrameLayout     flPlaceHolder;
-    private List<String>    albumThumbnailUrls;
+    private LinkifiedTextView    tvActivityText;
+    private GPlusHeader          gPlusHeader;
+    private ViewStub             viewStub;
+    private GPlusActionsFragment gPlusActionsFragment;
+    private SlidingUpPanelLayout gPlusSlider;
+    private Activity             activity;
+    private int                  activityType;
 
     public void onCreate( Bundle savedInstanceState )
     {
@@ -45,6 +46,7 @@ public class GPlusDetailActivity extends BaseActivity
         tvActivityText = ( LinkifiedTextView ) findViewById( R.id.tv_activity_text );
         gPlusHeader = ( GPlusHeader ) findViewById( R.id.gplus_header );
         viewStub = ( ViewStub ) findViewById( R.id.gplus_view_stub );
+        gPlusSlider = ( SlidingUpPanelLayout ) findViewById( R.id.gplus_slider );
         if ( null == getIntent() )
         {
             finish();
@@ -70,12 +72,28 @@ public class GPlusDetailActivity extends BaseActivity
         {
             showAlbumThumbnails( savedInstanceState );
         }
+
+        if ( null == getSupportFragmentManager().findFragmentByTag( GPlusActionsFragment.TAG ) )
+        {
+            gPlusActionsFragment = GPlusActionsFragment.newInstance( activity, GPlusActionClickedEvent.ACTION_PLUS_ONE );
+            View container = findViewById( R.id.gplus_actions_fragment_container );
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add( container.getId(), gPlusActionsFragment, GPlusActionsFragment.TAG )
+                    .commit();
+        }
+        else
+        {
+            gPlusActionsFragment = ( GPlusActionsFragment ) getSupportFragmentManager().findFragmentByTag( GPlusActionsFragment.TAG );
+        }
+
+        gPlusSlider.setEnableDragViewTouchEvents( true );
     }
 
     private void showPhoto( Bundle savedInstanceState )
     {
         viewStub.setLayoutResource( R.layout.gplus_detail_activity_type_photo );
-        imgvPhoto = ( ImageView ) viewStub.inflate();
+        final ImageView imgvPhoto = ( ImageView ) viewStub.inflate();
         imgvPhoto.setVisibility( View.GONE );
         final String imageUrl;
         if ( !TextUtils.isEmpty( activity.getObject().getAttachments().get( 0 ).getFullImage().getUrl() ) )
@@ -121,7 +139,7 @@ public class GPlusDetailActivity extends BaseActivity
     {
         viewStub.setLayoutResource( R.layout.gplus_detail_activity_type_video_or_link );
         FrameLayout temp = ( FrameLayout ) viewStub.inflate();
-        gPlusDetailView = ( GPlusDetailView ) temp.getChildAt( 0 );
+        GPlusDetailView gPlusDetailView = ( GPlusDetailView ) temp.getChildAt( 0 );
         gPlusDetailView.showDetails( activity );
     }
 
@@ -129,10 +147,10 @@ public class GPlusDetailActivity extends BaseActivity
     private void showAlbumThumbnails( Bundle savedInstanceState )
     {
         viewStub.setLayoutResource( R.layout.gplus_detail_activity_type_album_placeholder );
-        flPlaceHolder = ( FrameLayout ) viewStub.inflate();
+        FrameLayout flPlaceHolder = ( FrameLayout ) viewStub.inflate();
         if ( getSupportFragmentManager().findFragmentByTag( ViewAlbumThumbnailsFragment.TAG ) == null )
         {
-            albumThumbnailUrls = new ArrayList<String>(
+            List<String> albumThumbnailUrls = new ArrayList<String>(
                     activity.getObject().getAttachments().get( 0 ).getThumbnails().size() );
 
             for ( Thumbnail thumbnail : activity.getObject().getAttachments().get( 0 ).getThumbnails() )
@@ -152,5 +170,16 @@ public class GPlusDetailActivity extends BaseActivity
                             ViewAlbumThumbnailsFragment.TAG )
                     .commit();
         }
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if ( gPlusSlider.isPanelExpanded() )
+        {
+            gPlusSlider.collapsePanel();
+            return;
+        }
+        super.onBackPressed();
     }
 }

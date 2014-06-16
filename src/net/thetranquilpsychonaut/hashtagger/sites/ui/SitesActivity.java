@@ -29,6 +29,8 @@ import net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterFragment;
 import net.thetranquilpsychonaut.hashtagger.utils.DefaultPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerAdapter;
+import net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +39,10 @@ public class SitesActivity extends NavDrawerActivity
 {
     public static String currentHashtag = null;
 
-    ViewPager           vpSitesPager;
-    SitesPagerIndicator ipiSitesPager;
-    SitesAdapter        vpSitesPagerAdapter;
-    SearchView          svHashtag;
+    ViewPager          vpSitesPager;
+    IconPagerIndicator ipiSitesPager;
+    SitesAdapter       vpSitesPagerAdapter;
+    SearchView         svHashtag;
 
     @Override
     public void onCreate( Bundle savedInstanceState )
@@ -54,12 +56,10 @@ public class SitesActivity extends NavDrawerActivity
         dlNavDrawer.addView( rl, 0 );
 
         vpSitesPager = ( ViewPager ) findViewById( R.id.vp_sites_pager );
-        ipiSitesPager = ( SitesPagerIndicator ) findViewById( R.id.ipi_sites_pager );
+        ipiSitesPager = ( IconPagerIndicator ) findViewById( R.id.ipi_sites_pager );
         vpSitesPagerAdapter = new SitesAdapter( getSupportFragmentManager(), new ArrayList<PageDescriptor>() );
         vpSitesPager.setAdapter( vpSitesPagerAdapter );
         vpSitesPager.setOffscreenPageLimit( 2 );
-
-        ipiSitesPager.setViewPager( vpSitesPager );
 
         if ( !TextUtils.isEmpty( currentHashtag ) )
         {
@@ -83,59 +83,55 @@ public class SitesActivity extends NavDrawerActivity
     public void showActiveSites()
     {
         int[] savedSitePositions = getSavedSitePositions();
-        ipiSitesPager.removeAllViews();
         int twitterPosition = savedSitePositions[HashtaggerApp.TWITTER_VALUE];
         int gPlusPosition = savedSitePositions[HashtaggerApp.GPLUS_VALUE];
         int facebookPosition = savedSitePositions[HashtaggerApp.FACEBOOK_VALUE];
         if ( twitterPosition == -1 )
         {
-            vpSitesPagerAdapter.remove( TwitterFragment.descriptor );
+            vpSitesPagerAdapter.remove( TwitterFragment.DESCRIPTOR );
         }
         else
         {
-            ipiSitesPager.addIcon( HashtaggerApp.TWITTER_VALUE );
-            if ( vpSitesPagerAdapter.contains( TwitterFragment.descriptor ) )
+            if ( vpSitesPagerAdapter.contains( TwitterFragment.DESCRIPTOR ) )
             {
-                vpSitesPagerAdapter.move( TwitterFragment.descriptor, twitterPosition );
+                vpSitesPagerAdapter.move( TwitterFragment.DESCRIPTOR, twitterPosition );
             }
             else
             {
-                vpSitesPagerAdapter.insert( TwitterFragment.descriptor, twitterPosition );
+                vpSitesPagerAdapter.insert( TwitterFragment.DESCRIPTOR, twitterPosition );
             }
         }
         if ( gPlusPosition == -1 )
         {
-            vpSitesPagerAdapter.remove( GPlusFragment.descriptor );
+            vpSitesPagerAdapter.remove( GPlusFragment.DESCRIPTOR );
         }
         else
         {
-            ipiSitesPager.addIcon( HashtaggerApp.GPLUS_VALUE );
-            if ( vpSitesPagerAdapter.contains( GPlusFragment.descriptor ) )
+            if ( vpSitesPagerAdapter.contains( GPlusFragment.DESCRIPTOR ) )
             {
-                vpSitesPagerAdapter.move( GPlusFragment.descriptor, gPlusPosition );
+                vpSitesPagerAdapter.move( GPlusFragment.DESCRIPTOR, gPlusPosition );
             }
             else
             {
-                vpSitesPagerAdapter.insert( GPlusFragment.descriptor, gPlusPosition );
+                vpSitesPagerAdapter.insert( GPlusFragment.DESCRIPTOR, gPlusPosition );
             }
         }
         if ( facebookPosition == -1 )
         {
-            vpSitesPagerAdapter.remove( FacebookFragment.descriptor );
+            vpSitesPagerAdapter.remove( FacebookFragment.DESCRIPTOR );
         }
         else
         {
-            ipiSitesPager.addIcon( HashtaggerApp.FACEBOOK_VALUE );
-            if ( vpSitesPagerAdapter.contains( FacebookFragment.descriptor ) )
+            if ( vpSitesPagerAdapter.contains( FacebookFragment.DESCRIPTOR ) )
             {
-                vpSitesPagerAdapter.move( FacebookFragment.descriptor, facebookPosition );
+                vpSitesPagerAdapter.move( FacebookFragment.DESCRIPTOR, facebookPosition );
             }
             else
             {
-                vpSitesPagerAdapter.insert( FacebookFragment.descriptor, facebookPosition );
+                vpSitesPagerAdapter.insert( FacebookFragment.DESCRIPTOR, facebookPosition );
             }
         }
-        ipiSitesPager.setSelectedChild( vpSitesPager.getCurrentItem() );
+        ipiSitesPager.setViewPager( vpSitesPager );
     }
 
     private int[] getSavedSitePositions()

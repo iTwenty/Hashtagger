@@ -33,6 +33,7 @@ import android.widget.ViewAnimator;
 import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.cwacpager.PageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.events.SearchHashtagEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
@@ -446,6 +447,8 @@ public abstract class SitesFragment extends Fragment implements
     protected abstract void removeUserDetails();
 
     protected abstract String getUserName();
+
+    public abstract PageDescriptor getPageDescriptor();
 
     @Subscribe
     public void searchHashtag( SearchHashtagEvent event )

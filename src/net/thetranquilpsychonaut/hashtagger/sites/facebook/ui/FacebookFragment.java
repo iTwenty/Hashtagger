@@ -4,6 +4,7 @@ import android.net.Uri;
 import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.cwacpager.PageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.SimplePageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.events.FacebookActionClickedEvent;
@@ -25,7 +26,7 @@ import java.util.List;
  */
 public class FacebookFragment extends SitesFragment
 {
-    public static SimplePageDescriptor descriptor = new SimplePageDescriptor( HashtaggerApp.FACEBOOK, HashtaggerApp.FACEBOOK );
+    public static final SimplePageDescriptor DESCRIPTOR = new SimplePageDescriptor( HashtaggerApp.FACEBOOK, HashtaggerApp.FACEBOOK );
 
     @Override
     protected int getLogoResId()
@@ -55,6 +56,12 @@ public class FacebookFragment extends SitesFragment
     protected String getUserName()
     {
         return AccountPrefs.getFacebookUserName();
+    }
+
+    @Override
+    public PageDescriptor getPageDescriptor()
+    {
+        return DESCRIPTOR;
     }
 
     @Override
