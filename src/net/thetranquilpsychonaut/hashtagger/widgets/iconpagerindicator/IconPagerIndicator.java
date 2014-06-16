@@ -7,10 +7,8 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.cwacpager.PageDescriptor;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
 /**
  * This widget implements the dynamic action bar tab behavior that can change
@@ -18,6 +16,8 @@ import net.thetranquilpsychonaut.hashtagger.cwacpager.PageDescriptor;
  */
 public class IconPagerIndicator extends LinearLayout implements ViewPager.OnPageChangeListener, View.OnClickListener
 {
+    private static final int DEFAULT_PADDING = Helper.convertPxToDp( 5 );
+
     private ViewPager        mViewPager;
     private IconPagerAdapter mAdapter;
 
@@ -58,18 +58,19 @@ public class IconPagerIndicator extends LinearLayout implements ViewPager.OnPage
         mViewPager = view;
         mAdapter = ( IconPagerAdapter ) adapter;
         view.setOnPageChangeListener( this );
-        notifyDataSetChanged();
+        notifyIconSetChanged();
     }
 
 
-    public void notifyDataSetChanged()
+    public void notifyIconSetChanged()
     {
         this.removeAllViews();
         int count = mAdapter.getCount();
         for ( int i = 0; i < count; ++i )
         {
-            ImageView view = new ImageView( getContext(), null, android.R.style.Widget_Holo_Button_Borderless_Small );
+            ImageButton view = new ImageButton( getContext(), null, android.R.style.Widget_Holo_Button_Borderless_Small );
             LinearLayout.LayoutParams params = new LayoutParams( 0, LayoutParams.WRAP_CONTENT, 1 );
+            view.setPadding( DEFAULT_PADDING, DEFAULT_PADDING, DEFAULT_PADDING, DEFAULT_PADDING );
             params.gravity = Gravity.CENTER;
             view.setLayoutParams( params );
             view.setImageResource( mAdapter.getIconResId( i ) );
@@ -117,11 +118,11 @@ public class IconPagerIndicator extends LinearLayout implements ViewPager.OnPage
         {
             throw new RuntimeException( "ViewPager's adapter has not yet been set!" );
         }
-        ImageView child;
+        ImageButton child;
         int childCount = getChildCount();
         for ( int a = 0; a < childCount; ++a )
         {
-            child = ( ImageView ) getChildAt( a );
+            child = ( ImageButton ) getChildAt( a );
             if ( a == position )
             {
                 child.setColorFilter( getResources().getColor( mAdapter.getSelectedColor( position ) ) );
@@ -133,9 +134,18 @@ public class IconPagerIndicator extends LinearLayout implements ViewPager.OnPage
         }
     }
 
+    public void setIconsClickable( boolean iconsClickable )
+    {
+        int childCount = getChildCount();
+        for ( int i = 0; i < childCount; ++i )
+        {
+            getChildAt( i ).setEnabled( iconsClickable );
+        }
+    }
+
     @Override
     public void onClick( View v )
     {
-        setSelectedChild( indexOfChild( v ) );
+        mViewPager.setCurrentItem( indexOfChild( v ) );
     }
 }

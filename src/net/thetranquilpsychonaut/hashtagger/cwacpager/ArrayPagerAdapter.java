@@ -306,6 +306,11 @@ public abstract class ArrayPagerAdapter<T extends Fragment> extends PagerAdapter
         return false;
     }
 
+    public ArrayList<PageEntry> getEntries()
+    {
+        return entries;
+    }
+
     @SuppressWarnings("unchecked")
     public T getExistingFragment( int position )
     {
@@ -346,7 +351,7 @@ public abstract class ArrayPagerAdapter<T extends Fragment> extends PagerAdapter
         }
     };
 
-    private static class PageEntry implements Parcelable
+    public static class PageEntry implements Parcelable
     {
         private PageDescriptor      descriptor = null;
         private Fragment.SavedState state      = null;
@@ -376,7 +381,7 @@ public abstract class ArrayPagerAdapter<T extends Fragment> extends PagerAdapter
             this.state = in.readParcelable( ( ( Object ) this ).getClass().getClassLoader() );
         }
 
-        PageDescriptor getDescriptor()
+        public PageDescriptor getDescriptor()
         {
             return ( descriptor );
         }

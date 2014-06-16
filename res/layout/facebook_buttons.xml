@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<merge
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
@@ -13,7 +13,7 @@
         android:layout_weight="1"
         android:focusable="false"
         android:layout_gravity="center"
-        android:drawableLeft="@drawable/facebook_like"
+        android:drawableLeft="@drawable/facebook_like_small"
         style="@style/sitesButtonStyle"/>
 
     <net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:focusable="false"
-        android:drawableLeft="@drawable/facebook_comment"
+        android:drawableLeft="@drawable/comment_small"
         style="@style/sitesButtonStyle"/>
 
     <net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:focusable="false"
-        android:drawableLeft="@drawable/facebook_share"
+        android:drawableLeft="@drawable/share_small"
         style="@style/sitesButtonStyle"/>
 
     <net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton
@@ -43,4 +43,4 @@
         android:drawableLeft="@drawable/ic_action_full_screen"
         style="@style/sitesButtonStyle"/>
 
-</LinearLayout>
+</merge>

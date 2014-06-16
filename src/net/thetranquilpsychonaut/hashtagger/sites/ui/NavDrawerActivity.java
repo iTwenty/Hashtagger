@@ -92,8 +92,10 @@ public abstract class NavDrawerActivity extends FragmentActivity
         {
             switch ( position )
             {
-                case 0: return new TrendingHashtagsFragment();
-                case 1: return new SavedHashtagsFragment();
+                case 0:
+                    return new TrendingHashtagsFragment();
+                case 1:
+                    return new SavedHashtagsFragment();
             }
             return null;
         }
@@ -103,8 +105,10 @@ public abstract class NavDrawerActivity extends FragmentActivity
         {
             switch ( position )
             {
-                case 0: return R.drawable.trend;
-                case 1: return R.drawable.save;
+                case 0:
+                    return R.drawable.trending;
+                case 1:
+                    return R.drawable.save;
             }
             return -1;
         }

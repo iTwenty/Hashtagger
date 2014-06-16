@@ -28,9 +28,9 @@ import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.ListByAct
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.PeopleFeed;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Person;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesActionsFragment;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerAdapter;
 import net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerIndicator;
-import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -109,6 +109,7 @@ public class GPlusActionsFragment extends SitesActionsFragment implements Adapte
         gPlusActionsPagerIndicator = ( IconPagerIndicator ) v.findViewById( R.id.gplus_actions_pager_indicator );
         gPlusActionsPager.setAdapter( gPlusActionsPagerAdapter );
         gPlusActionsPagerIndicator.setViewPager( gPlusActionsPager );
+        gPlusActionsPager.setOffscreenPageLimit( 2 );
         switch ( actionType )
         {
             case GPlusActionClickedEvent.ACTION_PLUS_ONE:
@@ -367,9 +368,12 @@ public class GPlusActionsFragment extends SitesActionsFragment implements Adapte
         {
             switch ( position )
             {
-                case 0: return R.drawable.gplus_one;
-                case 1: return R.drawable.facebook_comment;
-                case 2: return R.drawable.facebook_share;
+                case 0:
+                    return R.drawable.plus;
+                case 1:
+                    return R.drawable.comment;
+                case 2:
+                    return R.drawable.share;
             }
             return -1;
         }

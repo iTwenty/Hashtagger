@@ -950,7 +950,9 @@ public class SlidingUpPanelLayout extends ViewGroup
     {
         View dragView = mDragView != null ? mDragView : mSlideableView;
         if ( dragView == null )
+        {
             return false;
+        }
         int[] viewLocation = new int[2];
         dragView.getLocationOnScreen( viewLocation );
         int[] parentLocation = new int[2];
@@ -1008,7 +1010,9 @@ public class SlidingUpPanelLayout extends ViewGroup
     public boolean collapsePanel()
     {
         if ( mSlideState == SlideState.HIDDEN || mSlideState == SlideState.COLLAPSED )
+        {
             return false;
+        }
         return collapsePanel( mSlideableView, 0 );
     }
 
@@ -1032,7 +1036,9 @@ public class SlidingUpPanelLayout extends ViewGroup
     public boolean expandPanel( float mSlideOffset )
     {
         if ( mSlideState == SlideState.EXPANDED )
+        {
             return false;
+        }
         mSlideableView.setVisibility( View.VISIBLE );
         return expandPanel( mSlideableView, 0, mSlideOffset );
     }
@@ -1070,7 +1076,9 @@ public class SlidingUpPanelLayout extends ViewGroup
     public void showPanel()
     {
         if ( mSlideState != SlideState.HIDDEN )
+        {
             return;
+        }
         mSlideableView.setVisibility( View.VISIBLE );
         requestLayout();
         smoothSlideTo( 0, 0 );
@@ -1079,12 +1087,14 @@ public class SlidingUpPanelLayout extends ViewGroup
     public void hidePanel()
     {
         if ( mSlideState == SlideState.DRAGGING || mSlideState == SlideState.HIDDEN )
+        {
             return;
+        }
         int newTop = computePanelTopPosition( 0.0f ) + ( mIsSlidingUp ? +mPanelHeight : -mPanelHeight );
         smoothSlideTo( computeSlideOffset( newTop ), 0 );
     }
 
-    @SuppressLint( "NewApi" )
+    @SuppressLint("NewApi")
     private void onPanelDragged( int newTop )
     {
         mSlideState = SlideState.DRAGGING;

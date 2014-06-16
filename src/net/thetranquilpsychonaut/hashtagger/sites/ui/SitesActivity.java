@@ -29,7 +29,6 @@ import net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterFragment;
 import net.thetranquilpsychonaut.hashtagger.utils.DefaultPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
-import net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerAdapter;
 import net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerIndicator;
 
 import java.util.ArrayList;
@@ -39,9 +38,9 @@ public class SitesActivity extends NavDrawerActivity
 {
     public static String currentHashtag = null;
 
-    ViewPager          vpSitesPager;
-    IconPagerIndicator ipiSitesPager;
-    SitesAdapter       vpSitesPagerAdapter;
+    ViewPager          sitesPager;
+    IconPagerIndicator sitesPagerIndicator;
+    SitesPagerAdapter  sitesPagerAdapter;
     SearchView         svHashtag;
 
     @Override
@@ -55,11 +54,13 @@ public class SitesActivity extends NavDrawerActivity
 
         dlNavDrawer.addView( rl, 0 );
 
-        vpSitesPager = ( ViewPager ) findViewById( R.id.vp_sites_pager );
-        ipiSitesPager = ( IconPagerIndicator ) findViewById( R.id.ipi_sites_pager );
-        vpSitesPagerAdapter = new SitesAdapter( getSupportFragmentManager(), new ArrayList<PageDescriptor>() );
-        vpSitesPager.setAdapter( vpSitesPagerAdapter );
-        vpSitesPager.setOffscreenPageLimit( 2 );
+        sitesPager = ( ViewPager ) findViewById( R.id.sites_pager );
+        sitesPagerIndicator = ( IconPagerIndicator ) findViewById( R.id.sites_pager_indicator );
+        sitesPagerAdapter = new SitesPagerAdapter( getSupportFragmentManager(), new ArrayList<PageDescriptor>() );
+        sitesPager.setAdapter( sitesPagerAdapter );
+        sitesPager.setOffscreenPageLimit( 2 );
+
+        sitesPagerIndicator.setViewPager( sitesPager );
 
         if ( !TextUtils.isEmpty( currentHashtag ) )
         {
@@ -88,50 +89,50 @@ public class SitesActivity extends NavDrawerActivity
         int facebookPosition = savedSitePositions[HashtaggerApp.FACEBOOK_VALUE];
         if ( twitterPosition == -1 )
         {
-            vpSitesPagerAdapter.remove( TwitterFragment.DESCRIPTOR );
+            sitesPagerAdapter.remove( TwitterFragment.DESCRIPTOR );
         }
         else
         {
-            if ( vpSitesPagerAdapter.contains( TwitterFragment.DESCRIPTOR ) )
+            if ( sitesPagerAdapter.contains( TwitterFragment.DESCRIPTOR ) )
             {
-                vpSitesPagerAdapter.move( TwitterFragment.DESCRIPTOR, twitterPosition );
+                sitesPagerAdapter.move( TwitterFragment.DESCRIPTOR, twitterPosition );
             }
             else
             {
-                vpSitesPagerAdapter.insert( TwitterFragment.DESCRIPTOR, twitterPosition );
+                sitesPagerAdapter.insert( TwitterFragment.DESCRIPTOR, twitterPosition );
             }
         }
         if ( gPlusPosition == -1 )
         {
-            vpSitesPagerAdapter.remove( GPlusFragment.DESCRIPTOR );
+            sitesPagerAdapter.remove( GPlusFragment.DESCRIPTOR );
         }
         else
         {
-            if ( vpSitesPagerAdapter.contains( GPlusFragment.DESCRIPTOR ) )
+            if ( sitesPagerAdapter.contains( GPlusFragment.DESCRIPTOR ) )
             {
-                vpSitesPagerAdapter.move( GPlusFragment.DESCRIPTOR, gPlusPosition );
+                sitesPagerAdapter.move( GPlusFragment.DESCRIPTOR, gPlusPosition );
             }
             else
             {
-                vpSitesPagerAdapter.insert( GPlusFragment.DESCRIPTOR, gPlusPosition );
+                sitesPagerAdapter.insert( GPlusFragment.DESCRIPTOR, gPlusPosition );
             }
         }
         if ( facebookPosition == -1 )
         {
-            vpSitesPagerAdapter.remove( FacebookFragment.DESCRIPTOR );
+            sitesPagerAdapter.remove( FacebookFragment.DESCRIPTOR );
         }
         else
         {
-            if ( vpSitesPagerAdapter.contains( FacebookFragment.DESCRIPTOR ) )
+            if ( sitesPagerAdapter.contains( FacebookFragment.DESCRIPTOR ) )
             {
-                vpSitesPagerAdapter.move( FacebookFragment.DESCRIPTOR, facebookPosition );
+                sitesPagerAdapter.move( FacebookFragment.DESCRIPTOR, facebookPosition );
             }
             else
             {
-                vpSitesPagerAdapter.insert( FacebookFragment.DESCRIPTOR, facebookPosition );
+                sitesPagerAdapter.insert( FacebookFragment.DESCRIPTOR, facebookPosition );
             }
         }
-        ipiSitesPager.setViewPager( vpSitesPager );
+        sitesPagerIndicator.notifyIconSetChanged();
     }
 
     private int[] getSavedSitePositions()

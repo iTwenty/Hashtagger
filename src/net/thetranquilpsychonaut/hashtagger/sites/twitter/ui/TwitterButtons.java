@@ -63,12 +63,12 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
         if ( isRetweeted )
         {
             ccbRetweet.setCompoundDrawablesWithIntrinsicBounds(
-                    getResources().getDrawable( R.drawable.twitter_retweet_on ), null, null, null );
+                    getResources().getDrawable( R.drawable.retweet_on_small ), null, null, null );
         }
         else
         {
             ccbRetweet.setCompoundDrawablesWithIntrinsicBounds(
-                    getResources().getDrawable( R.drawable.twitter_retweet ), null, null, null );
+                    getResources().getDrawable( R.drawable.retweet_small ), null, null, null );
         }
     }
 
@@ -78,12 +78,12 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
         if ( isFavorited )
         {
             ccbFavorite.setCompoundDrawablesWithIntrinsicBounds(
-                    getResources().getDrawable( R.drawable.twitter_favorite_on ), null, null, null );
+                    getResources().getDrawable( R.drawable.favorite_on_small ), null, null, null );
         }
         else
         {
             ccbFavorite.setCompoundDrawablesWithIntrinsicBounds(
-                    getResources().getDrawable( R.drawable.twitter_favorite ), null, null, null );
+                    getResources().getDrawable( R.drawable.favorite_small ), null, null, null );
         }
     }
 

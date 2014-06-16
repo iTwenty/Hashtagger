@@ -12,7 +12,7 @@ public class SearchResult implements Serializable
 {
     private List<Status> statuses;
 
-    @SerializedName( "search_metadata" )
+    @SerializedName("search_metadata")
     private SearchMetadata searchMetadata;
 
     public List<Status> getStatuses()

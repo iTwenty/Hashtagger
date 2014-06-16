@@ -3,13 +3,11 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -20,7 +18,6 @@ import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Commen
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.From;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesActionsFragment;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerAdapter;
 import net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerIndicator;
@@ -149,8 +146,10 @@ public class FacebookActionsFragment extends SitesActionsFragment implements Ada
         {
             switch ( position )
             {
-                case 0: return R.drawable.facebook_like;
-                case 1: return R.drawable.facebook_comment;
+                case 0:
+                    return R.drawable.facebook_like;
+                case 1:
+                    return R.drawable.comment;
             }
             return -1;
         }
