@@ -62,6 +62,6 @@ public abstract class SitesListRow extends RelativeLayout
         {
             return false;
         }
-        return sitesButtons.isVisible;
+        return sitesButtons.mIsVisible;
     }
 }
