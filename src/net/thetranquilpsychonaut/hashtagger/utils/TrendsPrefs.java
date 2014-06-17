@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by itwenty on 6/4/14.
  */
-public class TrendsPrefs
+public final class TrendsPrefs
 {
     public static final String TRENDS_PREFS                   = "trends_prefs";
     public static final String LOCAL_TRENDS_KEY               = "local_trends";

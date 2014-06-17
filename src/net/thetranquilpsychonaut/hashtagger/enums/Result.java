@@ -5,7 +5,7 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 /**
  * Created by itwenty on 3/28/14.
  */
-public class Result
+public final class Result
 {
     public static final int    SUCCESS       = 0;
     public static final int    FAILURE       = 1;
