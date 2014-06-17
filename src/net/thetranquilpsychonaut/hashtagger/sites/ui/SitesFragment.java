@@ -630,7 +630,7 @@ public abstract class SitesFragment extends Fragment implements
         else
         {
             viewHolder.sitesEmptyView.setText(
-                    String.format( "No results found for %s. Try again?", getEnteredHashtag() ) );
+                    String.format( "No results found for %s.\nTry again?", getEnteredHashtag() ) );
         }
         sitesListAdapter.notifyDataSetChanged();
         postNextTimedSearch();
