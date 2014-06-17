@@ -146,8 +146,10 @@ public class FacebookActionsFragment extends SitesActionsFragment implements Ada
         {
             switch ( position )
             {
-                case 0: return R.drawable.facebook_like;
-                case 1: return R.drawable.comment;
+                case 0:
+                    return R.drawable.facebook_like;
+                case 1:
+                    return R.drawable.comment;
             }
             return -1;
         }
@@ -175,8 +177,10 @@ public class FacebookActionsFragment extends SitesActionsFragment implements Ada
         {
             switch ( position )
             {
-                case 0: return "Likes";
-                case 1: return "Comments";
+                case 0:
+                    return "Likes";
+                case 1:
+                    return "Comments";
             }
             return null;
         }
@@ -186,8 +190,10 @@ public class FacebookActionsFragment extends SitesActionsFragment implements Ada
         {
             switch ( position )
             {
-                case 0: return initLikes( container );
-                case 1: return initComments( container );
+                case 0:
+                    return initLikes( container );
+                case 1:
+                    return initComments( container );
             }
             return null;
         }

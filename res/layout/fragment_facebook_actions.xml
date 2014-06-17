@@ -3,7 +3,9 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/card"
+    android:padding="@dimen/card_padding">
 
     <net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerIndicator
         android:id="@+id/facebook_actions_pager_indicator"
@@ -14,8 +16,6 @@
         android:id="@+id/facebook_actions_pager"
         android:layout_below="@id/facebook_actions_pager_indicator"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/card_padding"
-        android:background="@drawable/card"/>
+        android:layout_height="match_parent"/>
 
 </RelativeLayout>

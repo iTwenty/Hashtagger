@@ -16,10 +16,16 @@ import net.thetranquilpsychonaut.hashtagger.utils.Helper;
  */
 public class IconPagerIndicator extends LinearLayout implements ViewPager.OnPageChangeListener, View.OnClickListener
 {
+    public static interface IconClickListener
+    {
+        public void onIconClicked( int position );
+    }
+
     private static final int DEFAULT_PADDING = Helper.convertPxToDp( 5 );
 
-    private ViewPager        mViewPager;
-    private IconPagerAdapter mAdapter;
+    private ViewPager         mViewPager;
+    private IconPagerAdapter  mAdapter;
+    private IconClickListener listener;
 
     public IconPagerIndicator( Context context )
     {
@@ -143,9 +149,24 @@ public class IconPagerIndicator extends LinearLayout implements ViewPager.OnPage
         }
     }
 
+    public void setIconClickListener( IconClickListener listener )
+    {
+        this.listener = listener;
+    }
+
+    public void removeIconClickListener()
+    {
+        this.listener = null;
+    }
+
     @Override
     public void onClick( View v )
     {
-        mViewPager.setCurrentItem( indexOfChild( v ) );
+        int clickedPosition = indexOfChild( v );
+        mViewPager.setCurrentItem( clickedPosition );
+        if ( null != listener )
+        {
+            listener.onIconClicked( clickedPosition );
+        }
     }
 }

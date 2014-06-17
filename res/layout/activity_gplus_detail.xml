@@ -1,55 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<net.thetranquilpsychonaut.hashtagger.widgets.SlidingUpPanelLayout
-    android:id="@+id/gplus_slider"
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/net.thetranquilpsychonaut.hashtagger"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:shadowHeight="0dp"
-    android:gravity="bottom">
+    android:fillViewport="true"
+    android:paddingBottom="@dimen/layout_padding">
 
-    <ScrollView
+    <RelativeLayout
+        android:id="@+id/rl_root"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:paddingBottom="@dimen/layout_padding">
+        android:layout_height="wrap_content"
+        android:background="@drawable/card">
 
-        <RelativeLayout
-            android:id="@+id/rl_root"
+        <net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusHeader
+            android:id="@+id/gplus_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView
+            android:id="@+id/tv_activity_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/card">
+            android:layout_below="@id/gplus_header"
+            style="@style/MainMessage_Detail"/>
 
-            <net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusHeader
-                android:id="@+id/gplus_header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+        <ViewStub
+            android:id="@+id/gplus_view_stub"
+            android:layout_below="@id/tv_activity_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inflatedId="@+id/gplus_attachment"
+            android:layout_centerHorizontal="true"/>
 
-            <net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView
-                android:id="@+id/tv_activity_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/gplus_header"
-                style="@style/MainMessage_Detail"/>
+    </RelativeLayout>
 
-            <ViewStub
-                android:id="@+id/gplus_view_stub"
-                android:layout_below="@id/tv_activity_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inflatedId="@+id/gplus_attachment"
-                android:layout_centerHorizontal="true"/>
-
-        </RelativeLayout>
-
-    </ScrollView>
-
-    <FrameLayout
-        android:id="@+id/gplus_actions_fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="@dimen/layout_padding"
-        android:background="@android:color/transparent"/>
-
-</net.thetranquilpsychonaut.hashtagger.widgets.SlidingUpPanelLayout>
+</ScrollView>

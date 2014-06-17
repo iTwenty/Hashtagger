@@ -10,8 +10,9 @@ import android.widget.FrameLayout;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.events.FacebookActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.BaseActivity;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesDetailActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
@@ -21,26 +22,25 @@ import net.thetranquilpsychonaut.hashtagger.widgets.VideoThumbnail;
 /**
  * Created by itwenty on 5/18/14.
  */
-public class FacebookDetailActivity extends BaseActivity
+public class FacebookDetailActivity extends SitesDetailActivity
 {
     public static final String POST_KEY = "post";
 
-    private FacebookHeader    facebookHeader;
-    private LinkifiedTextView tvPostText;
-    private Post              post;
-    private int               postType;
+    private FacebookHeader          facebookHeader;
+    private LinkifiedTextView       tvPostText;
+    private FacebookActionsFragment facebookActionsFragment;
+    private Post                    post;
+    private int                     postType;
+    private ViewStub                viewStub;
 
-    private ViewStub       viewStub;
-    private VideoThumbnail videoThumbnail;
 
     @Override
-    protected void onCreate( Bundle savedInstanceState )
+    protected View initMainView( Bundle savedInstanceState )
     {
-        super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_facebook_detail );
-        facebookHeader = ( FacebookHeader ) findViewById( R.id.facebook_header );
-        tvPostText = ( LinkifiedTextView ) findViewById( R.id.tv_post_text );
-        viewStub = ( ViewStub ) findViewById( R.id.facebook_view_stub );
+        View v = getLayoutInflater().inflate( R.layout.activity_facebook_detail, null );
+        facebookHeader = ( FacebookHeader ) v.findViewById( R.id.facebook_header );
+        tvPostText = ( LinkifiedTextView ) v.findViewById( R.id.tv_post_text );
+        viewStub = ( ViewStub ) v.findViewById( R.id.facebook_view_stub );
         if ( null == getIntent() )
         {
             finish();
@@ -57,13 +57,32 @@ public class FacebookDetailActivity extends BaseActivity
         {
             showMedia( savedInstanceState );
         }
+        if ( null == getSupportFragmentManager().findFragmentByTag( FacebookActionsFragment.TAG ) )
+        {
+            facebookActionsFragment = FacebookActionsFragment.newInstance( post, FacebookActionClickedEvent.ACTION_LIKE );
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add( getSlidingView().getId(), facebookActionsFragment, FacebookActionsFragment.TAG )
+                    .commit();
+        }
+        else
+        {
+            facebookActionsFragment = ( FacebookActionsFragment ) getSupportFragmentManager().findFragmentByTag( FacebookActionsFragment.TAG );
+        }
+        return v;
+    }
+
+    @Override
+    protected View getDragView()
+    {
+        return facebookActionsFragment.getViewPagerIndicator();
     }
 
     private void showMedia( Bundle savedInstancState )
     {
         viewStub.setLayoutResource( R.layout.facebook_detail_activity_type_video );
         FrameLayout temp = ( FrameLayout ) viewStub.inflate();
-        videoThumbnail = ( VideoThumbnail ) temp.getChildAt( 0 );
+        final VideoThumbnail videoThumbnail = ( VideoThumbnail ) temp.getChildAt( 0 );
         videoThumbnail.setVisibility( View.GONE );
         final String imageUrl = UrlModifier.getFacebookLargePhotoUrl( post.getPicture() );
         Picasso.with( this )
