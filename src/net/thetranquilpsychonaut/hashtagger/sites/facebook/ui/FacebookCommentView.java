@@ -21,12 +21,12 @@ public class FacebookCommentView extends RelativeLayout
 
     public FacebookCommentView( Context context )
     {
-        super( context );
+        this( context, null, 0 );
     }
 
     public FacebookCommentView( Context context, AttributeSet attrs )
     {
-        super( context, attrs );
+        this( context, attrs, 0 );
     }
 
     public FacebookCommentView( Context context, AttributeSet attrs, int defStyle )

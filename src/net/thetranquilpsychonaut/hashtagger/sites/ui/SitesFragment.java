@@ -177,7 +177,6 @@ public abstract class SitesFragment extends Fragment implements
         initSitesEmptyView( viewReady );
         initNewResultsBar( viewReady );
         initResultsListView( viewReady );
-        initSitesActionsFragmentContainer( viewReady );
         return viewReady;
     }
 
@@ -306,11 +305,6 @@ public abstract class SitesFragment extends Fragment implements
         viewHolder.lvResultsList.setOnItemClickListener( this );
         viewHolder.lvResultsList.setOnItemLongClickListener( this );
         viewHolder.lvResultsList.setOnScrollListener( viewHolder.newResultsBar );
-    }
-
-    private void initSitesActionsFragmentContainer( View viewReady )
-    {
-        viewHolder.sitesActionsFragmentContainer = ( FrameLayout ) viewReady.findViewById( R.id.sites_actions_fragment_container );
     }
 
     private View initViewLoading( LayoutInflater inflater )
@@ -851,7 +845,6 @@ public abstract class SitesFragment extends Fragment implements
         public SitesFooterView      sitesFooterView;
         public MySwipeRefreshLayout srlReady;
         public NewResultsBar        newResultsBar;
-        public FrameLayout          sitesActionsFragmentContainer;
         public ProgressBar          pgbrLoadingResults;
         public Button               btnLogin;
     }
