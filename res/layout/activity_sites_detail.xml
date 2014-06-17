@@ -7,7 +7,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:shadowHeight="0dp"
-    app:panelHeight="72dp"
     android:gravity="bottom">
 
     <!--Main view inserted here by subclasses-->

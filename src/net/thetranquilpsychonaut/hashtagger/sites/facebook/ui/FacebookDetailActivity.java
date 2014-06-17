@@ -12,7 +12,7 @@ import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.events.FacebookActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesDetailActivity;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SlidingActionsActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
@@ -22,7 +22,7 @@ import net.thetranquilpsychonaut.hashtagger.widgets.VideoThumbnail;
 /**
  * Created by itwenty on 5/18/14.
  */
-public class FacebookDetailActivity extends SitesDetailActivity
+public class FacebookDetailActivity extends SlidingActionsActivity
 {
     public static final String POST_KEY = "post";
 
@@ -62,7 +62,7 @@ public class FacebookDetailActivity extends SitesDetailActivity
             facebookActionsFragment = FacebookActionsFragment.newInstance( post, FacebookActionClickedEvent.ACTION_LIKE );
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add( getSlidingView().getId(), facebookActionsFragment, FacebookActionsFragment.TAG )
+                    .add( getSlidingViewContainer().getId(), facebookActionsFragment, FacebookActionsFragment.TAG )
                     .commit();
         }
         else

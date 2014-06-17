@@ -13,7 +13,7 @@ import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.events.GPlusActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Thumbnail;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesDetailActivity;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SlidingActionsActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumThumbnailsFragment;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Created by itwenty on 5/16/14.
  */
-public class GPlusDetailActivity extends SitesDetailActivity
+public class GPlusDetailActivity extends SlidingActionsActivity
 {
     public static final String ACTIVITY_KEY = "activity";
     private LinkifiedTextView    tvActivityText;
@@ -73,7 +73,7 @@ public class GPlusDetailActivity extends SitesDetailActivity
             gPlusActionsFragment = GPlusActionsFragment.newInstance( activity, GPlusActionClickedEvent.ACTION_PLUS_ONE );
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add( getSlidingView().getId(), gPlusActionsFragment, GPlusActionsFragment.TAG )
+                    .add( getSlidingViewContainer().getId(), gPlusActionsFragment, GPlusActionsFragment.TAG )
                     .commit();
         }
         else

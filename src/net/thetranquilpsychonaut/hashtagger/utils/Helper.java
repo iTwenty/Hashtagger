@@ -45,8 +45,7 @@ public final class Helper
                 time,
                 DateUtils.SECOND_IN_MILLIS,
                 DateUtils.WEEK_IN_MILLIS,
-                DateUtils.FORMAT_ABBREV_ALL )
-                .toString();
+                DateUtils.FORMAT_ABBREV_ALL );
     }
 
     public static int convertPxToDp( int px )

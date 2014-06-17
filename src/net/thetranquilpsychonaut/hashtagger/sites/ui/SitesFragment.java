@@ -100,6 +100,7 @@ public abstract class SitesFragment extends Fragment implements
     public void onStart()
     {
         super.onStart();
+        Helper.debug( "SitesFragment onStart" );
         sitesSearchHandler.registerReceiver();
         HashtaggerApp.bus.register( this );
         if ( !sitesSearchHandler.isSearchRunning() )
@@ -109,7 +110,6 @@ public abstract class SitesFragment extends Fragment implements
                 showView( READY );
                 results.clear();
                 resultTypes.clear();
-                sitesListAdapter.notifyDataSetChanged();
                 showClickHashtagIfAlreadyEntered();
             }
             if ( viewHolder.srlReady.isRefreshing() )
@@ -121,6 +121,7 @@ public abstract class SitesFragment extends Fragment implements
                 viewHolder.sitesFooterView.showView( SitesFooterView.NORMAL );
             }
         }
+        sitesListAdapter.notifyDataSetChanged();
         if ( !TextUtils.isEmpty( getEnteredHashtag() ) && !results.isEmpty() )
         {
             postNextTimedSearch();
@@ -140,6 +141,7 @@ public abstract class SitesFragment extends Fragment implements
     public void onStop()
     {
         super.onStop();
+        Helper.debug( "SitesFragment onStop" );
         timedSearchHandler.removeCallbacks( timedSearchRunner );
         sitesSearchHandler.unregisterReceiver();
         HashtaggerApp.bus.unregister( this );
