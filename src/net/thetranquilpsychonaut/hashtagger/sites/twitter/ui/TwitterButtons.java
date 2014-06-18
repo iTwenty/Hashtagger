@@ -18,7 +18,6 @@ import net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton;
  */
 public class TwitterButtons extends SitesButtons implements View.OnClickListener
 {
-    public static int pos = -1;
     private CenterContentButton ccbReply;
     private CenterContentButton ccbRetweet;
     private CenterContentButton ccbFavorite;
@@ -118,13 +117,8 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
         }
         if ( v.equals( ccbViewDetails ) )
         {
-            doViewDetails();
+            TwitterDetailActivity.createAndStartActivity( status, getContext() );
         }
-    }
-
-    private void doViewDetails()
-    {
-        TwitterDetailActivity.createAndStartActivity( status, getContext() );
     }
 
     @Override

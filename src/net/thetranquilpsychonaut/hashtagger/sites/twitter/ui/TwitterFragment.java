@@ -182,7 +182,7 @@ public class TwitterFragment extends SitesFragment implements TwitterActionsPerf
     protected String getResultText( Object result )
     {
         Status status = ( Status ) result;
-        return status.isRetweeted() ? status.getRetweetedStatus().getText() : status.getText();
+        return status.isRetweet() ? status.getRetweetedStatus().getText() : status.getText();
     }
 
     @Override
