@@ -22,6 +22,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     CheckBoxPreference cbpFacebook;
     CheckBoxPreference cbpAutoUpdate;
     Preference         prefClearSearch;
+    Preference         prefAbout;
 
     @Override
     public void onCreate( Bundle savedInstanceState )
@@ -34,6 +35,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         cbpFacebook = ( CheckBoxPreference ) findPreference( DefaultPrefs.FACEBOOK_SITE_KEY );
         cbpAutoUpdate = ( CheckBoxPreference ) findPreference( DefaultPrefs.AUTO_UPDATE_KEY );
         prefClearSearch = findPreference( DefaultPrefs.CLEAR_SEARCH_KEY );
+        prefAbout = findPreference( DefaultPrefs.ABOUT_KEY );
 
         cbpTwitter.setSummary( AccountPrefs.areTwitterDetailsPresent() ?
                 "Logged in as : " + AccountPrefs.getTwitterUserName() :
@@ -52,6 +54,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         cbpFacebook.setOnPreferenceChangeListener( this );
         cbpAutoUpdate.setOnPreferenceChangeListener( this );
         prefClearSearch.setOnPreferenceClickListener( this );
+        prefAbout.setOnPreferenceClickListener( this );
     }
 
     @Override
@@ -77,6 +80,13 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                         }
                     } )
                     .show();
+        }
+        else if ( preference.equals( prefAbout ) )
+        {
+            getActivity().getFragmentManager()
+                    .beginTransaction()
+                    .add( AboutDialog.newInstance(), AboutDialog.TAG )
+                    .commit();
         }
         return true;
     }

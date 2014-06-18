@@ -14,6 +14,7 @@ public final class DefaultPrefs
     public static final String FACEBOOK_SITE_KEY = "site_facebook";
     public static final String AUTO_UPDATE_KEY   = "auto_update";
     public static final String CLEAR_SEARCH_KEY  = "clear_search";
+    public static final String ABOUT_KEY         = "about";
 
     private static final SharedPreferences getDefaultPrefs()
     {

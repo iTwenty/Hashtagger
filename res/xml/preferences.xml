@@ -43,4 +43,9 @@
         android:key="clear_search"
         android:icon="@drawable/ic_action_discard"/>
 
+    <Preference
+        android:title="About"
+        android:key="about"
+        android:icon="@drawable/ic_action_about"/>
+
 </PreferenceScreen>
