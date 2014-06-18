@@ -69,4 +69,6 @@
     <string name="str_retweet_confirm">Retweet this to your followers?</string>
     <string name="str_connect_to_network">Connect to a network first</string>
     <string name="str_search_for_hashtag">Search for %s</string>
+    <string name="str_trends_not_available">Trends not available</string>
+    <string name="str_trends_not_logged_in">Log in to Twitter to see trending topics</string>
 </resources>
