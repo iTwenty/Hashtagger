@@ -21,7 +21,6 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterTrendsEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterTrendsService;
-import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
 import java.util.ArrayList;
 import java.util.List;

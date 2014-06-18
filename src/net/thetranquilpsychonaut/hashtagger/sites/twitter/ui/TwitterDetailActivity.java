@@ -1,5 +1,7 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewStub;
@@ -34,10 +36,22 @@ public class TwitterDetailActivity extends BaseActivity implements View.OnClickL
     private ImageButton             imgbReply;
     private ImageButton             imgbRetweet;
     private ImageButton             imgbFavorite;
-    private Status                  status;
     private TwitterActionsPerformer twitterActionsPerformer;
     private int                     statusType;
 
+    // Passing status via Intent.putExtra() seems to pass a new copy of the status
+    // rather than reference to same status. So we pass the status to this activity
+    // statically and make sure to null it out in onStop(). We still need to preserve
+    // the status across screen rotation, so we persist it in the bundle in
+    // onSaveInstanceState() which is guaranteed to be called before onStop().
+    private static Status status;
+
+    public static void createAndStartActivity( Status status, Context context )
+    {
+        TwitterDetailActivity.status = status;
+        Intent i = new Intent( context, TwitterDetailActivity.class );
+        context.startActivity( i );
+    }
 
     @Override
     protected void onCreate( Bundle savedInstanceState )
@@ -50,11 +64,10 @@ public class TwitterDetailActivity extends BaseActivity implements View.OnClickL
         imgbReply = ( ImageButton ) findViewById( R.id.imgb_reply );
         imgbRetweet = ( ImageButton ) findViewById( R.id.imgb_retweet );
         imgbFavorite = ( ImageButton ) findViewById( R.id.imgb_favorite );
-        if ( null == getIntent() )
+        if ( null != savedInstanceState )
         {
-            finish();
+            status = ( Status ) savedInstanceState.getSerializable( STATUS_KEY );
         }
-        status = ( Status ) getIntent().getSerializableExtra( STATUS_KEY );
         if ( null == status )
         {
             finish();
@@ -129,7 +142,6 @@ public class TwitterDetailActivity extends BaseActivity implements View.OnClickL
     protected void onStart()
     {
         super.onStart();
-        Helper.debug( "TDA onStart" );
         HashtaggerApp.bus.register( this );
         twitterActionsPerformer = new TwitterActionsPerformer( getSupportFragmentManager() );
     }
@@ -138,9 +150,16 @@ public class TwitterDetailActivity extends BaseActivity implements View.OnClickL
     protected void onStop()
     {
         super.onStop();
-        Helper.debug( "TDA onStop" );
         HashtaggerApp.bus.unregister( this );
         twitterActionsPerformer = null;
+        status = null;
+    }
+
+    @Override
+    protected void onSaveInstanceState( Bundle outState )
+    {
+        super.onSaveInstanceState( outState );
+        outState.putSerializable( STATUS_KEY, status );
     }
 
     @Override
@@ -163,7 +182,6 @@ public class TwitterDetailActivity extends BaseActivity implements View.OnClickL
     @Subscribe
     public void onRetweetDone( TwitterRetweetDoneEvent event )
     {
-        this.status = event.getStatus();
         if ( event.getSuccess() )
         {
             updateActionsButtons();
@@ -178,11 +196,9 @@ public class TwitterDetailActivity extends BaseActivity implements View.OnClickL
     @Subscribe
     public void onFavoriteDone( TwitterFavoriteDoneEvent event )
     {
-        this.status = event.getStatus();
-        Helper.debug( "TDA onFavDone" );
+        Helper.debug( event.getStatus() == status ? "equal" : "unequal" );
         if ( event.getSuccess() )
         {
-            Helper.debug( String.valueOf( event.getStatus().isFavorited() ) );
             updateActionsButtons();
         }
         else
@@ -194,7 +210,6 @@ public class TwitterDetailActivity extends BaseActivity implements View.OnClickL
     @Subscribe
     public void onReplyDone( TwitterReplyDoneEvent event )
     {
-        this.status = event.getStatus();
         if ( event.getSuccess() )
         {
             Toast.makeText( this, "Replied like a champ!", Toast.LENGTH_SHORT ).show();

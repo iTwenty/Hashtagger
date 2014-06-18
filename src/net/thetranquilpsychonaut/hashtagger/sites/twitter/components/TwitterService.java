@@ -54,7 +54,7 @@ public class TwitterService extends SitesService
         SearchResult searchResult = null;
         try
         {
-            // for our initial search we dont need either max or since id.
+            // for our initial search we dont need either max or since myId.
             // Older search retrieves tweets with ids lower than the maxId
             // Newer search retrieves tweets with ids higher than the sinceId
 

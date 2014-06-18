@@ -21,7 +21,6 @@ import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragmentData;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
-import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 
 import java.util.ArrayList;
@@ -229,10 +228,8 @@ public class TwitterFragment extends SitesFragment implements TwitterActionsPerf
     @Subscribe
     public void onFavoriteDone( TwitterFavoriteDoneEvent event )
     {
-        Helper.debug( "TwitterFragment onFavDone" );
         if ( event.getSuccess() )
         {
-            Helper.debug( String.valueOf( event.getStatus().isFavorited() ) );
             sitesListAdapter.notifyDataSetChanged();
         }
         else

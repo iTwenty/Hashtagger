@@ -87,7 +87,7 @@ public final class Helper
 
     public static void showNoNetworkToast( Context context )
     {
-        Toast.makeText( context, context.getString( R.string.str_connect_to_network), Toast.LENGTH_SHORT ).show();
+        Toast.makeText( context, context.getString( R.string.str_connect_to_network ), Toast.LENGTH_SHORT ).show();
     }
 
     public static ArrayList<String> createStringArrayList( String... strings )

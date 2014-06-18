@@ -18,6 +18,7 @@ import net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton;
  */
 public class TwitterButtons extends SitesButtons implements View.OnClickListener
 {
+    public static int pos = -1;
     private CenterContentButton ccbReply;
     private CenterContentButton ccbRetweet;
     private CenterContentButton ccbFavorite;
@@ -123,9 +124,7 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
 
     private void doViewDetails()
     {
-        Intent i = new Intent( getContext(), TwitterDetailActivity.class );
-        i.putExtra( TwitterDetailActivity.STATUS_KEY, status );
-        getContext().startActivity( i );
+        TwitterDetailActivity.createAndStartActivity( status, getContext() );
     }
 
     @Override
