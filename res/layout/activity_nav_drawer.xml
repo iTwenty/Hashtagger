@@ -27,8 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            style="?android:attr/buttonBarStyle"
-            android:background="@drawable/bottom_bar_shadow"/>
+            style="?android:attr/buttonBarStyle"/>
 
     </RelativeLayout>
 
