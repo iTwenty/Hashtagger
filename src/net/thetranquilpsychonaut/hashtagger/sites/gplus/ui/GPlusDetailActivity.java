@@ -51,6 +51,7 @@ public class GPlusDetailActivity extends SlidingActionsActivity
         {
             finish();
         }
+        setTitle( activity.getActor().getDisplayName() + "'s post" );
         activityType = GPlusListAdapter.getActivityType( activity );
         gPlusHeader.showHeader( activity );
         tvActivityText.setText( activity.getObject().getLinkedText() );

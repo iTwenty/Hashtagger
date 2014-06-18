@@ -72,6 +72,7 @@ public class TwitterDetailActivity extends BaseActivity implements View.OnClickL
         {
             finish();
         }
+        setTitle( "@" + status.getUser().getScreenName() + "'s tweet" );
         this.statusType = TwitterListAdapter.getStatusType( status );
         twitterHeader.showHeader( status );
         tvStatusText.setText( status.getLinkedText() );
