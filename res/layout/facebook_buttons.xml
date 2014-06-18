@@ -26,15 +26,6 @@
         style="@style/sitesButtonStyle"/>
 
     <net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton
-        android:id="@+id/ccb_share"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:focusable="false"
-        android:drawableLeft="@drawable/share_small"
-        style="@style/sitesButtonStyle"/>
-
-    <net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton
         android:id="@+id/ccb_view_details"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

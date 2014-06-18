@@ -20,7 +20,6 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
 {
     private CenterContentButton ccbLike;
     private CenterContentButton ccbComment;
-    private CenterContentButton ccbShare;
     private CenterContentButton ccbViewDetails;
     private Post                post;
 
@@ -40,7 +39,6 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
         inflate( context, R.layout.facebook_buttons, this );
         ccbLike = ( CenterContentButton ) findViewById( R.id.ccb_like );
         ccbComment = ( CenterContentButton ) findViewById( R.id.ccb_comment );
-        ccbShare = ( CenterContentButton ) findViewById( R.id.ccb_share );
         ccbViewDetails = ( CenterContentButton ) findViewById( R.id.ccb_view_details );
     }
 
@@ -50,7 +48,6 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
         this.post = ( Post ) result;
         ccbLike.setOnClickListener( this );
         ccbComment.setOnClickListener( this );
-        ccbShare.setOnClickListener( this );
         ccbViewDetails.setOnClickListener( this );
         if ( null != post.getLikes() && !Helper.isNullOrEmpty( post.getLikes().getData() ) )
         {
@@ -68,14 +65,6 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
         {
             ccbComment.setText( "" );
         }
-        if ( null != post.getShares() && post.getShares().getCount() != 0 )
-        {
-            ccbShare.setText( String.valueOf( post.getShares().getCount() ) );
-        }
-        else
-        {
-            ccbShare.setText( "" );
-        }
     }
 
     @Override
@@ -83,7 +72,6 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
     {
         ccbLike.setOnClickListener( null );
         ccbComment.setOnClickListener( null );
-        ccbShare.setOnClickListener( null );
         ccbViewDetails.setOnClickListener( null );
     }
 
@@ -99,11 +87,6 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
         {
             // Subscriber : FacebookFragment : onFacebookActionClicked()
             HashtaggerApp.bus.post( new FacebookActionClickedEvent( post, FacebookActionClickedEvent.ACTION_COMMENT ) );
-        }
-        else if ( v.equals( ccbShare ) )
-        {
-            // Subscriber : FacebookFragment : onFacebookActionClicked()
-            HashtaggerApp.bus.post( new FacebookActionClickedEvent( post, FacebookActionClickedEvent.ACTION_SHARE ) );
         }
         else if ( v.equals( ccbViewDetails ) )
         {
