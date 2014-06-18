@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 import com.google.gson.JsonParser;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
+import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Trend;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Trends;
 
@@ -86,7 +87,7 @@ public final class Helper
 
     public static void showNoNetworkToast( Context context )
     {
-        Toast.makeText( context, "Connect to a network first", Toast.LENGTH_SHORT ).show();
+        Toast.makeText( context, context.getString( R.string.str_connect_to_network), Toast.LENGTH_SHORT ).show();
     }
 
     public static ArrayList<String> createStringArrayList( String... strings )

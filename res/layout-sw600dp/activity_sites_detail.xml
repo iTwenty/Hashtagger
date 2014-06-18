@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<net.thetranquilpsychonaut.hashtagger.widgets.SlidingUpPanelLayout
+    android:id="@+id/slider"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/net.thetranquilpsychonaut.hashtagger"
+    android:layout_width="600dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
+    app:shadowHeight="0dp"
+    android:gravity="bottom">
+
+    <!--Main view inserted here by subclasses-->
+
+    <FrameLayout
+        android:id="@+id/sliding_view"
+        android:layout_width="600dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:paddingTop="@dimen/layout_padding"
+        android:background="@android:color/transparent"/>
+
+</net.thetranquilpsychonaut.hashtagger.widgets.SlidingUpPanelLayout>

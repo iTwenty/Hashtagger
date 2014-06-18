@@ -129,7 +129,7 @@ public final class Linkifier
             PopupMenu menu = new PopupMenu( widget.getContext(), widget );
             menu.getMenuInflater().inflate( R.menu.hashtag_popup_menu, menu.getMenu() );
             MenuItem searchHashtagItem = menu.getMenu().findItem( R.id.it_search_for_hashtag );
-            searchHashtagItem.setTitle( "Search for " + this.hashtag );
+            searchHashtagItem.setTitle( String.format( widget.getResources().getString( R.string.str_search_for_hashtag ), this.hashtag ) );
             searchHashtagItem.setOnMenuItemClickListener( new MenuItem.OnMenuItemClickListener()
             {
                 @Override

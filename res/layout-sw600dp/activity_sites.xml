@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="600dp"
+    android:layout_gravity="center_horizontal"
+    android:layout_height="match_parent">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/sites_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/sites_pager_indicator"/>
+
+    <net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerIndicator
+        android:id="@id/sites_pager_indicator"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bottom_bar_shadow"
+        android:layout_centerHorizontal="true"
+        style="?android:buttonBarStyle"/>
+
+</RelativeLayout>

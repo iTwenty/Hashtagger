@@ -218,11 +218,11 @@ public class TwitterFragment extends SitesFragment implements TwitterActionsPerf
         if ( event.getSuccess() )
         {
             sitesListAdapter.notifyDataSetChanged();
-            Toast.makeText( getActivity(), "Retweeted like a champ!", Toast.LENGTH_SHORT ).show();
+            Toast.makeText( getActivity(), getResources().getString( R.string.str_retweet_success ), Toast.LENGTH_SHORT ).show();
         }
         else
         {
-            Toast.makeText( getActivity(), "Failed to retweet", Toast.LENGTH_SHORT ).show();
+            Toast.makeText( getActivity(), getResources().getString( R.string.str_retweet_failure ), Toast.LENGTH_SHORT ).show();
         }
     }
 
@@ -237,7 +237,7 @@ public class TwitterFragment extends SitesFragment implements TwitterActionsPerf
         }
         else
         {
-            Toast.makeText( getActivity(), "Failed to favorite", Toast.LENGTH_SHORT ).show();
+            Toast.makeText( getActivity(), getResources().getString( R.string.str_favorite_failure ), Toast.LENGTH_SHORT ).show();
         }
     }
 
@@ -246,11 +246,11 @@ public class TwitterFragment extends SitesFragment implements TwitterActionsPerf
     {
         if ( event.getSuccess() )
         {
-            Toast.makeText( getActivity(), "Replied like a champ!", Toast.LENGTH_SHORT ).show();
+            Toast.makeText( getActivity(), getResources().getString( R.string.str_reply_success ), Toast.LENGTH_SHORT ).show();
         }
         else
         {
-            Toast.makeText( getActivity(), "Failed to reply", Toast.LENGTH_SHORT ).show();
+            Toast.makeText( getActivity(), getResources().getString( R.string.str_reply_failure ), Toast.LENGTH_SHORT ).show();
         }
     }
 

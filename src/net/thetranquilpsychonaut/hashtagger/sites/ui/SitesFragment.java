@@ -235,7 +235,7 @@ public abstract class SitesFragment extends Fragment implements
                 }
             }
         } );
-        viewHolder.sitesEmptyView.setText( "Try the search icon above." );
+        viewHolder.sitesEmptyView.setText( getResources().getString( R.string.str_try_search_icon ) );
         viewHolder.sitesEmptyView.setImage( getPlainLogoResId() );
     }
 
@@ -367,7 +367,7 @@ public abstract class SitesFragment extends Fragment implements
     {
         if ( !TextUtils.isEmpty( getEnteredHashtag() ) )
         {
-            viewHolder.sitesEmptyView.setText( "Click to search for " + getEnteredHashtag() );
+            viewHolder.sitesEmptyView.setText( String.format( getResources().getString( R.string.str_click_to_search_hashtag ), getEnteredHashtag() ) );
         }
     }
 
@@ -397,8 +397,8 @@ public abstract class SitesFragment extends Fragment implements
         new AlertDialog.Builder( getActivity() )
                 .setIcon( getLogoResId() )
                 .setTitle( getSiteName() )
-                .setMessage( "Are you sure you want to logout?" )
-                .setPositiveButton( "Yes", new DialogInterface.OnClickListener()
+                .setMessage( getResources().getString( R.string.str_confirm_logout ) )
+                .setPositiveButton( getResources().getString( R.string.str_yes ), new DialogInterface.OnClickListener()
                 {
                     @Override
                     public void onClick( DialogInterface dialog, int which )
@@ -406,7 +406,7 @@ public abstract class SitesFragment extends Fragment implements
                         logoutUser();
                     }
                 } )
-                .setNegativeButton( "No", new DialogInterface.OnClickListener()
+                .setNegativeButton( getResources().getString( R.string.str_no ), new DialogInterface.OnClickListener()
                 {
                     @Override
                     public void onClick( DialogInterface dialog, int which )
@@ -632,7 +632,7 @@ public abstract class SitesFragment extends Fragment implements
         else
         {
             viewHolder.sitesEmptyView.setText(
-                    String.format( "No results found for %s.\nTry again?", getEnteredHashtag() ) );
+                    String.format( getResources().getString( R.string.str_no_results_found ), getEnteredHashtag() ) );
         }
         sitesListAdapter.notifyDataSetChanged();
         postNextTimedSearch();
@@ -709,7 +709,7 @@ public abstract class SitesFragment extends Fragment implements
         {
             case SearchType.INITIAL:
                 showView( READY );
-                viewHolder.sitesEmptyView.setText( "Something went wrong :( Try again?" );
+                viewHolder.sitesEmptyView.setText( getResources().getString( R.string.str_search_error ) );
                 break;
             case SearchType.OLDER:
                 viewHolder.sitesFooterView.showView( SitesFooterView.ERROR );

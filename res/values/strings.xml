@@ -54,4 +54,19 @@
     <string name="str_load_plusoners_error">Failed to load +1\'ers</string>
     <string name="str_load_resharers_error">Failed to load resharers</string>
     <string name="str_load_replies_error">Failed to load replies</string>
+    <string name="str_click_to_search_hashtag">Click to search for %s</string>
+    <string name="str_confirm_logout">Are you sure you want to logout?</string>
+    <string name="str_yes">Yes</string>
+    <string name="str_no">No</string>
+    <string name="str_no_results_found">No results found for %s\nTry again?</string>
+    <string name="str_search_error">Something went wrong :( Try again?</string>
+    <string name="str_try_search_icon">Try the search icon above.</string>
+    <string name="str_retweet_success">Retweeted like a champ!</string>
+    <string name="str_retweet_failure">Failed to retweet</string>
+    <string name="str_favorite_failure">Failed to favorite</string>
+    <string name="str_reply_success">Replied like a champ!</string>
+    <string name="str_reply_failure">Failed to reply</string>
+    <string name="str_retweet_confirm">Retweet this to your followers?</string>
+    <string name="str_connect_to_network">Connect to a network first</string>
+    <string name="str_search_for_hashtag">Search for %s</string>
 </resources>

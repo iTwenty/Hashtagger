@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterAction;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 
@@ -31,8 +32,8 @@ public class TwitterRetweetDialog extends DialogFragment
         this.status = ( Status ) getArguments().getSerializable( "status" );
         AlertDialog dialog = new AlertDialog.Builder( getActivity() )
                 .setTitle( "Retweet" )
-                .setMessage( "Retweet this to your followers?" )
-                .setPositiveButton( "Yes", new DialogInterface.OnClickListener()
+                .setMessage( getResources().getString( R.string.str_retweet_confirm ) )
+                .setPositiveButton( getResources().getString( R.string.str_yes ), new DialogInterface.OnClickListener()
                 {
                     @Override
                     public void onClick( DialogInterface dialog, int which )
@@ -40,7 +41,7 @@ public class TwitterRetweetDialog extends DialogFragment
                         doRetweet();
                     }
                 } )
-                .setNegativeButton( "No", new DialogInterface.OnClickListener()
+                .setNegativeButton( getResources().getString( R.string.str_no ), new DialogInterface.OnClickListener()
                 {
                     @Override
                     public void onClick( DialogInterface dialog, int which )
