@@ -4,12 +4,13 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
+import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 
 /**
  * Created by itwenty on 5/1/14.
@@ -49,9 +50,9 @@ public class TwitterPhotoRow extends TwitterListRow implements View.OnClickListe
     }
 
     @Override
-    protected TextView initStatusText()
+    protected LinkifiedTextView initStatusText()
     {
-        return ( TextView ) findViewById( R.id.tv_status_text );
+        return ( LinkifiedTextView ) findViewById( R.id.tv_status_text );
     }
 
     @Override
@@ -65,7 +66,7 @@ public class TwitterPhotoRow extends TwitterListRow implements View.OnClickListe
     {
         super.updateRow( result );
         Picasso.with( getContext() )
-                .load( status.getMediaEntities()[0].getMediaURL() + ":thumb" )
+                .load( status.getEntities().getMedia().get( 0 ).getMediaUrl() + ":thumb" )
                 .error( R.drawable.drawable_image_loading )
                 .fit()
                 .centerCrop()
@@ -78,7 +79,9 @@ public class TwitterPhotoRow extends TwitterListRow implements View.OnClickListe
         ViewAlbumActivity.createAndStartActivity(
                 getContext(),
                 "@" + status.getUser().getScreenName(),
-                Helper.createStringArrayList( Helper.getTwitterLargePhotoUrl( status.getMediaEntities()[0].getMediaURL() ) ),
+                Helper.createStringArrayList(
+                        UrlModifier.getTwitterLargePhotoUrl(
+                                status.getEntities().getMedia().get( 0 ).getMediaUrl() ) ),
                 0 );
     }
 }

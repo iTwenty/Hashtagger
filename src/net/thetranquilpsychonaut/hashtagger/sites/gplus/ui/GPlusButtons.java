@@ -5,11 +5,12 @@ import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Toast;
-import com.google.api.services.plus.model.Activity;
+import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.GPlusData;
+import net.thetranquilpsychonaut.hashtagger.events.GPlusActionClickedEvent;
+import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
-import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 import net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton;
 
 /**
@@ -51,14 +52,29 @@ public class GPlusButtons extends SitesButtons implements View.OnClickListener
         ccbComment.setOnClickListener( this );
         ccbShare.setOnClickListener( this );
         ccbViewDetails.setOnClickListener( this );
-        ccbPlusOne.setText( String.valueOf( activity.getObject().getPlusoners().getTotalItems() == 0 ? 1 : activity.getObject().getPlusoners().getTotalItems() ) );
+        if ( activity.getObject().getPlusoners().getTotalItems() != 0 )
+        {
+            ccbPlusOne.setText( String.valueOf( activity.getObject().getPlusoners().getTotalItems() ) );
+        }
+        else
+        {
+            ccbPlusOne.setText( "" );
+        }
         if ( activity.getObject().getReplies().getTotalItems() != 0 )
         {
             ccbComment.setText( String.valueOf( activity.getObject().getReplies().getTotalItems() ) );
         }
+        else
+        {
+            ccbComment.setText( "" );
+        }
         if ( activity.getObject().getResharers().getTotalItems() != 0 )
         {
             ccbShare.setText( String.valueOf( activity.getObject().getResharers().getTotalItems() ) );
+        }
+        else
+        {
+            ccbShare.setText( "" );
         }
     }
 
@@ -81,38 +97,26 @@ public class GPlusButtons extends SitesButtons implements View.OnClickListener
         }
         else if ( v.equals( ccbPlusOne ) )
         {
-            doPlusOne();
+            // Subscriber : GPlusFragment : onGPlusActionClicked()
+            HashtaggerApp.bus.post( new GPlusActionClickedEvent( activity, GPlusActionClickedEvent.ACTION_PLUS_ONE ) );
         }
         else if ( v.equals( ccbComment ) )
         {
-            doComment();
+            // Subscriber : GPlusFragment : onGPlusActionClicked()
+            HashtaggerApp.bus.post( new GPlusActionClickedEvent( activity, GPlusActionClickedEvent.ACTION_REPLY ) );
         }
         else if ( v.equals( ccbShare ) )
         {
-            doShare();
+            // Subscriber : GPlusFragment : onGPlusActionClicked()
+            HashtaggerApp.bus.post( new GPlusActionClickedEvent( activity, GPlusActionClickedEvent.ACTION_RESHARE ) );
         }
     }
 
     private void doViewDetails()
     {
         Intent i = new Intent( getContext(), GPlusDetailActivity.class );
-        GPlusData.ActivityData.pushActivity( this.activity );
+        i.putExtra( GPlusDetailActivity.ACTIVITY_KEY, activity );
         getContext().startActivity( i );
-    }
-
-    private void doShare()
-    {
-        Toast.makeText( getContext(), "Sorry Google+ shares are not implemented yet", Toast.LENGTH_SHORT ).show();
-    }
-
-    private void doComment()
-    {
-        Toast.makeText( getContext(), "Sorry Google+ comments are not implemented yet", Toast.LENGTH_SHORT ).show();
-    }
-
-    private void doPlusOne()
-    {
-        Toast.makeText( getContext(), "Sorry +1'ing is not implemented yet", Toast.LENGTH_SHORT ).show();
     }
 
     @Override
@@ -120,7 +124,7 @@ public class GPlusButtons extends SitesButtons implements View.OnClickListener
     {
         Toast.makeText( getContext(), "Sorry, that feature is not implemented yet", Toast.LENGTH_SHORT ).show();
         Intent i = new Intent( Intent.ACTION_VIEW );
-        i.setData( Helper.getGPlusActivityUrl( activity ) );
+        i.setData( UrlModifier.getGPlusActivityUrl( activity ) );
         getContext().startActivity( i );
     }
 }

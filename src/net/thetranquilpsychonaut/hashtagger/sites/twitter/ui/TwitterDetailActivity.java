@@ -1,71 +1,118 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.ViewStub;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Toast;
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesDetailActivity;
+import net.thetranquilpsychonaut.hashtagger.events.TwitterFavoriteDoneEvent;
+import net.thetranquilpsychonaut.hashtagger.events.TwitterReplyDoneEvent;
+import net.thetranquilpsychonaut.hashtagger.events.TwitterRetweetDoneEvent;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterActionsPerformer;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.BaseActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
-import twitter4j.Status;
-
-import java.util.ArrayList;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
+import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 
 /**
  * Created by itwenty on 5/10/14.
  */
-public class TwitterDetailActivity extends SitesDetailActivity implements View.OnClickListener
+public class TwitterDetailActivity extends BaseActivity implements View.OnClickListener, TwitterActionsPerformer.OnTwitterActionDoneListener
 {
     public static final String STATUS_KEY = "status";
-    private TextView      tvStatusText;
-    private TwitterHeader twitterHeader;
-    private Status        status;
-    private int           statusType;
+    private LinkifiedTextView       tvStatusText;
+    private TwitterHeader           twitterHeader;
+    private ViewStub                viewStub;
+    private ImageButton             imgbReply;
+    private ImageButton             imgbRetweet;
+    private ImageButton             imgbFavorite;
+    private TwitterActionsPerformer twitterActionsPerformer;
+    private int                     statusType;
 
-    private ViewStub  viewStub;
-    private ImageView imgvPhoto;
+    // Passing status via Intent.putExtra() seems to pass a new copy of the status
+    // rather than reference to same status. So we pass the status to this activity
+    // statically and make sure to null it out in onStop(). We still need to preserve
+    // the status across screen rotation, so we persist it in the bundle in
+    // onSaveInstanceState() which is guaranteed to be called before onStop().
+    private static Status status;
+
+    public static void createAndStartActivity( Status status, Context context )
+    {
+        TwitterDetailActivity.status = status;
+        Intent i = new Intent( context, TwitterDetailActivity.class );
+        context.startActivity( i );
+    }
 
     @Override
     protected void onCreate( Bundle savedInstanceState )
     {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_twitter_detail );
-        setTitle( "Tweet" );
-        tvStatusText = ( TextView ) findViewById( R.id.tv_status_text );
+        tvStatusText = ( LinkifiedTextView ) findViewById( R.id.tv_status_text );
         twitterHeader = ( TwitterHeader ) findViewById( R.id.twitter_header );
         viewStub = ( ViewStub ) findViewById( R.id.twitter_view_stub );
-        if ( null == getIntent() )
+        imgbReply = ( ImageButton ) findViewById( R.id.imgb_reply );
+        imgbRetweet = ( ImageButton ) findViewById( R.id.imgb_retweet );
+        imgbFavorite = ( ImageButton ) findViewById( R.id.imgb_favorite );
+        if ( null != savedInstanceState )
         {
-            finish();
+            status = ( Status ) savedInstanceState.getSerializable( STATUS_KEY );
         }
-        status = ( Status ) getIntent().getSerializableExtra( STATUS_KEY );
         if ( null == status )
         {
             finish();
         }
+        setTitle( "@" + status.getUser().getScreenName() + "'s tweet" );
         this.statusType = TwitterListAdapter.getStatusType( status );
         twitterHeader.showHeader( status );
-        String statusText = status.isRetweet() ? status.getRetweetedStatus().getText() : status.getText();
-        tvStatusText.setText( Html.fromHtml( Helper.getLinkedStatusText( statusText ) ) );
-        tvStatusText.setMovementMethod( LinkMovementMethod.getInstance() );
+        tvStatusText.setText( status.getLinkedText() );
+        imgbReply.setOnClickListener( this );
+        imgbRetweet.setOnClickListener( this );
+        imgbFavorite.setOnClickListener( this );
+        updateActionsButtons();
         if ( statusType == TwitterListAdapter.STATUS_TYPE_PHOTO )
         {
             showPhoto( savedInstanceState );
         }
     }
 
+    private void updateActionsButtons()
+    {
+        if ( status.isRetweeted() )
+        {
+            imgbRetweet.setImageResource( R.drawable.retweet_on );
+        }
+        else
+        {
+            imgbRetweet.setImageResource( R.drawable.retweet );
+        }
+        if ( status.isFavorited() )
+        {
+            imgbFavorite.setImageResource( R.drawable.favorite_on );
+        }
+        else
+        {
+            imgbFavorite.setImageResource( R.drawable.favorite );
+        }
+    }
+
     private void showPhoto( Bundle savedInstanceState )
     {
         viewStub.setLayoutResource( R.layout.twitter_detail_activity_type_photo );
-        imgvPhoto = ( ImageView ) viewStub.inflate();
+        final ImageView imgvPhoto = ( ImageView ) viewStub.inflate();
         imgvPhoto.setVisibility( View.GONE );
-        final String imageUrl = Helper.getTwitterLargePhotoUrl( status.getMediaEntities()[0].getMediaURL() );
+        final String imageUrl = UrlModifier.getTwitterLargePhotoUrl( status.getEntities().getMedia().get( 0 ).getMediaUrl() );
+        Helper.debug( imageUrl );
         Picasso.with( this )
                 .load( imageUrl )
                 .into( imgvPhoto, new Callback()
@@ -93,16 +140,84 @@ public class TwitterDetailActivity extends SitesDetailActivity implements View.O
     }
 
     @Override
-    protected TextView getLinkedTextView()
+    protected void onStart()
     {
-        return tvStatusText;
+        super.onStart();
+        HashtaggerApp.bus.register( this );
+        twitterActionsPerformer = new TwitterActionsPerformer( getSupportFragmentManager() );
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        HashtaggerApp.bus.unregister( this );
+        twitterActionsPerformer = null;
+        status = null;
+    }
+
+    @Override
+    protected void onSaveInstanceState( Bundle outState )
+    {
+        super.onSaveInstanceState( outState );
+        outState.putSerializable( STATUS_KEY, status );
     }
 
     @Override
     public void onClick( View v )
     {
-        ArrayList<String> imageUrls = new ArrayList<String>( 1 );
-        imageUrls.add( Helper.getTwitterLargePhotoUrl( status.getMediaEntities()[0].getMediaURL() ) );
-        ViewAlbumActivity.createAndStartActivity( this, "@" + status.getUser().getScreenName(), imageUrls, 0 );
+        if ( v.equals( imgbReply ) )
+        {
+            twitterActionsPerformer.doReply( status );
+        }
+        if ( v.equals( imgbRetweet ) )
+        {
+            twitterActionsPerformer.doRetweet( status );
+        }
+        if ( v.equals( imgbFavorite ) )
+        {
+            twitterActionsPerformer.doFavorite( status );
+        }
+    }
+
+    @Subscribe
+    public void onRetweetDone( TwitterRetweetDoneEvent event )
+    {
+        if ( event.getSuccess() )
+        {
+            updateActionsButtons();
+            Toast.makeText( this, "Retweeted like a champ!", Toast.LENGTH_SHORT ).show();
+        }
+        else
+        {
+            Toast.makeText( this, "Failed to retweet", Toast.LENGTH_SHORT ).show();
+        }
+    }
+
+    @Subscribe
+    public void onFavoriteDone( TwitterFavoriteDoneEvent event )
+    {
+        Helper.debug( event.getStatus() == status ? "equal" : "unequal" );
+        if ( event.getSuccess() )
+        {
+            updateActionsButtons();
+        }
+        else
+        {
+            Toast.makeText( this, "Failed to favorite", Toast.LENGTH_SHORT ).show();
+        }
+    }
+
+    @Subscribe
+    public void onReplyDone( TwitterReplyDoneEvent event )
+    {
+        if ( event.getSuccess() )
+        {
+            Toast.makeText( this, "Replied like a champ!", Toast.LENGTH_SHORT ).show();
+        }
+        else
+        {
+            Toast.makeText( this, "Failed to reply", Toast.LENGTH_SHORT ).show();
+        }
     }
 }

@@ -5,29 +5,22 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import facebook4j.Paging;
-import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
+import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.SearchResult;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.Linkifier;
 
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created by itwenty on 4/4/14.
  */
 public class FacebookSearchHandler extends SitesSearchHandler
 {
-
-    /*
-    * Facebook post search results are navigated using pages.
-    */
-    static Paging<Post> newestPage;
-    static Paging<Post> oldestPage;
-
-
     public FacebookSearchHandler( SitesSearchListener listener )
     {
         super( listener );
@@ -74,21 +67,27 @@ public class FacebookSearchHandler extends SitesSearchHandler
                     } );
                     return;
                 }
-                final List<Post> results = ( List<Post> ) intent.getSerializableExtra( Result.RESULT_DATA );
-                Iterator<Post> iterator = results.iterator();
+                final SearchResult searchResult = ( SearchResult ) intent.getSerializableExtra( Result.RESULT_DATA );
+                Iterator<Post> iterator = searchResult.getData().iterator();
                 while ( iterator.hasNext() )
                 {
-                    if ( TextUtils.isEmpty( iterator.next().getMessage() ) )
+                    Post post = iterator.next();
+                    if ( TextUtils.isEmpty( post.getMessage() ) )
                     {
+                        Helper.debug( "Facebook post with empty message removed. ID is : " + post.getId() );
                         iterator.remove();
                     }
+                }
+                for ( Post post : searchResult.getData() )
+                {
+                    post.setLinkedText( Linkifier.getLinkedFacebookText( post.getMessage() ) );
                 }
                 main.post( new Runnable()
                 {
                     @Override
                     public void run()
                     {
-                        sitesSearchListener.afterSearching( searchType, results );
+                        sitesSearchListener.afterSearching( searchType, searchResult.getData() );
                     }
                 } );
             }

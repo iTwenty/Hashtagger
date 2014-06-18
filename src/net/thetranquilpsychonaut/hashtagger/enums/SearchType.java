@@ -5,7 +5,7 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 /**
  * Created by itwenty on 3/28/14.
  */
-public class SearchType
+public final class SearchType
 {
     public static final int    INITIAL         = 0;
     public static final int    OLDER           = 1;

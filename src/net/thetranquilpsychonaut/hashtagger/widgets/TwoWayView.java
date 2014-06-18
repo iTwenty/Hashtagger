@@ -658,7 +658,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
      * choice mode has not been set to {@link #CHOICE_MODE_NONE} and the adapter
      * has stable IDs. ({@link ListAdapter#hasStableIds()} == {@code true})
      *
-     * @return A new array which contains the id of each checked item in the
+     * @return A new array which contains the myId of each checked item in the
      * list.
      */
     public long[] getCheckedItemIds()
@@ -5058,7 +5058,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                         else
                         {
                             // See if we can find a position in the new data with the same
-                            // id as the old selection. This will change mSyncPosition.
+                            // myId as the old selection. This will change mSyncPosition.
                             newPos = findSyncPosition();
                             if ( newPos >= 0 )
                             {
@@ -5066,7 +5066,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                                 selectablePos = lookForSelectablePosition( newPos, true );
                                 if ( selectablePos == newPos )
                                 {
-                                    // Same row id is selected
+                                    // Same row myId is selected
                                     mSyncPosition = newPos;
 
                                     if ( mSyncHeight == getHeight() )

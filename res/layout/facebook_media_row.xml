@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookHeader
+        android:id="@+id/facebook_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_message_picture_wrapper"
+        android:layout_below="@id/facebook_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView
+            android:id="@+id/tv_post_text"
+            android:ellipsize="end"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="10"
+            android:layout_toLeftOf="@+id/imgv_thumbnail"
+            tools:text="line1\nline2\nline3\nline4\nline5\nline6"
+            style="@style/MainMessage"/>
+
+        <net.thetranquilpsychonaut.hashtagger.widgets.VideoThumbnail
+            android:id="@id/imgv_thumbnail"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            style="@style/ListMediaImage"/>
+
+    </RelativeLayout>
+
+    <net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookButtons
+        android:id="@+id/facebook_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@id/rl_message_picture_wrapper"/>
+
+</merge>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dl_nav_drawer"
+    android:layout_height="match_parent"
+    android:layout_width="600dp"
+    android:layout_gravity="center_horizontal">
+
+    <!--
+    Subclasses of this activity should use addView( View, 0 )
+    to add their main view here
+    -->
+    <RelativeLayout
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@android:color/white">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/nav_drawer_pager"
+            android:layout_width="240dp"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/nav_drawer_pager_indicator"/>
+
+        <net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerIndicator
+            android:id="@id/nav_drawer_pager_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            style="?android:attr/buttonBarStyle"/>
+
+    </RelativeLayout>
+
+</android.support.v4.widget.DrawerLayout>

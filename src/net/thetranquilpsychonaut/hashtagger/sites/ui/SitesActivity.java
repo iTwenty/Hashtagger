@@ -29,6 +29,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterFragment;
 import net.thetranquilpsychonaut.hashtagger.utils.DefaultPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +38,10 @@ public class SitesActivity extends NavDrawerActivity
 {
     public static String currentHashtag = null;
 
-    ViewPager           vpSitesPager;
-    SitesPagerIndicator ipiSitesPager;
-    SitesAdapter        vpSitesPagerAdapter;
-    SearchView          svHashtag;
+    ViewPager          sitesPager;
+    IconPagerIndicator sitesPagerIndicator;
+    SitesPagerAdapter  sitesPagerAdapter;
+    SearchView         svHashtag;
 
     @Override
     public void onCreate( Bundle savedInstanceState )
@@ -53,13 +54,13 @@ public class SitesActivity extends NavDrawerActivity
 
         dlNavDrawer.addView( rl, 0 );
 
-        vpSitesPager = ( ViewPager ) findViewById( R.id.vp_sites_pager );
-        ipiSitesPager = ( SitesPagerIndicator ) findViewById( R.id.ipi_sites_pager );
-        vpSitesPagerAdapter = new SitesAdapter( getSupportFragmentManager(), new ArrayList<PageDescriptor>() );
-        vpSitesPager.setAdapter( vpSitesPagerAdapter );
-        vpSitesPager.setOffscreenPageLimit( 2 );
+        sitesPager = ( ViewPager ) findViewById( R.id.sites_pager );
+        sitesPagerIndicator = ( IconPagerIndicator ) findViewById( R.id.sites_pager_indicator );
+        sitesPagerAdapter = new SitesPagerAdapter( getSupportFragmentManager(), new ArrayList<PageDescriptor>() );
+        sitesPager.setAdapter( sitesPagerAdapter );
+        sitesPager.setOffscreenPageLimit( 2 );
 
-        ipiSitesPager.setViewPager( vpSitesPager );
+        sitesPagerIndicator.setViewPager( sitesPager );
 
         if ( !TextUtils.isEmpty( currentHashtag ) )
         {
@@ -83,59 +84,55 @@ public class SitesActivity extends NavDrawerActivity
     public void showActiveSites()
     {
         int[] savedSitePositions = getSavedSitePositions();
-        ipiSitesPager.removeAllViews();
         int twitterPosition = savedSitePositions[HashtaggerApp.TWITTER_VALUE];
-        int facebookPosition = savedSitePositions[HashtaggerApp.FACEBOOK_VALUE];
         int gPlusPosition = savedSitePositions[HashtaggerApp.GPLUS_VALUE];
+        int facebookPosition = savedSitePositions[HashtaggerApp.FACEBOOK_VALUE];
         if ( twitterPosition == -1 )
         {
-            vpSitesPagerAdapter.remove( TwitterFragment.descriptor );
+            sitesPagerAdapter.remove( TwitterFragment.DESCRIPTOR );
         }
         else
         {
-            ipiSitesPager.addIcon( HashtaggerApp.TWITTER_VALUE );
-            if ( vpSitesPagerAdapter.contains( TwitterFragment.descriptor ) )
+            if ( sitesPagerAdapter.contains( TwitterFragment.DESCRIPTOR ) )
             {
-                vpSitesPagerAdapter.move( TwitterFragment.descriptor, twitterPosition );
+                sitesPagerAdapter.move( TwitterFragment.DESCRIPTOR, twitterPosition );
             }
             else
             {
-                vpSitesPagerAdapter.insert( TwitterFragment.descriptor, twitterPosition );
-            }
-        }
-        if ( facebookPosition == -1 )
-        {
-            vpSitesPagerAdapter.remove( FacebookFragment.descriptor );
-        }
-        else
-        {
-            ipiSitesPager.addIcon( HashtaggerApp.FACEBOOK_VALUE );
-            if ( vpSitesPagerAdapter.contains( FacebookFragment.descriptor ) )
-            {
-                vpSitesPagerAdapter.move( FacebookFragment.descriptor, facebookPosition );
-            }
-            else
-            {
-                vpSitesPagerAdapter.insert( FacebookFragment.descriptor, facebookPosition );
+                sitesPagerAdapter.insert( TwitterFragment.DESCRIPTOR, twitterPosition );
             }
         }
         if ( gPlusPosition == -1 )
         {
-            vpSitesPagerAdapter.remove( GPlusFragment.descriptor );
+            sitesPagerAdapter.remove( GPlusFragment.DESCRIPTOR );
         }
         else
         {
-            ipiSitesPager.addIcon( HashtaggerApp.GPLUS_VALUE );
-            if ( vpSitesPagerAdapter.contains( GPlusFragment.descriptor ) )
+            if ( sitesPagerAdapter.contains( GPlusFragment.DESCRIPTOR ) )
             {
-                vpSitesPagerAdapter.move( GPlusFragment.descriptor, gPlusPosition );
+                sitesPagerAdapter.move( GPlusFragment.DESCRIPTOR, gPlusPosition );
             }
             else
             {
-                vpSitesPagerAdapter.insert( GPlusFragment.descriptor, gPlusPosition );
+                sitesPagerAdapter.insert( GPlusFragment.DESCRIPTOR, gPlusPosition );
             }
         }
-        ipiSitesPager.setSelectedChild( vpSitesPager.getCurrentItem() );
+        if ( facebookPosition == -1 )
+        {
+            sitesPagerAdapter.remove( FacebookFragment.DESCRIPTOR );
+        }
+        else
+        {
+            if ( sitesPagerAdapter.contains( FacebookFragment.DESCRIPTOR ) )
+            {
+                sitesPagerAdapter.move( FacebookFragment.DESCRIPTOR, facebookPosition );
+            }
+            else
+            {
+                sitesPagerAdapter.insert( FacebookFragment.DESCRIPTOR, facebookPosition );
+            }
+        }
+        sitesPagerIndicator.notifyIconSetChanged();
     }
 
     private int[] getSavedSitePositions()
@@ -143,8 +140,8 @@ public class SitesActivity extends NavDrawerActivity
         int[] positions = new int[HashtaggerApp.TOTAL_SITES_COUNT];
         int activePosition = 0;
         positions[HashtaggerApp.TWITTER_VALUE] = DefaultPrefs.twitterActive ? activePosition++ : -1;
-        positions[HashtaggerApp.FACEBOOK_VALUE] = DefaultPrefs.facebookActive ? activePosition++ : -1;
         positions[HashtaggerApp.GPLUS_VALUE] = DefaultPrefs.gPlusActive ? activePosition++ : -1;
+        positions[HashtaggerApp.FACEBOOK_VALUE] = DefaultPrefs.facebookActive ? activePosition++ : -1;
         return positions;
     }
 
@@ -256,6 +253,7 @@ public class SitesActivity extends NavDrawerActivity
             @Override
             public void run()
             {
+                // Subscriber : SitesFragment : searchHashtag()
                 HashtaggerApp.bus.post( new SearchHashtagEvent() );
             }
         } );

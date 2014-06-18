@@ -5,20 +5,23 @@ import android.widget.Toast;
 import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.cwacpager.PageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.SimplePageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.events.SearchHashtagEvent;
-import net.thetranquilpsychonaut.hashtagger.events.TwitterFavoriteEvent;
-import net.thetranquilpsychonaut.hashtagger.events.TwitterReplyEvent;
-import net.thetranquilpsychonaut.hashtagger.events.TwitterRetweetEvent;
+import net.thetranquilpsychonaut.hashtagger.events.TwitterActionClickedEvent;
+import net.thetranquilpsychonaut.hashtagger.events.TwitterFavoriteDoneEvent;
+import net.thetranquilpsychonaut.hashtagger.events.TwitterReplyDoneEvent;
+import net.thetranquilpsychonaut.hashtagger.events.TwitterRetweetDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterActionsPerformer;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterSearchHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragmentData;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
-import net.thetranquilpsychonaut.hashtagger.utils.Helper;
-import twitter4j.Status;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,20 +29,35 @@ import java.util.List;
 /**
  * Created by itwenty on 2/26/14.
  */
-public class TwitterFragment extends SitesFragment
+public class TwitterFragment extends SitesFragment implements TwitterActionsPerformer.OnTwitterActionDoneListener
 {
-    public static SimplePageDescriptor descriptor = new SimplePageDescriptor( HashtaggerApp.TWITTER, HashtaggerApp.TWITTER );
+    public static final SimplePageDescriptor DESCRIPTOR = new SimplePageDescriptor( HashtaggerApp.TWITTER, HashtaggerApp.TWITTER );
+    private TwitterActionsPerformer twitterActionsPerformer;
 
     @Override
-    protected int getSketchLogoResId()
+    public void onStart()
     {
-        return R.drawable.twitter_sketch;
+        super.onStart();
+        twitterActionsPerformer = new TwitterActionsPerformer( getChildFragmentManager() );
+    }
+
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+        twitterActionsPerformer = null;
     }
 
     @Override
     protected int getLogoResId()
     {
         return R.drawable.twitter_icon_flat;
+    }
+
+    @Override
+    protected int getPlainLogoResId()
+    {
+        return R.drawable.twitter_icon_plain;
     }
 
     @Override
@@ -58,6 +76,12 @@ public class TwitterFragment extends SitesFragment
     protected String getUserName()
     {
         return AccountPrefs.getTwitterUserName();
+    }
+
+    @Override
+    public PageDescriptor getPageDescriptor()
+    {
+        return DESCRIPTOR;
     }
 
     @Override
@@ -164,48 +188,66 @@ public class TwitterFragment extends SitesFragment
     @Override
     protected Uri getResultUrl( Object result )
     {
-        return Helper.getTwitterStatusUrl( ( Status ) result );
+        return UrlModifier.getTwitterStatusUrl( ( Status ) result );
     }
 
     @Subscribe
-    public void onRetweetDone( TwitterRetweetEvent event )
+    public void onTwitterActionClicked( TwitterActionClickedEvent event )
+    {
+        Status status = event.getStatus();
+        switch ( event.getActionType() )
+        {
+            case TwitterActionClickedEvent.ACTION_REPLY:
+                twitterActionsPerformer.doReply( status );
+                break;
+            case TwitterActionClickedEvent.ACTION_RETWEET:
+                twitterActionsPerformer.doRetweet( status );
+                break;
+            case TwitterActionClickedEvent.ACTION_FAVORITE:
+                twitterActionsPerformer.doFavorite( status );
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Subscribe
+    public void onRetweetDone( TwitterRetweetDoneEvent event )
     {
         if ( event.getSuccess() )
         {
-            ( ( List<Status> ) results ).set( event.getPosition(), event.getStatus() );
             sitesListAdapter.notifyDataSetChanged();
-            Toast.makeText( getActivity(), "Retweeted like a champ!", Toast.LENGTH_SHORT ).show();
+            Toast.makeText( getActivity(), getResources().getString( R.string.str_retweet_success ), Toast.LENGTH_SHORT ).show();
         }
         else
         {
-            Toast.makeText( getActivity(), "Failed to retweet", Toast.LENGTH_SHORT ).show();
+            Toast.makeText( getActivity(), getResources().getString( R.string.str_retweet_failure ), Toast.LENGTH_SHORT ).show();
         }
     }
 
     @Subscribe
-    public void onFavoriteDone( TwitterFavoriteEvent event )
+    public void onFavoriteDone( TwitterFavoriteDoneEvent event )
     {
         if ( event.getSuccess() )
         {
-            ( ( List<Status> ) results ).set( event.getPosition(), event.getStatus() );
             sitesListAdapter.notifyDataSetChanged();
         }
         else
         {
-            Toast.makeText( getActivity(), "Failed to favorite", Toast.LENGTH_SHORT ).show();
+            Toast.makeText( getActivity(), getResources().getString( R.string.str_favorite_failure ), Toast.LENGTH_SHORT ).show();
         }
     }
 
     @Subscribe
-    public void onReplyDone( TwitterReplyEvent event )
+    public void onReplyDone( TwitterReplyDoneEvent event )
     {
         if ( event.getSuccess() )
         {
-            Toast.makeText( getActivity(), "Replied like a champ!", Toast.LENGTH_SHORT ).show();
+            Toast.makeText( getActivity(), getResources().getString( R.string.str_reply_success ), Toast.LENGTH_SHORT ).show();
         }
         else
         {
-            Toast.makeText( getActivity(), "Failed to reply", Toast.LENGTH_SHORT ).show();
+            Toast.makeText( getActivity(), getResources().getString( R.string.str_reply_failure ), Toast.LENGTH_SHORT ).show();
         }
     }
 

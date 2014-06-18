@@ -8,21 +8,15 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
-import twitter4j.QueryResult;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.SearchResult;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
+import net.thetranquilpsychonaut.hashtagger.utils.Linkifier;
 
 /**
  * Created by itwenty on 3/13/14.
  */
 public class TwitterSearchHandler extends SitesSearchHandler
 {
-    /*
-    max and since ids are used to navigate through the tweets timeline.
-    tweet ids are time based i.e later tweets have higher ids than older tweets.
-    */
-
-    static long maxId;
-    static long sinceId;
-
     public TwitterSearchHandler( SitesSearchListener listener )
     {
         super( listener );
@@ -70,13 +64,21 @@ public class TwitterSearchHandler extends SitesSearchHandler
                     } );
                     return;
                 }
-                final QueryResult result = ( QueryResult ) intent.getSerializableExtra( Result.RESULT_DATA );
+                final SearchResult result = ( SearchResult ) intent.getSerializableExtra( Result.RESULT_DATA );
+                for ( Status status : result.getStatuses() )
+                {
+                    status.setLinkedText( Linkifier.getLinkedTwitterText( status.getText() ) );
+                    if ( status.isRetweet() )
+                    {
+                        status.getRetweetedStatus().setLinkedText( Linkifier.getLinkedTwitterText( status.getRetweetedStatus().getText() ) );
+                    }
+                }
                 main.post( new Runnable()
                 {
                     @Override
                     public void run()
                     {
-                        sitesSearchListener.afterSearching( searchType, result.getTweets() );
+                        sitesSearchListener.afterSearching( searchType, result.getStatuses() );
                     }
                 } );
             }

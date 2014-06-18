@@ -3,9 +3,9 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
-import twitter4j.Status;
 
 import java.util.List;
 
@@ -17,8 +17,7 @@ public class TwitterListAdapter extends SitesListAdapter
 
     public static final int STATUS_TYPE_NORMAL = 0;
     public static final int STATUS_TYPE_PHOTO  = 1;
-    public static final int STATUS_TYPE_LINK   = 2;
-    public static final int STATUS_TYPE_COUNT  = 3;
+    public static final int STATUS_TYPE_COUNT  = 2;
 
     protected TwitterListAdapter( Context context, int textViewResourceId, List<?> objects, List<Integer> resultTypes )
     {
@@ -55,12 +54,6 @@ public class TwitterListAdapter extends SitesListAdapter
                     convertView = new TwitterPhotoRow( context );
                 }
                 break;
-            case STATUS_TYPE_LINK:
-                if ( null == convertView || !( convertView instanceof TwitterLinkRow ) )
-                {
-                    convertView = new TwitterLinkRow( context );
-                }
-                break;
         }
         return ( SitesListRow ) convertView;
     }
@@ -69,13 +62,9 @@ public class TwitterListAdapter extends SitesListAdapter
     {
         int statusType = STATUS_TYPE_NORMAL;
 
-        if ( status.getMediaEntities().length > 0 )
+        if ( null != status.getEntities().getMedia() && status.getEntities().getMedia().size() > 0 )
         {
             statusType = STATUS_TYPE_PHOTO;
-        }
-        else if ( status.getURLEntities().length > 0 )
-        {
-            statusType = STATUS_TYPE_LINK;
         }
 
         return statusType;

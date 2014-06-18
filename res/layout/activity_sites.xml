@@ -6,13 +6,13 @@
     android:layout_height="match_parent">
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/vp_sites_pager"
+        android:id="@+id/sites_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/ipi_sites_pager"/>
+        android:layout_above="@+id/sites_pager_indicator"/>
 
-    <net.thetranquilpsychonaut.hashtagger.sites.ui.SitesPagerIndicator
-        android:id="@id/ipi_sites_pager"
+    <net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerIndicator
+        android:id="@id/sites_pager_indicator"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

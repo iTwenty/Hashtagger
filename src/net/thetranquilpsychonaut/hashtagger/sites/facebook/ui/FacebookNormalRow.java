@@ -2,9 +2,9 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.TextView;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
+import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 
 /**
  * Created by itwenty on 5/2/14.
@@ -40,9 +40,9 @@ public class FacebookNormalRow extends FacebookListRow
     }
 
     @Override
-    protected TextView initPostText()
+    protected LinkifiedTextView initPostText()
     {
-        return ( TextView ) findViewById( R.id.tv_post_text );
+        return ( LinkifiedTextView ) findViewById( R.id.tv_post_text );
     }
 
     @Override

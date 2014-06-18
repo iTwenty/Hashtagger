@@ -18,10 +18,11 @@ import net.thetranquilpsychonaut.hashtagger.utils.DefaultPrefs;
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener
 {
     CheckBoxPreference cbpTwitter;
-    CheckBoxPreference cbpFacebook;
     CheckBoxPreference cbpGPlus;
+    CheckBoxPreference cbpFacebook;
     CheckBoxPreference cbpAutoUpdate;
     Preference         prefClearSearch;
+    Preference         prefAbout;
 
     @Override
     public void onCreate( Bundle savedInstanceState )
@@ -30,28 +31,30 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         addPreferencesFromResource( R.xml.preferences );
 
         cbpTwitter = ( CheckBoxPreference ) findPreference( DefaultPrefs.TWITTER_SITE_KEY );
-        cbpFacebook = ( CheckBoxPreference ) findPreference( DefaultPrefs.FACEBOOK_SITE_KEY );
         cbpGPlus = ( CheckBoxPreference ) findPreference( DefaultPrefs.GPLUS_SITE_KEY );
+        cbpFacebook = ( CheckBoxPreference ) findPreference( DefaultPrefs.FACEBOOK_SITE_KEY );
         cbpAutoUpdate = ( CheckBoxPreference ) findPreference( DefaultPrefs.AUTO_UPDATE_KEY );
         prefClearSearch = findPreference( DefaultPrefs.CLEAR_SEARCH_KEY );
+        prefAbout = findPreference( DefaultPrefs.ABOUT_KEY );
 
         cbpTwitter.setSummary( AccountPrefs.areTwitterDetailsPresent() ?
                 "Logged in as : " + AccountPrefs.getTwitterUserName() :
                 "Not logged in." );
-        cbpFacebook.setSummary( AccountPrefs.areFacebookDetailsPresent() ?
-                "Logged in as : " + AccountPrefs.getFacebookUserName() :
-                "Not logged in." );
         cbpGPlus.setSummary( AccountPrefs.areGPlusDetailsPresent() ?
                 "Logged in as : " + AccountPrefs.getGPlusUserName() :
+                "Not logged in." );
+        cbpFacebook.setSummary( AccountPrefs.areFacebookDetailsPresent() ?
+                "Logged in as : " + AccountPrefs.getFacebookUserName() :
                 "Not logged in." );
 
         setAutoUpdateSummary( DefaultPrefs.isAutoUpdateEnabled() );
 
         cbpTwitter.setOnPreferenceChangeListener( this );
-        cbpFacebook.setOnPreferenceChangeListener( this );
         cbpGPlus.setOnPreferenceChangeListener( this );
+        cbpFacebook.setOnPreferenceChangeListener( this );
         cbpAutoUpdate.setOnPreferenceChangeListener( this );
         prefClearSearch.setOnPreferenceClickListener( this );
+        prefAbout.setOnPreferenceClickListener( this );
     }
 
     @Override
@@ -78,6 +81,13 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                     } )
                     .show();
         }
+        else if ( preference.equals( prefAbout ) )
+        {
+            getActivity().getFragmentManager()
+                    .beginTransaction()
+                    .add( AboutDialog.newInstance(), AboutDialog.TAG )
+                    .commit();
+        }
         return true;
     }
 
@@ -98,14 +108,14 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             DefaultPrefs.twitterActive = ( Boolean ) newValue;
             DefaultPrefs.activeSitesChanged = true;
         }
-        if ( preference.equals( cbpFacebook ) )
-        {
-            DefaultPrefs.facebookActive = ( Boolean ) newValue;
-            DefaultPrefs.activeSitesChanged = true;
-        }
         if ( preference.equals( cbpGPlus ) )
         {
             DefaultPrefs.gPlusActive = ( Boolean ) newValue;
+            DefaultPrefs.activeSitesChanged = true;
+        }
+        if ( preference.equals( cbpFacebook ) )
+        {
+            DefaultPrefs.facebookActive = ( Boolean ) newValue;
             DefaultPrefs.activeSitesChanged = true;
         }
         if ( preference.equals( cbpAutoUpdate ) )

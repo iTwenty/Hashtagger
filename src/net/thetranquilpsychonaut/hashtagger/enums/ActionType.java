@@ -5,7 +5,7 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 /**
  * Created by itwenty on 4/2/14.
  */
-public class ActionType
+public final class ActionType
 {
     public static final int    SEARCH          = 0;
     public static final int    AUTH            = 1;

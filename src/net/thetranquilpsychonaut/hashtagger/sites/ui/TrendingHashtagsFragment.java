@@ -21,7 +21,6 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterTrendsEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterTrendsService;
-import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -136,17 +135,18 @@ public class TrendingHashtagsFragment extends Fragment implements
         if ( code == TwitterTrendsService.TRENDS_FOUND )
         {
             List<String> trends = event.getTrends();
+            trendingHashtags.clear();
             trendingHashtags.addAll( trends );
             trendingHashtagsAdapter.notifyDataSetChanged();
-            tvTrendingHashtagsEmpty.setText( "Trending hashtags will appear here" );
+            tvTrendingHashtagsEmpty.setText( getResources().getString( R.string.str_trending_hashtags_empty ) );
         }
         else if ( code == TwitterTrendsService.TRENDS_NOT_AVAILABLE )
         {
-            tvTrendingHashtagsEmpty.setText( "Trends not available" );
+            tvTrendingHashtagsEmpty.setText( getResources().getString( R.string.str_trends_not_available ) );
         }
         else if ( code == TwitterTrendsService.TWITTER_NOT_LOGGED_IN )
         {
-            tvTrendingHashtagsEmpty.setText( "Log in to Twitter to see trending topics" );
+            tvTrendingHashtagsEmpty.setText( getResources().getString( R.string.str_trends_not_logged_in ) );
         }
     }
 
@@ -159,14 +159,14 @@ public class TrendingHashtagsFragment extends Fragment implements
             {
                 case 1:
                     twitterTrendsService.fetchTrends( TwitterTrendsService.GLOBAL );
-                    tvTrendingHashtagsEmpty.setText( "Loading" );
+                    tvTrendingHashtagsEmpty.setText( getResources().getString( R.string.str_loading ) );
                     trendingHashtags.clear();
                     trendingHashtagsAdapter.notifyDataSetChanged();
                     break;
                 case 0: // fall through
                 default:
                     twitterTrendsService.fetchTrends( TwitterTrendsService.LOCAL );
-                    tvTrendingHashtagsEmpty.setText( "Loading" );
+                    tvTrendingHashtagsEmpty.setText( getResources().getString( R.string.str_loading ) );
                     trendingHashtags.clear();
                     trendingHashtagsAdapter.notifyDataSetChanged();
                     break;
@@ -189,7 +189,6 @@ public class TrendingHashtagsFragment extends Fragment implements
         @Override
         public void onServiceConnected( ComponentName name, IBinder service )
         {
-            Helper.debug( "onServiceConnected" );
             TwitterTrendsService.TwitterTrendsBinder binder =
                     ( TwitterTrendsService.TwitterTrendsBinder ) service;
             twitterTrendsService = binder.getService();

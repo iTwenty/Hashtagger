@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="twitter_dark_blue" type="color">#0084b4</item>
-    <item name="twitter_logo_blue" type="color">#00aced</item>
+    <item name="twitter_blue" type="color">#00aced</item>
     <item name="twitter_verified_blue" type="color">#1dcaff</item>
     <item name="twitter_background_blue" type="color">#c0deed</item>
     <item name="twitter_white" type="color">#ffffff</item>
@@ -17,4 +17,5 @@
     <color name="sites_button_pressed">#99999999</color>
     <color name="error_red">#ff4444</color>
     <color name="login_button_pressed">#77ff8800</color>
+    <color name="translucent_black">#aa000000</color>
 </resources>

@@ -1,154 +1,93 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.components;
 
-import android.os.AsyncTask;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import net.thetranquilpsychonaut.hashtagger.config.TwitterConfig;
-import net.thetranquilpsychonaut.hashtagger.events.TwitterFavoriteEvent;
-import net.thetranquilpsychonaut.hashtagger.events.TwitterReplyEvent;
-import net.thetranquilpsychonaut.hashtagger.events.TwitterRetweetEvent;
-import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
+import net.thetranquilpsychonaut.hashtagger.events.TwitterFavoriteDoneEvent;
+import net.thetranquilpsychonaut.hashtagger.events.TwitterReplyDoneEvent;
+import net.thetranquilpsychonaut.hashtagger.events.TwitterRetweetDoneEvent;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.Twitter;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
-import twitter4j.StatusUpdate;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
-import twitter4j.auth.AccessToken;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by itwenty on 5/11/14.
  */
 public class TwitterAction
 {
-    public void executeReplyAction( String reply, long inReplyToUserId )
+    public void executeReplyAction( String reply, final Status status )
     {
-        new TwitterReplyTask( reply, inReplyToUserId ).execute();
+        Twitter.api().replyToStatus( reply, status.getInReplyToStatusIdStr(), new Callback<Status>()
+        {
+            @Override
+            public void success( Status newStatus, Response response )
+            {
+                // Subscriber : TwitterFragment : onReplyDone()
+                HashtaggerApp.bus.post( new TwitterReplyDoneEvent( true, status ) );
+            }
+
+            @Override
+            public void failure( RetrofitError retrofitError )
+            {
+                // Subscriber : TwitterFragment : onReplyDone()
+                HashtaggerApp.bus.post( new TwitterReplyDoneEvent( false, status ) );
+            }
+        } );
     }
 
-    public void executeRetweetAction( long retweetId, int position )
+    public void executeRetweetAction( final Status status )
     {
-        new TwitterRetweetTask( retweetId, position ).execute();
+        Twitter.api().retweetStatus( status.getIdStr(), new Callback<Status>()
+        {
+            @Override
+            public void success( Status newStatus, Response response )
+            {
+                status.setRetweeted( newStatus.isRetweeted() );
+                status.setRetweetCount( newStatus.getRetweetCount() );
+                // Subscriber : TwitterFragment : onRetweetDone()
+                HashtaggerApp.bus.post( new TwitterRetweetDoneEvent( true, status ) );
+            }
+
+            @Override
+            public void failure( RetrofitError retrofitError )
+            {
+                // Subscriber : TwitterFragment : onRetweetDone()
+                HashtaggerApp.bus.post( new TwitterRetweetDoneEvent( false, status ) );
+            }
+        } );
     }
 
-    public void executeFavoriteAction( long tweetId, boolean isFavorited, int position )
+    public void executeFavoriteAction( final Status status )
     {
-        new TwitterFavoriteTask( tweetId, isFavorited, position ).execute();
-    }
-
-    private static class TwitterReplyTask extends AsyncTask<Void, Void, Void>
-    {
-        Twitter twitter;
-        String  reply;
-        long    inReplyToUserId;
-        boolean success = false;
-
-        public TwitterReplyTask( String reply, long inReplyToUserId )
+        Callback<Status> cb = new Callback<Status>()
         {
-            twitter = new TwitterFactory( TwitterConfig.CONFIGURATION ).getInstance();
-            twitter.setOAuthAccessToken( new AccessToken( AccountPrefs.getTwitterAccessToken(), AccountPrefs.getTwitterAccessTokenSecret() ) );
-            this.reply = reply;
-            this.inReplyToUserId = inReplyToUserId;
-        }
-
-        @Override
-        protected Void doInBackground( Void... params )
-        {
-            try
+            @Override
+            public void success( Status newStatus, Response response )
             {
-                twitter.updateStatus( new StatusUpdate( reply ).inReplyToStatusId( inReplyToUserId ) );
-                success = true;
+                Helper.debug( String.valueOf( newStatus.isFavorited() ) );
+                Helper.debug( String.valueOf( newStatus.getFavoriteCount() ) );
+                status.setFavorited( newStatus.isFavorited() );
+                status.setFavoriteCount( newStatus.getFavoriteCount() );
+                // Subscriber : TwitterFragment : onFavoriteDone()
+                HashtaggerApp.bus.post( new TwitterFavoriteDoneEvent( true, status ) );
             }
-            catch ( TwitterException e )
+
+            @Override
+            public void failure( RetrofitError retrofitError )
             {
-                Helper.debug( "Error while posting twitter reply : " + e.getMessage() );
+                // Subscriber : TwitterFragment : onFavoriteDone()
+                HashtaggerApp.bus.post( new TwitterFavoriteDoneEvent( false, status ) );
             }
-            return null;
-        }
+        };
 
-        @Override
-        protected void onPostExecute( Void aVoid )
+        if ( status.isFavorited() )
         {
-            // This event is handled in TwitterFragment in onReplyDone method
-            HashtaggerApp.bus.post( new TwitterReplyEvent( success ) );
+            Twitter.api().destroyFavorite( status.getIdStr(), cb );
         }
-    }
-
-    private static class TwitterRetweetTask extends AsyncTask<Void, Void, Void>
-    {
-        Twitter          twitter;
-        long             retweetId;
-        int              position;
-        twitter4j.Status status;
-        boolean success = false;
-
-        public TwitterRetweetTask( long retweetId, int position )
+        else
         {
-            twitter = new TwitterFactory( TwitterConfig.CONFIGURATION ).getInstance();
-            twitter.setOAuthAccessToken( new AccessToken( AccountPrefs.getTwitterAccessToken(), AccountPrefs.getTwitterAccessTokenSecret() ) );
-            this.retweetId = retweetId;
-            this.position = position;
-        }
-
-        @Override
-        protected Void doInBackground( Void... params )
-        {
-            try
-            {
-                status = twitter.retweetStatus( retweetId );
-                success = true;
-            }
-            catch ( TwitterException e )
-            {
-                Helper.debug( "Error while performing Twitter retweet : " + e.getMessage() );
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute( Void aVoid )
-        {
-            // This event is handled in TwitterFragment in onRetweetDone method
-            HashtaggerApp.bus.post( new TwitterRetweetEvent( success, position, status ) );
-        }
-    }
-
-    private static class TwitterFavoriteTask extends AsyncTask<Void, Void, Void>
-    {
-        private long             tweetId;
-        private int              position;
-        private twitter4j.Status status;
-        private Twitter          twitter;
-        private boolean          isFavorited;
-        private boolean success = false;
-
-        public TwitterFavoriteTask( long tweetId, boolean isFavorited, int position )
-        {
-            this.tweetId = tweetId;
-            this.position = position;
-            this.isFavorited = isFavorited;
-            twitter = new TwitterFactory( TwitterConfig.CONFIGURATION ).getInstance();
-            twitter.setOAuthAccessToken( new AccessToken( AccountPrefs.getTwitterAccessToken(), AccountPrefs.getTwitterAccessTokenSecret() ) );
-        }
-
-        @Override
-        protected Void doInBackground( Void... params )
-        {
-            try
-            {
-                status = isFavorited ? twitter.destroyFavorite( tweetId ) : twitter.createFavorite( tweetId );
-                success = true;
-            }
-            catch ( TwitterException e )
-            {
-                Helper.debug( "Error while favoriting Twitter status :" + e.getMessage() );
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute( Void aVoid )
-        {
-            // This event is handled in TwitterFragment in onFavoritedDone method
-            HashtaggerApp.bus.post( new TwitterFavoriteEvent( success, position, status ) );
+            Twitter.api().createFavorite( status.getIdStr(), cb );
         }
     }
 }

@@ -1,20 +1,22 @@
 package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 
 import android.net.Uri;
-import com.google.api.services.plus.model.Activity;
 import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.cwacpager.PageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.SimplePageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
+import net.thetranquilpsychonaut.hashtagger.events.GPlusActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.events.SearchHashtagEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.GPlusSearchHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragmentData;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
-import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +26,7 @@ import java.util.List;
  */
 public class GPlusFragment extends SitesFragment
 {
-    public static SimplePageDescriptor descriptor = new SimplePageDescriptor( HashtaggerApp.GPLUS, HashtaggerApp.GPLUS );
+    public static final SimplePageDescriptor DESCRIPTOR = new SimplePageDescriptor( HashtaggerApp.GPLUS, HashtaggerApp.GPLUS );
 
     @Override
     protected SitesSearchHandler initSitesSearchHandler()
@@ -52,15 +54,15 @@ public class GPlusFragment extends SitesFragment
     }
 
     @Override
-    protected int getSketchLogoResId()
-    {
-        return R.drawable.gplus_sketch;
-    }
-
-    @Override
     protected int getLogoResId()
     {
         return R.drawable.gplus_icon_flat;
+    }
+
+    @Override
+    protected int getPlainLogoResId()
+    {
+        return R.drawable.gplus_icon_plain;
     }
 
     @Override
@@ -72,13 +74,19 @@ public class GPlusFragment extends SitesFragment
     @Override
     protected void removeUserDetails()
     {
-        AccountPrefs.removeTwitterDetails();
+        AccountPrefs.removeGPlusDetails();
     }
 
     @Override
     protected String getUserName()
     {
         return AccountPrefs.getGPlusUserName();
+    }
+
+    @Override
+    public PageDescriptor getPageDescriptor()
+    {
+        return DESCRIPTOR;
     }
 
     @Override
@@ -161,12 +169,19 @@ public class GPlusFragment extends SitesFragment
     @Override
     protected Uri getResultUrl( Object result )
     {
-        return Helper.getGPlusActivityUrl( ( Activity ) result );
+        return UrlModifier.getGPlusActivityUrl( ( Activity ) result );
     }
 
     @Subscribe
     public void searchHashtag( SearchHashtagEvent event )
     {
         super.searchHashtag( event );
+    }
+
+    @Subscribe
+    public void onGPlusActionClicked( GPlusActionClickedEvent event )
+    {
+        GPlusActionsFragment fragment = GPlusActionsFragment.newInstance( event.getActivity(), event.getActionType() );
+        fragment.show( getChildFragmentManager(), fragment.TAG );
     }
 }

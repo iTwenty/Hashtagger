@@ -10,9 +10,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.User;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
-import twitter4j.Status;
-import twitter4j.User;
 
 /**
  * Created by itwenty on 5/8/14.
@@ -62,7 +62,7 @@ public class TwitterHeader extends RelativeLayout implements View.OnClickListene
             tvRetweetName.setVisibility( GONE );
         }
         Picasso.with( getContext() )
-                .load( user.getProfileImageURL() )
+                .load( user.getProfileImageUrl() )
                 .fit()
                 .centerCrop()
                 .into( imgvProfileImage );

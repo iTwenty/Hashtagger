@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
+<merge
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -16,14 +16,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <TextView
+        <net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView
             android:id="@+id/tv_activity_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/album_thumbnail"
             style="@style/MainMessage"/>
 
-        <net.thetranquilpsychonaut.hashtagger.sites.ui.AlbumThumbnail
+        <net.thetranquilpsychonaut.hashtagger.widgets.AlbumThumbnail
             android:id="@id/album_thumbnail"
             android:layout_width="75dp"
             android:layout_height="75dp"
@@ -39,4 +39,4 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"/>
 
-</RelativeLayout>
+</merge>

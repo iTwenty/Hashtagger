@@ -1,8 +1,8 @@
 package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
-import com.google.api.services.plus.model.Activity;
-import facebook4j.Post;
-import twitter4j.Status;
+import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
+import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 
 import java.util.List;
 
@@ -17,15 +17,15 @@ public final class SitesFragmentData
         public static List<Integer> statusTypes;
     }
 
-    public static final class Facebook
-    {
-        public static List<Post>    posts;
-        public static List<Integer> postTypes;
-    }
-
     public static final class GPlus
     {
         public static List<Activity> activities;
         public static List<Integer>  activityTypes;
+    }
+
+    public static final class Facebook
+    {
+        public static List<Post>    posts;
+        public static List<Integer> postTypes;
     }
 }

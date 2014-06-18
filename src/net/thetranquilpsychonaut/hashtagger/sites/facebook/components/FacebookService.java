@@ -1,19 +1,16 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.components;
 
 import android.content.Intent;
-import facebook4j.Facebook;
-import facebook4j.FacebookException;
-import facebook4j.FacebookFactory;
-import facebook4j.Post;
-import facebook4j.ResponseList;
-import facebook4j.auth.AccessToken;
+import android.net.Uri;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.config.FacebookConfig;
 import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesService;
+import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.Facebook;
+import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.SearchParams;
+import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.SearchResult;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookLoginActivity;
-import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.FacebookApi;
@@ -24,15 +21,17 @@ import org.scribe.model.Verb;
 import org.scribe.model.Verifier;
 import org.scribe.oauth.OAuthService;
 
-import java.io.Serializable;
-
 /**
  * Created by itwenty on 4/7/14.
  */
 public class FacebookService extends SitesService
 {
+    private static final int FACEBOOK_SEARCH_LIMIT = 20;
     private volatile static boolean isServiceRunning;
     private static final String FACEBOOK_USERNAME_URL = "https://graph.facebook.com/me?fields=name";
+
+    private static String until;
+    private static String since;
 
     @Override
     protected Intent doSearch( Intent searchIntent )
@@ -41,51 +40,47 @@ public class FacebookService extends SitesService
         final String hashtag = searchIntent.getStringExtra( HashtaggerApp.HASHTAG_KEY );
         Intent resultIntent = new Intent();
         resultIntent.putExtra( SearchType.SEARCH_TYPE_KEY, searchType );
-        ResponseList<Post> responseList = null;
+        SearchResult searchResult = null;
         try
         {
-            if ( !AccountPrefs.areFacebookDetailsPresent() )
-            {
-                throw new FacebookException( "Facebook access token not found" );
-            }
-            Facebook facebook = new FacebookFactory( FacebookConfig.CONFIGURATION ).getInstance();
-            facebook.setOAuthAccessToken( new AccessToken( AccountPrefs.getFacebookAccessToken() ) );
+            SearchParams searchParams = new SearchParams( hashtag );
+            searchParams.setLimit( FACEBOOK_SEARCH_LIMIT );
             switch ( searchType )
             {
                 case SearchType.INITIAL:
-                    responseList = facebook.searchPosts( hashtag );
                     break;
                 case SearchType.OLDER:
-                    responseList = facebook.fetchNext( FacebookSearchHandler.oldestPage );
+                    searchParams.setUntil( until );
                     break;
                 case SearchType.NEWER:
-                    responseList = facebook.fetchPrevious( FacebookSearchHandler.newestPage );
+                    searchParams.setSince( since );
                     break;
                 case SearchType.TIMED:
-                    responseList = facebook.fetchPrevious( FacebookSearchHandler.newestPage );
+                    searchParams.setSince( since );
                     break;
             }
+            searchResult = Facebook.api().searchPosts( searchParams.getParams() );
         }
-        catch ( FacebookException e )
+        catch ( Exception e )
         {
             Helper.debug( "Error while searching Facebook for " + hashtag + " : " + e.getMessage() );
         }
-        int searchResult = null == responseList ? Result.FAILURE : Result.SUCCESS;
-        resultIntent.putExtra( Result.RESULT_KEY, searchResult );
-        if ( searchResult == Result.SUCCESS )
+        int result = null == searchResult ? Result.FAILURE : Result.SUCCESS;
+        resultIntent.putExtra( Result.RESULT_KEY, result );
+        if ( result == Result.SUCCESS )
         {
-            if ( !responseList.isEmpty() )
+            if ( !searchResult.getData().isEmpty() )
             {
                 if ( searchType != SearchType.OLDER )
                 {
-                    FacebookSearchHandler.newestPage = responseList.getPaging();
+                    since = Uri.parse( searchResult.getPaging().getPrevious() ).getQueryParameter( "since" );
                 }
                 if ( searchType != SearchType.NEWER && searchType != SearchType.TIMED )
                 {
-                    FacebookSearchHandler.oldestPage = responseList.getPaging();
+                    until = Uri.parse( searchResult.getPaging().getNext() ).getQueryParameter( "until" );
                 }
             }
-            resultIntent.putExtra( Result.RESULT_DATA, ( Serializable ) responseList );
+            resultIntent.putExtra( Result.RESULT_DATA, searchResult );
         }
         return resultIntent;
     }

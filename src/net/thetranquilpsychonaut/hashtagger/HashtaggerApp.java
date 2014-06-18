@@ -28,17 +28,16 @@ public class HashtaggerApp extends Application
     public static final String TWITTER_SEARCH_ACTION = NAMESPACE + "twitter_search_action";
     public static final String TWITTER_LOGIN_ACTION  = NAMESPACE + "twitter_login_action";
 
+    public static final String GPLUS               = "Google+";
+    public static final int    GPLUS_VALUE         = 1;
+    public static final String GPLUS_LOGIN_ACTION  = NAMESPACE + "gplus_login_action";
+    public static final String GPLUS_SEARCH_ACTION = NAMESPACE + "gplus_search_action";
 
     public static final String FACEBOOK               = "Facebook";
-    public static final int    FACEBOOK_VALUE         = 1;
+    public static final int    FACEBOOK_VALUE         = 2;
     public static final String FACEBOOK_LOGIN_ACTION  = NAMESPACE + "facebook_login_action";
     public static final String FACEBOOK_SEARCH_ACTION = NAMESPACE + "facebook_search_action";
 
-
-    public static final String GPLUS               = "Google+";
-    public static final int    GPLUS_VALUE         = 2;
-    public static final String GPLUS_LOGIN_ACTION  = NAMESPACE + "gplus_login_action";
-    public static final String GPLUS_SEARCH_ACTION = NAMESPACE + "gplus_search_action";
 
     @Override
     public void onCreate()

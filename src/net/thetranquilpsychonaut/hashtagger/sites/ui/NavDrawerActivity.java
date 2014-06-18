@@ -12,6 +12,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerAdapter;
+import net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerIndicator;
 
 /**
  * Created by itwenty on 5/10/14.
@@ -22,9 +24,9 @@ public abstract class NavDrawerActivity extends FragmentActivity
     protected ActionBarDrawerToggle drawerToggle;
     protected ActionBar             actionBar;
 
-    protected ViewPager               navDrawerPager;
-    protected NavDrawerPagerIndicator navDrawerPagerIndicator;
-    protected NavDrawerPagerAdapter   navDrawerPagerAdapter;
+    protected ViewPager             navDrawerPager;
+    protected IconPagerIndicator    navDrawerPagerIndicator;
+    protected NavDrawerPagerAdapter navDrawerPagerAdapter;
 
     @Override
     protected void onCreate( Bundle savedInstanceState )
@@ -41,7 +43,7 @@ public abstract class NavDrawerActivity extends FragmentActivity
         dlNavDrawer.setDrawerListener( drawerToggle );
 
         navDrawerPager = ( ViewPager ) findViewById( R.id.nav_drawer_pager );
-        navDrawerPagerIndicator = ( NavDrawerPagerIndicator ) findViewById( R.id.nav_drawer_pager_indicator );
+        navDrawerPagerIndicator = ( IconPagerIndicator ) findViewById( R.id.nav_drawer_pager_indicator );
 
         navDrawerPagerAdapter = new NavDrawerPagerAdapter( getSupportFragmentManager() );
         navDrawerPager.setAdapter( navDrawerPagerAdapter );
@@ -78,7 +80,7 @@ public abstract class NavDrawerActivity extends FragmentActivity
         return super.onOptionsItemSelected( item );
     }
 
-    private static class NavDrawerPagerAdapter extends FragmentPagerAdapter
+    private static class NavDrawerPagerAdapter extends FragmentPagerAdapter implements IconPagerAdapter
     {
         public NavDrawerPagerAdapter( FragmentManager fm )
         {
@@ -96,6 +98,25 @@ public abstract class NavDrawerActivity extends FragmentActivity
                     return new SavedHashtagsFragment();
             }
             return null;
+        }
+
+        @Override
+        public int getIconResId( int position )
+        {
+            switch ( position )
+            {
+                case 0:
+                    return R.drawable.trending;
+                case 1:
+                    return R.drawable.save;
+            }
+            return -1;
+        }
+
+        @Override
+        public int getSelectedColor( int position )
+        {
+            return R.color.orange;
         }
 
         @Override

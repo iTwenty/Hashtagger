@@ -2,19 +2,21 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.net.Uri;
 import com.squareup.otto.Subscribe;
-import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.cwacpager.PageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.SimplePageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
+import net.thetranquilpsychonaut.hashtagger.events.FacebookActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.events.SearchHashtagEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.components.FacebookSearchHandler;
+import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragmentData;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
-import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,18 +26,18 @@ import java.util.List;
  */
 public class FacebookFragment extends SitesFragment
 {
-    public static SimplePageDescriptor descriptor = new SimplePageDescriptor( HashtaggerApp.FACEBOOK, HashtaggerApp.FACEBOOK );
-
-    @Override
-    protected int getSketchLogoResId()
-    {
-        return R.drawable.facebook_sketch;
-    }
+    public static final SimplePageDescriptor DESCRIPTOR = new SimplePageDescriptor( HashtaggerApp.FACEBOOK, HashtaggerApp.FACEBOOK );
 
     @Override
     protected int getLogoResId()
     {
         return R.drawable.facebook_icon_flat;
+    }
+
+    @Override
+    protected int getPlainLogoResId()
+    {
+        return R.drawable.facebook_icon_plain;
     }
 
     @Override
@@ -54,6 +56,12 @@ public class FacebookFragment extends SitesFragment
     protected String getUserName()
     {
         return AccountPrefs.getFacebookUserName();
+    }
+
+    @Override
+    public PageDescriptor getPageDescriptor()
+    {
+        return DESCRIPTOR;
     }
 
     @Override
@@ -159,12 +167,19 @@ public class FacebookFragment extends SitesFragment
     @Override
     protected Uri getResultUrl( Object result )
     {
-        return Helper.getFacebookPostUrl( ( Post ) result );
+        return UrlModifier.getFacebookPostUrl( ( Post ) result );
     }
 
     @Subscribe
     public void searchHashtag( SearchHashtagEvent event )
     {
         super.searchHashtag( event );
+    }
+
+    @Subscribe
+    public void onFacebookActionClicked( FacebookActionClickedEvent event )
+    {
+        FacebookActionsFragment fragment = FacebookActionsFragment.newInstance( event.getPost(), event.getActionType() );
+        fragment.show( getChildFragmentManager(), FacebookActionsFragment.TAG );
     }
 }

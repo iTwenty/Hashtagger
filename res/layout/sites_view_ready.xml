@@ -17,7 +17,6 @@
             android:layout_height="match_parent"
             android:divider="@null"
             android:dividerHeight="@dimen/card_padding"
-            android:padding="@dimen/card_padding"
             android:listSelector="@android:color/transparent"
             android:cacheColorHint="@android:color/transparent"/>
 
@@ -34,5 +33,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"/>
+
+    <FrameLayout
+        android:id="@+id/sites_actions_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"/>
 
 </RelativeLayout>

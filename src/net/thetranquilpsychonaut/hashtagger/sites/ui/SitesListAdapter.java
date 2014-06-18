@@ -26,7 +26,6 @@ public abstract class SitesListAdapter extends ArrayAdapter
         SitesListRow sitesListRow = getSitesListRow( getContext(), position, convertView, parent );
         Object data = getItem( position );
         sitesListRow.updateRow( data );
-        sitesListRow.sitesButtons.setTag( position );
         if ( null != parent.getTag() )
         {
             int expandedPosition = ( Integer ) parent.getTag();

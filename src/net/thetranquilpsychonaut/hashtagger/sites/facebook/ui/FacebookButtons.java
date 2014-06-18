@@ -4,11 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.Toast;
-import facebook4j.Post;
+import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.events.FacebookActionClickedEvent;
+import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 import net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton;
 
 /**
@@ -18,7 +20,6 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
 {
     private CenterContentButton ccbLike;
     private CenterContentButton ccbComment;
-    private CenterContentButton ccbShare;
     private CenterContentButton ccbViewDetails;
     private Post                post;
 
@@ -38,7 +39,6 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
         inflate( context, R.layout.facebook_buttons, this );
         ccbLike = ( CenterContentButton ) findViewById( R.id.ccb_like );
         ccbComment = ( CenterContentButton ) findViewById( R.id.ccb_comment );
-        ccbShare = ( CenterContentButton ) findViewById( R.id.ccb_share );
         ccbViewDetails = ( CenterContentButton ) findViewById( R.id.ccb_view_details );
     }
 
@@ -48,11 +48,23 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
         this.post = ( Post ) result;
         ccbLike.setOnClickListener( this );
         ccbComment.setOnClickListener( this );
-        ccbShare.setOnClickListener( this );
         ccbViewDetails.setOnClickListener( this );
-        ccbLike.setText( post.getLikes().getCount() != null && post.getLikes().getCount() != 0 ? String.valueOf( post.getLikes().getCount() ) : "" );
-        ccbComment.setText( post.getComments().getCount() != null && post.getComments().getCount() != 0 ? String.valueOf( post.getComments().getCount() ) : "" );
-        ccbShare.setText( post.getSharesCount() != null && post.getSharesCount() != 0 ? String.valueOf( post.getSharesCount() ) : "" );
+        if ( null != post.getLikes() && !Helper.isNullOrEmpty( post.getLikes().getData() ) )
+        {
+            ccbLike.setText( String.valueOf( post.getLikes().getData().size() ) );
+        }
+        else
+        {
+            ccbLike.setText( "" );
+        }
+        if ( null != post.getComments() && !Helper.isNullOrEmpty( post.getComments().getData() ) )
+        {
+            ccbComment.setText( String.valueOf( post.getComments().getData().size() ) );
+        }
+        else
+        {
+            ccbComment.setText( "" );
+        }
     }
 
     @Override
@@ -60,7 +72,6 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
     {
         ccbLike.setOnClickListener( null );
         ccbComment.setOnClickListener( null );
-        ccbShare.setOnClickListener( null );
         ccbViewDetails.setOnClickListener( null );
     }
 
@@ -69,15 +80,13 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
     {
         if ( v.equals( ccbLike ) )
         {
-            doLike();
+            // Subscriber : FacebookFragment : onFacebookActionClicked()
+            HashtaggerApp.bus.post( new FacebookActionClickedEvent( post, FacebookActionClickedEvent.ACTION_LIKE ) );
         }
         else if ( v.equals( ccbComment ) )
         {
-            doComment();
-        }
-        else if ( v.equals( ccbShare ) )
-        {
-            doShare();
+            // Subscriber : FacebookFragment : onFacebookActionClicked()
+            HashtaggerApp.bus.post( new FacebookActionClickedEvent( post, FacebookActionClickedEvent.ACTION_COMMENT ) );
         }
         else if ( v.equals( ccbViewDetails ) )
         {
@@ -88,34 +97,15 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
     private void doViewDetails()
     {
         Intent i = new Intent( getContext(), FacebookDetailActivity.class );
-        i.putExtra( FacebookDetailActivity.POST_KEY, ( java.io.Serializable ) post );
+        i.putExtra( FacebookDetailActivity.POST_KEY, post );
         getContext().startActivity( i );
-    }
-
-    private void doShare()
-    {
-
-        Toast.makeText( getContext(), "Sorry, Facebook shares are not implemented yet", Toast.LENGTH_SHORT ).show();
-        //doOpenInBrowser();
-    }
-
-    private void doComment()
-    {
-        Toast.makeText( getContext(), "Sorry, Facebook comments are not implemented yet", Toast.LENGTH_SHORT ).show();
-        //doOpenInBrowser();
-    }
-
-    private void doLike()
-    {
-        Toast.makeText( getContext(), "Sorry, Facebook likes are not implemented yet", Toast.LENGTH_SHORT ).show();
-        //doOpenInBrowser();
     }
 
     @Override
     public void doOpenInBrowser()
     {
         Intent i = new Intent( Intent.ACTION_VIEW );
-        i.setData( Helper.getFacebookPostUrl( post ) );
+        i.setData( UrlModifier.getFacebookPostUrl( post ) );
         getContext().startActivity( i );
     }
 }

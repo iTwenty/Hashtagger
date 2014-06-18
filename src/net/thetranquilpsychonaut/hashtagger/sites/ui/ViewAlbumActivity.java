@@ -21,7 +21,6 @@ import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.utils.SingleMediaScanner;
 import net.thetranquilpsychonaut.hashtagger.widgets.TextDrawable;
 import net.thetranquilpsychonaut.hashtagger.widgets.TouchImageView;
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -121,7 +120,8 @@ public class ViewAlbumActivity extends BaseActivity
                     .placeholder( loading )
                     .error( error )
                     .into( touchImageView );
-            container.addView( touchImageView, 0 );
+            Helper.debug( "Loading image from URL : " + albumImageUrls.get( position ) );
+            container.addView( touchImageView );
             return touchImageView;
         }
 

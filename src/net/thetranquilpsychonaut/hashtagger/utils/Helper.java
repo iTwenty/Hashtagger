@@ -1,34 +1,29 @@
 package net.thetranquilpsychonaut.hashtagger.utils;
 
 import android.content.Context;
-import android.net.Uri;
 import android.text.format.DateUtils;
-import android.text.util.Linkify;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.Patterns;
-import android.widget.TextView;
 import android.widget.Toast;
-import com.google.api.services.plus.model.Activity;
 import com.google.gson.JsonParser;
-import com.twitter.Autolink;
-import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import twitter4j.Status;
-import twitter4j.Trend;
-import twitter4j.Trends;
+import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Trend;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Trends;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Collection;
 
 /**
  * Created by itwenty on 2/7/14.
  */
-public class Helper
+public final class Helper
 {
+    private Helper()
+    {
+        throw new RuntimeException( "Class Helper must not be instantiated" );
+    }
+
     private static final boolean DEBUG = true;
 
     public static void debug( String s )
@@ -51,38 +46,7 @@ public class Helper
                 time,
                 DateUtils.SECOND_IN_MILLIS,
                 DateUtils.WEEK_IN_MILLIS,
-                DateUtils.FORMAT_ABBREV_ALL )
-                .toString();
-    }
-
-    public static String getStringDate( Date date )
-    {
-        SimpleDateFormat sdf = new SimpleDateFormat( "hh:mm:ss dd/MM/yyyy" );
-        return sdf.format( date );
-    }
-
-    public static String getLinkedStatusText( String tweetText )
-    {
-        return new Autolink().autoLink( tweetText );
-    }
-
-    public static void linkifyFacebook( TextView tv )
-    {
-        Linkify.TransformFilter filter = new Linkify.TransformFilter()
-        {
-            @Override
-            public String transformUrl( Matcher match, String url )
-            {
-                return match.group();
-            }
-        };
-
-        Pattern hashtagPattern = Pattern.compile( "#([A-Za-z0-9_-]+)" );
-        String hashtagScheme = "http://www.facebook.com/hashtag/";
-        Linkify.addLinks( tv, hashtagPattern, hashtagScheme, null, filter );
-
-        Pattern urlPattern = Patterns.WEB_URL;
-        Linkify.addLinks( tv, urlPattern, null, null, filter );
+                DateUtils.FORMAT_ABBREV_ALL );
     }
 
     public static int convertPxToDp( int px )
@@ -123,42 +87,7 @@ public class Helper
 
     public static void showNoNetworkToast( Context context )
     {
-        Toast.makeText( context, "Connect to a network first", Toast.LENGTH_SHORT ).show();
-    }
-
-    public static String getFacebookProfilePictureUrl( String userId )
-    {
-        return String.format( "http://graph.facebook.com/%s/picture?type=square", userId );
-    }
-
-    public static Uri getTwitterStatusUrl( Status status )
-    {
-        return Uri.parse( "http://twitter.com/" + status.getUser().getId() + "/status/" + status.getId() );
-    }
-
-    public static Uri getFacebookPostUrl( Post post )
-    {
-        return Uri.parse( "http://facebook.com/" + post.getId() );
-    }
-
-    public static Uri getGPlusActivityUrl( Activity activity )
-    {
-        return Uri.parse( activity.getUrl() );
-    }
-
-    public static String getFacebookLargePhotoUrl( String smallPhotoUrl )
-    {
-        return smallPhotoUrl.replaceAll( "_s.|_t.", "_o." );
-    }
-
-    public static String getGPlusAlbumImageUrl( String albumThumbnailUrl )
-    {
-        return albumThumbnailUrl.replaceAll( "/w\\d+-h\\d+.*/", "/" );
-    }
-
-    public static String getTwitterLargePhotoUrl( String smallPhotoUrl )
-    {
-        return smallPhotoUrl.replaceAll( ":thumb$|:small$|:medium$|:large$|$", ":large" );
+        Toast.makeText( context, context.getString( R.string.str_connect_to_network ), Toast.LENGTH_SHORT ).show();
     }
 
     public static ArrayList<String> createStringArrayList( String... strings )
@@ -173,7 +102,7 @@ public class Helper
 
     public static ArrayList<String> createTrendsArrayList( Trends trends )
     {
-        ArrayList<String> list = new ArrayList<String>( trends.getTrends().length );
+        ArrayList<String> list = new ArrayList<String>( trends.getTrends().size() );
         for ( Trend t : trends.getTrends() )
         {
             list.add( t.getName() );
@@ -189,5 +118,10 @@ public class Helper
                 .get( field )
                 .toString()
                 .replaceAll( "\"", "" );
+    }
+
+    public static boolean isNullOrEmpty( final Collection<?> c )
+    {
+        return null == c || c.isEmpty();
     }
 }

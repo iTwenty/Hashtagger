@@ -14,7 +14,9 @@ import android.widget.RelativeLayout;
 public abstract class SitesButtons extends LinearLayout
 {
     private static final int TIME_SCALE = 4;
-    protected boolean isVisible;
+    protected boolean mIsVisible;
+    private int mExpandedHeight = 0;
+    private ValueAnimator mHeightAnimator;
 
     public SitesButtons( Context context )
     {
@@ -29,38 +31,40 @@ public abstract class SitesButtons extends LinearLayout
     public SitesButtons( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
-        isVisible = false;
+        mIsVisible = false;
+        mHeightAnimator = new ValueAnimator();
+        mHeightAnimator.addUpdateListener( new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate( ValueAnimator animation )
+            {
+                setHeight( ( Integer ) animation.getAnimatedValue() );
+            }
+        } );
     }
 
     public void show( Object result, boolean animate, AnimatorListenerAdapter adapter )
     {
-        int widthMeasureSpec = MeasureSpec.makeMeasureSpec( RelativeLayout.LayoutParams.MATCH_PARENT, MeasureSpec.EXACTLY );
-        int heightMeasureSpec = MeasureSpec.makeMeasureSpec( RelativeLayout.LayoutParams.WRAP_CONTENT, MeasureSpec.EXACTLY );
-        measure( widthMeasureSpec, heightMeasureSpec );
-        int finalHeight = getMeasuredHeight();
         if ( animate )
         {
-            final ValueAnimator animator = ValueAnimator.ofInt( 0, finalHeight );
-            animator.setDuration( TIME_SCALE * finalHeight );
+            int expandedWidthMeasureSpec = MeasureSpec.makeMeasureSpec( RelativeLayout.LayoutParams.MATCH_PARENT, MeasureSpec.EXACTLY );
+            int expandedHeightMeasureSpec = MeasureSpec.makeMeasureSpec( RelativeLayout.LayoutParams.WRAP_CONTENT, MeasureSpec.EXACTLY );
+            measure( expandedWidthMeasureSpec, expandedHeightMeasureSpec );
+            mExpandedHeight = getMeasuredHeight();
+            mHeightAnimator.setDuration( TIME_SCALE * mExpandedHeight );
+            mHeightAnimator.removeAllListeners();
+            mHeightAnimator.setIntValues( 0, mExpandedHeight );
             if ( null != adapter )
             {
-                animator.addListener( adapter );
+                mHeightAnimator.addListener( adapter );
             }
-            animator.addUpdateListener( new ValueAnimator.AnimatorUpdateListener()
-            {
-                @Override
-                public void onAnimationUpdate( ValueAnimator animation )
-                {
-                    setHeight( ( Integer ) animation.getAnimatedValue() );
-                }
-            } );
-            animator.start();
+            mHeightAnimator.start();
         }
         else
         {
-            setHeight( finalHeight );
+            setHeight( mExpandedHeight );
         }
-        isVisible = true;
+        mIsVisible = true;
         updateButtons( result );
     }
 
@@ -70,23 +74,15 @@ public abstract class SitesButtons extends LinearLayout
     {
         if ( animate )
         {
-            final ValueAnimator animator = ValueAnimator.ofInt( getHeight(), 0 );
-            animator.setDuration( TIME_SCALE * getHeight() );
-            animator.addUpdateListener( new ValueAnimator.AnimatorUpdateListener()
-            {
-                @Override
-                public void onAnimationUpdate( ValueAnimator animation )
-                {
-                    setHeight( ( Integer ) animation.getAnimatedValue() );
-                }
-            } );
-            animator.start();
+            mHeightAnimator.removeAllListeners();
+            mHeightAnimator.setIntValues( mExpandedHeight, 0 );
+            mHeightAnimator.start();
         }
         else
         {
             setHeight( 0 );
         }
-        isVisible = false;
+        mIsVisible = false;
         clearButtons();
 
     }

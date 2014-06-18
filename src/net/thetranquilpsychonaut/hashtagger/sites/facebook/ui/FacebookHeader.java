@@ -9,9 +9,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
-import facebook4j.Post;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 
 /**
  * Created by itwenty on 5/11/14.
@@ -47,7 +48,7 @@ public class FacebookHeader extends RelativeLayout implements View.OnClickListen
     {
         this.post = post;
         Picasso.with( getContext() )
-                .load( Helper.getFacebookProfilePictureUrl( post.getFrom().getId() ) )
+                .load( UrlModifier.getFacebookProfilePictureUrl( post.getFrom().getId() ) )
                 .fit()
                 .centerCrop()
                 .into( imgvProfileImage );

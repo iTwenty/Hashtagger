@@ -1,7 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.LinearLayout;

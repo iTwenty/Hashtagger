@@ -32,6 +32,7 @@ import android.widget.ViewAnimator;
 import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.cwacpager.PageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.events.SearchHashtagEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
@@ -58,7 +59,7 @@ public abstract class SitesFragment extends Fragment implements
     private static final int LOADING = 1;
     private static final int LOGIN   = 2;
 
-    private   ViewAnimator       vaSitesView;
+    protected ViewAnimator       vaSitesView;
     protected ViewHolder         viewHolder;
     protected SitesSearchHandler sitesSearchHandler;
     protected List<?>            results;
@@ -69,7 +70,8 @@ public abstract class SitesFragment extends Fragment implements
     protected Animation          fadeIn;
     protected Animation          fadeOut;
 
-    protected int activeView = READY;
+    protected Rect tmpRect    = new Rect();
+    protected int  activeView = READY;
 
     private class TimedSearchRunner implements Runnable
     {
@@ -107,7 +109,6 @@ public abstract class SitesFragment extends Fragment implements
                 showView( READY );
                 results.clear();
                 resultTypes.clear();
-                sitesListAdapter.notifyDataSetChanged();
                 showClickHashtagIfAlreadyEntered();
             }
             if ( viewHolder.srlReady.isRefreshing() )
@@ -119,6 +120,7 @@ public abstract class SitesFragment extends Fragment implements
                 viewHolder.sitesFooterView.showView( SitesFooterView.NORMAL );
             }
         }
+        sitesListAdapter.notifyDataSetChanged();
         if ( !TextUtils.isEmpty( getEnteredHashtag() ) && !results.isEmpty() )
         {
             postNextTimedSearch();
@@ -231,9 +233,10 @@ public abstract class SitesFragment extends Fragment implements
                 }
             }
         } );
-        viewHolder.sitesEmptyView.setText( "Feels a bit empty here. Try the search icon above?" );
-        viewHolder.sitesEmptyView.setImage( getSketchLogoResId() );
+        viewHolder.sitesEmptyView.setText( getResources().getString( R.string.str_try_search_icon ) );
+        viewHolder.sitesEmptyView.setImage( getPlainLogoResId() );
     }
+
 
     private void initNewResultsBar( View viewReady )
     {
@@ -362,7 +365,7 @@ public abstract class SitesFragment extends Fragment implements
     {
         if ( !TextUtils.isEmpty( getEnteredHashtag() ) )
         {
-            viewHolder.sitesEmptyView.setText( "Click to search for " + getEnteredHashtag() );
+            viewHolder.sitesEmptyView.setText( String.format( getResources().getString( R.string.str_click_to_search_hashtag ), getEnteredHashtag() ) );
         }
     }
 
@@ -392,8 +395,8 @@ public abstract class SitesFragment extends Fragment implements
         new AlertDialog.Builder( getActivity() )
                 .setIcon( getLogoResId() )
                 .setTitle( getSiteName() )
-                .setMessage( "Are you sure you want to logout?" )
-                .setPositiveButton( "Yes", new DialogInterface.OnClickListener()
+                .setMessage( getResources().getString( R.string.str_confirm_logout ) )
+                .setPositiveButton( getResources().getString( R.string.str_yes ), new DialogInterface.OnClickListener()
                 {
                     @Override
                     public void onClick( DialogInterface dialog, int which )
@@ -401,7 +404,7 @@ public abstract class SitesFragment extends Fragment implements
                         logoutUser();
                     }
                 } )
-                .setNegativeButton( "No", new DialogInterface.OnClickListener()
+                .setNegativeButton( getResources().getString( R.string.str_no ), new DialogInterface.OnClickListener()
                 {
                     @Override
                     public void onClick( DialogInterface dialog, int which )
@@ -428,15 +431,17 @@ public abstract class SitesFragment extends Fragment implements
 
     protected abstract List<Integer> initResultTypesList();
 
-    protected abstract int getSketchLogoResId();
-
     protected abstract int getLogoResId();
+
+    protected abstract int getPlainLogoResId();
 
     protected abstract boolean isUserLoggedIn();
 
     protected abstract void removeUserDetails();
 
     protected abstract String getUserName();
+
+    public abstract PageDescriptor getPageDescriptor();
 
     @Subscribe
     public void searchHashtag( SearchHashtagEvent event )
@@ -524,11 +529,13 @@ public abstract class SitesFragment extends Fragment implements
         if ( !HashtaggerApp.isNetworkConnected() )
         {
             Helper.showNoNetworkToast( getActivity() );
+            viewHolder.srlReady.setRefreshing( false );
             return;
         }
         if ( !isUserLoggedIn() )
         {
             Toast.makeText( getActivity(), getResources().getString( R.string.str_not_logged_in ), Toast.LENGTH_LONG ).show();
+            viewHolder.srlReady.setRefreshing( false );
             return;
         }
         sitesSearchHandler.beginSearch( SearchType.NEWER, hashtag );
@@ -623,7 +630,7 @@ public abstract class SitesFragment extends Fragment implements
         else
         {
             viewHolder.sitesEmptyView.setText(
-                    String.format( "No results found for %s. Try again?", getEnteredHashtag() ) );
+                    String.format( getResources().getString( R.string.str_no_results_found ), getEnteredHashtag() ) );
         }
         sitesListAdapter.notifyDataSetChanged();
         postNextTimedSearch();
@@ -700,7 +707,7 @@ public abstract class SitesFragment extends Fragment implements
         {
             case SearchType.INITIAL:
                 showView( READY );
-                viewHolder.sitesEmptyView.setText( "Something went wrong :( Try again?" );
+                viewHolder.sitesEmptyView.setText( getResources().getString( R.string.str_search_error ) );
                 break;
             case SearchType.OLDER:
                 viewHolder.sitesFooterView.showView( SitesFooterView.ERROR );
@@ -717,7 +724,7 @@ public abstract class SitesFragment extends Fragment implements
 
     /*
     *********************** for UserHandlerListener ****************
-     */
+    */
     public void logoutUser()
     {
         removeUserDetails();
@@ -784,9 +791,8 @@ public abstract class SitesFragment extends Fragment implements
 
     private void scrollIfHidden( View view )
     {
-        Rect r = new Rect();
-        view.getLocalVisibleRect( r );
-        int hiddenHeight = view.getHeight() - r.height();
+        view.getLocalVisibleRect( tmpRect );
+        int hiddenHeight = view.getHeight() - tmpRect.height();
         if ( ( hiddenHeight > 0 ) &&
                 ( viewHolder.lvResultsList.getLastVisiblePosition() == viewHolder.lvResultsList.getPositionForView( view ) ) )
         {

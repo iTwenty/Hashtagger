@@ -11,18 +11,15 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import net.thetranquilpsychonaut.hashtagger.config.TwitterConfig;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterTrendsEvent;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.Twitter;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.TrendLocation;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Trends;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.utils.TrendsPrefs;
-import twitter4j.GeoLocation;
-import twitter4j.Trends;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
-import twitter4j.auth.AccessToken;
 
 import java.util.List;
 
@@ -31,7 +28,7 @@ import java.util.List;
  */
 public class TwitterTrendsService extends Service
 {
-    public static final long TRENDS_UPDATE_INTERVAL   = 1000 * 60 * 60; // one hpur
+    public static final long TRENDS_UPDATE_INTERVAL = 1000 * 60 * 60; // one hpur
 
     // choice of selected location
     public static final int LOCAL  = 0;
@@ -47,7 +44,6 @@ public class TwitterTrendsService extends Service
     private TrendsFetcherRunnable trendsFetcherRunnable;
     private IBinder               twitterTrendsBinder;
     private TwitterTrendsEvent    event;
-    private Twitter               twitter;
     private int                   trendsChoice;
 
     @Override
@@ -59,7 +55,6 @@ public class TwitterTrendsService extends Service
         trendsFetcherHandler = new Handler( trendsFetcherThread.getLooper() );
         twitterTrendsBinder = new TwitterTrendsBinder();
         trendsFetcherRunnable = new TrendsFetcherRunnable();
-        twitter = new TwitterFactory( TwitterConfig.CONFIGURATION ).getInstance();
         Helper.debug( "TwitterTrendsService created" );
     }
 
@@ -72,12 +67,6 @@ public class TwitterTrendsService extends Service
             trendsFetcherThread.quit();
         }
         Helper.debug( "TwitterTrendsService destroyed" );
-    }
-
-    private void updateAccessToken()
-    {
-        twitter.setOAuthAccessToken( null );
-        twitter.setOAuthAccessToken( new AccessToken( AccountPrefs.getTwitterAccessToken(), AccountPrefs.getTwitterAccessTokenSecret() ) );
     }
 
     private void fetchNewLocalTrends()
@@ -94,7 +83,6 @@ public class TwitterTrendsService extends Service
             if ( AccountPrefs.areTwitterDetailsPresent() )
             {
                 Helper.debug( "User is logged in to Twitter" );
-                updateAccessToken();
                 Location lastLoc = getLastKnownLocation();
                 if ( null != lastLoc )
                 {
@@ -119,14 +107,14 @@ public class TwitterTrendsService extends Service
     private void fetchTrendsForLastKnownLocation( Location lastLoc )
     {
         Helper.debug( "fetchTrendsForLastKnownLocation called" );
-        twitter4j.Location trendsLoc = getClosestTrendsLocation( new GeoLocation( lastLoc.getLatitude(), lastLoc.getLongitude() ) );
+        TrendLocation trendsLoc = getClosestTrendLocation( lastLoc.getLatitude(), lastLoc.getLongitude() );
         if ( null != trendsLoc )
         {
             Helper.debug( String.format( "Location closest to user's location for which trends are available is %s", trendsLoc.getName() ) );
             Trends trends = getTrendsForLocation( trendsLoc.getWoeid() );
             if ( null != trends )
             {
-                Helper.debug( String.format( "Trends found for location %s", trends.getLocation().getName() ) );
+                Helper.debug( String.format( "Trends found for location %s", trends.getLocations().get( 0 ).getName() ) );
                 event = new TwitterTrendsEvent( Helper.createTrendsArrayList( trends ), LOCAL, TRENDS_FOUND );
                 notifyTrendsFound( event, false );
             }
@@ -147,23 +135,23 @@ public class TwitterTrendsService extends Service
     {
         Helper.debug( "fetchTrendsForCountry called" );
         String countryIso = fetchSimCountryIso();
-        if ( null != countryIso )
+        if ( !TextUtils.isEmpty( countryIso ) )
         {
             Helper.debug( "Country ISO from SIM is " + countryIso );
-            twitter4j.Location countryLoc = getTrendsLocationForCountry( countryIso );
+            TrendLocation countryLoc = getTrendLocationForCountry( countryIso );
             if ( null != countryLoc )
             {
-                Helper.debug( String.format( "Trends location for country %s is %s", countryIso, countryLoc.getCountryName() ) );
+                Helper.debug( String.format( "Trends location for country %s is %s", countryIso, countryLoc.getCountry() ) );
                 Trends trends = getTrendsForLocation( countryLoc.getWoeid() );
                 if ( null != trends )
                 {
-                    Helper.debug( String.format( "Trends found for location %s", trends.getLocation().getName() ) );
+                    Helper.debug( String.format( "Trends found for location %s", trends.getLocations().get( 0 ).getName() ) );
                     event = new TwitterTrendsEvent( Helper.createTrendsArrayList( trends ), LOCAL, TRENDS_FOUND );
                     notifyTrendsFound( event, false );
                 }
                 else
                 {
-                    Helper.debug( String.format( "No trends for country %s", countryLoc.getCountryName() ) );
+                    Helper.debug( String.format( "No trends for country %s", countryLoc.getCountry() ) );
                     event = new TwitterTrendsEvent( null, LOCAL, TRENDS_NOT_AVAILABLE );
                     notifyTrendsFound( event, true );
                 }
@@ -207,7 +195,6 @@ public class TwitterTrendsService extends Service
             if ( AccountPrefs.areTwitterDetailsPresent() )
             {
                 Helper.debug( "User is logged in to twitter" );
-                updateAccessToken();
                 Trends globalTrends = getTrendsForLocation( 1 );
                 if ( null != globalTrends )
                 {
@@ -261,6 +248,7 @@ public class TwitterTrendsService extends Service
             @Override
             public void run()
             {
+                // Subscriber : TrendingHashtagsFragment : onTwitterTrendsFound()
                 HashtaggerApp.bus.post( event );
             }
         } );
@@ -271,63 +259,63 @@ public class TwitterTrendsService extends Service
         Trends trends = null;
         try
         {
-            trends = twitter.getPlaceTrends( woeid );
+            trends = Twitter.api().getTrendsForPlace( woeid ).get( 0 );
         }
-        catch ( TwitterException e )
+        catch ( Exception e )
         {
             Helper.debug( String.format( "Error while finding trends for woeid %d : %s", woeid, e.getMessage() ) );
         }
         return trends;
     }
 
-    private twitter4j.Location getClosestTrendsLocation( GeoLocation geoLocation )
+    private TrendLocation getClosestTrendLocation( double latitude, double longitude )
     {
-        twitter4j.Location loc = null;
+        TrendLocation location = null;
         try
         {
-            List<twitter4j.Location> locs = twitter.getClosestTrends( geoLocation );
+            List<TrendLocation> locs = Twitter.api().getClosestTrendLocations( latitude, longitude );
             if ( null == locs || locs.size() == 0 )
             {
-                throw new TwitterException( "No closest locations found" );
+                throw new Exception( "No closest locations found" );
             }
-            loc = locs.get( 0 );
+            location = locs.get( 0 );
         }
-        catch ( TwitterException e )
+        catch ( Exception e )
         {
-            Helper.debug( String.format( "Error while finding closest trends for %f %f : %s", geoLocation.getLatitude(), geoLocation.getLongitude(), e.getMessage() ) );
+            Helper.debug( String.format( "Error while finding closest trends for %f %f : %s", latitude, longitude, e.getMessage() ) );
         }
-        return loc;
+        return location;
     }
 
-    private twitter4j.Location getTrendsLocationForCountry( String countryIso )
+    private TrendLocation getTrendLocationForCountry( String countryIso )
     {
-        twitter4j.Location loc = null;
+        TrendLocation location = null;
         try
         {
-            List<twitter4j.Location> locs = twitter.getAvailableTrends();
+            List<TrendLocation> locs = Twitter.api().getAvailableTrends();
             if ( null == locs || locs.size() == 0 )
             {
-                throw new TwitterException( "No available trends found" );
+                throw new Exception( "No available trends found" );
             }
-            for ( twitter4j.Location l : locs )
+            for ( TrendLocation l : locs )
             {
                 if ( null != l.getCountryCode() && l.getCountryCode().equalsIgnoreCase( countryIso ) )
                 {
                     Helper.debug( "Trends found for country code " + countryIso + " : " + l.toString() );
-                    loc = l;
+                    location = l;
                     break;
                 }
             }
-            if ( null == loc )
+            if ( null == location )
             {
-                throw new TwitterException( "Trends not available for country " + countryIso );
+                throw new Exception( "Trends not available for country " + countryIso );
             }
         }
-        catch ( TwitterException e )
+        catch ( Exception e )
         {
             Helper.debug( String.format( "Error while searching available trends : %s", e.getMessage() ) );
         }
-        return loc;
+        return location;
     }
 
     private Location getLastKnownLocation()

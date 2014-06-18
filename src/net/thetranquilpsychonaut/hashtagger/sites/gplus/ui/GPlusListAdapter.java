@@ -3,7 +3,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import com.google.api.services.plus.model.Activity;
+import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 
@@ -79,7 +79,7 @@ public class GPlusListAdapter extends SitesListAdapter
     public static int getActivityType( Activity activity )
     {
         int activityType = ACTIVITY_TYPE_NORMAL;
-        String objectType = null == activity.getObject().getAttachments() ?
+        String objectType = activity.getObject().getAttachments().isEmpty() ?
                 "" :
                 activity.getObject().getAttachments().get( 0 ).getObjectType();
 

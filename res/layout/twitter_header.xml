@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@id/tv_name"
-        android:drawableLeft="@drawable/twitter_retweet_on"
+        android:drawableLeft="@drawable/retweet_on_small"
         tools:text=" of @screenname"
         style="@style/TwitterScreenName"/>
 

@@ -22,7 +22,7 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/nav_drawer_pager_indicator"/>
 
-        <net.thetranquilpsychonaut.hashtagger.sites.ui.NavDrawerPagerIndicator
+        <net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerIndicator
             android:id="@id/nav_drawer_pager_indicator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

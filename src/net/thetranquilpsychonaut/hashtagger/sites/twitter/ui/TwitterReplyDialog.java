@@ -2,9 +2,9 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterAction;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 
 /**
  * Created by itwenty on 5/11/14.
@@ -20,18 +21,17 @@ import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterActi
 public class TwitterReplyDialog extends DialogFragment implements TextWatcher, View.OnFocusChangeListener
 {
     public static final String TAG = "twitter_reply_dialog";
+    Status   status;
     String   inReplyToScreenName;
-    long     inReplyToStatusId;
     EditText edtReplyText;
     TextView tvCharCounter;
     TextView tvReplyProgress;
 
-    public static TwitterReplyDialog newInstance( String inReplyToScreenName, long inReplyToStatusId )
+    public static TwitterReplyDialog newInstance( Status status )
     {
         TwitterReplyDialog dialog = new TwitterReplyDialog();
         Bundle args = new Bundle();
-        args.putString( "reply_to_screen_name", inReplyToScreenName );
-        args.putLong( "reply_to_status_id", inReplyToStatusId );
+        args.putSerializable( "status", status );
         dialog.setArguments( args );
         return dialog;
     }
@@ -39,8 +39,8 @@ public class TwitterReplyDialog extends DialogFragment implements TextWatcher, V
     @Override
     public Dialog onCreateDialog( Bundle savedInstanceState )
     {
-        this.inReplyToScreenName = getArguments().getString( "reply_to_screen_name" );
-        this.inReplyToStatusId = getArguments().getLong( "reply_to_status_id" );
+        this.status = ( Status ) getArguments().getSerializable( "status" );
+        this.inReplyToScreenName = status.getUser().getScreenName();
         View layout = getActivity().getLayoutInflater().inflate( R.layout.dialog_twitter_reply, null );
         AlertDialog dialog = new AlertDialog.Builder( getActivity() )
                 .setView( layout )
@@ -76,7 +76,7 @@ public class TwitterReplyDialog extends DialogFragment implements TextWatcher, V
 
     public void doReply()
     {
-        new TwitterAction().executeReplyAction( edtReplyText.getText().toString(), this.inReplyToStatusId );
+        new TwitterAction().executeReplyAction( edtReplyText.getText().toString(), this.status );
     }
 
     @Override

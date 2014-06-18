@@ -3,8 +3,9 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.TextView;
-import facebook4j.Post;
+import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
+import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 
 /**
  * Created by itwenty on 5/31/14.
@@ -40,13 +41,13 @@ public abstract class FacebookListRow extends SitesListRow
 
     protected abstract FacebookHeader initFacebookHeader();
 
-    protected abstract TextView initPostText();
+    protected abstract LinkifiedTextView initPostText();
 
     @Override
     public void updateRow( Object result )
     {
         this.post = ( Post ) result;
         facebookHeader.showHeader( post );
-        tvPostText.setText( post.getMessage() );
+        tvPostText.setText( post.getLinkedText() );
     }
 }
