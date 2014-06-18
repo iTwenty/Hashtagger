@@ -23,7 +23,7 @@
             android:title="Facebook"
             android:key="site_facebook"
             android:icon="@drawable/facebook_icon_flat"
-            android:defaultValue="true"/>
+            android:defaultValue="false"/>
 
     </PreferenceCategory>
 
