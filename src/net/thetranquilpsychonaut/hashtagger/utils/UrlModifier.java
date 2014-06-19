@@ -49,9 +49,6 @@ public final class UrlModifier
         String newUrl = FB_INTERNAL_URL_PATTERN.matcher( smallPhotoUrl ).replaceAll( "_o." );
         if ( TextUtils.equals( smallPhotoUrl, newUrl ) && smallPhotoUrl.contains( "fbexternal" ) )
         {
-            ;
-        }
-        {
             Uri uri = Uri.parse( smallPhotoUrl );
             String imageUrl = uri.getQueryParameter( "url" );
             if ( !TextUtils.isEmpty( imageUrl ) )

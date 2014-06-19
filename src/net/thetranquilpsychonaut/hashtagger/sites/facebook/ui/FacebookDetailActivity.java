@@ -86,11 +86,10 @@ public class FacebookDetailActivity extends SlidingActionsActivity
         final VideoThumbnail videoThumbnail = ( VideoThumbnail ) temp.getChildAt( 0 );
         videoThumbnail.setVisibility( View.GONE );
         final String imageUrl = UrlModifier.getFacebookLargePhotoUrl( post.getPicture() );
+        Helper.debug( imageUrl );
         Picasso.with( this )
                 .load( imageUrl )
                 .error( R.drawable.facebook_icon_plain )
-                .centerCrop()
-                .fit()
                 .into( videoThumbnail.getVideoThumbnail(), new Callback()
                 {
                     @Override

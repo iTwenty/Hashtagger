@@ -68,6 +68,7 @@ public class FacebookMediaRow extends FacebookListRow implements View.OnClickLis
     public void updateRow( Object result )
     {
         super.updateRow( result );
+        Helper.debug( post.getPicture() );
         Picasso.with( getContext() )
                 .load( post.getPicture() )
                 .error( R.drawable.drawable_image_loading )
