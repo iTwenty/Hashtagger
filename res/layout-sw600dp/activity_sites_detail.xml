@@ -17,7 +17,6 @@
         android:layout_width="600dp"
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
-        android:paddingTop="@dimen/layout_padding"
         android:background="@android:color/transparent"/>
 
 </net.thetranquilpsychonaut.hashtagger.widgets.SlidingUpPanelLayout>

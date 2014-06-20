@@ -22,3 +22,7 @@ proguard/
 .idea/
 # Config keys
 src/net/thetranquilpsychonaut/hashtagger/config/
+# Empty ant.properties
+ant.properties
+# Proguard logs
+proguard_logs
