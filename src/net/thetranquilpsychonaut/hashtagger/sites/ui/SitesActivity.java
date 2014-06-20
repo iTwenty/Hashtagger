@@ -223,9 +223,13 @@ public class SitesActivity extends NavDrawerActivity
 
     public void handleIntent( Intent intent )
     {
-        // Collapse the searchView, supposed to happen automatically, but doesn't :(
-        svHashtag.setIconified( true );
-        svHashtag.onActionViewCollapsed();
+        // This method gets called before svHashtag is fully ready during a some
+        // starts, causing NPE, so we need to check for null
+        if ( null != svHashtag )
+        {
+            svHashtag.setIconified( true );
+            svHashtag.onActionViewCollapsed();
+        }
         String input = intent.getStringExtra( SearchManager.QUERY );
         if ( TextUtils.isEmpty( input ) )
         {

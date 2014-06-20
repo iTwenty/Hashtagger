@@ -337,7 +337,10 @@ public abstract class SitesFragment extends Fragment implements
         if ( null != savedInstanceState )
         {
             showView( savedInstanceState.getInt( ACTIVE_VIEW_KEY ) );
-            viewHolder.sitesFooterView.showView( savedInstanceState.getInt( ACTIVE_FOOTER_VIEW_KEY ) );
+            if ( null != viewHolder.sitesFooterView )
+            {
+                viewHolder.sitesFooterView.showView( savedInstanceState.getInt( ACTIVE_FOOTER_VIEW_KEY ) );
+            }
         }
     }
 
@@ -355,7 +358,11 @@ public abstract class SitesFragment extends Fragment implements
     {
         super.onSaveInstanceState( outState );
         outState.putInt( ACTIVE_VIEW_KEY, getActiveView() );
-        outState.putInt( ACTIVE_FOOTER_VIEW_KEY, viewHolder.sitesFooterView.getActiveView() );
+        // Gave me an NPE once, so a null check here :/
+        if ( null != viewHolder.sitesFooterView )
+        {
+            outState.putInt( ACTIVE_FOOTER_VIEW_KEY, viewHolder.sitesFooterView.getActiveView() );
+        }
         saveData();
     }
 
