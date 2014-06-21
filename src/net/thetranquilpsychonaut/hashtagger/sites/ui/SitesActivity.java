@@ -33,15 +33,21 @@ import net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPager
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class SitesActivity extends NavDrawerActivity
 {
-    public static String currentHashtag = null;
+    private ViewPager          sitesPager;
+    private IconPagerIndicator sitesPagerIndicator;
+    private SitesPagerAdapter  sitesPagerAdapter;
+    private SearchView         svHashtag;
+    private Stack<String>      hashtags;
 
-    ViewPager          sitesPager;
-    IconPagerIndicator sitesPagerIndicator;
-    SitesPagerAdapter  sitesPagerAdapter;
-    SearchView         svHashtag;
+    // We check and reset this flag in onHandleIntent() to know
+    // if the current intent is because of a back press or not.
+    // In case it is, we don't need to add the search query to
+    // the stack.
+    private boolean isSearchDueToBackPress = false;
 
     @Override
     public void onCreate( Bundle savedInstanceState )
@@ -61,10 +67,13 @@ public class SitesActivity extends NavDrawerActivity
         sitesPager.setOffscreenPageLimit( 2 );
 
         sitesPagerIndicator.setViewPager( sitesPager );
+        hashtags = null == PersistentData.SitesActivityData.hashtags ?
+                new Stack<String>() :
+                PersistentData.SitesActivityData.hashtags;
 
-        if ( !TextUtils.isEmpty( currentHashtag ) )
+        if ( !TextUtils.isEmpty( peekCurrentHashtag() ) )
         {
-            setTitle( currentHashtag );
+            setTitle( peekCurrentHashtag() );
         }
 
         showActiveSites();
@@ -161,16 +170,23 @@ public class SitesActivity extends NavDrawerActivity
         svHashtag = ( SearchView ) menu.findItem( R.id.sv_hashtag ).getActionView();
         svHashtag.setSearchableInfo( searchManager.getSearchableInfo( getComponentName() ) );
         MenuItem saveHashtagItem = menu.findItem( R.id.it_save_hashtag );
-        if ( TextUtils.isEmpty( currentHashtag ) )
+        if ( !TextUtils.isEmpty( peekCurrentHashtag() ) )
         {
-            saveHashtagItem.setVisible( false );
+            saveHashtagItem.setTitle( "Save " + peekCurrentHashtag() );
+            saveHashtagItem.setVisible( true );
         }
         else
         {
-            saveHashtagItem.setTitle( "Save " + currentHashtag );
-            saveHashtagItem.setVisible( true );
+            saveHashtagItem.setVisible( false );
         }
         return true;
+    }
+
+    @Override
+    protected void onSaveInstanceState( Bundle outState )
+    {
+        super.onSaveInstanceState( outState );
+        PersistentData.SitesActivityData.hashtags = this.hashtags;
     }
 
     @Override
@@ -186,19 +202,16 @@ public class SitesActivity extends NavDrawerActivity
 
     public void doSaveHashtag( MenuItem item )
     {
-        if ( TextUtils.isEmpty( currentHashtag ) )
-        {
-            return;
-        }
         ContentValues values = new ContentValues();
-        values.put( SavedHashtagsDBContract.SavedHashtags.COLUMN_HASHTAG, currentHashtag );
+        String hashtagToSave = peekCurrentHashtag();
+        values.put( SavedHashtagsDBContract.SavedHashtags.COLUMN_HASHTAG, hashtagToSave );
         Uri result = getContentResolver()
                 .insert( SavedHashtagsProviderContract.SavedHashtags.CONTENT_URI, values );
         Toast.makeText(
                 this,
                 result == null ?
-                        "Failed to save hashtag " + currentHashtag :
-                        "Saved hashtag " + currentHashtag,
+                        "Failed to save hashtag " + hashtagToSave :
+                        "Saved hashtag " + hashtagToSave,
                 Toast.LENGTH_SHORT )
                 .show();
     }
@@ -230,11 +243,20 @@ public class SitesActivity extends NavDrawerActivity
             svHashtag.setIconified( true );
             svHashtag.onActionViewCollapsed();
         }
-        String input = intent.getStringExtra( SearchManager.QUERY );
+        final String input = intent.getStringExtra( SearchManager.QUERY );
         if ( TextUtils.isEmpty( input ) )
         {
             return;
         }
+
+        // If the search is due to back press, we just popped the input
+        // off the stack. We don't want to add it back in!
+        if ( !isSearchDueToBackPress )
+        {
+            pushCurrentHashtag( input );
+        }
+        isSearchDueToBackPress = false;
+
         // No point continuing is network is not available
         if ( !HashtaggerApp.isNetworkConnected() )
         {
@@ -242,7 +264,6 @@ public class SitesActivity extends NavDrawerActivity
             return;
         }
 
-        currentHashtag = input;
         // We have a hashtag, time to show the save option in the menu
         invalidateOptionsMenu();
         // Save the entered query for later search suggestion
@@ -250,21 +271,55 @@ public class SitesActivity extends NavDrawerActivity
                 this,
                 HashtagSuggestionsProvider.AUTHORITY,
                 HashtagSuggestionsProvider.MODE );
-        suggestions.saveRecentQuery( currentHashtag, null );
-        setTitle( currentHashtag );
+        suggestions.saveRecentQuery( input, null );
+        setTitle( input );
         new Handler( Looper.getMainLooper() ).post( new Runnable()
         {
             @Override
             public void run()
             {
                 // Subscriber : SitesFragment : searchHashtag()
-                HashtaggerApp.bus.post( new SearchHashtagEvent() );
+                HashtaggerApp.bus.post( new SearchHashtagEvent( input ) );
             }
         } );
     }
 
-    public static final String getCurrentHashtag()
+    @Override
+    public void onBackPressed()
     {
-        return currentHashtag;
+        popCurrentHashtag();
+        String hashtag = peekCurrentHashtag();
+        if ( TextUtils.isEmpty( hashtag ) )
+        {
+            super.onBackPressed();
+        }
+        else
+        {
+            // This flag tells onHandleIntent() to not add the query back to the stack
+            isSearchDueToBackPress = true;
+            Intent intent = new Intent( Intent.ACTION_SEARCH );
+            intent.putExtra( SearchManager.QUERY, hashtag );
+            intent.setComponent( this.getComponentName() );
+            startActivity( intent );
+        }
+    }
+
+    public String peekCurrentHashtag()
+    {
+        if ( Helper.isNullOrEmpty( hashtags ) )
+            return null;
+        return hashtags.peek();
+    }
+
+    public String popCurrentHashtag()
+    {
+        if ( Helper.isNullOrEmpty( hashtags ) )
+            return null;
+        return hashtags.pop();
+    }
+
+    public String pushCurrentHashtag( String hashtag )
+    {
+        return hashtags.push( hashtag );
     }
 }

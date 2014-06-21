@@ -5,4 +5,15 @@ package net.thetranquilpsychonaut.hashtagger.events;
  */
 public class SearchHashtagEvent
 {
+    String hashtag;
+
+    public SearchHashtagEvent( String hashtag )
+    {
+        this.hashtag = hashtag;
+    }
+
+    public String getHashtag()
+    {
+        return hashtag;
+    }
 }

@@ -13,7 +13,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.components.FacebookSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragmentData;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.PersistentData;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
@@ -73,8 +73,8 @@ public class FacebookFragment extends SitesFragment
     @Override
     protected void saveData()
     {
-        SitesFragmentData.Facebook.posts = ( List<Post> ) results;
-        SitesFragmentData.Facebook.postTypes = resultTypes;
+        PersistentData.FacebookFragmentData.posts = ( List<Post> ) results;
+        PersistentData.FacebookFragmentData.postTypes = resultTypes;
     }
 
     @Override
@@ -104,13 +104,17 @@ public class FacebookFragment extends SitesFragment
     @Override
     protected List<?> initResultsList()
     {
-        return null == SitesFragmentData.Facebook.posts ? new ArrayList<Post>() : SitesFragmentData.Facebook.posts;
+        return null == PersistentData.FacebookFragmentData.posts ?
+                new ArrayList<Post>() :
+                PersistentData.FacebookFragmentData.posts;
     }
 
     @Override
     protected List<Integer> initResultTypesList()
     {
-        return null == SitesFragmentData.Facebook.postTypes ? new ArrayList<Integer>() : SitesFragmentData.Facebook.postTypes;
+        return null == PersistentData.FacebookFragmentData.postTypes ?
+                new ArrayList<Integer>() :
+                PersistentData.FacebookFragmentData.postTypes;
     }
 
     @Override

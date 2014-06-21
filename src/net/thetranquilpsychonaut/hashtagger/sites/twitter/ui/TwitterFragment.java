@@ -18,7 +18,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterActi
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragmentData;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.PersistentData;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
@@ -93,8 +93,8 @@ public class TwitterFragment extends SitesFragment implements TwitterActionsPerf
     @Override
     protected void saveData()
     {
-        SitesFragmentData.Twitter.statuses = ( List<Status> ) results;
-        SitesFragmentData.Twitter.statusTypes = resultTypes;
+        PersistentData.TwitterFragmentData.statuses = ( List<Status> ) results;
+        PersistentData.TwitterFragmentData.statusTypes = resultTypes;
     }
 
     @Override
@@ -124,13 +124,17 @@ public class TwitterFragment extends SitesFragment implements TwitterActionsPerf
     @Override
     protected List<?> initResultsList()
     {
-        return null == SitesFragmentData.Twitter.statuses ? new ArrayList<Status>() : SitesFragmentData.Twitter.statuses;
+        return null == PersistentData.TwitterFragmentData.statuses ?
+                new ArrayList<Status>() :
+                PersistentData.TwitterFragmentData.statuses;
     }
 
     @Override
     protected List<Integer> initResultTypesList()
     {
-        return null == SitesFragmentData.Twitter.statusTypes ? new ArrayList<Integer>() : SitesFragmentData.Twitter.statusTypes;
+        return null == PersistentData.TwitterFragmentData.statusTypes ?
+                new ArrayList<Integer>() :
+                PersistentData.TwitterFragmentData.statusTypes;
     }
 
     @Override

@@ -78,8 +78,8 @@ public abstract class SitesFragment extends Fragment implements
         @Override
         public void run()
         {
-            // Ensure that getEnteredHashtag() does not return null before calling this.
-            sitesSearchHandler.beginSearch( SearchType.TIMED, getEnteredHashtag() );
+            // Ensure that currentHashtag is not null or empty before calling this.
+            sitesSearchHandler.beginSearch( SearchType.TIMED, getCurrentHashtag() );
         }
     }
 
@@ -88,8 +88,6 @@ public abstract class SitesFragment extends Fragment implements
     {
         super.onCreate( savedInstanceState );
         setHasOptionsMenu( true );
-        timedSearchHandler = new Handler( Looper.getMainLooper() );
-        timedSearchRunner = new TimedSearchRunner();
         results = initResultsList();
         resultTypes = initResultTypesList();
         sitesListAdapter = initSitesListAdapter();
@@ -121,10 +119,6 @@ public abstract class SitesFragment extends Fragment implements
             }
         }
         sitesListAdapter.notifyDataSetChanged();
-        if ( !TextUtils.isEmpty( getEnteredHashtag() ) && !results.isEmpty() )
-        {
-            postNextTimedSearch();
-        }
     }
 
     private void postNextTimedSearch()
@@ -187,9 +181,9 @@ public abstract class SitesFragment extends Fragment implements
             @Override
             public void onRefresh()
             {
-                if ( !TextUtils.isEmpty( getEnteredHashtag() ) )
+                if ( !TextUtils.isEmpty( getCurrentHashtag() ) )
                 {
-                    doLoadNewerResults( getEnteredHashtag() );
+                    doLoadNewerResults( getCurrentHashtag() );
                 }
             }
         } );
@@ -207,9 +201,9 @@ public abstract class SitesFragment extends Fragment implements
             @Override
             public void onClick( View v )
             {
-                if ( !TextUtils.isEmpty( getEnteredHashtag() ) )
+                if ( !TextUtils.isEmpty( getCurrentHashtag() ) )
                 {
-                    doLoadOlderResults( getEnteredHashtag() );
+                    doLoadOlderResults( getCurrentHashtag() );
                 }
             }
         } );
@@ -223,13 +217,9 @@ public abstract class SitesFragment extends Fragment implements
             @Override
             public void onClick( View v )
             {
-                if ( TextUtils.isEmpty( getEnteredHashtag() ) )
+                if ( !TextUtils.isEmpty( getCurrentHashtag() ) )
                 {
-                    ( ( SitesActivity ) getActivity() ).svHashtag.onActionViewExpanded();
-                }
-                else
-                {
-                    searchHashtag( null );
+                    searchHashtag( new SearchHashtagEvent( getCurrentHashtag() ) );
                 }
             }
         } );
@@ -337,7 +327,7 @@ public abstract class SitesFragment extends Fragment implements
         if ( null != savedInstanceState )
         {
             showView( savedInstanceState.getInt( ACTIVE_VIEW_KEY ) );
-            if ( null != viewHolder.sitesFooterView )
+            if ( null != viewHolder.sitesFooterView && savedInstanceState.containsKey( ACTIVE_FOOTER_VIEW_KEY ) )
             {
                 viewHolder.sitesFooterView.showView( savedInstanceState.getInt( ACTIVE_FOOTER_VIEW_KEY ) );
             }
@@ -351,6 +341,17 @@ public abstract class SitesFragment extends Fragment implements
         showClickHashtagIfAlreadyEntered();
         fadeIn = AnimationUtils.loadAnimation( getActivity(), android.R.anim.fade_in );
         fadeOut = AnimationUtils.loadAnimation( getActivity(), android.R.anim.fade_out );
+        timedSearchHandler = new Handler( Looper.getMainLooper() );
+        timedSearchRunner = new TimedSearchRunner();
+        if ( !TextUtils.isEmpty( getCurrentHashtag() ) && !results.isEmpty() )
+        {
+            postNextTimedSearch();
+        }
+    }
+
+    public String getCurrentHashtag()
+    {
+        return ( ( SitesActivity ) getActivity() ).peekCurrentHashtag();
     }
 
     @Override
@@ -370,15 +371,13 @@ public abstract class SitesFragment extends Fragment implements
 
     private void showClickHashtagIfAlreadyEntered()
     {
-        if ( !TextUtils.isEmpty( getEnteredHashtag() ) )
+        if ( !TextUtils.isEmpty( getCurrentHashtag() ) )
         {
-            viewHolder.sitesEmptyView.setText( String.format( getResources().getString( R.string.str_click_to_search_hashtag ), getEnteredHashtag() ) );
+            viewHolder.sitesEmptyView.setText(
+                    String.format(
+                            getResources().getString( R.string.str_click_to_search_hashtag ),
+                            getCurrentHashtag() ) );
         }
-    }
-
-    protected String getEnteredHashtag()
-    {
-        return SitesActivity.currentHashtag;
     }
 
     protected abstract String getLoginButtonText();
@@ -453,7 +452,7 @@ public abstract class SitesFragment extends Fragment implements
     @Subscribe
     public void searchHashtag( SearchHashtagEvent event )
     {
-        if ( TextUtils.isEmpty( getEnteredHashtag() ) )
+        if ( TextUtils.isEmpty( event.getHashtag() ) )
         {
             return;
         }
@@ -469,7 +468,7 @@ public abstract class SitesFragment extends Fragment implements
         viewHolder.srlReady.setRefreshing( false );
         viewHolder.sitesFooterView.showView( SitesFooterView.NORMAL );
         sitesSearchHandler.cancelCurrentSearch();
-        sitesSearchHandler.beginSearch( SearchType.INITIAL, getEnteredHashtag() );
+        sitesSearchHandler.beginSearch( SearchType.INITIAL, event.getHashtag() );
     }
 
     public void showView( int activeView )
@@ -637,7 +636,7 @@ public abstract class SitesFragment extends Fragment implements
         else
         {
             viewHolder.sitesEmptyView.setText(
-                    String.format( getResources().getString( R.string.str_no_results_found ), getEnteredHashtag() ) );
+                    String.format( getResources().getString( R.string.str_no_results_found ), getCurrentHashtag() ) );
         }
         sitesListAdapter.notifyDataSetChanged();
         postNextTimedSearch();
@@ -801,7 +800,8 @@ public abstract class SitesFragment extends Fragment implements
         view.getLocalVisibleRect( tmpRect );
         int hiddenHeight = view.getHeight() - tmpRect.height();
         if ( ( hiddenHeight > 0 ) &&
-                ( viewHolder.lvResultsList.getLastVisiblePosition() == viewHolder.lvResultsList.getPositionForView( view ) ) )
+                ( viewHolder.lvResultsList.getLastVisiblePosition()
+                        == viewHolder.lvResultsList.getPositionForView( view ) ) )
         {
             viewHolder.lvResultsList.smoothScrollBy( hiddenHeight, 2 * hiddenHeight );
         }

@@ -13,7 +13,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.GPlusSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragmentData;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.PersistentData;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
@@ -44,13 +44,17 @@ public class GPlusFragment extends SitesFragment
     @Override
     protected List<?> initResultsList()
     {
-        return null == SitesFragmentData.GPlus.activities ? new ArrayList<Activity>() : SitesFragmentData.GPlus.activities;
+        return null == PersistentData.GPlusFragmentData.activities ?
+                new ArrayList<Activity>() :
+                PersistentData.GPlusFragmentData.activities;
     }
 
     @Override
     protected List<Integer> initResultTypesList()
     {
-        return null == SitesFragmentData.GPlus.activityTypes ? new ArrayList<Integer>() : SitesFragmentData.GPlus.activityTypes;
+        return null == PersistentData.GPlusFragmentData.activityTypes ?
+                new ArrayList<Integer>() :
+                PersistentData.GPlusFragmentData.activityTypes;
     }
 
     @Override
@@ -98,8 +102,8 @@ public class GPlusFragment extends SitesFragment
     @Override
     protected void saveData()
     {
-        SitesFragmentData.GPlus.activities = ( List<Activity> ) results;
-        SitesFragmentData.GPlus.activityTypes = resultTypes;
+        PersistentData.GPlusFragmentData.activities = ( List<Activity> ) results;
+        PersistentData.GPlusFragmentData.activityTypes = resultTypes;
     }
 
     @Override
