@@ -55,7 +55,6 @@ public class TwitterTrendsService extends Service
         trendsFetcherHandler = new Handler( trendsFetcherThread.getLooper() );
         twitterTrendsBinder = new TwitterTrendsBinder();
         trendsFetcherRunnable = new TrendsFetcherRunnable();
-        Helper.debug( "TwitterTrendsService created" );
     }
 
     @Override
@@ -66,7 +65,6 @@ public class TwitterTrendsService extends Service
         {
             trendsFetcherThread.quit();
         }
-        Helper.debug( "TwitterTrendsService destroyed" );
     }
 
     private void fetchNewLocalTrends()
