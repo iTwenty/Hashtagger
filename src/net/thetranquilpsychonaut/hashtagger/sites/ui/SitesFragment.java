@@ -59,8 +59,6 @@ public abstract class SitesFragment extends Fragment implements
     private static final int LOADING = 1;
     private static final int LOGIN   = 2;
 
-    protected ViewAnimator       vaSitesView;
-    protected ViewHolder         viewHolder;
     protected SitesSearchHandler sitesSearchHandler;
     protected List<?>            results;
     protected List<Integer>      resultTypes;
@@ -69,6 +67,16 @@ public abstract class SitesFragment extends Fragment implements
     protected TimedSearchRunner  timedSearchRunner;
     protected Animation          fadeIn;
     protected Animation          fadeOut;
+
+    // Views
+    protected ViewAnimator         vaSitesView;
+    protected ListView             lvResultsList;
+    protected SitesEmptyView       sitesEmptyView;
+    protected SitesFooterView      sitesFooterView;
+    protected MySwipeRefreshLayout srlReady;
+    protected NewResultsBar        newResultsBar;
+    protected ProgressBar          pgbrLoadingResults;
+    protected Button               btnLogin;
 
     protected Rect tmpRect    = new Rect();
     protected int  activeView = READY;
@@ -98,8 +106,8 @@ public abstract class SitesFragment extends Fragment implements
     public void onStart()
     {
         super.onStart();
-        sitesSearchHandler.registerReceiver();
         HashtaggerApp.bus.register( this );
+        sitesSearchHandler.registerReceiver();
         if ( !sitesSearchHandler.isSearchRunning() )
         {
             if ( activeView == LOADING )
@@ -109,13 +117,13 @@ public abstract class SitesFragment extends Fragment implements
                 resultTypes.clear();
                 showClickHashtagIfAlreadyEntered();
             }
-            if ( viewHolder.srlReady.isRefreshing() )
+            if ( srlReady.isRefreshing() )
             {
-                viewHolder.srlReady.setRefreshing( false );
+                srlReady.setRefreshing( false );
             }
-            if ( viewHolder.sitesFooterView.getActiveView() == SitesFooterView.LOADING )
+            if ( sitesFooterView.getActiveView() == SitesFooterView.LOADING )
             {
-                viewHolder.sitesFooterView.showView( SitesFooterView.NORMAL );
+                sitesFooterView.showView( SitesFooterView.NORMAL );
             }
         }
         sitesListAdapter.notifyDataSetChanged();
@@ -136,7 +144,7 @@ public abstract class SitesFragment extends Fragment implements
         super.onStop();
         timedSearchHandler.removeCallbacks( timedSearchRunner );
         sitesSearchHandler.unregisterReceiver();
-        HashtaggerApp.bus.unregister( this );
+        HashtaggerApp.bus.register( this );
     }
 
     @Override
@@ -144,7 +152,6 @@ public abstract class SitesFragment extends Fragment implements
     {
         View v = inflater.inflate( R.layout.fragment_sites, container, false );
         vaSitesView = ( ViewAnimator ) v.findViewById( R.id.va_sites_view );
-        viewHolder = new ViewHolder();
         vaSitesView.addView( initViewReady( inflater ), READY );
         vaSitesView.addView( initViewLoading( inflater ), LOADING );
         vaSitesView.addView( initViewLogin( inflater ), LOGIN );
@@ -175,8 +182,8 @@ public abstract class SitesFragment extends Fragment implements
 
     private void initSwipeRefreshLayout( View viewReady )
     {
-        viewHolder.srlReady = ( MySwipeRefreshLayout ) viewReady.findViewById( R.id.srl_ready );
-        viewHolder.srlReady.setOnRefreshListener( new SwipeRefreshLayout.OnRefreshListener()
+        srlReady = ( MySwipeRefreshLayout ) viewReady.findViewById( R.id.srl_ready );
+        srlReady.setOnRefreshListener( new SwipeRefreshLayout.OnRefreshListener()
         {
             @Override
             public void onRefresh()
@@ -187,7 +194,7 @@ public abstract class SitesFragment extends Fragment implements
                 }
             }
         } );
-        viewHolder.srlReady.setColorScheme( android.R.color.holo_blue_dark,
+        srlReady.setColorScheme( android.R.color.holo_blue_dark,
                 android.R.color.holo_orange_dark,
                 android.R.color.holo_blue_dark,
                 android.R.color.holo_orange_dark );
@@ -195,8 +202,8 @@ public abstract class SitesFragment extends Fragment implements
 
     private void initSitesFooterView( View viewReady )
     {
-        viewHolder.sitesFooterView = new SitesFooterView( viewReady.getContext() );
-        viewHolder.sitesFooterView.setOnClickListener( new View.OnClickListener()
+        sitesFooterView = new SitesFooterView( viewReady.getContext() );
+        sitesFooterView.setOnClickListener( new View.OnClickListener()
         {
             @Override
             public void onClick( View v )
@@ -211,8 +218,8 @@ public abstract class SitesFragment extends Fragment implements
 
     private void initSitesEmptyView( View viewReady )
     {
-        viewHolder.sitesEmptyView = ( SitesEmptyView ) viewReady.findViewById( R.id.sites_empty_view );
-        viewHolder.sitesEmptyView.setOnClickListener( new View.OnClickListener()
+        sitesEmptyView = ( SitesEmptyView ) viewReady.findViewById( R.id.sites_empty_view );
+        sitesEmptyView.setOnClickListener( new View.OnClickListener()
         {
             @Override
             public void onClick( View v )
@@ -223,29 +230,29 @@ public abstract class SitesFragment extends Fragment implements
                 }
             }
         } );
-        viewHolder.sitesEmptyView.setText( getResources().getString( R.string.str_try_search_icon ) );
-        viewHolder.sitesEmptyView.setImage( getPlainLogoResId() );
+        sitesEmptyView.setText( getResources().getString( R.string.str_try_search_icon ) );
+        sitesEmptyView.setImage( getPlainLogoResId() );
     }
 
 
     private void initNewResultsBar( View viewReady )
     {
-        viewHolder.newResultsBar = ( NewResultsBar ) viewReady.findViewById( R.id.new_results_bar );
-        viewHolder.newResultsBar.setOnScrollToNewClickListener( new NewResultsBar.OnScrollToNewClickListener()
+        newResultsBar = ( NewResultsBar ) viewReady.findViewById( R.id.new_results_bar );
+        newResultsBar.setOnScrollToNewClickListener( new NewResultsBar.OnScrollToNewClickListener()
         {
             @Override
             public void onScrollToNewClicked( final NewResultsBar bar, int resultCount )
             {
-                if ( null == viewHolder.lvResultsList )
+                if ( null == lvResultsList )
                 {
                     return;
                 }
 
-                final int currentPosition = viewHolder.lvResultsList.getFirstVisiblePosition();
+                final int currentPosition = lvResultsList.getFirstVisiblePosition();
                 if ( currentPosition > resultCount )
                 {
                     // We temporarily set a new onScrollListener to notify us when scroll stops
-                    viewHolder.lvResultsList.setOnScrollListener( new AbsListView.OnScrollListener()
+                    lvResultsList.setOnScrollListener( new AbsListView.OnScrollListener()
                     {
                         @Override
                         public void onScrollStateChanged( AbsListView view, int scrollState )
@@ -256,7 +263,7 @@ public abstract class SitesFragment extends Fragment implements
                                 // we call expandNewResultsText() to make user aware of new results above
                                 // this point and restore the scroll listener to its previous value
                                 bar.expandNewResultsText();
-                                viewHolder.lvResultsList.setOnScrollListener( bar );
+                                lvResultsList.setOnScrollListener( bar );
                             }
                         }
 
@@ -275,11 +282,11 @@ public abstract class SitesFragment extends Fragment implements
                     // getFirstVisiblePosition() reports one position less
                     // than the position actually visible,
                     // causing NewResultsBar count to decrease by one.
-                    viewHolder.lvResultsList.smoothScrollToPositionFromTop( resultCount, -5 );
+                    lvResultsList.smoothScrollToPositionFromTop( resultCount, -5 );
                 }
                 else
                 {
-                    viewHolder.lvResultsList.smoothScrollToPosition( 0 );
+                    lvResultsList.smoothScrollToPosition( 0 );
                 }
             }
         } );
@@ -287,29 +294,29 @@ public abstract class SitesFragment extends Fragment implements
 
     private void initResultsListView( View viewReady )
     {
-        viewHolder.lvResultsList = ( ListView ) viewReady.findViewById( R.id.lv_results_list );
-        viewHolder.lvResultsList.addFooterView( viewHolder.sitesFooterView, null, false );
-        viewHolder.lvResultsList.setAdapter( sitesListAdapter );
-        viewHolder.lvResultsList.setEmptyView( viewHolder.sitesEmptyView );
-        viewHolder.lvResultsList.setOnItemClickListener( this );
-        viewHolder.lvResultsList.setOnItemLongClickListener( this );
-        viewHolder.lvResultsList.setOnScrollListener( viewHolder.newResultsBar );
+        lvResultsList = ( ListView ) viewReady.findViewById( R.id.lv_results_list );
+        lvResultsList.addFooterView( sitesFooterView, null, false );
+        lvResultsList.setAdapter( sitesListAdapter );
+        lvResultsList.setEmptyView( sitesEmptyView );
+        lvResultsList.setOnItemClickListener( this );
+        lvResultsList.setOnItemLongClickListener( this );
+        lvResultsList.setOnScrollListener( newResultsBar );
     }
 
     private View initViewLoading( LayoutInflater inflater )
     {
         View viewLoading = inflater.inflate( R.layout.sites_view_loading, null );
-        viewHolder.pgbrLoadingResults = ( ProgressBar ) viewLoading.findViewById( R.id.pgbr_loading_results );
+        pgbrLoadingResults = ( ProgressBar ) viewLoading.findViewById( R.id.pgbr_loading_results );
         return viewLoading;
     }
 
     private View initViewLogin( LayoutInflater inflater )
     {
         View viewLogin = inflater.inflate( R.layout.sites_view_login, null );
-        viewHolder.btnLogin = ( Button ) viewLogin.findViewById( R.id.btn_login );
-        viewHolder.btnLogin.setText( getLoginButtonText() );
-        viewHolder.btnLogin.setBackgroundResource( getLoginButtonBackgroundId() );
-        viewHolder.btnLogin.setOnClickListener( new View.OnClickListener()
+        btnLogin = ( Button ) viewLogin.findViewById( R.id.btn_login );
+        btnLogin.setText( getLoginButtonText() );
+        btnLogin.setBackgroundResource( getLoginButtonBackgroundId() );
+        btnLogin.setOnClickListener( new View.OnClickListener()
         {
             @Override
             public void onClick( View v )
@@ -327,9 +334,9 @@ public abstract class SitesFragment extends Fragment implements
         if ( null != savedInstanceState )
         {
             showView( savedInstanceState.getInt( ACTIVE_VIEW_KEY ) );
-            if ( null != viewHolder.sitesFooterView && savedInstanceState.containsKey( ACTIVE_FOOTER_VIEW_KEY ) )
+            if ( null != sitesFooterView && savedInstanceState.containsKey( ACTIVE_FOOTER_VIEW_KEY ) )
             {
-                viewHolder.sitesFooterView.showView( savedInstanceState.getInt( ACTIVE_FOOTER_VIEW_KEY ) );
+                sitesFooterView.showView( savedInstanceState.getInt( ACTIVE_FOOTER_VIEW_KEY ) );
             }
         }
     }
@@ -360,9 +367,9 @@ public abstract class SitesFragment extends Fragment implements
         super.onSaveInstanceState( outState );
         outState.putInt( ACTIVE_VIEW_KEY, getActiveView() );
         // Gave me an NPE once, so a null check here :/
-        if ( null != viewHolder.sitesFooterView )
+        if ( null != sitesFooterView )
         {
-            outState.putInt( ACTIVE_FOOTER_VIEW_KEY, viewHolder.sitesFooterView.getActiveView() );
+            outState.putInt( ACTIVE_FOOTER_VIEW_KEY, sitesFooterView.getActiveView() );
         }
         saveData();
     }
@@ -373,7 +380,7 @@ public abstract class SitesFragment extends Fragment implements
     {
         if ( !TextUtils.isEmpty( getCurrentHashtag() ) )
         {
-            viewHolder.sitesEmptyView.setText(
+            sitesEmptyView.setText(
                     String.format(
                             getResources().getString( R.string.str_click_to_search_hashtag ),
                             getCurrentHashtag() ) );
@@ -459,14 +466,14 @@ public abstract class SitesFragment extends Fragment implements
 
         if ( !isUserLoggedIn() )
         {
-            viewHolder.btnLogin.animate().rotationXBy( 360 ).setDuration( 1000 ).start();
+            btnLogin.animate().rotationXBy( 360 ).setDuration( 1000 ).start();
             return;
         }
         timedSearchHandler.removeCallbacks( timedSearchRunner );
         // We use the listview tag to keep track of selected position. On a new search, we clear this tag.
-        viewHolder.lvResultsList.setTag( null );
-        viewHolder.srlReady.setRefreshing( false );
-        viewHolder.sitesFooterView.showView( SitesFooterView.NORMAL );
+        lvResultsList.setTag( null );
+        srlReady.setRefreshing( false );
+        sitesFooterView.showView( SitesFooterView.NORMAL );
         sitesSearchHandler.cancelCurrentSearch();
         sitesSearchHandler.beginSearch( SearchType.INITIAL, event.getHashtag() );
     }
@@ -535,13 +542,13 @@ public abstract class SitesFragment extends Fragment implements
         if ( !HashtaggerApp.isNetworkConnected() )
         {
             Helper.showNoNetworkToast( getActivity() );
-            viewHolder.srlReady.setRefreshing( false );
+            srlReady.setRefreshing( false );
             return;
         }
         if ( !isUserLoggedIn() )
         {
             Toast.makeText( getActivity(), getResources().getString( R.string.str_not_logged_in ), Toast.LENGTH_LONG ).show();
-            viewHolder.srlReady.setRefreshing( false );
+            srlReady.setRefreshing( false );
             return;
         }
         sitesSearchHandler.beginSearch( SearchType.NEWER, hashtag );
@@ -594,10 +601,10 @@ public abstract class SitesFragment extends Fragment implements
                 showView( LOADING );
                 break;
             case SearchType.OLDER:
-                viewHolder.sitesFooterView.showView( SitesFooterView.LOADING );
+                sitesFooterView.showView( SitesFooterView.LOADING );
                 break;
             case SearchType.NEWER:
-                viewHolder.srlReady.setRefreshing( true );
+                srlReady.setRefreshing( true );
                 break;
             case SearchType.TIMED:
                 break;
@@ -635,7 +642,7 @@ public abstract class SitesFragment extends Fragment implements
         }
         else
         {
-            viewHolder.sitesEmptyView.setText(
+            sitesEmptyView.setText(
                     String.format( getResources().getString( R.string.str_no_results_found ), getCurrentHashtag() ) );
         }
         sitesListAdapter.notifyDataSetChanged();
@@ -644,7 +651,7 @@ public abstract class SitesFragment extends Fragment implements
 
     public void afterOlderSearch( List<?> searchResults )
     {
-        viewHolder.sitesFooterView.showView( SitesFooterView.NORMAL );
+        sitesFooterView.showView( SitesFooterView.NORMAL );
         if ( !searchResults.isEmpty() )
         {
             updateResultsAndTypes( SearchType.OLDER, searchResults );
@@ -658,22 +665,22 @@ public abstract class SitesFragment extends Fragment implements
 
     public void afterNewerSearch( List<?> searchResults )
     {
-        viewHolder.srlReady.setRefreshing( false );
+        srlReady.setRefreshing( false );
         if ( !searchResults.isEmpty() )
         {
             int newFirstVisiblePositionIndex =
-                    viewHolder.lvResultsList.getFirstVisiblePosition() + searchResults.size();
+                    lvResultsList.getFirstVisiblePosition() + searchResults.size();
 
-            int topOffset = null == viewHolder.lvResultsList.getChildAt( 0 ) ?
+            int topOffset = null == lvResultsList.getChildAt( 0 ) ?
                     0 :
-                    viewHolder.lvResultsList.getChildAt( 0 ).getTop();
+                    lvResultsList.getChildAt( 0 ).getTop();
 
             updateResultsAndTypes( SearchType.NEWER, searchResults );
-            viewHolder.lvResultsList.setSelectionFromTop( newFirstVisiblePositionIndex, topOffset );
-            viewHolder.newResultsBar.setVisibility( View.VISIBLE );
+            lvResultsList.setSelectionFromTop( newFirstVisiblePositionIndex, topOffset );
+            newResultsBar.setVisibility( View.VISIBLE );
 
-            viewHolder.newResultsBar.setResultsCount(
-                    viewHolder.newResultsBar.getResultsCount() + searchResults.size() );
+            newResultsBar.setResultsCount(
+                    newResultsBar.getResultsCount() + searchResults.size() );
         }
         else
         {
@@ -687,18 +694,18 @@ public abstract class SitesFragment extends Fragment implements
         if ( !searchResults.isEmpty() )
         {
             int newFirstVisiblePositionIndex =
-                    viewHolder.lvResultsList.getFirstVisiblePosition() + searchResults.size();
+                    lvResultsList.getFirstVisiblePosition() + searchResults.size();
 
-            int topOffset = null == viewHolder.lvResultsList.getChildAt( 0 ) ?
+            int topOffset = null == lvResultsList.getChildAt( 0 ) ?
                     0 :
-                    viewHolder.lvResultsList.getChildAt( 0 ).getTop();
+                    lvResultsList.getChildAt( 0 ).getTop();
 
             updateResultsAndTypes( SearchType.TIMED, searchResults );
-            viewHolder.lvResultsList.setSelectionFromTop( newFirstVisiblePositionIndex, topOffset );
-            viewHolder.newResultsBar.setVisibility( View.VISIBLE );
+            lvResultsList.setSelectionFromTop( newFirstVisiblePositionIndex, topOffset );
+            newResultsBar.setVisibility( View.VISIBLE );
 
-            viewHolder.newResultsBar.setResultsCount(
-                    viewHolder.newResultsBar.getResultsCount() + searchResults.size() );
+            newResultsBar.setResultsCount(
+                    newResultsBar.getResultsCount() + searchResults.size() );
         }
         sitesListAdapter.notifyDataSetChanged();
         postNextTimedSearch();
@@ -713,13 +720,13 @@ public abstract class SitesFragment extends Fragment implements
         {
             case SearchType.INITIAL:
                 showView( READY );
-                viewHolder.sitesEmptyView.setText( getResources().getString( R.string.str_search_error ) );
+                sitesEmptyView.setText( getResources().getString( R.string.str_search_error ) );
                 break;
             case SearchType.OLDER:
-                viewHolder.sitesFooterView.showView( SitesFooterView.ERROR );
+                sitesFooterView.showView( SitesFooterView.ERROR );
                 break;
             case SearchType.NEWER:
-                viewHolder.srlReady.setRefreshing( false );
+                srlReady.setRefreshing( false );
                 Toast.makeText( getActivity(), getResources().getString( R.string.str_toast_newer_results_error ), Toast.LENGTH_LONG ).show();
                 break;
             case SearchType.TIMED:
@@ -800,10 +807,10 @@ public abstract class SitesFragment extends Fragment implements
         view.getLocalVisibleRect( tmpRect );
         int hiddenHeight = view.getHeight() - tmpRect.height();
         if ( ( hiddenHeight > 0 ) &&
-                ( viewHolder.lvResultsList.getLastVisiblePosition()
-                        == viewHolder.lvResultsList.getPositionForView( view ) ) )
+                ( lvResultsList.getLastVisiblePosition()
+                        == lvResultsList.getPositionForView( view ) ) )
         {
-            viewHolder.lvResultsList.smoothScrollBy( hiddenHeight, 2 * hiddenHeight );
+            lvResultsList.smoothScrollBy( hiddenHeight, 2 * hiddenHeight );
         }
     }
 
@@ -843,17 +850,6 @@ public abstract class SitesFragment extends Fragment implements
     protected abstract String getResultText( Object result );
 
     protected abstract Uri getResultUrl( Object result );
-
-    protected static class ViewHolder
-    {
-        public ListView             lvResultsList;
-        public SitesEmptyView       sitesEmptyView;
-        public SitesFooterView      sitesFooterView;
-        public MySwipeRefreshLayout srlReady;
-        public NewResultsBar        newResultsBar;
-        public ProgressBar          pgbrLoadingResults;
-        public Button               btnLogin;
-    }
 
     public int getActiveView()
     {
