@@ -5,20 +5,14 @@ import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 /**
  * Created by itwenty on 5/17/14.
  */
-public class TwitterFavoriteDoneEvent
+public class TwitterFavoriteDoneEvent extends ResultEvent
 {
     Status  status;
-    boolean success;
 
     public TwitterFavoriteDoneEvent( boolean success, Status status )
     {
-        this.success = success;
+        super( success );
         this.status = status;
-    }
-
-    public boolean getSuccess()
-    {
-        return success;
     }
 
     public Status getStatus()

@@ -218,7 +218,7 @@ public class TwitterFragment extends SitesFragment implements TwitterActionsPerf
     @Subscribe
     public void onRetweetDone( TwitterRetweetDoneEvent event )
     {
-        if ( event.getSuccess() )
+        if ( event.isSuccess() )
         {
             sitesListAdapter.notifyDataSetChanged();
             Toast.makeText( getActivity(), getResources().getString( R.string.str_retweet_success ), Toast.LENGTH_SHORT ).show();
@@ -232,7 +232,7 @@ public class TwitterFragment extends SitesFragment implements TwitterActionsPerf
     @Subscribe
     public void onFavoriteDone( TwitterFavoriteDoneEvent event )
     {
-        if ( event.getSuccess() )
+        if ( event.isSuccess() )
         {
             sitesListAdapter.notifyDataSetChanged();
         }
@@ -245,7 +245,7 @@ public class TwitterFragment extends SitesFragment implements TwitterActionsPerf
     @Subscribe
     public void onReplyDone( TwitterReplyDoneEvent event )
     {
-        if ( event.getSuccess() )
+        if ( event.isSuccess() )
         {
             Toast.makeText( getActivity(), getResources().getString( R.string.str_reply_success ), Toast.LENGTH_SHORT ).show();
         }

@@ -5,27 +5,21 @@ import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.PeopleFee
 /**
  * Created by itwenty on 6/14/14.
  */
-public class PeopleFeedEvent
+public class PeopleFeedEvent extends ResultEvent
 {
     private PeopleFeed peopleFeed;
-    private boolean    success;
     private String     collection;
 
     public PeopleFeedEvent( PeopleFeed peopleFeed, boolean success, String collection )
     {
+        super( success );
         this.peopleFeed = peopleFeed;
-        this.success = success;
         this.collection = collection;
     }
 
     public PeopleFeed getPeopleFeed()
     {
         return peopleFeed;
-    }
-
-    public boolean isSuccess()
-    {
-        return success;
     }
 
     public String getCollection()

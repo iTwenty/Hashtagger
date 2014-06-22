@@ -5,24 +5,18 @@ import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.CommentFe
 /**
  * Created by itwenty on 6/15/14.
  */
-public class CommentFeedEvent
+public class CommentFeedEvent extends ResultEvent
 {
     private CommentFeed commentFeed;
-    private boolean     success;
 
     public CommentFeedEvent( CommentFeed feed, boolean success )
     {
+        super( success );
         this.commentFeed = feed;
-        this.success = success;
     }
 
     public CommentFeed getCommentFeed()
     {
         return commentFeed;
-    }
-
-    public boolean isSuccess()
-    {
-        return success;
     }
 }

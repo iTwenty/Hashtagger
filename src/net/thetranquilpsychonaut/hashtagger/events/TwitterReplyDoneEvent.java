@@ -5,20 +5,14 @@ import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 /**
  * Created by itwenty on 5/17/14.
  */
-public class TwitterReplyDoneEvent
+public class TwitterReplyDoneEvent extends ResultEvent
 {
     Status  status;
-    boolean success;
 
     public TwitterReplyDoneEvent( boolean success, Status status )
     {
-        this.success = success;
+        super( success );
         this.status = status;
-    }
-
-    public boolean getSuccess()
-    {
-        return this.success;
     }
 
     public Status getStatus()

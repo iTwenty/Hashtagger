@@ -183,7 +183,7 @@ public class TwitterDetailActivity extends BaseActivity implements View.OnClickL
     @Subscribe
     public void onRetweetDone( TwitterRetweetDoneEvent event )
     {
-        if ( event.getSuccess() )
+        if ( event.isSuccess() )
         {
             updateActionsButtons();
             Toast.makeText( this, "Retweeted like a champ!", Toast.LENGTH_SHORT ).show();
@@ -198,7 +198,7 @@ public class TwitterDetailActivity extends BaseActivity implements View.OnClickL
     public void onFavoriteDone( TwitterFavoriteDoneEvent event )
     {
         Helper.debug( event.getStatus() == status ? "equal" : "unequal" );
-        if ( event.getSuccess() )
+        if ( event.isSuccess() )
         {
             updateActionsButtons();
         }
@@ -211,7 +211,7 @@ public class TwitterDetailActivity extends BaseActivity implements View.OnClickL
     @Subscribe
     public void onReplyDone( TwitterReplyDoneEvent event )
     {
-        if ( event.getSuccess() )
+        if ( event.isSuccess() )
         {
             Toast.makeText( this, "Replied like a champ!", Toast.LENGTH_SHORT ).show();
         }
