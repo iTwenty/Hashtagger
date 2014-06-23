@@ -7,7 +7,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
  */
 public class TwitterFavoriteDoneEvent extends ResultEvent
 {
-    Status  status;
+    Status status;
 
     public TwitterFavoriteDoneEvent( boolean success, Status status )
     {

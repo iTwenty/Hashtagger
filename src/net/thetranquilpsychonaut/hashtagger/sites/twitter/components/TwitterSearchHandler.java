@@ -1,12 +1,7 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.components;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Handler;
-import android.os.Looper;
-import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import net.thetranquilpsychonaut.hashtagger.enums.Result;
-import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
+import com.squareup.otto.Subscribe;
+import net.thetranquilpsychonaut.hashtagger.events.TwitterSearchDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.SearchResult;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
@@ -40,54 +35,38 @@ public class TwitterSearchHandler extends SitesSearchHandler
         TwitterService.setIsServiceRunning( false );
     }
 
-
-    @Override
-    public void onReceive( Context context, final Intent intent )
+    @Subscribe
+    public void onTwitterSearchDone( final TwitterSearchDoneEvent event )
     {
-        final Handler main = new Handler( Looper.getMainLooper() );
-        new Thread( new Runnable()
+        final int searchType = event.getSearchType();
+        if ( !event.isSuccess() )
+        {
+            getMainHandler().post( new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    sitesSearchListener.onError( searchType );
+                }
+            } );
+            return;
+        }
+        final SearchResult result = event.getSearchResult();
+        for ( Status status : result.getStatuses() )
+        {
+            status.setLinkedText( Linkifier.getLinkedTwitterText( status.getText() ) );
+            if ( status.isRetweet() )
+            {
+                status.getRetweetedStatus().setLinkedText( Linkifier.getLinkedTwitterText( status.getRetweetedStatus().getText() ) );
+            }
+        }
+        getMainHandler().post( new Runnable()
         {
             @Override
             public void run()
             {
-                final int searchType = intent.getIntExtra( SearchType.SEARCH_TYPE_KEY, -1 );
-                int resultType = intent.getIntExtra( Result.RESULT_KEY, -1 );
-                if ( resultType == Result.FAILURE )
-                {
-                    main.post( new Runnable()
-                    {
-                        @Override
-                        public void run()
-                        {
-                            sitesSearchListener.onError( searchType );
-                        }
-                    } );
-                    return;
-                }
-                final SearchResult result = ( SearchResult ) intent.getSerializableExtra( Result.RESULT_DATA );
-                for ( Status status : result.getStatuses() )
-                {
-                    status.setLinkedText( Linkifier.getLinkedTwitterText( status.getText() ) );
-                    if ( status.isRetweet() )
-                    {
-                        status.getRetweetedStatus().setLinkedText( Linkifier.getLinkedTwitterText( status.getRetweetedStatus().getText() ) );
-                    }
-                }
-                main.post( new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        sitesSearchListener.afterSearching( searchType, result.getStatuses() );
-                    }
-                } );
+                sitesSearchListener.afterSearching( searchType, result.getStatuses() );
             }
-        } ).start();
-    }
-
-    @Override
-    public String getSearchActionName()
-    {
-        return HashtaggerApp.TWITTER_SEARCH_ACTION;
+        } );
     }
 }

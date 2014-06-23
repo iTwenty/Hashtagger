@@ -1,13 +1,8 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.components;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
-import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import net.thetranquilpsychonaut.hashtagger.enums.Result;
-import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
+import com.squareup.otto.Subscribe;
+import net.thetranquilpsychonaut.hashtagger.events.FacebookSearchDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.SearchResult;
@@ -44,59 +39,44 @@ public class FacebookSearchHandler extends SitesSearchHandler
         FacebookService.setIsServiceRunning( false );
     }
 
-    @Override
-    public void onReceive( Context context, final Intent intent )
+    @Subscribe
+    public void onFacebookSearchDone( final FacebookSearchDoneEvent event )
     {
-        final Handler main = new Handler( Looper.getMainLooper() );
-        new Thread( new Runnable()
+        final int searchType = event.getSearchType();
+        if ( !event.isSuccess() )
+        {
+            getMainHandler().post( new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    sitesSearchListener.onError( searchType );
+                }
+            } );
+            return;
+        }
+        final SearchResult searchResult = event.getSearchResult();
+        Iterator<Post> iterator = searchResult.getData().iterator();
+        while ( iterator.hasNext() )
+        {
+            Post post = iterator.next();
+            if ( TextUtils.isEmpty( post.getMessage() ) )
+            {
+                Helper.debug( "Facebook post with empty message removed. ID is : " + post.getId() );
+                iterator.remove();
+            }
+        }
+        for ( Post post : searchResult.getData() )
+        {
+            post.setLinkedText( Linkifier.getLinkedFacebookText( post.getMessage() ) );
+        }
+        getMainHandler().post( new Runnable()
         {
             @Override
             public void run()
             {
-                final int searchType = intent.getIntExtra( SearchType.SEARCH_TYPE_KEY, -1 );
-                int resultType = intent.getIntExtra( Result.RESULT_KEY, -1 );
-                if ( resultType == Result.FAILURE )
-                {
-                    main.post( new Runnable()
-                    {
-                        @Override
-                        public void run()
-                        {
-                            sitesSearchListener.onError( searchType );
-                        }
-                    } );
-                    return;
-                }
-                final SearchResult searchResult = ( SearchResult ) intent.getSerializableExtra( Result.RESULT_DATA );
-                Iterator<Post> iterator = searchResult.getData().iterator();
-                while ( iterator.hasNext() )
-                {
-                    Post post = iterator.next();
-                    if ( TextUtils.isEmpty( post.getMessage() ) )
-                    {
-                        Helper.debug( "Facebook post with empty message removed. ID is : " + post.getId() );
-                        iterator.remove();
-                    }
-                }
-                for ( Post post : searchResult.getData() )
-                {
-                    post.setLinkedText( Linkifier.getLinkedFacebookText( post.getMessage() ) );
-                }
-                main.post( new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        sitesSearchListener.afterSearching( searchType, searchResult.getData() );
-                    }
-                } );
+                sitesSearchListener.afterSearching( searchType, searchResult.getData() );
             }
-        } ).start();
-    }
-
-    @Override
-    public String getSearchActionName()
-    {
-        return HashtaggerApp.FACEBOOK_SEARCH_ACTION;
+        } );
     }
 }

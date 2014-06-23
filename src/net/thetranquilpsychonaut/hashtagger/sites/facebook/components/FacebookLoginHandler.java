@@ -1,10 +1,10 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.components;
 
-import android.content.Context;
 import android.content.Intent;
+import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
-import net.thetranquilpsychonaut.hashtagger.enums.Result;
+import net.thetranquilpsychonaut.hashtagger.events.FacebookAuthDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookLoginActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
@@ -40,24 +40,24 @@ public class FacebookLoginHandler extends SitesLoginHandler
         facebookLoginListener.whileObtainingAccessToken();
     }
 
-    @Override
-    public void onReceive( Context context, Intent intent )
+    @Subscribe
+    public void onFacebookAuthDone( FacebookAuthDoneEvent event )
     {
-        int result = intent.getIntExtra( Result.RESULT_KEY, -1 );
-        if ( result == Result.FAILURE )
+        if ( !event.isSuccess() )
         {
             facebookLoginListener.onError();
             return;
         }
-        Token accessToken = ( Token ) intent.getSerializableExtra( Result.RESULT_DATA );
-        String userName = intent.getStringExtra( Result.RESULT_EXTRAS );
+        Token accessToken = event.getToken();
+        String userName = event.getUserName();
         AccountPrefs.addFacebookDetails( accessToken.getToken(), userName );
-        facebookLoginListener.onUserLoggedIn();
-    }
-
-    @Override
-    public String getLoginActionName()
-    {
-        return HashtaggerApp.FACEBOOK_LOGIN_ACTION;
+        getMainHandler().post( new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                facebookLoginListener.onUserLoggedIn();
+            }
+        } );
     }
 }

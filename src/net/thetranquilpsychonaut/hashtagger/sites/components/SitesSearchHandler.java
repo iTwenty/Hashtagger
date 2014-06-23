@@ -1,8 +1,8 @@
 package net.thetranquilpsychonaut.hashtagger.sites.components;
 
-import android.content.BroadcastReceiver;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.os.Handler;
+import android.os.Looper;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by itwenty on 3/14/14.
  */
-public abstract class SitesSearchHandler extends BroadcastReceiver implements SearchActionName
+public abstract class SitesSearchHandler
 {
     public interface SitesSearchListener
     {
@@ -22,6 +22,10 @@ public abstract class SitesSearchHandler extends BroadcastReceiver implements Se
 
         public void onError( int searchType );
     }
+
+    // We use this handler to call the methods of SitesSearchListerner which
+    // must run on UI thread.
+    private Handler mainHandler = new Handler( Looper.getMainLooper() );
 
     protected SitesSearchListener sitesSearchListener;
 
@@ -36,31 +40,28 @@ public abstract class SitesSearchHandler extends BroadcastReceiver implements Se
         searchIntent.putExtra( ActionType.ACTION_TYPE_KEY, ActionType.SEARCH );
         searchIntent.putExtra( SearchType.SEARCH_TYPE_KEY, searchType );
         searchIntent.putExtra( HashtaggerApp.HASHTAG_KEY, hashtag );
-        searchIntent = addExtraParameters( searchIntent );
         HashtaggerApp.app.startService( searchIntent );
         sitesSearchListener.whileSearching( searchType );
-    }
-
-    protected Intent addExtraParameters( Intent searchIntent )
-    {
-        return searchIntent;
     }
 
     protected abstract Class<?> getServiceClass();
 
     public void registerReceiver()
     {
-        IntentFilter filter = new IntentFilter( getSearchActionName() );
-        filter.addCategory( Intent.CATEGORY_DEFAULT );
-        HashtaggerApp.app.registerReceiver( this, filter );
+        HashtaggerApp.bus.register( this );
     }
 
     public void unregisterReceiver()
     {
-        HashtaggerApp.app.unregisterReceiver( this );
+        HashtaggerApp.bus.unregister( this );
     }
 
     public abstract boolean isSearchRunning();
 
     public abstract void cancelCurrentSearch();
+
+    protected Handler getMainHandler()
+    {
+        return this.mainHandler;
+    }
 }

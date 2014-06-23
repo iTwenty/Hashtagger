@@ -5,8 +5,9 @@ import android.text.TextUtils;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.config.TwitterConfig;
 import net.thetranquilpsychonaut.hashtagger.enums.AuthType;
-import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
+import net.thetranquilpsychonaut.hashtagger.events.TwitterAuthDoneEvent;
+import net.thetranquilpsychonaut.hashtagger.events.TwitterSearchDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesService;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.Twitter;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.SearchParams;
@@ -44,17 +45,15 @@ public class TwitterService extends SitesService
     private static final int    TWITTER_SEARCH_LIMIT = 20;
 
     @Override
-    protected Intent doSearch( Intent searchIntent )
+    protected void doSearch( Intent searchIntent )
     {
         final int searchType = searchIntent.getIntExtra( SearchType.SEARCH_TYPE_KEY, -1 );
         final String hashtag = searchIntent.getStringExtra( HashtaggerApp.HASHTAG_KEY );
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra( SearchType.SEARCH_TYPE_KEY, searchType );
         SearchParams params = new SearchParams( hashtag );
         SearchResult searchResult = null;
         try
         {
-            // for our initial search we dont need either max or since myId.
+            // for our initial search we don't need either max or since myId.
             // Older search retrieves tweets with ids lower than the maxId
             // Newer search retrieves tweets with ids higher than the sinceId
 
@@ -79,11 +78,10 @@ public class TwitterService extends SitesService
         {
             Helper.debug( "Error while searching Twitter for " + hashtag + " : " + e.getMessage() );
         }
-        int result = null == searchResult ? Result.FAILURE : Result.SUCCESS;
-        resultIntent.putExtra( Result.RESULT_KEY, result );
-        if ( result == Result.SUCCESS )
+        boolean success = null != searchResult;
+        if ( success )
         {
-            if ( !searchResult.getStatuses().isEmpty() )
+            if ( !Helper.isNullOrEmpty( searchResult.getStatuses() ) )
             {
                 //  if our current search is the initial one,
                 //  we set both the max and since ids for subsquent searches.
@@ -110,9 +108,9 @@ public class TwitterService extends SitesService
                     searchResult.getStatuses().remove( 0 );
                 }
             }
-            resultIntent.putExtra( Result.RESULT_DATA, searchResult );
         }
-        return resultIntent;
+        // Subscriber : TwitterSearchHandler : onTwitterSearchDone()
+        HashtaggerApp.bus.post( new TwitterSearchDoneEvent( searchType, success, searchResult ) );
     }
 
     private String getLowestId( List<Status> list )
@@ -121,31 +119,31 @@ public class TwitterService extends SitesService
     }
 
     @Override
-    protected Intent doAuth( Intent intent )
+    protected void doAuth( Intent intent )
     {
         final int authType = intent.getIntExtra( AuthType.AUTH_TYPE_KEY, -1 );
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra( AuthType.AUTH_TYPE_KEY, authType );
+        TwitterAuthDoneEvent authDoneEvent;
         switch ( authType )
         {
             case AuthType.REQUEST:
-                resultIntent = doRequestAuth( resultIntent );
+                authDoneEvent = doRequestAuth();
                 break;
             case AuthType.ACCESS:
                 final Token requestToken = ( Token ) intent.getSerializableExtra( TwitterLoginActivity.TWITTER_REQUEST_TOKEN_KEY );
                 final String oauthVerifier = intent.getStringExtra( TwitterLoginActivity.TWITTER_OAUTH_VERIFIER_KEY );
-                resultIntent = doAccessAuth( resultIntent, requestToken, oauthVerifier );
+                authDoneEvent = doAccessAuth( requestToken, oauthVerifier );
                 break;
             default:
-                resultIntent.putExtra( Result.RESULT_KEY, Result.FAILURE );
+                authDoneEvent = new TwitterAuthDoneEvent( false, null, null, null, 0 );
         }
-        return resultIntent;
+        // Subscriber : TwitterLoginHandler : onTwitterAuthDone()
+        HashtaggerApp.bus.post( authDoneEvent );
     }
 
-    private Intent doRequestAuth( Intent resultIntent )
+    private TwitterAuthDoneEvent doRequestAuth()
     {
         Token token = null;
-        String authorizationUrl = null;
+        String authUrl = null;
         try
         {
             OAuthService service = new ServiceBuilder()
@@ -155,23 +153,17 @@ public class TwitterService extends SitesService
                     .apiSecret( TwitterConfig.TWITTER_OAUTH_CONSUMER_SECRET )
                     .build();
             token = service.getRequestToken();
-            authorizationUrl = service.getAuthorizationUrl( token );
+            authUrl = service.getAuthorizationUrl( token );
         }
         catch ( OAuthConnectionException e )
         {
             Helper.debug( "Error while obtaining twitter request token : " + e.getMessage() );
         }
-        int requestResult = null == token ? Result.FAILURE : Result.SUCCESS;
-        resultIntent.putExtra( Result.RESULT_KEY, requestResult );
-        if ( requestResult == Result.SUCCESS )
-        {
-            resultIntent.putExtra( Result.RESULT_DATA, token );
-            resultIntent.putExtra( Result.RESULT_EXTRAS, authorizationUrl );
-        }
-        return resultIntent;
+        boolean success = null != token;
+        return new TwitterAuthDoneEvent( success, token, null, authUrl, AuthType.REQUEST );
     }
 
-    private Intent doAccessAuth( Intent resultIntent, Token requestToken, String oauthVerifier )
+    private TwitterAuthDoneEvent doAccessAuth( Token requestToken, String oauthVerifier )
     {
         Token accessToken = null;
         String userName = null;
@@ -195,26 +187,8 @@ public class TwitterService extends SitesService
         {
             Helper.debug( "Error while obtaining twitter access token : " + e.getMessage() );
         }
-        int accessResult = null == accessToken ? Result.FAILURE : Result.SUCCESS;
-        resultIntent.putExtra( Result.RESULT_KEY, accessResult );
-        if ( accessResult == Result.SUCCESS )
-        {
-            resultIntent.putExtra( Result.RESULT_DATA, accessToken );
-            resultIntent.putExtra( Result.RESULT_EXTRAS, userName );
-        }
-        return resultIntent;
-    }
-
-    @Override
-    protected boolean isServiceRunning()
-    {
-        return isServiceRunning;
-    }
-
-    @Override
-    protected void setServiceRunning( boolean running )
-    {
-        isServiceRunning = running;
+        boolean success = null != accessToken;
+        return new TwitterAuthDoneEvent( success, accessToken, userName, null, AuthType.ACCESS );
     }
 
     public static void setIsServiceRunning( boolean running )
@@ -225,17 +199,5 @@ public class TwitterService extends SitesService
     public static boolean getIsServiceRunning()
     {
         return isServiceRunning;
-    }
-
-    @Override
-    public String getSearchActionName()
-    {
-        return HashtaggerApp.TWITTER_SEARCH_ACTION;
-    }
-
-    @Override
-    public String getLoginActionName()
-    {
-        return HashtaggerApp.TWITTER_LOGIN_ACTION;
     }
 }

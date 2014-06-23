@@ -1,24 +1,28 @@
 package net.thetranquilpsychonaut.hashtagger.sites.components;
 
-import android.content.BroadcastReceiver;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.os.Handler;
+import android.os.Looper;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 
 /**
  * Created by itwenty on 5/16/14.
  */
-public abstract class SitesLoginHandler extends BroadcastReceiver implements LoginActionName
+public abstract class SitesLoginHandler
 {
+    private Handler mainHandler = new Handler( Looper.getMainLooper() );
+
     public void registerReceiver()
     {
-        IntentFilter filter = new IntentFilter( getLoginActionName() );
-        filter.addCategory( Intent.CATEGORY_DEFAULT );
-        HashtaggerApp.app.registerReceiver( this, filter );
+        HashtaggerApp.bus.register( this );
     }
 
     public void unregisterReceiver()
     {
-        HashtaggerApp.app.unregisterReceiver( this );
+        HashtaggerApp.bus.unregister( this );
+    }
+
+    protected Handler getMainHandler()
+    {
+        return this.mainHandler;
     }
 }

@@ -307,14 +307,18 @@ public class SitesActivity extends NavDrawerActivity
     public String peekCurrentHashtag()
     {
         if ( Helper.isNullOrEmpty( hashtags ) )
+        {
             return null;
+        }
         return hashtags.peek();
     }
 
     public String popCurrentHashtag()
     {
         if ( Helper.isNullOrEmpty( hashtags ) )
+        {
             return null;
+        }
         return hashtags.pop();
     }
 

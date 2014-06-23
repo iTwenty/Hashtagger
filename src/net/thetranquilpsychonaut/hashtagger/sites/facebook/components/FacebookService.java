@@ -4,8 +4,9 @@ import android.content.Intent;
 import android.net.Uri;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.config.FacebookConfig;
-import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
+import net.thetranquilpsychonaut.hashtagger.events.FacebookAuthDoneEvent;
+import net.thetranquilpsychonaut.hashtagger.events.FacebookSearchDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesService;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.Facebook;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.SearchParams;
@@ -34,12 +35,10 @@ public class FacebookService extends SitesService
     private static String since;
 
     @Override
-    protected Intent doSearch( Intent searchIntent )
+    protected void doSearch( Intent searchIntent )
     {
         final int searchType = searchIntent.getIntExtra( SearchType.SEARCH_TYPE_KEY, -1 );
         final String hashtag = searchIntent.getStringExtra( HashtaggerApp.HASHTAG_KEY );
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra( SearchType.SEARCH_TYPE_KEY, searchType );
         SearchResult searchResult = null;
         try
         {
@@ -65,9 +64,8 @@ public class FacebookService extends SitesService
         {
             Helper.debug( "Error while searching Facebook for " + hashtag + " : " + e.getMessage() );
         }
-        int result = null == searchResult ? Result.FAILURE : Result.SUCCESS;
-        resultIntent.putExtra( Result.RESULT_KEY, result );
-        if ( result == Result.SUCCESS )
+        boolean success = null != searchResult;
+        if ( success )
         {
             if ( !searchResult.getData().isEmpty() )
             {
@@ -80,16 +78,15 @@ public class FacebookService extends SitesService
                     until = Uri.parse( searchResult.getPaging().getNext() ).getQueryParameter( "until" );
                 }
             }
-            resultIntent.putExtra( Result.RESULT_DATA, searchResult );
         }
-        return resultIntent;
+        // Subscriber : FacebookSearchHandler : onFacebookSearchDone()
+        HashtaggerApp.bus.post( new FacebookSearchDoneEvent( searchType, success, searchResult ) );
     }
 
     @Override
-    protected Intent doAuth( Intent intent )
+    protected void doAuth( Intent intent )
     {
         final String code = intent.getStringExtra( FacebookLoginActivity.FACEBOOK_CODE_KEY );
-        Intent resultIntent = new Intent();
         Token accessToken = null;
         String userName = null;
         try
@@ -110,26 +107,9 @@ public class FacebookService extends SitesService
         {
             Helper.debug( "Failed to get Facebook access token : " + e.getMessage() );
         }
-        int accessResult = null == accessToken ? Result.FAILURE : Result.SUCCESS;
-        resultIntent.putExtra( Result.RESULT_KEY, accessResult );
-        if ( accessResult == Result.SUCCESS )
-        {
-            resultIntent.putExtra( Result.RESULT_DATA, accessToken );
-            resultIntent.putExtra( Result.RESULT_EXTRAS, userName );
-        }
-        return resultIntent;
-    }
-
-    @Override
-    protected boolean isServiceRunning()
-    {
-        return isServiceRunning;
-    }
-
-    @Override
-    protected void setServiceRunning( boolean running )
-    {
-        isServiceRunning = running;
+        boolean success = null != accessToken;
+        // Subscriber : FacebookLoginHandler : onFacebookAuthDone()
+        HashtaggerApp.bus.post( new FacebookAuthDoneEvent( success, accessToken, userName ) );
     }
 
     public static void setIsServiceRunning( boolean running )
@@ -140,17 +120,5 @@ public class FacebookService extends SitesService
     public static boolean getIsServiceRunning()
     {
         return isServiceRunning;
-    }
-
-    @Override
-    public String getLoginActionName()
-    {
-        return HashtaggerApp.FACEBOOK_LOGIN_ACTION;
-    }
-
-    @Override
-    public String getSearchActionName()
-    {
-        return HashtaggerApp.FACEBOOK_SEARCH_ACTION;
     }
 }

@@ -10,7 +10,7 @@ import android.os.Message;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
 
-public abstract class SitesService extends Service implements SearchActionName, LoginActionName
+public abstract class SitesService extends Service
 {
     private static final String SITES_SERVICE_NAME = HashtaggerApp.NAMESPACE + "sites_service_name";
 
@@ -28,26 +28,16 @@ public abstract class SitesService extends Service implements SearchActionName, 
         @Override
         public void handleMessage( Message msg )
         {
-            setServiceRunning( true );
             Intent intent = ( Intent ) msg.obj;
             int actionType = msg.what;
-            Intent resultIntent = new Intent();
             if ( actionType == ActionType.SEARCH )
             {
-                resultIntent = doSearch( intent );
-                resultIntent.setAction( getSearchActionName() );
+                doSearch( intent );
             }
             else if ( actionType == ActionType.AUTH )
             {
-                resultIntent = doAuth( intent );
-                resultIntent.setAction( getLoginActionName() );
+                doAuth( intent );
             }
-            resultIntent.addCategory( Intent.CATEGORY_DEFAULT );
-            if ( isServiceRunning() )
-            {
-                sendBroadcast( resultIntent );
-            }
-            setServiceRunning( false );
             stopSelf( msg.arg1 );
         }
     }
@@ -97,11 +87,7 @@ public abstract class SitesService extends Service implements SearchActionName, 
         return null;
     }
 
-    protected abstract Intent doSearch( Intent intent );
+    protected abstract void doSearch( Intent intent );
 
-    protected abstract Intent doAuth( Intent intent );
-
-    protected abstract boolean isServiceRunning();
-
-    protected abstract void setServiceRunning( boolean running );
+    protected abstract void doAuth( Intent intent );
 }

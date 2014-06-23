@@ -8,7 +8,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
  */
 public class TwitterRetweetDoneEvent extends ResultEvent
 {
-    Status  status;
+    Status status;
 
     public TwitterRetweetDoneEvent( boolean success, Status status )
     {

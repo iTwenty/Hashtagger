@@ -1,11 +1,11 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.components;
 
-import android.content.Context;
 import android.content.Intent;
+import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
 import net.thetranquilpsychonaut.hashtagger.enums.AuthType;
-import net.thetranquilpsychonaut.hashtagger.enums.Result;
+import net.thetranquilpsychonaut.hashtagger.events.TwitterAuthDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterLoginActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
@@ -56,34 +56,41 @@ public class TwitterLoginHandler extends SitesLoginHandler
         twitterLoginListener.whileObtainingAccessToken();
     }
 
-    @Override
-    public void onReceive( Context context, Intent intent )
+    @Subscribe
+    public void onTwitterAuthDone( TwitterAuthDoneEvent event )
     {
-        int resultType = intent.getIntExtra( Result.RESULT_KEY, -1 );
-        if ( resultType == Result.FAILURE )
+        if ( !event.isSuccess() )
         {
             twitterLoginListener.onError();
             return;
         }
-        int authType = intent.getIntExtra( AuthType.AUTH_TYPE_KEY, -1 );
+        int authType = event.getAuthType();
         switch ( authType )
         {
             case AuthType.REQUEST:
-                Token requestToken = ( Token ) intent.getSerializableExtra( Result.RESULT_DATA );
-                String authorizationUrl = intent.getStringExtra( Result.RESULT_EXTRAS );
-                twitterLoginListener.onObtainingReqToken( requestToken, authorizationUrl );
+                final Token requestToken = event.getToken();
+                final String authorizationUrl = event.getAuthUrl();
+                getMainHandler().post( new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        twitterLoginListener.onObtainingReqToken( requestToken, authorizationUrl );
+                    }
+                } );
                 break;
             case AuthType.ACCESS:
-                Token accessToken = ( Token ) intent.getSerializableExtra( Result.RESULT_DATA );
-                String userName = intent.getStringExtra( Result.RESULT_EXTRAS );
+                Token accessToken = event.getToken();
+                String userName = event.getUserName();
                 AccountPrefs.addTwitterDetails( accessToken.getToken(), accessToken.getSecret(), userName );
-                twitterLoginListener.onUserLoggedIn();
+                getMainHandler().post( new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        twitterLoginListener.onUserLoggedIn();
+                    }
+                } );
         }
-    }
-
-    @Override
-    public String getLoginActionName()
-    {
-        return HashtaggerApp.TWITTER_LOGIN_ACTION;
     }
 }

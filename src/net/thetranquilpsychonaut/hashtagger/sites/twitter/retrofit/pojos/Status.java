@@ -14,7 +14,7 @@ import java.util.Date;
  */
 public class Status implements Serializable
 {
-    @SerializedName( "created_at" )
+    @SerializedName("created_at")
     private Date createdAt;
 
     @SerializedName("id_str")

@@ -3,8 +3,9 @@ package net.thetranquilpsychonaut.hashtagger.sites.gplus.components;
 import android.content.Intent;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.config.GPlusConfig;
-import net.thetranquilpsychonaut.hashtagger.enums.Result;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
+import net.thetranquilpsychonaut.hashtagger.events.GPlusAuthDoneEvent;
+import net.thetranquilpsychonaut.hashtagger.events.GPlusSearchDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesService;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.GPlus;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.ActivityFeed;
@@ -31,14 +32,12 @@ public class GPlusService extends SitesService
     private static final String GPLUS_USERNAME_URL = "https://www.googleapis.com/plus/v1/people/me?fields=displayName";
 
     @Override
-    protected Intent doSearch( Intent searchIntent )
+    protected void doSearch( Intent searchIntent )
     {
         final int searchType = searchIntent.getIntExtra( SearchType.SEARCH_TYPE_KEY, -1 );
         final String hashtag = searchIntent.getStringExtra( HashtaggerApp.HASHTAG_KEY );
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra( SearchType.SEARCH_TYPE_KEY, searchType );
         SearchParams params = new SearchParams( hashtag );
-        ActivityFeed results = null;
+        ActivityFeed activityFeed = null;
         try
         {
             // Google+ API has no method to fetch results newer than specified activity.
@@ -56,30 +55,28 @@ public class GPlusService extends SitesService
                 default:
                     break;
             }
-            results = GPlus.api().searchActivities( params.getParams() );
+            activityFeed = GPlus.api().searchActivities( params.getParams() );
         }
         catch ( Exception e )
         {
             Helper.debug( "Error while searching Google+ for " + hashtag + " : " + e.getMessage() );
         }
-        int searchResult = null == results ? Result.FAILURE : Result.SUCCESS;
-        resultIntent.putExtra( Result.RESULT_KEY, searchResult );
-        if ( searchResult == Result.SUCCESS )
+        boolean success = null != activityFeed;
+        if ( success )
         {
             if ( searchType != SearchType.NEWER && searchType != SearchType.TIMED )
             {
-                nextPageToken = results.getNextPageToken();
+                nextPageToken = activityFeed.getNextPageToken();
             }
-            resultIntent.putExtra( Result.RESULT_DATA, results );
         }
-        return resultIntent;
+        // Subscriber : GPlusSearchHandler : onGPlusSearchDone()
+        HashtaggerApp.bus.post( new GPlusSearchDoneEvent( searchType, success, activityFeed ) );
     }
 
     @Override
-    protected Intent doAuth( Intent authIntent )
+    protected void doAuth( Intent authIntent )
     {
         final String code = authIntent.getStringExtra( GPlusLoginActivity.GPLUS_CODE_KEY );
-        Intent resultIntent = new Intent();
         Token accessToken = null;
         String userName = null;
         try
@@ -101,26 +98,9 @@ public class GPlusService extends SitesService
         {
             Helper.debug( "Error while obtaining Google+ access token : " + e.getMessage() );
         }
-        int accessResult = null == accessToken ? Result.FAILURE : Result.SUCCESS;
-        resultIntent.putExtra( Result.RESULT_KEY, accessResult );
-        if ( accessResult == Result.SUCCESS )
-        {
-            resultIntent.putExtra( Result.RESULT_DATA, accessToken );
-            resultIntent.putExtra( Result.RESULT_EXTRAS, userName );
-        }
-        return resultIntent;
-    }
-
-    @Override
-    protected boolean isServiceRunning()
-    {
-        return isServiceRunning;
-    }
-
-    @Override
-    protected void setServiceRunning( boolean running )
-    {
-        isServiceRunning = running;
+        boolean success = null != accessToken;
+        // Subscriber : GPlusLoginHandler : onGPlusAuthDone()
+        HashtaggerApp.bus.post( new GPlusAuthDoneEvent( success, accessToken, userName ) );
     }
 
     public static void setIsServiceRunning( boolean running )
@@ -131,17 +111,5 @@ public class GPlusService extends SitesService
     public static boolean getIsServiceRunning()
     {
         return isServiceRunning;
-    }
-
-    @Override
-    public String getLoginActionName()
-    {
-        return HashtaggerApp.GPLUS_LOGIN_ACTION;
-    }
-
-    @Override
-    public String getSearchActionName()
-    {
-        return HashtaggerApp.GPLUS_SEARCH_ACTION;
     }
 }

@@ -1,10 +1,10 @@
 package net.thetranquilpsychonaut.hashtagger.sites.gplus.components;
 
-import android.content.Context;
 import android.content.Intent;
+import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
-import net.thetranquilpsychonaut.hashtagger.enums.Result;
+import net.thetranquilpsychonaut.hashtagger.events.GPlusAuthDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusLoginActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
@@ -41,25 +41,25 @@ public class GPlusLoginHandler extends SitesLoginHandler
         gPlusLoginListener.whileObtainingAccessToken();
     }
 
-    @Override
-    public void onReceive( Context context, Intent intent )
+    @Subscribe
+    public void onGPlusAuthDone( GPlusAuthDoneEvent event )
     {
-        int result = intent.getIntExtra( Result.RESULT_KEY, -1 );
-        if ( result == Result.FAILURE )
+        if ( !event.isSuccess() )
         {
             gPlusLoginListener.onError();
             return;
         }
-        Token accessToken = ( Token ) intent.getSerializableExtra( Result.RESULT_DATA );
-        String userName = intent.getStringExtra( Result.RESULT_EXTRAS );
+        Token accessToken = event.getToken();
+        String userName = event.getUserName();
         String refreshToken = Helper.extractJsonStringField( accessToken.getRawResponse(), "refresh_token" );
         AccountPrefs.addGPlusDetails( accessToken.getToken(), refreshToken, userName );
-        gPlusLoginListener.onUserLoggedIn();
-    }
-
-    @Override
-    public String getLoginActionName()
-    {
-        return HashtaggerApp.GPLUS_LOGIN_ACTION;
+        getMainHandler().post( new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                gPlusLoginListener.onUserLoggedIn();
+            }
+        } );
     }
 }
