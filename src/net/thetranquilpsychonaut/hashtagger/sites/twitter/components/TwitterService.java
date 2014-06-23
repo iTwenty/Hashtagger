@@ -87,7 +87,7 @@ public class TwitterService extends SitesService
             if ( !Helper.isNullOrEmpty( searchResult.getStatuses() ) )
             {
                 //  if our current search is the initial one,
-                //  we set both the max and since ids for subsquent searches.
+                //  we set both the max and since ids for subsequent searches.
                 //  if our current search is older,
                 //  we don't want it to change the sinceId for our next newer search.
                 //  if our current search is newer,

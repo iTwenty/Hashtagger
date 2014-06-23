@@ -26,7 +26,7 @@ import org.scribe.oauth.OAuthService;
  */
 public class GPlusService extends SitesService
 {
-    public static String nextPageToken;
+    private static String nextPageToken;
 
     private volatile static boolean isSearchRunning = false;
 

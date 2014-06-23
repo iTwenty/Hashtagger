@@ -70,7 +70,7 @@ public class FacebookService extends SitesService
         boolean success = null != searchResult;
         if ( success )
         {
-            if ( !searchResult.getData().isEmpty() )
+            if ( !Helper.isNullOrEmpty( searchResult.getData() ) )
             {
                 if ( searchType != SearchType.OLDER )
                 {
