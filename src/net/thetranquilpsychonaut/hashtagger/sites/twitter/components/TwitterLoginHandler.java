@@ -1,13 +1,9 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.components;
 
-import android.content.Intent;
 import com.squareup.otto.Subscribe;
-import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
 import net.thetranquilpsychonaut.hashtagger.enums.AuthType;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterAuthDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
-import net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterLoginActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
 import org.scribe.model.Token;
 
@@ -16,44 +12,15 @@ import org.scribe.model.Token;
  */
 public class TwitterLoginHandler extends SitesLoginHandler
 {
-    public interface TwitterLoginListener
+    public TwitterLoginHandler( SitesLoginListener listener )
     {
-        public void whileObtainingReqToken();
-
-        public void onObtainingReqToken( Token requestToken, String authorizationUrl );
-
-        public void whileObtainingAccessToken();
-
-        public void onError();
-
-        public void onUserLoggedIn();
+        super( listener );
     }
 
-    TwitterLoginListener twitterLoginListener;
-
-    public TwitterLoginHandler( TwitterLoginListener listener )
+    @Override
+    protected Class<?> getServiceClass()
     {
-        twitterLoginListener = listener;
-    }
-
-    public void fetchRequestToken()
-    {
-        Intent requestIntent = new Intent( HashtaggerApp.app, TwitterService.class );
-        requestIntent.putExtra( ActionType.ACTION_TYPE_KEY, ActionType.AUTH );
-        requestIntent.putExtra( AuthType.AUTH_TYPE_KEY, AuthType.REQUEST );
-        HashtaggerApp.app.startService( requestIntent );
-        twitterLoginListener.whileObtainingReqToken();
-    }
-
-    public void fetchAccessToken( Token requestToken, String oauthVerifier )
-    {
-        Intent accessIntent = new Intent( HashtaggerApp.app, TwitterService.class );
-        accessIntent.putExtra( ActionType.ACTION_TYPE_KEY, ActionType.AUTH );
-        accessIntent.putExtra( AuthType.AUTH_TYPE_KEY, AuthType.ACCESS );
-        accessIntent.putExtra( TwitterLoginActivity.TWITTER_REQUEST_TOKEN_KEY, requestToken );
-        accessIntent.putExtra( TwitterLoginActivity.TWITTER_OAUTH_VERIFIER_KEY, oauthVerifier );
-        HashtaggerApp.app.startService( accessIntent );
-        twitterLoginListener.whileObtainingAccessToken();
+        return TwitterService.class;
     }
 
     @Subscribe
@@ -61,7 +28,7 @@ public class TwitterLoginHandler extends SitesLoginHandler
     {
         if ( !event.isSuccess() )
         {
-            twitterLoginListener.onError();
+            listener.onError();
             return;
         }
         int authType = event.getAuthType();
@@ -75,7 +42,7 @@ public class TwitterLoginHandler extends SitesLoginHandler
                     @Override
                     public void run()
                     {
-                        twitterLoginListener.onObtainingReqToken( requestToken, authorizationUrl );
+                        listener.onObtainingReqToken( requestToken, authorizationUrl );
                     }
                 } );
                 break;
@@ -88,7 +55,7 @@ public class TwitterLoginHandler extends SitesLoginHandler
                     @Override
                     public void run()
                     {
-                        twitterLoginListener.onUserLoggedIn();
+                        listener.onUserLoggedIn();
                     }
                 } );
         }

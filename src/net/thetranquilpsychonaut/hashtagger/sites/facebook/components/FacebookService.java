@@ -7,6 +7,7 @@ import net.thetranquilpsychonaut.hashtagger.config.FacebookConfig;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.events.FacebookAuthDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.events.FacebookSearchDoneEvent;
+import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesService;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.Facebook;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.SearchParams;
@@ -89,7 +90,7 @@ public class FacebookService extends SitesService
     @Override
     protected void doAuth( Intent intent )
     {
-        final String code = intent.getStringExtra( FacebookLoginActivity.FACEBOOK_CODE_KEY );
+        final String code = intent.getStringExtra( SitesLoginHandler.VERIFIER_KEY );
         Token accessToken = null;
         String userName = null;
         try

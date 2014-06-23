@@ -6,6 +6,7 @@ import net.thetranquilpsychonaut.hashtagger.config.GPlusConfig;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.events.GPlusAuthDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.events.GPlusSearchDoneEvent;
+import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesService;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.GPlus;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.ActivityFeed;
@@ -79,7 +80,7 @@ public class GPlusService extends SitesService
     @Override
     protected void doAuth( Intent authIntent )
     {
-        final String code = authIntent.getStringExtra( GPlusLoginActivity.GPLUS_CODE_KEY );
+        final String code = authIntent.getStringExtra( SitesLoginHandler.VERIFIER_KEY );
         Token accessToken = null;
         String userName = null;
         try

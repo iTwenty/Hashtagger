@@ -107,7 +107,7 @@ public abstract class SitesFragment extends Fragment implements
     {
         super.onStart();
         HashtaggerApp.bus.register( this );
-        sitesSearchHandler.registerReceiver();
+        HashtaggerApp.bus.register( sitesSearchHandler );
         if ( !sitesSearchHandler.isSearchRunning() )
         {
             if ( activeView == LOADING )
@@ -143,8 +143,8 @@ public abstract class SitesFragment extends Fragment implements
     {
         super.onStop();
         timedSearchHandler.removeCallbacks( timedSearchRunner );
-        sitesSearchHandler.unregisterReceiver();
-        HashtaggerApp.bus.register( this );
+        HashtaggerApp.bus.unregister( sitesSearchHandler );
+        HashtaggerApp.bus.unregister( this );
     }
 
     @Override
@@ -433,7 +433,7 @@ public abstract class SitesFragment extends Fragment implements
     @Override
     public void onPrepareOptionsMenu( Menu menu )
     {
-        menu.findItem( R.id.it_logout ).setVisible( isUserLoggedIn() ? true : false );
+        menu.findItem( R.id.it_logout ).setVisible( isUserLoggedIn() );
     }
 
     protected abstract SitesSearchHandler initSitesSearchHandler();

@@ -8,6 +8,7 @@ import net.thetranquilpsychonaut.hashtagger.enums.AuthType;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterAuthDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterSearchDoneEvent;
+import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesService;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.Twitter;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.SearchParams;
@@ -132,8 +133,8 @@ public class TwitterService extends SitesService
                 authDoneEvent = doRequestAuth();
                 break;
             case AuthType.ACCESS:
-                final Token requestToken = ( Token ) intent.getSerializableExtra( TwitterLoginActivity.TWITTER_REQUEST_TOKEN_KEY );
-                final String oauthVerifier = intent.getStringExtra( TwitterLoginActivity.TWITTER_OAUTH_VERIFIER_KEY );
+                final Token requestToken = ( Token ) intent.getSerializableExtra( SitesLoginHandler.REQUEST_TOKEN_KEY );
+                final String oauthVerifier = intent.getStringExtra( SitesLoginHandler.VERIFIER_KEY );
                 authDoneEvent = doAccessAuth( requestToken, oauthVerifier );
                 break;
             default:

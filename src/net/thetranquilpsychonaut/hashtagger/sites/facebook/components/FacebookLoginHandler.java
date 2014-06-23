@@ -1,12 +1,8 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.components;
 
-import android.content.Intent;
 import com.squareup.otto.Subscribe;
-import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
-import net.thetranquilpsychonaut.hashtagger.enums.ActionType;
 import net.thetranquilpsychonaut.hashtagger.events.FacebookAuthDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
-import net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookLoginActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
 import org.scribe.model.Token;
 
@@ -15,29 +11,9 @@ import org.scribe.model.Token;
  */
 public class FacebookLoginHandler extends SitesLoginHandler
 {
-    public interface FacebookLoginListener
+    public FacebookLoginHandler( SitesLoginListener listener )
     {
-        public void whileObtainingAccessToken();
-
-        public void onError();
-
-        public void onUserLoggedIn();
-    }
-
-    FacebookLoginListener facebookLoginListener;
-
-    public FacebookLoginHandler( FacebookLoginListener listener )
-    {
-        facebookLoginListener = listener;
-    }
-
-    public void fetchAccessToken( String code )
-    {
-        Intent accessIntent = new Intent( HashtaggerApp.app, FacebookService.class );
-        accessIntent.putExtra( ActionType.ACTION_TYPE_KEY, ActionType.AUTH );
-        accessIntent.putExtra( FacebookLoginActivity.FACEBOOK_CODE_KEY, code );
-        HashtaggerApp.app.startService( accessIntent );
-        facebookLoginListener.whileObtainingAccessToken();
+        super( listener );
     }
 
     @Subscribe
@@ -45,7 +21,7 @@ public class FacebookLoginHandler extends SitesLoginHandler
     {
         if ( !event.isSuccess() )
         {
-            facebookLoginListener.onError();
+            listener.onError();
             return;
         }
         Token accessToken = event.getToken();
@@ -56,8 +32,14 @@ public class FacebookLoginHandler extends SitesLoginHandler
             @Override
             public void run()
             {
-                facebookLoginListener.onUserLoggedIn();
+                listener.onUserLoggedIn();
             }
         } );
+    }
+
+    @Override
+    protected Class<?> getServiceClass()
+    {
+        return FacebookService.class;
     }
 }

@@ -46,16 +46,6 @@ public abstract class SitesSearchHandler
 
     protected abstract Class<?> getServiceClass();
 
-    public void registerReceiver()
-    {
-        HashtaggerApp.bus.register( this );
-    }
-
-    public void unregisterReceiver()
-    {
-        HashtaggerApp.bus.unregister( this );
-    }
-
     public abstract boolean isSearchRunning();
 
     protected Handler getMainHandler()
