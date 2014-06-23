@@ -23,7 +23,7 @@ public abstract class SitesSearchHandler
         public void onError( int searchType );
     }
 
-    // We use this handler to call the methods of SitesSearchListerner which
+    // We use this handler to call the methods of SitesSearchListener which
     // must run on UI thread.
     private Handler mainHandler = new Handler( Looper.getMainLooper() );
 
@@ -57,8 +57,6 @@ public abstract class SitesSearchHandler
     }
 
     public abstract boolean isSearchRunning();
-
-    public abstract void cancelCurrentSearch();
 
     protected Handler getMainHandler()
     {

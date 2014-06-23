@@ -27,8 +27,9 @@ import org.scribe.oauth.OAuthService;
  */
 public class FacebookService extends SitesService
 {
-    private static final int FACEBOOK_SEARCH_LIMIT = 20;
-    private volatile static boolean isServiceRunning;
+    private volatile static boolean isSearchRunning = false;
+
+    private static final int    FACEBOOK_SEARCH_LIMIT = 20;
     private static final String FACEBOOK_USERNAME_URL = "https://graph.facebook.com/me?fields=name";
 
     private static String until;
@@ -37,6 +38,7 @@ public class FacebookService extends SitesService
     @Override
     protected void doSearch( Intent searchIntent )
     {
+        isSearchRunning = true;
         final int searchType = searchIntent.getIntExtra( SearchType.SEARCH_TYPE_KEY, -1 );
         final String hashtag = searchIntent.getStringExtra( HashtaggerApp.HASHTAG_KEY );
         SearchResult searchResult = null;
@@ -81,6 +83,7 @@ public class FacebookService extends SitesService
         }
         // Subscriber : FacebookSearchHandler : onFacebookSearchDone()
         HashtaggerApp.bus.post( new FacebookSearchDoneEvent( searchType, success, searchResult ) );
+        isSearchRunning = false;
     }
 
     @Override
@@ -112,13 +115,8 @@ public class FacebookService extends SitesService
         HashtaggerApp.bus.post( new FacebookAuthDoneEvent( success, accessToken, userName ) );
     }
 
-    public static void setIsServiceRunning( boolean running )
+    public static boolean isSearchRunning()
     {
-        isServiceRunning = running;
-    }
-
-    public static boolean getIsServiceRunning()
-    {
-        return isServiceRunning;
+        return isSearchRunning;
     }
 }

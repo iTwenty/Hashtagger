@@ -30,13 +30,7 @@ public class FacebookSearchHandler extends SitesSearchHandler
     @Override
     public boolean isSearchRunning()
     {
-        return FacebookService.getIsServiceRunning();
-    }
-
-    @Override
-    public void cancelCurrentSearch()
-    {
-        FacebookService.setIsServiceRunning( false );
+        return FacebookService.isSearchRunning();
     }
 
     @Subscribe

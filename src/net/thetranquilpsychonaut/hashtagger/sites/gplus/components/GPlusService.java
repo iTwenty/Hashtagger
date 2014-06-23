@@ -27,13 +27,15 @@ public class GPlusService extends SitesService
 {
     public static String nextPageToken;
 
-    private volatile static boolean isServiceRunning;
+    private volatile static boolean isSearchRunning = false;
+
     private static final int    GPLUS_SEARCH_LIMIT = 20;
     private static final String GPLUS_USERNAME_URL = "https://www.googleapis.com/plus/v1/people/me?fields=displayName";
 
     @Override
     protected void doSearch( Intent searchIntent )
     {
+        isSearchRunning = true;
         final int searchType = searchIntent.getIntExtra( SearchType.SEARCH_TYPE_KEY, -1 );
         final String hashtag = searchIntent.getStringExtra( HashtaggerApp.HASHTAG_KEY );
         SearchParams params = new SearchParams( hashtag );
@@ -71,6 +73,7 @@ public class GPlusService extends SitesService
         }
         // Subscriber : GPlusSearchHandler : onGPlusSearchDone()
         HashtaggerApp.bus.post( new GPlusSearchDoneEvent( searchType, success, activityFeed ) );
+        isSearchRunning = false;
     }
 
     @Override
@@ -103,13 +106,8 @@ public class GPlusService extends SitesService
         HashtaggerApp.bus.post( new GPlusAuthDoneEvent( success, accessToken, userName ) );
     }
 
-    public static void setIsServiceRunning( boolean running )
+    public static boolean isSearchRunning()
     {
-        isServiceRunning = running;
-    }
-
-    public static boolean getIsServiceRunning()
-    {
-        return isServiceRunning;
+        return isSearchRunning;
     }
 }

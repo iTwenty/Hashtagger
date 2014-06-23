@@ -474,7 +474,6 @@ public abstract class SitesFragment extends Fragment implements
         lvResultsList.setTag( null );
         srlReady.setRefreshing( false );
         sitesFooterView.showView( SitesFooterView.NORMAL );
-        sitesSearchHandler.cancelCurrentSearch();
         sitesSearchHandler.beginSearch( SearchType.INITIAL, event.getHashtag() );
     }
 

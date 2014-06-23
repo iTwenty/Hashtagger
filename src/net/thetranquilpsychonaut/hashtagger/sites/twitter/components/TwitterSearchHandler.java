@@ -26,13 +26,7 @@ public class TwitterSearchHandler extends SitesSearchHandler
     @Override
     public boolean isSearchRunning()
     {
-        return TwitterService.getIsServiceRunning();
-    }
-
-    @Override
-    public void cancelCurrentSearch()
-    {
-        TwitterService.setIsServiceRunning( false );
+        return TwitterService.isIsSearchRunning();
     }
 
     @Subscribe

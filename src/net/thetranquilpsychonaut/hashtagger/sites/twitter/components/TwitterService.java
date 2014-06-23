@@ -40,13 +40,15 @@ public class TwitterService extends SitesService
     private static String maxId;
     private static String sinceId;
 
-    private volatile static boolean isServiceRunning;
+    private volatile static boolean isSearchRunning = false;
+
     private static final String TWITTER_USERNAME_URL = "https://api.twitter.com/1.1/account/verify_credentials.json";
     private static final int    TWITTER_SEARCH_LIMIT = 20;
 
     @Override
     protected void doSearch( Intent searchIntent )
     {
+        isSearchRunning = true;
         final int searchType = searchIntent.getIntExtra( SearchType.SEARCH_TYPE_KEY, -1 );
         final String hashtag = searchIntent.getStringExtra( HashtaggerApp.HASHTAG_KEY );
         SearchParams params = new SearchParams( hashtag );
@@ -111,6 +113,7 @@ public class TwitterService extends SitesService
         }
         // Subscriber : TwitterSearchHandler : onTwitterSearchDone()
         HashtaggerApp.bus.post( new TwitterSearchDoneEvent( searchType, success, searchResult ) );
+        isSearchRunning = false;
     }
 
     private String getLowestId( List<Status> list )
@@ -191,13 +194,8 @@ public class TwitterService extends SitesService
         return new TwitterAuthDoneEvent( success, accessToken, userName, null, AuthType.ACCESS );
     }
 
-    public static void setIsServiceRunning( boolean running )
+    public static boolean isIsSearchRunning()
     {
-        isServiceRunning = running;
-    }
-
-    public static boolean getIsServiceRunning()
-    {
-        return isServiceRunning;
+        return isSearchRunning;
     }
 }
