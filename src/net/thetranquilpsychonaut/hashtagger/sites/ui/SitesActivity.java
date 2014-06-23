@@ -287,21 +287,19 @@ public class SitesActivity extends NavDrawerActivity
     @Override
     public void onBackPressed()
     {
-        popCurrentHashtag();
-        String hashtag = peekCurrentHashtag();
-        if ( TextUtils.isEmpty( hashtag ) )
+        if ( Helper.isNullOrEmpty( hashtags ) || hashtags.size() == 1 )
         {
             super.onBackPressed();
+            return;
         }
-        else
-        {
-            // This flag tells onHandleIntent() to not add the query back to the stack
-            isSearchDueToBackPress = true;
-            Intent intent = new Intent( Intent.ACTION_SEARCH );
-            intent.putExtra( SearchManager.QUERY, hashtag );
-            intent.setComponent( this.getComponentName() );
-            startActivity( intent );
-        }
+        popCurrentHashtag();
+        String hashtag = peekCurrentHashtag();
+        // This flag tells onHandleIntent() to not add the query back to the stack
+        isSearchDueToBackPress = true;
+        Intent intent = new Intent( Intent.ACTION_SEARCH );
+        intent.putExtra( SearchManager.QUERY, hashtag );
+        intent.setComponent( this.getComponentName() );
+        startActivity( intent );
     }
 
     public String peekCurrentHashtag()
