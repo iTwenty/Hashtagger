@@ -512,7 +512,7 @@ public abstract class SitesFragment extends Fragment implements
     {
         showView( READY );
         Toast.makeText( getActivity(),
-                getResources().getString( getLoggedInToastTextId() ) + getUserName(),
+                String.format( getResources().getString( getLoggedInToastTextId() ), getUserName() ),
                 Toast.LENGTH_LONG )
                 .show();
         getActivity().invalidateOptionsMenu();

@@ -1,5 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
+import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.config.FacebookConfig;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.components.FacebookLoginHandler;
@@ -13,6 +14,12 @@ public class FacebookLoginActivity extends SitesLoginActivity
     public static final String FACEBOOK_CALLBACK_URL  = "http://localhost/";
     public static final String FACEBOOK_CODE_KEY      = "code";
     public static final String FACEBOOK_AUTHORIZE_URL = String.format( "https://www.facebook.com/dialog/oauth?client_id=%s&redirect_uri=%s", FacebookConfig.FACEBOOK_OAUTH_APP_ID, FACEBOOK_CALLBACK_URL );
+
+    @Override
+    protected int getLoginTitleResId()
+    {
+        return R.string.str_title_activity_facebook_login;
+    }
 
     @Override
     protected int getOAuthVersion()

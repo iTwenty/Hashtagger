@@ -37,6 +37,7 @@ public abstract class SitesLoginActivity extends FragmentActivity implements Sit
     {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_loading );
+        setTitle( getString( getLoginTitleResId() ) );
         sitesLoginHandler = initSitesLoginHandler();
         vaLoadingView = ( ViewAnimator ) findViewById( R.id.va_loading_view );
         webView = initMainView( savedInstanceState );
@@ -62,6 +63,8 @@ public abstract class SitesLoginActivity extends FragmentActivity implements Sit
             }
         }
     }
+
+    protected abstract int getLoginTitleResId();
 
     protected abstract int getOAuthVersion();
 

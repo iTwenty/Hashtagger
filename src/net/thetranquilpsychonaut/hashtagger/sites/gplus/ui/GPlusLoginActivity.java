@@ -1,5 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 
+import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.config.GPlusConfig;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.GPlusLoginHandler;
@@ -15,6 +16,12 @@ public class GPlusLoginActivity extends SitesLoginActivity
     private static final String GPLUS_AUTHORIZE_URL =
             String.format( "https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=%s&redirect_uri=%s&scope=%s",
                     GPlusConfig.GPLUS_OAUTH_CLIENT_ID, GPLUS_CALLBACK_URL, GPlusConfig.GPLUS_ACCESS_SCOPE );
+
+    @Override
+    protected int getLoginTitleResId()
+    {
+        return R.string.str_title_activity_gplus_login;
+    }
 
     @Override
     protected int getOAuthVersion()
