@@ -126,6 +126,14 @@ public final class AccountPrefs
         return false;
     }
 
+    public static void removeInstagramDetails()
+    {
+        getAccountPrefs()
+                .edit()
+                .remove( INSTAGRAM_USER_NAME_KEY )
+                .commit();
+    }
+
     public static String getInstagramUserName()
     {
         return getAccountPrefs().getString( INSTAGRAM_USER_NAME_KEY, "" );
@@ -163,5 +171,4 @@ public final class AccountPrefs
     {
         return getAccountPrefs().getString( FACEBOOK_USER_NAME_KEY, "" );
     }
-
 }

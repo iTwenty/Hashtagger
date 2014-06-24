@@ -19,17 +19,15 @@ public class HashtaggerApp extends Application
     public static final String NAMESPACE         = "hashtagger:";
     public static final String HASHTAG_KEY       = NAMESPACE + "hashtag";
 
-    public static final int TOTAL_SITES_COUNT = 3;
-
-    public static final String TWITTER       = "Twitter";
-    public static final int    TWITTER_VALUE = 0;
-
-    public static final String GPLUS       = "Google+";
-    public static final int    GPLUS_VALUE = 1;
-
-    public static final String FACEBOOK       = "Facebook";
-    public static final int    FACEBOOK_VALUE = 2;
-
+    public static final int    TOTAL_SITES_COUNT = 4;
+    public static final String TWITTER           = "Twitter";
+    public static final int    TWITTER_VALUE     = 0;
+    public static final String GPLUS             = "Google+";
+    public static final int    GPLUS_VALUE       = 1;
+    public static final String INSTAGRAM         = "Instagram";
+    public static final int    INSTAGRAM_VALUE   = 2;
+    public static final String FACEBOOK          = "Facebook";
+    public static final int    FACEBOOK_VALUE    = 3;
 
     @Override
     public void onCreate()

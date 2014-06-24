@@ -76,17 +76,25 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private void disableUncheckedSitesIfMaxActiveSitesReached()
     {
         updateActiveSitesCount();
-        activeSites.setTitle( String.format( getString( R.string.actives_sites_title ), activeSitesCount ) );
+        activeSites.setTitle( String.format( getString( R.string.actives_sites_title ), activeSitesCount, MAX_ACTIVE_SITES ) );
         if ( activeSitesCount >= MAX_ACTIVE_SITES )
         {
             if ( !DefaultPrefs.twitterActive )
+            {
                 cbpTwitter.setEnabled( false );
+            }
             if ( !DefaultPrefs.gPlusActive )
+            {
                 cbpGPlus.setEnabled( false );
+            }
             if ( !DefaultPrefs.instagramActive )
+            {
                 cbpInstagram.setEnabled( false );
+            }
             if ( !DefaultPrefs.facebookActive )
+            {
                 cbpFacebook.setEnabled( false );
+            }
         }
         else
         {
@@ -103,13 +111,21 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         activeSitesCount = 0;
 
         if ( DefaultPrefs.twitterActive )
+        {
             activeSitesCount++;
+        }
         if ( DefaultPrefs.gPlusActive )
+        {
             activeSitesCount++;
+        }
         if ( DefaultPrefs.instagramActive )
+        {
             activeSitesCount++;
+        }
         if ( DefaultPrefs.facebookActive )
+        {
             activeSitesCount++;
+        }
     }
 
     @Override

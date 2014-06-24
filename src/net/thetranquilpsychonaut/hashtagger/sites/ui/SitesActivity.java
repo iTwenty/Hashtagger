@@ -26,6 +26,7 @@ import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsDBContrac
 import net.thetranquilpsychonaut.hashtagger.savedhashtags.SavedHashtagsProviderContract;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusFragment;
+import net.thetranquilpsychonaut.hashtagger.sites.instagram.ui.InstagramFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterFragment;
 import net.thetranquilpsychonaut.hashtagger.utils.DefaultPrefs;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
@@ -95,7 +96,9 @@ public class SitesActivity extends NavDrawerActivity
         int[] savedSitePositions = getSavedSitePositions();
         int twitterPosition = savedSitePositions[HashtaggerApp.TWITTER_VALUE];
         int gPlusPosition = savedSitePositions[HashtaggerApp.GPLUS_VALUE];
+        int instagramPosition = savedSitePositions[HashtaggerApp.INSTAGRAM_VALUE];
         int facebookPosition = savedSitePositions[HashtaggerApp.FACEBOOK_VALUE];
+
         if ( twitterPosition == -1 )
         {
             sitesPagerAdapter.remove( TwitterFragment.DESCRIPTOR );
@@ -111,6 +114,7 @@ public class SitesActivity extends NavDrawerActivity
                 sitesPagerAdapter.insert( TwitterFragment.DESCRIPTOR, twitterPosition );
             }
         }
+
         if ( gPlusPosition == -1 )
         {
             sitesPagerAdapter.remove( GPlusFragment.DESCRIPTOR );
@@ -126,6 +130,23 @@ public class SitesActivity extends NavDrawerActivity
                 sitesPagerAdapter.insert( GPlusFragment.DESCRIPTOR, gPlusPosition );
             }
         }
+
+        if ( instagramPosition == -1 )
+        {
+            sitesPagerAdapter.remove( InstagramFragment.DESCRIPTOR );
+        }
+        else
+        {
+            if ( sitesPagerAdapter.contains( InstagramFragment.DESCRIPTOR ) )
+            {
+                sitesPagerAdapter.move( InstagramFragment.DESCRIPTOR, instagramPosition );
+            }
+            else
+            {
+                sitesPagerAdapter.insert( InstagramFragment.DESCRIPTOR, instagramPosition );
+            }
+        }
+
         if ( facebookPosition == -1 )
         {
             sitesPagerAdapter.remove( FacebookFragment.DESCRIPTOR );
@@ -141,6 +162,7 @@ public class SitesActivity extends NavDrawerActivity
                 sitesPagerAdapter.insert( FacebookFragment.DESCRIPTOR, facebookPosition );
             }
         }
+
         sitesPagerIndicator.notifyIconSetChanged();
     }
 
@@ -150,6 +172,7 @@ public class SitesActivity extends NavDrawerActivity
         int activePosition = 0;
         positions[HashtaggerApp.TWITTER_VALUE] = DefaultPrefs.twitterActive ? activePosition++ : -1;
         positions[HashtaggerApp.GPLUS_VALUE] = DefaultPrefs.gPlusActive ? activePosition++ : -1;
+        positions[HashtaggerApp.INSTAGRAM_VALUE] = DefaultPrefs.instagramActive ? activePosition++ : -1;
         positions[HashtaggerApp.FACEBOOK_VALUE] = DefaultPrefs.facebookActive ? activePosition++ : -1;
         return positions;
     }

@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
+import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.Media;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 
 import java.io.UnsupportedEncodingException;
@@ -42,6 +43,12 @@ public final class UrlModifier
     public static Uri getGPlusActivityUrl( Activity activity )
     {
         return Uri.parse( activity.getUrl() );
+    }
+
+    public static Uri getInstagramMediaUrl( Media media )
+    {
+        // TODO
+        return null;
     }
 
     public static String getFacebookLargePhotoUrl( String smallPhotoUrl )

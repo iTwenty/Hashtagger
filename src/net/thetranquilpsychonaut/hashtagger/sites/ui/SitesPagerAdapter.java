@@ -6,6 +6,7 @@ import net.thetranquilpsychonaut.hashtagger.cwacpager.ArrayPagerAdapter;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.PageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusFragment;
+import net.thetranquilpsychonaut.hashtagger.sites.instagram.ui.InstagramFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterFragment;
 import net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerAdapter;
 
@@ -32,6 +33,10 @@ public class SitesPagerAdapter extends ArrayPagerAdapter<SitesFragment> implemen
         {
             return new GPlusFragment();
         }
+        if ( pageDescriptor.equals( InstagramFragment.DESCRIPTOR ) )
+        {
+            return new InstagramFragment();
+        }
         if ( pageDescriptor.equals( FacebookFragment.DESCRIPTOR ) )
         {
             return new FacebookFragment();
@@ -51,6 +56,10 @@ public class SitesPagerAdapter extends ArrayPagerAdapter<SitesFragment> implemen
         {
             return R.drawable.gplus_logo;
         }
+        if ( descriptor.equals( InstagramFragment.DESCRIPTOR ) )
+        {
+            return R.drawable.instagram_logo;
+        }
         if ( descriptor.equals( FacebookFragment.DESCRIPTOR ) )
         {
             return R.drawable.facebook_logo;
@@ -69,6 +78,10 @@ public class SitesPagerAdapter extends ArrayPagerAdapter<SitesFragment> implemen
         if ( descriptor.equals( GPlusFragment.DESCRIPTOR ) )
         {
             return R.color.gplus_red;
+        }
+        if ( descriptor.equals( InstagramFragment.DESCRIPTOR ) )
+        {
+            return R.color.instagram_blue;
         }
         if ( descriptor.equals( FacebookFragment.DESCRIPTOR ) )
         {

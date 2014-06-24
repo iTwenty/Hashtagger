@@ -33,6 +33,7 @@
         <service android:name=".sites.twitter.components.TwitterService"/>
         <service android:name=".sites.facebook.components.FacebookService"/>
         <service android:name=".sites.gplus.components.GPlusService"/>
+        <service android:name=".sites.instagram.components.InstagramService"/>
         <service android:name=".sites.twitter.components.TwitterTrendsService"/>
 
         <activity
@@ -54,14 +55,6 @@
         <activity
             android:name=".sites.twitter.ui.TwitterLoginActivity"
             android:launchMode="singleTop">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-
-                <data android:scheme="twitter-login-callback"/>
-            </intent-filter>
         </activity>
 
         <activity
@@ -71,6 +64,11 @@
 
         <activity
             android:name=".sites.gplus.ui.GPlusLoginActivity"
+            android:launchMode="singleTop">
+        </activity>
+
+        <activity
+            android:name=".sites.instagram.ui.InstagramLoginActivity"
             android:launchMode="singleTop">
         </activity>
 

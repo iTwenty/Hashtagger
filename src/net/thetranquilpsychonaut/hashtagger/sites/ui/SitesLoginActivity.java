@@ -58,8 +58,11 @@ public abstract class SitesLoginActivity extends FragmentActivity implements Sit
         {
             switch ( getOAuthVersion() )
             {
-                case 1: sitesLoginHandler.fetchRequestToken(); break;
-                case 2: webView.loadUrl( getAuthorizationUrl() );
+                case 1:
+                    sitesLoginHandler.fetchRequestToken();
+                    break;
+                case 2:
+                    webView.loadUrl( getAuthorizationUrl() );
             }
         }
     }

@@ -58,5 +58,9 @@
     <string name="str_search_for_hashtag">Search for %s</string>
     <string name="str_trends_not_available">Trends not available</string>
     <string name="str_trends_not_logged_in">Log in to Twitter to see trending topics</string>
-    <string name="actives_sites_title">Active Sites (%d/3)</string>
+    <string name="actives_sites_title" formatted="false">Active Sites (%d/%d)</string>
+    <string name="str_instagram_login_button_text">Sign in with Instagram</string>
+    <string name="str_toast_instagram_logged_in_as">Logged in to Instagram as %s</string>
+    <string name="str_toast_instagram_login_failed">Could not log in to Instagram</string>
+    <string name="str_title_activity_instagram_login">Sign In With Instagram</string>
 </resources>
