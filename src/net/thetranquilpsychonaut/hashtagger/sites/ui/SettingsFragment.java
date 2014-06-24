@@ -19,6 +19,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 {
     CheckBoxPreference cbpTwitter;
     CheckBoxPreference cbpGPlus;
+    CheckBoxPreference cbpInstagram;
     CheckBoxPreference cbpFacebook;
     CheckBoxPreference cbpAutoUpdate;
     Preference         prefClearSearch;
@@ -32,6 +33,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
         cbpTwitter = ( CheckBoxPreference ) findPreference( DefaultPrefs.TWITTER_SITE_KEY );
         cbpGPlus = ( CheckBoxPreference ) findPreference( DefaultPrefs.GPLUS_SITE_KEY );
+        cbpInstagram = ( CheckBoxPreference ) findPreference( DefaultPrefs.INSTAGRAM_SITE_KEY );
         cbpFacebook = ( CheckBoxPreference ) findPreference( DefaultPrefs.FACEBOOK_SITE_KEY );
         cbpAutoUpdate = ( CheckBoxPreference ) findPreference( DefaultPrefs.AUTO_UPDATE_KEY );
         prefClearSearch = findPreference( DefaultPrefs.CLEAR_SEARCH_KEY );
@@ -43,6 +45,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         cbpGPlus.setSummary( AccountPrefs.areGPlusDetailsPresent() ?
                 "Logged in as : " + AccountPrefs.getGPlusUserName() :
                 "Not logged in." );
+        cbpInstagram.setSummary( AccountPrefs.areInstagramDetailsPresent() ?
+                "Logged in as : " + AccountPrefs.getInstagramUserName() :
+                "Not logged in." );
         cbpFacebook.setSummary( AccountPrefs.areFacebookDetailsPresent() ?
                 "Logged in as : " + AccountPrefs.getFacebookUserName() :
                 "Not logged in." );
@@ -51,6 +56,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
         cbpTwitter.setOnPreferenceChangeListener( this );
         cbpGPlus.setOnPreferenceChangeListener( this );
+        cbpInstagram.setOnPreferenceChangeListener( this );
         cbpFacebook.setOnPreferenceChangeListener( this );
         cbpAutoUpdate.setOnPreferenceChangeListener( this );
         prefClearSearch.setOnPreferenceClickListener( this );
@@ -111,6 +117,11 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         if ( preference.equals( cbpGPlus ) )
         {
             DefaultPrefs.gPlusActive = ( Boolean ) newValue;
+            DefaultPrefs.activeSitesChanged = true;
+        }
+        if ( preference.equals( cbpInstagram ) )
+        {
+            DefaultPrefs.instagramActive = ( Boolean ) newValue;
             DefaultPrefs.activeSitesChanged = true;
         }
         if ( preference.equals( cbpFacebook ) )

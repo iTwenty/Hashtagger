@@ -20,6 +20,12 @@
             android:defaultValue="true"/>
 
         <CheckBoxPreference
+            android:title="Instagram"
+            android:key="site_instagram"
+            android:icon="@drawable/instagram_icon_flat"
+            android:defaultValue="false"/>
+
+        <CheckBoxPreference
             android:title="Facebook"
             android:key="site_facebook"
             android:icon="@drawable/facebook_icon_flat"
