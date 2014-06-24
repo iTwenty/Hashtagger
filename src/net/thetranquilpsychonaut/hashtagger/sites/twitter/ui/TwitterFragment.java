@@ -87,7 +87,7 @@ public class TwitterFragment extends SitesFragment implements TwitterActionsPerf
     @Override
     protected int getLoginButtonBackgroundId()
     {
-        return R.drawable.selector_twitter_background;
+        return R.drawable.selector_twitter;
     }
 
     @Override

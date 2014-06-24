@@ -30,7 +30,7 @@ public class InstagramFragment extends SitesFragment
     protected int getLoginButtonBackgroundId()
     {
         // TODO
-        return R.drawable.selector_instagram_background;
+        return R.drawable.selector_instragram;
     }
 
     @Override

@@ -96,7 +96,7 @@ public class GPlusFragment extends SitesFragment
     @Override
     protected int getLoginButtonBackgroundId()
     {
-        return R.drawable.selector_gplus_icon_background;
+        return R.drawable.selector_gplus;
     }
 
     @Override

@@ -67,7 +67,7 @@ public class FacebookFragment extends SitesFragment
     @Override
     protected int getLoginButtonBackgroundId()
     {
-        return R.drawable.selector_facebook_icon_background;
+        return R.drawable.selector_facebook;
     }
 
     @Override

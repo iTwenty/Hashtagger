@@ -2,6 +2,6 @@
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true"
-          android:drawable="@drawable/instagram_icon_background_selected"/>
-    <item android:drawable="@drawable/instagram_icon_background"/>
+          android:drawable="@drawable/gplus_selected"/>
+    <item android:drawable="@drawable/gplus"/>
 </selector>
