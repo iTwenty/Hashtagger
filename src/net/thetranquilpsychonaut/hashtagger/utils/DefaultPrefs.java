@@ -9,6 +9,7 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
  */
 public final class DefaultPrefs
 {
+    public static final String ACTIVE_SITES_KEY   = "category_active_sites";
     public static final String TWITTER_SITE_KEY   = "site_twitter";
     public static final String GPLUS_SITE_KEY     = "site_gplus";
     public static final String INSTAGRAM_SITE_KEY = "site_instagram";

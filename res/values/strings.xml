@@ -58,4 +58,5 @@
     <string name="str_search_for_hashtag">Search for %s</string>
     <string name="str_trends_not_available">Trends not available</string>
     <string name="str_trends_not_logged_in">Log in to Twitter to see trending topics</string>
+    <string name="actives_sites_title">Active Sites (%d/3)</string>
 </resources>

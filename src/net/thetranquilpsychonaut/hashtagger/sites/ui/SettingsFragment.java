@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.provider.SearchRecentSuggestions;
 import net.thetranquilpsychonaut.hashtagger.HashtagSuggestionsProvider;
@@ -17,6 +18,10 @@ import net.thetranquilpsychonaut.hashtagger.utils.DefaultPrefs;
  */
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener
 {
+    // Max sites that can be active simultaneously.
+    private static final int MAX_ACTIVE_SITES = 3;
+
+    PreferenceCategory activeSites;
     CheckBoxPreference cbpTwitter;
     CheckBoxPreference cbpGPlus;
     CheckBoxPreference cbpInstagram;
@@ -25,12 +30,15 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     Preference         prefClearSearch;
     Preference         prefAbout;
 
+    private int activeSitesCount;
+
     @Override
     public void onCreate( Bundle savedInstanceState )
     {
         super.onCreate( savedInstanceState );
         addPreferencesFromResource( R.xml.preferences );
 
+        activeSites = ( PreferenceCategory ) findPreference( DefaultPrefs.ACTIVE_SITES_KEY );
         cbpTwitter = ( CheckBoxPreference ) findPreference( DefaultPrefs.TWITTER_SITE_KEY );
         cbpGPlus = ( CheckBoxPreference ) findPreference( DefaultPrefs.GPLUS_SITE_KEY );
         cbpInstagram = ( CheckBoxPreference ) findPreference( DefaultPrefs.INSTAGRAM_SITE_KEY );
@@ -38,6 +46,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         cbpAutoUpdate = ( CheckBoxPreference ) findPreference( DefaultPrefs.AUTO_UPDATE_KEY );
         prefClearSearch = findPreference( DefaultPrefs.CLEAR_SEARCH_KEY );
         prefAbout = findPreference( DefaultPrefs.ABOUT_KEY );
+
+        disableUncheckedSitesIfMaxActiveSitesReached();
 
         cbpTwitter.setSummary( AccountPrefs.areTwitterDetailsPresent() ?
                 "Logged in as : " + AccountPrefs.getTwitterUserName() :
@@ -61,6 +71,45 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         cbpAutoUpdate.setOnPreferenceChangeListener( this );
         prefClearSearch.setOnPreferenceClickListener( this );
         prefAbout.setOnPreferenceClickListener( this );
+    }
+
+    private void disableUncheckedSitesIfMaxActiveSitesReached()
+    {
+        updateActiveSitesCount();
+        activeSites.setTitle( String.format( getString( R.string.actives_sites_title ), activeSitesCount ) );
+        if ( activeSitesCount >= MAX_ACTIVE_SITES )
+        {
+            if ( !DefaultPrefs.twitterActive )
+                cbpTwitter.setEnabled( false );
+            if ( !DefaultPrefs.gPlusActive )
+                cbpGPlus.setEnabled( false );
+            if ( !DefaultPrefs.instagramActive )
+                cbpInstagram.setEnabled( false );
+            if ( !DefaultPrefs.facebookActive )
+                cbpFacebook.setEnabled( false );
+        }
+        else
+        {
+            cbpTwitter.setEnabled( true );
+            cbpGPlus.setEnabled( true );
+            cbpInstagram.setEnabled( true );
+            cbpFacebook.setEnabled( true );
+        }
+    }
+
+    private void updateActiveSitesCount()
+    {
+        // Reset the count before updating
+        activeSitesCount = 0;
+
+        if ( DefaultPrefs.twitterActive )
+            activeSitesCount++;
+        if ( DefaultPrefs.gPlusActive )
+            activeSitesCount++;
+        if ( DefaultPrefs.instagramActive )
+            activeSitesCount++;
+        if ( DefaultPrefs.facebookActive )
+            activeSitesCount++;
     }
 
     @Override
@@ -113,21 +162,25 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         {
             DefaultPrefs.twitterActive = ( Boolean ) newValue;
             DefaultPrefs.activeSitesChanged = true;
+            disableUncheckedSitesIfMaxActiveSitesReached();
         }
         if ( preference.equals( cbpGPlus ) )
         {
             DefaultPrefs.gPlusActive = ( Boolean ) newValue;
             DefaultPrefs.activeSitesChanged = true;
+            disableUncheckedSitesIfMaxActiveSitesReached();
         }
         if ( preference.equals( cbpInstagram ) )
         {
             DefaultPrefs.instagramActive = ( Boolean ) newValue;
             DefaultPrefs.activeSitesChanged = true;
+            disableUncheckedSitesIfMaxActiveSitesReached();
         }
         if ( preference.equals( cbpFacebook ) )
         {
             DefaultPrefs.facebookActive = ( Boolean ) newValue;
             DefaultPrefs.activeSitesChanged = true;
+            disableUncheckedSitesIfMaxActiveSitesReached();
         }
         if ( preference.equals( cbpAutoUpdate ) )
         {
