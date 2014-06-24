@@ -1,6 +1,6 @@
 Hashtagger is an Android application that allows you to search your favorite social networks for your favorite topics from one single place.
 
-[Play Store link](https://google.com/)
+[Play Store link](https://play.google.com/store/apps/details?id=net.thetranquilpsychonaut.hashtagger)
 
 # Instructions
 
