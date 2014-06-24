@@ -65,7 +65,6 @@ public final class FacebookConfig
 
 Then cross your fingers and compile! If something goes wrong, you can shoot me a mail at jaydeepmjoshi at gmail dot com.
 
-# Disclaimer
+# License
 
-This is principally a learning project. I am pretty sure I have some code in here that would make the eyes of more experienced developers bleed with horror. Hell, I myself think certain parts could be redone in a far better manner now that I know more of Android. But still, it's here and it's open to tinkering. Feel free to do with it as you please!
-
+Licensed under Apache license. See LICENSE file.
