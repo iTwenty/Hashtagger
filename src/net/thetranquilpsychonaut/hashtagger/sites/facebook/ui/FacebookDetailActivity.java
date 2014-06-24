@@ -89,7 +89,7 @@ public class FacebookDetailActivity extends SlidingActionsActivity
         Helper.debug( imageUrl );
         Picasso.with( this )
                 .load( imageUrl )
-                .error( R.drawable.facebook_icon_plain )
+                .error( R.drawable.facebook_icon_flat_170 )
                 .into( videoThumbnail.getVideoThumbnail(), new Callback()
                 {
                     @Override

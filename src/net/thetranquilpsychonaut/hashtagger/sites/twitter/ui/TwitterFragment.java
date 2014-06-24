@@ -49,15 +49,15 @@ public class TwitterFragment extends SitesFragment implements TwitterActionsPerf
     }
 
     @Override
-    protected int getLogoResId()
+    protected int getFlatIconResId()
     {
         return R.drawable.twitter_icon_flat;
     }
 
     @Override
-    protected int getPlainLogoResId()
+    protected int getFlatIcon170ResId()
     {
-        return R.drawable.twitter_icon_plain;
+        return R.drawable.twitter_icon_flat_170;
     }
 
     @Override

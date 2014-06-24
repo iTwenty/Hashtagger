@@ -58,15 +58,15 @@ public class GPlusFragment extends SitesFragment
     }
 
     @Override
-    protected int getLogoResId()
+    protected int getFlatIconResId()
     {
         return R.drawable.gplus_icon_flat;
     }
 
     @Override
-    protected int getPlainLogoResId()
+    protected int getFlatIcon170ResId()
     {
-        return R.drawable.gplus_icon_plain;
+        return R.drawable.gplus_icon_flat_170;
     }
 
     @Override

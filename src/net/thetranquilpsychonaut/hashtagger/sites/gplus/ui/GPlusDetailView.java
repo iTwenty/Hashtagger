@@ -53,7 +53,7 @@ public class GPlusDetailView extends RelativeLayout implements View.OnClickListe
         {
             Picasso.with( getContext() )
                     .load( UrlModifier.getGPlusSmallPhotoUrl( attachment.getImage().getUrl() ) )
-                    .error( R.drawable.gplus_icon_plain )
+                    .error( R.drawable.gplus_icon_flat_170 )
                     .fit()
                     .centerCrop()
                     .noFade()
@@ -62,7 +62,7 @@ public class GPlusDetailView extends RelativeLayout implements View.OnClickListe
         else
         {
             Picasso.with( getContext() )
-                    .load( R.drawable.gplus_icon_plain )
+                    .load( R.drawable.gplus_icon_flat_170 )
                     .fit()
                     .centerCrop()
                     .noFade()

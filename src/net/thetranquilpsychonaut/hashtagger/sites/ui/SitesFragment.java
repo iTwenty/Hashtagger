@@ -231,9 +231,8 @@ public abstract class SitesFragment extends Fragment implements
             }
         } );
         sitesEmptyView.setText( getResources().getString( R.string.str_try_search_icon ) );
-        sitesEmptyView.setImage( getPlainLogoResId() );
+        sitesEmptyView.setImage( getFlatIcon170ResId() );
     }
-
 
     private void initNewResultsBar( View viewReady )
     {
@@ -406,7 +405,7 @@ public abstract class SitesFragment extends Fragment implements
     private void doLogout()
     {
         new AlertDialog.Builder( getActivity() )
-                .setIcon( getLogoResId() )
+                .setIcon( getFlatIconResId() )
                 .setTitle( getSiteName() )
                 .setMessage( getResources().getString( R.string.str_confirm_logout ) )
                 .setPositiveButton( getResources().getString( R.string.str_yes ), new DialogInterface.OnClickListener()
@@ -444,9 +443,9 @@ public abstract class SitesFragment extends Fragment implements
 
     protected abstract List<Integer> initResultTypesList();
 
-    protected abstract int getLogoResId();
+    protected abstract int getFlatIconResId();
 
-    protected abstract int getPlainLogoResId();
+    protected abstract int getFlatIcon170ResId();
 
     protected abstract boolean isUserLoggedIn();
 
