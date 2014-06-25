@@ -7,7 +7,6 @@
         android:title="@string/str_save_hashtag"
         android:icon="@android:drawable/ic_menu_save"
         android:showAsAction="never"
-        android:onClick="doSaveHashtag"
         android:visible="false"/>
 
     <item
@@ -21,8 +20,7 @@
         android:id="@+id/it_settings"
         android:title="@string/str_settings"
         android:icon="@android:drawable/ic_menu_preferences"
-        android:showAsAction="never"
-        android:onClick="doLaunchSettings"/>
+        android:showAsAction="never"/>
 
     <item
         android:id="@+id/it_logout"

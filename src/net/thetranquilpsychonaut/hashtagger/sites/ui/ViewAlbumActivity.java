@@ -92,6 +92,15 @@ public class ViewAlbumActivity extends BaseActivity
     public boolean onCreateOptionsMenu( Menu menu )
     {
         getMenuInflater().inflate( R.menu.activity_view_album_menu, menu );
+        menu.findItem( R.id.it_save_image ).setOnMenuItemClickListener( new MenuItem.OnMenuItemClickListener()
+        {
+            @Override
+            public boolean onMenuItemClick( MenuItem item )
+            {
+                doSaveImage( item );
+                return true;
+            }
+        } );
         return true;
     }
 

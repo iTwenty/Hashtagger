@@ -193,6 +193,24 @@ public class SitesActivity extends NavDrawerActivity
         svHashtag = ( SearchView ) menu.findItem( R.id.sv_hashtag ).getActionView();
         svHashtag.setSearchableInfo( searchManager.getSearchableInfo( getComponentName() ) );
         MenuItem saveHashtagItem = menu.findItem( R.id.it_save_hashtag );
+        saveHashtagItem.setOnMenuItemClickListener( new MenuItem.OnMenuItemClickListener()
+        {
+            @Override
+            public boolean onMenuItemClick( MenuItem item )
+            {
+                doSaveHashtag( item );
+                return true;
+            }
+        } );
+        menu.findItem( R.id.it_settings ).setOnMenuItemClickListener( new MenuItem.OnMenuItemClickListener()
+        {
+            @Override
+            public boolean onMenuItemClick( MenuItem item )
+            {
+                doLaunchSettings( item );
+                return true;
+            }
+        } );
         if ( !TextUtils.isEmpty( peekCurrentHashtag() ) )
         {
             saveHashtagItem.setTitle( "Save " + peekCurrentHashtag() );

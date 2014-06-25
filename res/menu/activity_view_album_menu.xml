@@ -6,7 +6,6 @@
         android:id="@+id/it_save_image"
         android:icon="@android:drawable/ic_menu_save"
         android:title="@string/str_save_image"
-        android:showAsAction="always"
-        android:onClick="doSaveImage"/>
+        android:showAsAction="always"/>
 
 </menu>
