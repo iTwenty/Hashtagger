@@ -5,8 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <net.thetranquilpsychonaut.hashtagger.sites.instagram.ui.InstagramHeader
+        android:id="@+id/instagram_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <TextView
         android:id="@+id/tv_media_text"
+        android:layout_below="@id/instagram_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/MainMessage"/>

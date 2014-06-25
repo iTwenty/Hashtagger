@@ -14,6 +14,7 @@ import net.thetranquilpsychonaut.hashtagger.utils.Helper;
  */
 public class InstagramListRow extends SitesListRow
 {
+    private InstagramHeader instagramHeader;
     private TextView tvMediaText;
     private Media    media;
 
@@ -36,6 +37,7 @@ public class InstagramListRow extends SitesListRow
     protected void init( Context context )
     {
         inflate( context, R.layout.instagram_list_row, this );
+        instagramHeader= ( InstagramHeader ) findViewById( R.id.instagram_header );
         tvMediaText = ( TextView ) findViewById( R.id.tv_media_text );
         super.init( context );
     }
@@ -50,6 +52,14 @@ public class InstagramListRow extends SitesListRow
     public void updateRow( Object result )
     {
         this.media = ( Media ) result;
-        tvMediaText.setText( Helper.getFuzzyDateTime( media.getCreatedTime() ) );
+        instagramHeader.showHeader( media );
+        if ( null != media.getCaption() )
+        {
+            tvMediaText.setText( media.getCaption().getText() );
+        }
+        else
+        {
+            tvMediaText.setText( "" );
+        }
     }
 }
