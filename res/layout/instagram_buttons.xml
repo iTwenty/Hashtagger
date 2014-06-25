@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton
+        android:id="@+id/ccb_like"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:focusable="false"
+        android:drawableLeft="@drawable/instagram_like_small"
+        style="@style/sitesButtonStyle"/>
+
+    <net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton
+        android:id="@+id/ccb_comment"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:focusable="false"
+        android:drawableLeft="@drawable/comment_small"
+        style="@style/sitesButtonStyle"/>
+
+    <net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton
+        android:id="@+id/ccb_view_details"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:focusable="false"
+        android:drawableLeft="@drawable/ic_action_full_screen"
+        style="@style/sitesButtonStyle"/>
+
+</merge>

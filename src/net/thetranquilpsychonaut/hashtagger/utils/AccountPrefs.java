@@ -148,6 +148,11 @@ public final class AccountPrefs
         return getAccountPrefs().getString( INSTAGRAM_USER_NAME_KEY, "" );
     }
 
+    public static String getInstagramAccessToken()
+    {
+        return getAccountPrefs().getString( INSTAGRAM_ACCESS_TOKEN_KEY, "" );
+    }
+
     /* ************* Facebook *******************/
 
     public static void addFacebookDetails( String accessToken, String userName )

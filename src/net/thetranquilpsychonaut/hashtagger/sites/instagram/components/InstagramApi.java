@@ -78,7 +78,9 @@ public class InstagramApi extends DefaultApi20
                 request.addBodyParameter( OAuthConstants.REDIRECT_URI, config.getCallback() );
 
                 if ( config.hasScope() )
+                {
                     request.addBodyParameter( OAuthConstants.SCOPE, config.getScope() );
+                }
 
                 Response response = request.send();
                 return getAccessTokenExtractor().extract( response.getBody() );

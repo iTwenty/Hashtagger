@@ -142,7 +142,14 @@ public class InstagramFragment extends SitesFragment
     @Override
     protected void updateResultsAndTypes( int searchType, List<?> searchResults )
     {
-        // TODO
+        List<Media> newResults = ( List<Media> ) searchResults;
+        List<Integer> newResultTypes = new ArrayList<Integer>( newResults.size() );
+        for ( Media media : newResults )
+        {
+            newResultTypes.add( InstagramListAdapter.getMediaType( media ) );
+        }
+        ( ( List<Media> ) results ).addAll( newResults );
+        resultTypes.addAll( newResultTypes );
     }
 
     @Override

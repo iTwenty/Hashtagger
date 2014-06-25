@@ -5,9 +5,9 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 /**
- * Created by itwenty on 6/24/14.
+ * Created by itwenty on 6/25/14.
  */
-public class Caption implements Serializable
+public class Comment implements Serializable
 {
     @SerializedName("created_time")
     private long   createdTime;

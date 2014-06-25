@@ -39,7 +39,11 @@ public class InstagramListAdapter extends SitesListAdapter
     @Override
     protected SitesListRow getSitesListRow( Context context, int position, View convertView, ViewGroup parent )
     {
-        return null;
+        if ( null == convertView )
+        {
+            convertView = new InstagramListRow( context );
+        }
+        return ( SitesListRow ) convertView;
     }
 
     public static int getMediaType( Media media )
