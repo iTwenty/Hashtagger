@@ -1,7 +1,11 @@
 package net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos;
 
+import android.text.Spannable;
 import com.google.gson.annotations.SerializedName;
+import net.thetranquilpsychonaut.hashtagger.utils.Linkifier;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 
 /**
@@ -10,10 +14,11 @@ import java.io.Serializable;
 public class Caption implements Serializable
 {
     @SerializedName("created_time")
-    private long   createdTime;
-    private String text;
-    private From   from;
-    private String id;
+    private           long      createdTime;
+    private           String    text;
+    private transient Spannable linkedText;
+    private           From      from;
+    private           String    id;
 
     public long getCreatedTime()
     {
@@ -53,5 +58,21 @@ public class Caption implements Serializable
     public void setId( String id )
     {
         this.id = id;
+    }
+
+    public Spannable getLinkedText()
+    {
+        return linkedText;
+    }
+
+    public void setLinkedText( Spannable linkedText )
+    {
+        this.linkedText = linkedText;
+    }
+
+    private void readObject( ObjectInputStream inputStream ) throws IOException, ClassNotFoundException
+    {
+        inputStream.defaultReadObject();
+        linkedText = Linkifier.getLinkedInstagramText( text );
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<merge
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -10,17 +10,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <TextView
-        android:id="@+id/tv_media_text"
+    <RelativeLayout
+        android:id="@+id/rl_wrapper"
         android:layout_below="@id/instagram_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/MainMessage"/>
+        android:layout_height="wrap_content">
+
+        <net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView
+            android:id="@+id/tv_media_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/video_thumbnail"
+            style="@style/MainMessage"/>
+
+        <net.thetranquilpsychonaut.hashtagger.widgets.VideoThumbnail
+            android:id="@+id/video_thumbnail"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            style="@style/ListMediaImage"/>
+
+    </RelativeLayout>
 
     <net.thetranquilpsychonaut.hashtagger.sites.instagram.ui.InstagramButtons
         android:id="@+id/instagram_buttons"
         android:layout_width="match_parent"
-        android:layout_below="@+id/tv_media_text"
+        android:layout_below="@+id/rl_wrapper"
         android:layout_height="0dp"/>
 
-</merge>
+
+</RelativeLayout>

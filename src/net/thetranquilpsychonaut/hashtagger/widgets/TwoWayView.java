@@ -1157,7 +1157,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         }
     }
 
-    @TargetApi( 9 )
+    @TargetApi(9)
     private boolean overScrollByInternal( int deltaX, int deltaY,
                                           int scrollX, int scrollY,
                                           int scrollRangeX, int scrollRangeY,
@@ -1174,7 +1174,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
     }
 
     @Override
-    @TargetApi( 9 )
+    @TargetApi(9)
     public void setOverScrollMode( int mode )
     {
         if ( Build.VERSION.SDK_INT < 9 )
@@ -1910,7 +1910,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
     }
 
     @Override
-    @TargetApi( 14 )
+    @TargetApi(14)
     public void onInitializeAccessibilityEvent( AccessibilityEvent event )
     {
         super.onInitializeAccessibilityEvent( event );
@@ -1918,7 +1918,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
     }
 
     @Override
-    @TargetApi( 14 )
+    @TargetApi(14)
     public void onInitializeAccessibilityNodeInfo( AccessibilityNodeInfo info )
     {
         super.onInitializeAccessibilityNodeInfo( info );
@@ -1941,7 +1941,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
     }
 
     @Override
-    @TargetApi( 16 )
+    @TargetApi(16)
     public boolean performAccessibilityAction( int action, Bundle arguments )
     {
         if ( super.performAccessibilityAction( action, arguments ) )
@@ -3373,7 +3373,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         }
     }
 
-    @TargetApi( 9 )
+    @TargetApi(9)
     private int getScaledOverscrollDistance( ViewConfiguration vc )
     {
         if ( Build.VERSION.SDK_INT < 9 )
@@ -3621,7 +3621,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         return false;
     }
 
-    @TargetApi( 14 )
+    @TargetApi(14)
     private final float getCurrVelocity()
     {
         if ( Build.VERSION.SDK_INT >= 14 )
@@ -3632,7 +3632,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         return 0;
     }
 
-    @TargetApi( 5 )
+    @TargetApi(5)
     private boolean awakenScrollbarsInternal()
     {
         if ( Build.VERSION.SDK_INT >= 5 )
@@ -5605,7 +5605,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         return child;
     }
 
-    @TargetApi( 11 )
+    @TargetApi(11)
     private void setupChild( View child, int position, int top, int left,
                              boolean flow, boolean selected, boolean recycled )
     {
@@ -6141,7 +6141,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         }
     }
 
-    @TargetApi( 14 )
+    @TargetApi(14)
     private SparseBooleanArray cloneCheckStates()
     {
         if ( mCheckStates == null )
@@ -6258,7 +6258,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         return INVALID_POSITION;
     }
 
-    @TargetApi( 16 )
+    @TargetApi(16)
     private View obtainView( int position, boolean[] isScrap )
     {
         isScrap[0] = false;
@@ -6402,7 +6402,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
         return new AdapterContextMenuInfo( view, position, id );
     }
 
-    @TargetApi( 11 )
+    @TargetApi(11)
     private void updateOnScreenCheckedViews()
     {
         final int firstPos = mFirstPosition;
@@ -6800,7 +6800,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
                 throw new IllegalArgumentException( "Can't have a viewTypeCount < 1" );
             }
 
-            @SuppressWarnings( "unchecked" )
+            @SuppressWarnings("unchecked")
             ArrayList<View>[] scrapViews = new ArrayList[viewTypeCount];
             for ( int i = 0; i < viewTypeCount; i++ )
             {
@@ -6968,7 +6968,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             return null;
         }
 
-        @TargetApi( 14 )
+        @TargetApi(14)
         void addScrapView( View scrap, int position )
         {
             LayoutParams lp = ( LayoutParams ) scrap.getLayoutParams();
@@ -7020,7 +7020,7 @@ public class TwoWayView extends AdapterView<ListAdapter> implements
             }
         }
 
-        @TargetApi( 14 )
+        @TargetApi(14)
         void scrapActiveViews()
         {
             final View[] activeViews = mActiveViews;

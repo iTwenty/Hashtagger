@@ -26,6 +26,9 @@ public class InstagramService extends SitesService
     private static final int     MAX_COUNT       = 20;
     private static       boolean isSearchRunning = false;
 
+    private static String nextMaxId;
+    private static String nextMinId;
+
     @Override
     protected void doSearch( Intent intent )
     {
@@ -36,11 +39,26 @@ public class InstagramService extends SitesService
         {
             hashtag = hashtag.substring( 1, hashtag.length() );
         }
+        hashtag = hashtag.replaceAll( "\\s+", "" );
         SearchParams params = new SearchParams();
         SearchResult searchResult = null;
         try
         {
             params.setCount( MAX_COUNT );
+            switch ( searchType )
+            {
+                case SearchType.INITIAL:
+                    break;
+                case SearchType.OLDER:
+                    params.setMaxTagId( nextMaxId );
+                    break;
+                case SearchType.NEWER:
+                    params.setMinTagId( nextMinId );
+                    break;
+                case SearchType.TIMED:
+                    params.setMinTagId( nextMinId );
+                    break;
+            }
             searchResult = Instagram.api().getRecentMedia( hashtag, params.getParams() );
         }
         catch ( Exception e )
@@ -50,6 +68,17 @@ public class InstagramService extends SitesService
         boolean success = null != searchResult;
         if ( success )
         {
+            if ( !Helper.isNullOrEmpty( searchResult.getData() ) )
+            {
+                if ( searchType != SearchType.OLDER )
+                {
+                    nextMinId = searchResult.getPagination().getNextMinId();
+                }
+                if ( searchType != SearchType.NEWER && searchType != SearchType.TIMED )
+                {
+                    nextMaxId = searchResult.getPagination().getNextMaxId();
+                }
+            }
 
         }
         // Subscriber : InstagramSearchHandler : onInstagramSearchDone()

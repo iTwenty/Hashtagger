@@ -37,8 +37,8 @@ public class Instagram
 
     public static interface Api
     {
-        @GET( "/tags/{tagName}/media/recent" )
-        public SearchResult getRecentMedia( @Path( "tagName" ) String tagName,
+        @GET("/tags/{tagName}/media/recent")
+        public SearchResult getRecentMedia( @Path("tagName") String tagName,
                                             @QueryMap Map<String, String> params );
     }
 }

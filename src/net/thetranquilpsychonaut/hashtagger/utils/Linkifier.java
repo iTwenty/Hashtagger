@@ -64,6 +64,19 @@ public final class Linkifier
         return stripUnderlines( ss );
     }
 
+    public static Spannable getLinkedInstagramText( String text )
+    {
+        if ( TextUtils.isEmpty( text ) )
+        {
+            return new SpannableString( "" );
+        }
+        SpannableString ss = new SpannableString( text );
+        Linkify.addLinks( ss, hashtagPattern, hashtagScheme, null, filter );
+        Linkify.addLinks( ss, Patterns.WEB_URL, null, null, filter );
+        return stripUnderlines( ss );
+    }
+
+
     public static Spannable getLinkedFacebookText( String message )
     {
         if ( TextUtils.isEmpty( message ) )

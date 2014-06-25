@@ -1,22 +1,30 @@
 package net.thetranquilpsychonaut.hashtagger.sites.instagram.ui;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.widget.TextView;
+import android.view.View;
+import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.Media;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
+import net.thetranquilpsychonaut.hashtagger.widgets.VideoThumbnail;
 
 /**
  * Created by itwenty on 6/25/14.
  */
-public class InstagramListRow extends SitesListRow
+public class InstagramListRow extends SitesListRow implements View.OnClickListener
 {
-    private InstagramHeader instagramHeader;
-    private TextView tvMediaText;
-    private Media    media;
+    private InstagramHeader   instagramHeader;
+    private LinkifiedTextView tvMediaText;
+    private VideoThumbnail    videoThumbnail;
+    private Media             media;
 
     protected InstagramListRow( Context context )
     {
@@ -37,8 +45,10 @@ public class InstagramListRow extends SitesListRow
     protected void init( Context context )
     {
         inflate( context, R.layout.instagram_list_row, this );
-        instagramHeader= ( InstagramHeader ) findViewById( R.id.instagram_header );
-        tvMediaText = ( TextView ) findViewById( R.id.tv_media_text );
+        instagramHeader = ( InstagramHeader ) findViewById( R.id.instagram_header );
+        tvMediaText = ( LinkifiedTextView ) findViewById( R.id.tv_media_text );
+        videoThumbnail = ( VideoThumbnail ) findViewById( R.id.video_thumbnail );
+        videoThumbnail.setOnClickListener( this );
         super.init( context );
     }
 
@@ -55,11 +65,39 @@ public class InstagramListRow extends SitesListRow
         instagramHeader.showHeader( media );
         if ( null != media.getCaption() )
         {
-            tvMediaText.setText( media.getCaption().getText() );
+            tvMediaText.setText( media.getCaption().getLinkedText() );
         }
         else
         {
             tvMediaText.setText( "" );
+        }
+        Picasso.with( getContext() )
+                .load( media.getImages().getThumbnail().getUrl() )
+                .fit()
+                .centerCrop()
+                .into( videoThumbnail.getVideoThumbnail() );
+        videoThumbnail.showPlayButton( TextUtils.equals( "video", media.getType() ) );
+    }
+
+    @Override
+    public void onClick( View v )
+    {
+        if ( v.equals( videoThumbnail ) )
+        {
+            if ( TextUtils.equals( "video", media.getType() ) )
+            {
+                Intent i = new Intent( Intent.ACTION_VIEW );
+                i.setData( Uri.parse( media.getVideos().getStandardResolution().getUrl() ) );
+                getContext().startActivity( i );
+            }
+            else
+            {
+                ViewAlbumActivity.createAndStartActivity(
+                        getContext(),
+                        media.getUser().getUserName(),
+                        Helper.createStringArrayList( media.getImages().getStandardResolution().getUrl() ),
+                        0 );
+            }
         }
     }
 }

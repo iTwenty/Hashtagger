@@ -9,15 +9,15 @@ import java.io.Serializable;
  */
 public class Pagination implements Serializable
 {
-    @SerializedName( "next_max_tag_id" )
+    @SerializedName("next_max_tag_id")
     private String nextMaxTagId;
-    @SerializedName( "next_max_id" )
+    @SerializedName("next_max_id")
     private String nextMaxId;
-    @SerializedName( "next_min_id" )
+    @SerializedName("next_min_id")
     private String nextMinId;
-    @SerializedName( "min_tag_id" )
+    @SerializedName("min_tag_id")
     private String minTagId;
-    @SerializedName( "next_url" )
+    @SerializedName("next_url")
     private String nextUrl;
 
     public String getNextMaxTagId()

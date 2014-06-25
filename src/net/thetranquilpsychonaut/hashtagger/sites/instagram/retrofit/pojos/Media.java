@@ -16,13 +16,13 @@ public class Media implements Serializable
     private String   type;
     private Comments comments;
     private String   filter;
-    @SerializedName( "created_time" )
+    @SerializedName("created_time")
     private long     createdTime;
     private String   link;
     private Likes    likes;
     private Images   images;
     private Caption  caption;
-    @SerializedName( "user_has_liked" )
+    @SerializedName("user_has_liked")
     private boolean  userHasLiked;
     private String   id;
     private From     user;
@@ -145,5 +145,15 @@ public class Media implements Serializable
     public void setUser( From user )
     {
         this.user = user;
+    }
+
+    public Videos getVideos()
+    {
+        return videos;
+    }
+
+    public void setVideos( Videos videos )
+    {
+        this.videos = videos;
     }
 }

@@ -1,6 +1,8 @@
 package net.thetranquilpsychonaut.hashtagger.sites.instagram.ui;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,6 +12,7 @@ import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.Media;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 
 /**
  * Created by itwenty on 6/25/14.
@@ -17,9 +20,9 @@ import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 public class InstagramHeader extends RelativeLayout implements View.OnClickListener
 {
     private ImageView imgvProfileImage;
-    private TextView tvUsername;
-    private TextView tvCreatedTime;
-    private Media media;
+    private TextView  tvUsername;
+    private TextView  tvCreatedTime;
+    private Media     media;
 
     public InstagramHeader( Context context )
     {
@@ -58,7 +61,9 @@ public class InstagramHeader extends RelativeLayout implements View.OnClickListe
     {
         if ( v.equals( imgvProfileImage ) )
         {
-
+            Intent i = new Intent( Intent.ACTION_VIEW );
+            i.setData( Uri.parse( UrlModifier.getInstagramUserUrl( media.getUser().getUserName() ) ) );
+            getContext().startActivity( i );
         }
     }
 }

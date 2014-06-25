@@ -7,6 +7,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.Comme
 import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.Media;
 import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.SearchResult;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.Linkifier;
 
 /**
  * Created by itwenty on 6/24/14.
@@ -56,6 +57,7 @@ public class InstagramSearchHandler extends SitesSearchHandler
             if ( null != media.getCaption() )
             {
                 media.getCaption().setCreatedTime( media.getCaption().getCreatedTime() * 1000L );
+                media.getCaption().setLinkedText( Linkifier.getLinkedInstagramText( media.getCaption().getText() ) );
             }
             if ( null != media.getComments() && !Helper.isNullOrEmpty( media.getComments().getData() ) )
             {
