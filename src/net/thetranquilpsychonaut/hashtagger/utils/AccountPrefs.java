@@ -16,6 +16,7 @@ public final class AccountPrefs
     public static final String GPLUS_ACCESS_TOKEN_KEY          = "gplus_access_token";
     public static final String GPLUS_REFRESH_TOKEN_KEY         = "gplus_refresh_token";
     public static final String GPLUS_USER_NAME_KEY             = "gplus_user_name";
+    public static final String INSTAGRAM_ACCESS_TOKEN_KEY      = "instagram_access_token";
     public static final String INSTAGRAM_USER_NAME_KEY         = "instagram_user_name";
     public static final String FACEBOOK_ACCESS_TOKEN_KEY       = "facebook_access_token";
     public static final String FACEBOOK_USER_NAME_KEY          = "facebook_user_name";
@@ -121,15 +122,23 @@ public final class AccountPrefs
      * ************* Instagram *****************
      */
 
+    public static void addInstagramDetails( String token, String userName )
+    {
+        getAccountPrefs().edit()
+                .putString( INSTAGRAM_ACCESS_TOKEN_KEY, token )
+                .putString( INSTAGRAM_USER_NAME_KEY, userName )
+                .commit();
+    }
+
     public static boolean areInstagramDetailsPresent()
     {
-        return false;
+        return getAccountPrefs().contains( INSTAGRAM_ACCESS_TOKEN_KEY );
     }
 
     public static void removeInstagramDetails()
     {
-        getAccountPrefs()
-                .edit()
+        getAccountPrefs().edit()
+                .remove( INSTAGRAM_ACCESS_TOKEN_KEY )
                 .remove( INSTAGRAM_USER_NAME_KEY )
                 .commit();
     }

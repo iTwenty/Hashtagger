@@ -1,6 +1,7 @@
 package net.thetranquilpsychonaut.hashtagger.sites.instagram.ui;
 
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.config.InstagramConfig;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesLoginHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.instagram.components.InstagramLoginHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesLoginActivity;
@@ -10,6 +11,12 @@ import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesLoginActivity;
  */
 public class InstagramLoginActivity extends SitesLoginActivity
 {
+    public static final String CALLBACK_URL       = "http://localhost/";
+    public static final String INSTAGRAM_CODE_KEY = "code";
+    public static final String AUTHORIZATION_URL  =
+            String.format( "https://api.instagram.com/oauth/authorize/?client_id=%s&redirect_uri=%s&response_type=code&scope=%s",
+                    InstagramConfig.INSTAGRAM_CLIENT_ID, CALLBACK_URL, InstagramConfig.INSTAGRAM_SCOPE );
+
     @Override
     protected int getLoginTitleResId()
     {
@@ -25,8 +32,7 @@ public class InstagramLoginActivity extends SitesLoginActivity
     @Override
     protected String getAuthorizationUrl()
     {
-        // TODO
-        return null;
+        return AUTHORIZATION_URL;
     }
 
     @Override
@@ -38,14 +44,12 @@ public class InstagramLoginActivity extends SitesLoginActivity
     @Override
     protected String getVerifierKey()
     {
-        // TODO
-        return null;
+        return INSTAGRAM_CODE_KEY;
     }
 
     @Override
     protected String getCallbackUrl()
     {
-        // TODO
-        return null;
+        return CALLBACK_URL;
     }
 }

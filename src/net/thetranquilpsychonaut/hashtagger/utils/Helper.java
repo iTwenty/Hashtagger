@@ -120,6 +120,18 @@ public final class Helper
                 .replaceAll( "\"", "" );
     }
 
+    public static final String extractInstagramUserName( String jsonBody )
+    {
+        return new JsonParser()
+                .parse( jsonBody )
+                .getAsJsonObject()
+                .get( "user" )
+                .getAsJsonObject()
+                .get( "username" )
+                .toString()
+                .replaceAll( "\"", "" );
+    }
+
     public static boolean isNullOrEmpty( final Collection<?> c )
     {
         return null == c || c.isEmpty();
