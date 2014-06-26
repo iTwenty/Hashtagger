@@ -12,7 +12,6 @@ import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
  */
 public abstract class GPlusListRow extends SitesListRow
 {
-    protected GPlusHeader gPlusHeader;
     protected TextView    tvActivityText;
     protected Activity    activity;
 
@@ -34,20 +33,16 @@ public abstract class GPlusListRow extends SitesListRow
     @Override
     protected void init( Context context )
     {
-        gPlusHeader = initGPlusHeader();
         tvActivityText = initActivityText();
-        super.init( context );
     }
-
-    protected abstract GPlusHeader initGPlusHeader();
 
     protected abstract LinkifiedTextView initActivityText();
 
     @Override
     public void updateRow( Object result )
     {
+        super.updateRow( result );
         this.activity = ( Activity ) result;
-        gPlusHeader.showHeader( activity );
         tvActivityText.setText( activity.getObject().getLinkedText() );
     }
 }

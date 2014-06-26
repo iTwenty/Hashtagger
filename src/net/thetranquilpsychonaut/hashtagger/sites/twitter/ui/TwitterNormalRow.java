@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesHeader;
 import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 
 /**
@@ -34,12 +35,6 @@ public class TwitterNormalRow extends TwitterListRow
     }
 
     @Override
-    protected TwitterHeader initTwitterHeader()
-    {
-        return ( TwitterHeader ) findViewById( R.id.twitter_header );
-    }
-
-    @Override
     protected LinkifiedTextView initStatusText()
     {
         return ( LinkifiedTextView ) findViewById( R.id.tv_status_text );
@@ -49,6 +44,12 @@ public class TwitterNormalRow extends TwitterListRow
     protected SitesButtons initSitesButtons()
     {
         return ( SitesButtons ) findViewById( R.id.twitter_buttons );
+    }
+
+    @Override
+    protected SitesHeader initSitesHeader()
+    {
+        return ( SitesHeader ) findViewById( R.id.twitter_header );
     }
 
     @Override

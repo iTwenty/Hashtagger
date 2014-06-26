@@ -88,12 +88,6 @@ public class InstagramButtons extends SitesButtons implements View.OnClickListen
     }
 
     @Override
-    public void doOpenInBrowser()
-    {
-
-    }
-
-    @Override
     public void onClick( View v )
     {
         if ( v.equals( ccbLike ) )

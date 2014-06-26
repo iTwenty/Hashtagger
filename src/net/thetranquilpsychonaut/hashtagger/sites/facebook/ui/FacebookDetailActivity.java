@@ -52,7 +52,7 @@ public class FacebookDetailActivity extends SlidingActionsActivity
         }
         setTitle( post.getFrom().getName() + "'s post" );
         this.postType = FacebookListAdapter.getPostType( this.post );
-        facebookHeader.showHeader( post );
+        facebookHeader.updateHeader( post );
         tvPostText.setText( post.getLinkedText() );
         if ( postType == FacebookListAdapter.POST_TYPE_MEDIA )
         {

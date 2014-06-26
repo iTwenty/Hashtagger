@@ -11,14 +11,14 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesHeader;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
 /**
  * Created by itwenty on 5/14/14.
  */
-public class GPlusHeader extends RelativeLayout implements View.OnClickListener
+public class GPlusHeader extends SitesHeader
 {
-    private ImageView imgvActorImage;
     private TextView  tvDisplayName;
     private TextView  tvSharedName;
     private TextView  tvPublishedTime;
@@ -26,33 +26,49 @@ public class GPlusHeader extends RelativeLayout implements View.OnClickListener
 
     public GPlusHeader( Context context )
     {
-        this( context, null, 0 );
+        super( context );
     }
 
     public GPlusHeader( Context context, AttributeSet attrs )
     {
-        this( context, attrs, 0 );
+        super( context, attrs );
     }
 
     public GPlusHeader( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
+    }
+
+    @Override
+    protected void init( Context context )
+    {
         inflate( context, R.layout.gplus_header, this );
-        imgvActorImage = ( ImageView ) findViewById( R.id.imgv_actor_image );
         tvDisplayName = ( TextView ) findViewById( R.id.tv_display_name );
         tvPublishedTime = ( TextView ) findViewById( R.id.tv_published_time );
         tvSharedName = ( TextView ) findViewById( R.id.tv_shared_name );
-        imgvActorImage.setOnClickListener( this );
     }
 
-    public void showHeader( Activity activity )
+    @Override
+    protected ImageView initProfileImage()
     {
-        this.activity = activity;
+        return ( ImageView ) findViewById( R.id.imgv_actor_image );
+    }
+
+    @Override
+    protected String getProfileUrl()
+    {
+        return activity.getActor().getUrl();
+    }
+
+    @Override
+    protected void updateHeader( Object result )
+    {
+        this.activity = ( Activity ) result;
         Picasso.with( getContext() )
-                .load( activity.getActor().getImage().getUrl() )
-                .fit()
-                .centerCrop()
-                .into( imgvActorImage );
+            .load( activity.getActor().getImage().getUrl() )
+            .fit()
+            .centerCrop()
+            .into( profileImage );
         tvDisplayName.setText( activity.getActor().getDisplayName() );
         tvPublishedTime.setText( Helper.getFuzzyDateTime( activity.getPublished().getTime() ) );
         if ( "share".equals( activity.getVerb() ) )
@@ -63,17 +79,6 @@ public class GPlusHeader extends RelativeLayout implements View.OnClickListener
         else
         {
             tvSharedName.setVisibility( GONE );
-        }
-    }
-
-    @Override
-    public void onClick( View v )
-    {
-        if ( v.equals( imgvActorImage ) )
-        {
-            Intent i = new Intent( Intent.ACTION_VIEW );
-            i.setData( Uri.parse( activity.getActor().getUrl() ) );
-            getContext().startActivity( i );
         }
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesHeader;
 import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 
 /**
@@ -34,12 +35,6 @@ public class GPlusNormalRow extends GPlusListRow
     }
 
     @Override
-    protected GPlusHeader initGPlusHeader()
-    {
-        return ( GPlusHeader ) findViewById( R.id.gplus_header );
-    }
-
-    @Override
     protected LinkifiedTextView initActivityText()
     {
         return ( LinkifiedTextView ) findViewById( R.id.tv_activity_text );
@@ -49,6 +44,12 @@ public class GPlusNormalRow extends GPlusListRow
     protected SitesButtons initSitesButtons()
     {
         return ( SitesButtons ) findViewById( R.id.gplus_buttons );
+    }
+
+    @Override
+    protected SitesHeader initSitesHeader()
+    {
+        return ( SitesHeader ) findViewById( R.id.gplus_header );
     }
 
     @Override

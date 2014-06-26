@@ -11,59 +11,64 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.Media;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesHeader;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 
 /**
  * Created by itwenty on 6/25/14.
  */
-public class InstagramHeader extends RelativeLayout implements View.OnClickListener
+public class InstagramHeader extends SitesHeader
 {
-    private ImageView imgvProfileImage;
     private TextView  tvUsername;
     private TextView  tvCreatedTime;
     private Media     media;
 
     public InstagramHeader( Context context )
     {
-        this( context, null, 0 );
+        super( context );
     }
 
     public InstagramHeader( Context context, AttributeSet attrs )
     {
-        this( context, attrs, 0 );
+        super( context, attrs );
     }
 
     public InstagramHeader( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
-        inflate( context, R.layout.instagram_header, this );
-        this.imgvProfileImage = ( ImageView ) findViewById( R.id.imgv_profile_image );
-        this.tvUsername = ( TextView ) findViewById( R.id.tv_user_name );
-        this.tvCreatedTime = ( TextView ) findViewById( R.id.tv_created_time );
-        this.imgvProfileImage.setOnClickListener( this );
     }
 
-    public void showHeader( Media media )
+    @Override
+    protected void init( Context context )
     {
-        this.media = media;
+        inflate( context, R.layout.instagram_header, this );
+        this.tvUsername = ( TextView ) findViewById( R.id.tv_user_name );
+        this.tvCreatedTime = ( TextView ) findViewById( R.id.tv_created_time );
+    }
+
+    @Override
+    protected ImageView initProfileImage()
+    {
+        return ( ImageView ) findViewById( R.id.imgv_profile_image );
+    }
+
+    @Override
+    protected String getProfileUrl()
+    {
+        return UrlModifier.getInstagramUserUrl( media.getUser().getUserName() );
+    }
+
+    @Override
+    protected void updateHeader( Object result )
+    {
+        this.media = ( Media ) result;
         Picasso.with( getContext() )
                 .load( media.getUser().getProfilePicture() )
                 .fit()
                 .centerCrop()
-                .into( imgvProfileImage );
+                .into( profileImage );
         tvUsername.setText( media.getUser().getUserName() );
         tvCreatedTime.setText( Helper.getFuzzyDateTime( media.getCreatedTime() ) );
-    }
-
-    @Override
-    public void onClick( View v )
-    {
-        if ( v.equals( imgvProfileImage ) )
-        {
-            Intent i = new Intent( Intent.ACTION_VIEW );
-            i.setData( Uri.parse( UrlModifier.getInstagramUserUrl( media.getUser().getUserName() ) ) );
-            getContext().startActivity( i );
-        }
     }
 }

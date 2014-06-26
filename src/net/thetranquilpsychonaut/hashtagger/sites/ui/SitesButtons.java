@@ -100,6 +100,4 @@ public abstract class SitesButtons extends LinearLayout
         this.setLayoutParams( params );
         this.requestLayout();
     }
-
-    public abstract void doOpenInBrowser();
 }

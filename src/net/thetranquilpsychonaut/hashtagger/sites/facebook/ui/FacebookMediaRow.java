@@ -9,6 +9,7 @@ import android.view.View;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesHeader;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
@@ -47,12 +48,6 @@ public class FacebookMediaRow extends FacebookListRow implements View.OnClickLis
     }
 
     @Override
-    protected FacebookHeader initFacebookHeader()
-    {
-        return ( FacebookHeader ) findViewById( R.id.facebook_header );
-    }
-
-    @Override
     protected LinkifiedTextView initPostText()
     {
         return ( LinkifiedTextView ) findViewById( R.id.tv_post_text );
@@ -62,6 +57,12 @@ public class FacebookMediaRow extends FacebookListRow implements View.OnClickLis
     protected SitesButtons initSitesButtons()
     {
         return ( SitesButtons ) findViewById( R.id.facebook_buttons );
+    }
+
+    @Override
+    protected SitesHeader initSitesHeader()
+    {
+        return ( SitesHeader ) findViewById( R.id.facebook_header );
     }
 
     @Override

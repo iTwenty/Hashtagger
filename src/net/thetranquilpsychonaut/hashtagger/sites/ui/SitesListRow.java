@@ -12,6 +12,7 @@ import net.thetranquilpsychonaut.hashtagger.R;
 public abstract class SitesListRow extends RelativeLayout
 {
     protected SitesButtons sitesButtons;
+    protected SitesHeader sitesHeader;
 
     protected SitesListRow( Context context )
     {
@@ -27,41 +28,37 @@ public abstract class SitesListRow extends RelativeLayout
     {
         super( context, attrs, defStyle );
         init( context );
+        sitesButtons = initSitesButtons();
+        sitesHeader = initSitesHeader();
+        if ( null == sitesButtons || null == sitesHeader )
+        {
+            throw new RuntimeException( "Either SitesButtons or SitesHeader is null." );
+        }
     }
 
-    protected void init( Context context )
-    {
-        sitesButtons = initSitesButtons();
-    }
+    protected abstract void init( Context context );
 
     protected abstract SitesButtons initSitesButtons();
 
+    protected abstract SitesHeader initSitesHeader();
+
     public void expandRow( final Object result, boolean animate, AnimatorListenerAdapter adapter )
     {
-        if ( null == sitesButtons )
-        {
-            return;
-        }
         sitesButtons.show( result, animate, adapter );
     }
 
-    public abstract void updateRow( final Object result );
+    public void updateRow( final Object result )
+    {
+        sitesHeader.updateHeader( result );
+    }
 
     public void collapseRow( boolean animate )
     {
-        if ( null == sitesButtons )
-        {
-            return;
-        }
         sitesButtons.hide( animate );
     }
 
     public boolean isExpanded()
     {
-        if ( null == sitesButtons )
-        {
-            return false;
-        }
         return sitesButtons.mIsVisible;
     }
 }

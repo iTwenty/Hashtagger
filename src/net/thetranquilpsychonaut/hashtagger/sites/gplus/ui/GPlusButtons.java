@@ -4,13 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.Toast;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.events.GPlusActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
-import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 import net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton;
 
 /**
@@ -119,12 +117,4 @@ public class GPlusButtons extends SitesButtons implements View.OnClickListener
         getContext().startActivity( i );
     }
 
-    @Override
-    public void doOpenInBrowser()
-    {
-        Toast.makeText( getContext(), "Sorry, that feature is not implemented yet", Toast.LENGTH_SHORT ).show();
-        Intent i = new Intent( Intent.ACTION_VIEW );
-        i.setData( UrlModifier.getGPlusActivityUrl( activity ) );
-        getContext().startActivity( i );
-    }
 }

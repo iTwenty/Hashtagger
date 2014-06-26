@@ -10,6 +10,7 @@ import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.Media;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesHeader;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
@@ -21,7 +22,6 @@ import net.thetranquilpsychonaut.hashtagger.widgets.VideoThumbnail;
  */
 public class InstagramListRow extends SitesListRow implements View.OnClickListener
 {
-    private InstagramHeader   instagramHeader;
     private LinkifiedTextView tvMediaText;
     private VideoThumbnail    videoThumbnail;
     private Media             media;
@@ -45,11 +45,9 @@ public class InstagramListRow extends SitesListRow implements View.OnClickListen
     protected void init( Context context )
     {
         inflate( context, R.layout.instagram_list_row, this );
-        instagramHeader = ( InstagramHeader ) findViewById( R.id.instagram_header );
         tvMediaText = ( LinkifiedTextView ) findViewById( R.id.tv_media_text );
         videoThumbnail = ( VideoThumbnail ) findViewById( R.id.video_thumbnail );
         videoThumbnail.setOnClickListener( this );
-        super.init( context );
     }
 
     @Override
@@ -59,10 +57,16 @@ public class InstagramListRow extends SitesListRow implements View.OnClickListen
     }
 
     @Override
+    protected SitesHeader initSitesHeader()
+    {
+        return ( SitesHeader ) findViewById( R.id.instagram_header );
+    }
+
+    @Override
     public void updateRow( Object result )
     {
+        super.updateRow( result );
         this.media = ( Media ) result;
-        instagramHeader.showHeader( media );
         if ( null != media.getCaption() )
         {
             tvMediaText.setText( media.getCaption().getLinkedText() );

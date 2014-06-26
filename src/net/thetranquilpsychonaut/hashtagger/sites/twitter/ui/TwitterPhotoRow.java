@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesHeader;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
@@ -44,12 +45,6 @@ public class TwitterPhotoRow extends TwitterListRow implements View.OnClickListe
     }
 
     @Override
-    protected TwitterHeader initTwitterHeader()
-    {
-        return ( TwitterHeader ) findViewById( R.id.twitter_header );
-    }
-
-    @Override
     protected LinkifiedTextView initStatusText()
     {
         return ( LinkifiedTextView ) findViewById( R.id.tv_status_text );
@@ -59,6 +54,12 @@ public class TwitterPhotoRow extends TwitterListRow implements View.OnClickListe
     protected SitesButtons initSitesButtons()
     {
         return ( SitesButtons ) findViewById( R.id.twitter_buttons );
+    }
+
+    @Override
+    protected SitesHeader initSitesHeader()
+    {
+        return ( SitesHeader ) findViewById( R.id.twitter_header );
     }
 
     @Override

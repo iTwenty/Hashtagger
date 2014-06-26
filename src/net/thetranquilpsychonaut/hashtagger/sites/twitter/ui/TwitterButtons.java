@@ -1,7 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.View;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
@@ -9,7 +8,6 @@ import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
-import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 import net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton;
 
 
@@ -121,11 +119,4 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
         }
     }
 
-    @Override
-    public void doOpenInBrowser()
-    {
-        Intent i = new Intent( Intent.ACTION_VIEW );
-        i.setData( UrlModifier.getTwitterStatusUrl( status ) );
-        getContext().startActivity( i );
-    }
 }

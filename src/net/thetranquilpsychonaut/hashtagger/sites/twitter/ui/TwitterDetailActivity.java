@@ -74,7 +74,7 @@ public class TwitterDetailActivity extends BaseActivity implements View.OnClickL
         }
         setTitle( "@" + status.getUser().getScreenName() + "'s tweet" );
         this.statusType = TwitterListAdapter.getStatusType( status );
-        twitterHeader.showHeader( status );
+        twitterHeader.updateHeader( status );
         tvStatusText.setText( status.isRetweet() ? status.getRetweetedStatus().getLinkedText() : status.getLinkedText() );
         imgbReply.setOnClickListener( this );
         imgbRetweet.setOnClickListener( this );

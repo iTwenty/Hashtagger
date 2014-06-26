@@ -11,7 +11,6 @@ import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
  */
 public abstract class TwitterListRow extends SitesListRow
 {
-    protected TwitterHeader     twitterHeader;
     protected LinkifiedTextView tvStatusText;
     protected Status            status;
 
@@ -33,20 +32,16 @@ public abstract class TwitterListRow extends SitesListRow
     @Override
     protected void init( Context context )
     {
-        twitterHeader = initTwitterHeader();
         tvStatusText = initStatusText();
-        super.init( context );
     }
-
-    protected abstract TwitterHeader initTwitterHeader();
 
     protected abstract LinkifiedTextView initStatusText();
 
     @Override
     public void updateRow( Object result )
     {
+        super.updateRow( result );
         this.status = ( Status ) result;
-        twitterHeader.showHeader( status );
         tvStatusText.setText( status.isRetweet() ? status.getRetweetedStatus().getLinkedText() : status.getLinkedText() );
     }
 }

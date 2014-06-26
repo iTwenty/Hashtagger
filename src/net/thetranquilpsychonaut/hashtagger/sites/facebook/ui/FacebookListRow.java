@@ -12,7 +12,6 @@ import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
  */
 public abstract class FacebookListRow extends SitesListRow
 {
-    protected FacebookHeader facebookHeader;
     protected TextView       tvPostText;
     protected Post           post;
 
@@ -34,20 +33,16 @@ public abstract class FacebookListRow extends SitesListRow
     @Override
     protected void init( Context context )
     {
-        facebookHeader = initFacebookHeader();
         tvPostText = initPostText();
-        super.init( context );
     }
-
-    protected abstract FacebookHeader initFacebookHeader();
 
     protected abstract LinkifiedTextView initPostText();
 
     @Override
     public void updateRow( Object result )
     {
+        super.updateRow( result );
         this.post = ( Post ) result;
-        facebookHeader.showHeader( post );
         tvPostText.setText( post.getLinkedText() );
     }
 }
