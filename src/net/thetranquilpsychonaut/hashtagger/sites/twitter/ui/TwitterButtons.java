@@ -40,6 +40,11 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
         ccbRetweet = ( CenterContentButton ) findViewById( R.id.ccb_retweet );
         ccbFavorite = ( CenterContentButton ) findViewById( R.id.ccb_favorite );
         ccbViewDetails = ( CenterContentButton ) findViewById( R.id.ccb_view_details );
+        setCenterDrawable( ccbReply, mShowSmallButtons ? R.drawable.reply_small : R.drawable.reply );
+        setCenterDrawable( ccbRetweet, mShowSmallButtons ? R.drawable.retweet_small : R.drawable.retweet );
+        setCenterDrawable( ccbFavorite, mShowSmallButtons ? R.drawable.favorite_small : R.drawable.favorite );
+        setCenterDrawable( ccbViewDetails, mShowSmallButtons ? R.drawable.view_details_small : R.drawable.view_details );
+        ccbViewDetails.setVisibility( mShowViewDetailsButton ? VISIBLE : GONE );
     }
 
     @Override
@@ -60,13 +65,11 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
     {
         if ( isRetweeted )
         {
-            ccbRetweet.setCompoundDrawablesWithIntrinsicBounds(
-                    getResources().getDrawable( R.drawable.retweet_on_small ), null, null, null );
+            setCenterDrawable( ccbRetweet, mShowSmallButtons ? R.drawable.retweet_on_small : R.drawable.retweet_on );
         }
         else
         {
-            ccbRetweet.setCompoundDrawablesWithIntrinsicBounds(
-                    getResources().getDrawable( R.drawable.retweet_small ), null, null, null );
+            setCenterDrawable( ccbRetweet, mShowSmallButtons ? R.drawable.retweet_small : R.drawable.retweet );
         }
     }
 
@@ -75,13 +78,11 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
     {
         if ( isFavorited )
         {
-            ccbFavorite.setCompoundDrawablesWithIntrinsicBounds(
-                    getResources().getDrawable( R.drawable.favorite_on_small ), null, null, null );
+            setCenterDrawable( ccbFavorite, mShowSmallButtons ? R.drawable.favorite_on_small : R.drawable.favorite_on );
         }
         else
         {
-            ccbFavorite.setCompoundDrawablesWithIntrinsicBounds(
-                    getResources().getDrawable( R.drawable.favorite_small ), null, null, null );
+            setCenterDrawable( ccbFavorite, mShowSmallButtons ? R.drawable.favorite_small : R.drawable.favorite );
         }
     }
 

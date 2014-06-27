@@ -16,6 +16,11 @@
         <attr name="GPlusDetailViewStyle" format="reference"/>
     </declare-styleable>
 
+    <declare-styleable name="SitesButtons">
+        <attr name="showSmallButtons" format="boolean"/>
+        <attr name="showViewDetailsButton" format="boolean"/>
+    </declare-styleable>
+
     <declare-styleable name="TwoWayView">
 
         <!-- Imported from View -->

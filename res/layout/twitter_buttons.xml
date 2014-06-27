@@ -12,8 +12,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:focusable="false"
-        android:layout_gravity="center"
-        android:drawableLeft="@drawable/reply_small"
         style="@style/sitesButtonStyle"/>
 
     <net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton
@@ -22,7 +20,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:focusable="false"
-        android:drawableLeft="@drawable/retweet_small"
         style="@style/sitesButtonStyle"/>
 
     <net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton
@@ -31,7 +28,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:focusable="false"
-        android:drawableLeft="@drawable/favorite_small"
         style="@style/sitesButtonStyle"/>
 
     <net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton
@@ -40,7 +36,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:focusable="false"
-        android:drawableLeft="@drawable/view_details_small"
         style="@style/sitesButtonStyle"/>
 
 </merge>

@@ -3,10 +3,13 @@ package net.thetranquilpsychonaut.hashtagger.sites.ui;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton;
 
 /**
  * Created by itwenty on 5/2/14.
@@ -14,7 +17,11 @@ import android.widget.RelativeLayout;
 public abstract class SitesButtons extends LinearLayout
 {
     private static final int TIME_SCALE = 4;
+
     protected boolean mIsVisible;
+    protected boolean mShowSmallButtons;
+    protected boolean mShowViewDetailsButton;
+
     private int mExpandedHeight = 0;
     private ValueAnimator mHeightAnimator;
 
@@ -31,6 +38,12 @@ public abstract class SitesButtons extends LinearLayout
     public SitesButtons( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
+        if ( null != attrs )
+        {
+            TypedArray ta = context.obtainStyledAttributes( attrs, R.styleable.SitesButtons );
+            mShowSmallButtons = ta.getBoolean( R.styleable.SitesButtons_showSmallButtons, false );
+            mShowViewDetailsButton = ta.getBoolean( R.styleable.SitesButtons_showViewDetailsButton, false );
+        }
         mIsVisible = false;
         mHeightAnimator = new ValueAnimator();
         mHeightAnimator.addUpdateListener( new ValueAnimator.AnimatorUpdateListener()
@@ -99,5 +112,14 @@ public abstract class SitesButtons extends LinearLayout
         params.height = height;
         this.setLayoutParams( params );
         this.requestLayout();
+    }
+
+    protected void setCenterDrawable( CenterContentButton ccb, int drawableResId )
+    {
+        ccb.setCompoundDrawablesWithIntrinsicBounds(
+                getResources().getDrawable( drawableResId ),
+                null,
+                null,
+                null );
     }
 }

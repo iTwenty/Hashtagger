@@ -2,6 +2,7 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:hashtagger="http://schemas.android.com/apk/res/net.thetranquilpsychonaut.hashtagger"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:layout_above="@+id/twitter_actions_layout"
+        android:layout_above="@+id/twitter_buttons"
         android:paddingBottom="5dp">
 
         <RelativeLayout
@@ -41,39 +42,13 @@
 
     </ScrollView>
 
-    <LinearLayout
-        android:id="@id/twitter_actions_layout"
-        android:orientation="horizontal"
+    <net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterButtons
+        android:id="@id/twitter_buttons"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/card"
-        android:padding="0dp">
-
-        <ImageButton
-            android:id="@+id/imgb_reply"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/reply"
-            android:layout_weight="1"
-            style="?android:borderlessButtonStyle"/>
-
-        <ImageButton
-            android:id="@+id/imgb_retweet"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/retweet"
-            android:layout_weight="1"
-            style="?android:borderlessButtonStyle"/>
-
-        <ImageButton
-            android:id="@+id/imgb_favorite"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/favorite"
-            android:layout_weight="1"
-            style="?android:borderlessButtonStyle"/>
-
-    </LinearLayout>
+        hashtagger:showViewDetailsButton="false"
+        android:padding="0dp"/>
 
 </RelativeLayout>

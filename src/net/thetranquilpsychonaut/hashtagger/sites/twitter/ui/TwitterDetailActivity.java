@@ -13,6 +13,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.events.TwitterActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterFavoriteDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterReplyDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterRetweetDoneEvent;
@@ -27,15 +28,13 @@ import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 /**
  * Created by itwenty on 5/10/14.
  */
-public class TwitterDetailActivity extends BaseActivity implements View.OnClickListener, TwitterActionsPerformer.OnTwitterActionDoneListener
+public class TwitterDetailActivity extends BaseActivity implements TwitterActionsPerformer.OnTwitterActionDoneListener
 {
     public static final String STATUS_KEY = "status";
     private LinkifiedTextView       tvStatusText;
     private TwitterHeader           twitterHeader;
     private ViewStub                viewStub;
-    private ImageButton             imgbReply;
-    private ImageButton             imgbRetweet;
-    private ImageButton             imgbFavorite;
+    private TwitterButtons          twitterButtons;
     private TwitterActionsPerformer twitterActionsPerformer;
     private int                     statusType;
 
@@ -61,9 +60,7 @@ public class TwitterDetailActivity extends BaseActivity implements View.OnClickL
         tvStatusText = ( LinkifiedTextView ) findViewById( R.id.tv_status_text );
         twitterHeader = ( TwitterHeader ) findViewById( R.id.twitter_header );
         viewStub = ( ViewStub ) findViewById( R.id.twitter_view_stub );
-        imgbReply = ( ImageButton ) findViewById( R.id.imgb_reply );
-        imgbRetweet = ( ImageButton ) findViewById( R.id.imgb_retweet );
-        imgbFavorite = ( ImageButton ) findViewById( R.id.imgb_favorite );
+        twitterButtons = ( TwitterButtons ) findViewById( R.id.twitter_buttons );
         if ( null != savedInstanceState )
         {
             status = ( Status ) savedInstanceState.getSerializable( STATUS_KEY );
@@ -76,33 +73,10 @@ public class TwitterDetailActivity extends BaseActivity implements View.OnClickL
         this.statusType = TwitterListAdapter.getStatusType( status );
         twitterHeader.updateHeader( status );
         tvStatusText.setText( status.isRetweet() ? status.getRetweetedStatus().getLinkedText() : status.getLinkedText() );
-        imgbReply.setOnClickListener( this );
-        imgbRetweet.setOnClickListener( this );
-        imgbFavorite.setOnClickListener( this );
-        updateActionsButtons();
+        twitterButtons.updateButtons( status );
         if ( statusType == TwitterListAdapter.STATUS_TYPE_PHOTO )
         {
             showPhoto( savedInstanceState );
-        }
-    }
-
-    private void updateActionsButtons()
-    {
-        if ( status.isRetweeted() )
-        {
-            imgbRetweet.setImageResource( R.drawable.retweet_on );
-        }
-        else
-        {
-            imgbRetweet.setImageResource( R.drawable.retweet );
-        }
-        if ( status.isFavorited() )
-        {
-            imgbFavorite.setImageResource( R.drawable.favorite_on );
-        }
-        else
-        {
-            imgbFavorite.setImageResource( R.drawable.favorite );
         }
     }
 
@@ -163,20 +137,23 @@ public class TwitterDetailActivity extends BaseActivity implements View.OnClickL
         outState.putSerializable( STATUS_KEY, status );
     }
 
-    @Override
-    public void onClick( View v )
+    @Subscribe
+    public void onTwitterActionClicked( TwitterActionClickedEvent event )
     {
-        if ( v.equals( imgbReply ) )
+        Status status = event.getStatus();
+        switch ( event.getActionType() )
         {
-            twitterActionsPerformer.doReply( status );
-        }
-        if ( v.equals( imgbRetweet ) )
-        {
-            twitterActionsPerformer.doRetweet( status );
-        }
-        if ( v.equals( imgbFavorite ) )
-        {
-            twitterActionsPerformer.doFavorite( status );
+            case TwitterActionClickedEvent.ACTION_REPLY:
+                twitterActionsPerformer.doReply( status );
+                break;
+            case TwitterActionClickedEvent.ACTION_RETWEET:
+                twitterActionsPerformer.doRetweet( status );
+                break;
+            case TwitterActionClickedEvent.ACTION_FAVORITE:
+                twitterActionsPerformer.doFavorite( status );
+                break;
+            default:
+                break;
         }
     }
 
@@ -185,7 +162,7 @@ public class TwitterDetailActivity extends BaseActivity implements View.OnClickL
     {
         if ( event.isSuccess() )
         {
-            updateActionsButtons();
+            twitterButtons.updateButtons( status );
             Toast.makeText( this, "Retweeted like a champ!", Toast.LENGTH_SHORT ).show();
         }
         else
@@ -200,7 +177,7 @@ public class TwitterDetailActivity extends BaseActivity implements View.OnClickL
         Helper.debug( event.getStatus() == status ? "equal" : "unequal" );
         if ( event.isSuccess() )
         {
-            updateActionsButtons();
+            twitterButtons.updateButtons( status );
         }
         else
         {
