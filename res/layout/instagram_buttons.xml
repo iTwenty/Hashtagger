@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:focusable="false"
-        android:drawableLeft="@drawable/ic_action_full_screen"
+        android:drawableLeft="@drawable/view_details_small"
         style="@style/sitesButtonStyle"/>
 
 </merge>
