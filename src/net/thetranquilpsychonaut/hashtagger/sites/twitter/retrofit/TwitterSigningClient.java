@@ -1,5 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit;
 
+import com.squareup.okhttp.OkHttpClient;
 import net.thetranquilpsychonaut.hashtagger.config.TwitterConfig;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSigningClient;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
@@ -12,6 +13,10 @@ import org.scribe.model.Token;
  */
 public class TwitterSigningClient extends SitesSigningClient
 {
+    public TwitterSigningClient( OkHttpClient client )
+    {
+        super( client );
+    }
     @Override
     protected String getScope()
     {

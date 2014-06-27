@@ -1,5 +1,7 @@
 package net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit;
 
+import com.squareup.okhttp.OkHttpClient;
+import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.SearchResult;
 import retrofit.RestAdapter;
 import retrofit.http.GET;
@@ -24,9 +26,12 @@ public class Instagram
             {
                 if ( null == api )
                 {
+                    OkHttpClient client = new OkHttpClient();
+                    client.setCache( HashtaggerApp.cache );
+
                     RestAdapter adapter = new RestAdapter.Builder()
                             .setEndpoint( ENDPOINT )
-                            .setClient( new InstagramSigningClient() )
+                            .setClient( new InstagramSigningClient( client ) )
                             .build();
                     api = adapter.create( Api.class );
                 }

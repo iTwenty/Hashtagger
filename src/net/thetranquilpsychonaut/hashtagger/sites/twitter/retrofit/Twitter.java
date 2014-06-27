@@ -2,6 +2,8 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.squareup.okhttp.OkHttpClient;
+import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.SearchResult;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.TrendLocation;
@@ -39,9 +41,12 @@ public class Twitter
                             .registerTypeAdapter( Date.class, new TwitterDateDeserializer() )
                             .create();
 
+                    OkHttpClient client = new OkHttpClient();
+                    client.setCache( HashtaggerApp.cache );
+
                     RestAdapter adapter = new RestAdapter.Builder()
                             .setEndpoint( ENDPOINT )
-                            .setClient( new TwitterSigningClient() )
+                            .setClient( new TwitterSigningClient( client ) )
                             .setConverter( new GsonConverter( gson ) )
                             .build();
 

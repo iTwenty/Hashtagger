@@ -1,5 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit;
 
+import com.squareup.okhttp.OkHttpClient;
 import net.thetranquilpsychonaut.hashtagger.config.InstagramConfig;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSigningClient;
 import net.thetranquilpsychonaut.hashtagger.sites.instagram.components.InstagramApi;
@@ -12,6 +13,11 @@ import org.scribe.model.Token;
  */
 public class InstagramSigningClient extends SitesSigningClient
 {
+    public InstagramSigningClient( OkHttpClient client )
+    {
+        super( client );
+    }
+
     @Override
     protected String getScope()
     {

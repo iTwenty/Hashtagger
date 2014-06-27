@@ -4,8 +4,13 @@ import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import com.squareup.okhttp.Cache;
 import com.squareup.otto.Bus;
 import com.squareup.otto.ThreadEnforcer;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by itwenty on 2/7/14.
@@ -14,6 +19,7 @@ public class HashtaggerApp extends Application
 {
     public static HashtaggerApp app;
     public static final Bus bus = new Bus( ThreadEnforcer.ANY );
+    public static Cache cache;
 
     public static final String PACKAGE_NAMESPACE = "net.thetranquilpsychonaut.hashtagger";
     public static final String NAMESPACE         = "hashtagger:";
@@ -34,6 +40,14 @@ public class HashtaggerApp extends Application
     {
         super.onCreate();
         app = this;
+        try
+        {
+            cache = new Cache( new File( app.getCacheDir().getAbsolutePath(), "cache" ), 10 * 1024 );
+        }
+        catch ( IOException e )
+        {
+            Helper.debug( "Failed to install cache : " + e.getMessage() );
+        }
     }
 
     public static boolean isNetworkConnected()

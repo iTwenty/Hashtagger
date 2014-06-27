@@ -2,6 +2,8 @@ package net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.squareup.okhttp.OkHttpClient;
+import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.ActivityFeed;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.CommentFeed;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.PeopleFeed;
@@ -35,9 +37,12 @@ public class GPlus
                             .registerTypeAdapter( Date.class, new GPlusDateDeserializer() )
                             .create();
 
+                    OkHttpClient client = new OkHttpClient();
+                    client.setCache( HashtaggerApp.cache );
+
                     RestAdapter adapter = new RestAdapter.Builder()
                             .setEndpoint( ENDPOINT )
-                            .setClient( new GPlusSigningClient() )
+                            .setClient( new GPlusSigningClient( client ) )
                             .setConverter( new GsonConverter( gson ) )
                             .build();
 

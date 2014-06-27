@@ -1,6 +1,7 @@
 package net.thetranquilpsychonaut.hashtagger.sites.components;
 
 import android.text.TextUtils;
+import com.squareup.okhttp.OkHttpClient;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.Api;
@@ -25,9 +26,9 @@ public abstract class SitesSigningClient extends OkClient
 {
     private OAuthService signingService;
 
-    public SitesSigningClient()
+    public SitesSigningClient( OkHttpClient client )
     {
-        super();
+        super( client );
         ServiceBuilder sb = new ServiceBuilder()
                 .provider( getProviderClass() )
                 .apiKey( getApiKey() )

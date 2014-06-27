@@ -1,12 +1,8 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;

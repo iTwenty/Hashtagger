@@ -1,5 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit;
 
+import com.squareup.okhttp.OkHttpClient;
 import net.thetranquilpsychonaut.hashtagger.config.FacebookConfig;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSigningClient;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
@@ -12,6 +13,11 @@ import org.scribe.model.Token;
  */
 public class FacebookSigningClient extends SitesSigningClient
 {
+    public FacebookSigningClient( OkHttpClient client )
+    {
+        super( client );
+    }
+
     @Override
     protected String getScope()
     {

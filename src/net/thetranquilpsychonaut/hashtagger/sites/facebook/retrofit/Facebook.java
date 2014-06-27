@@ -2,6 +2,8 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.squareup.okhttp.OkHttpClient;
+import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.SearchResult;
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
@@ -32,9 +34,12 @@ public class Facebook
                             .registerTypeAdapter( Date.class, new FacebookDateDeserializer() )
                             .create();
 
+                    OkHttpClient client = new OkHttpClient();
+                    client.setCache( HashtaggerApp.cache );
+
                     RestAdapter adapter = new RestAdapter.Builder()
                             .setEndpoint( ENDPOINT )
-                            .setClient( new FacebookSigningClient() )
+                            .setClient( new FacebookSigningClient( client ) )
                             .setConverter( new GsonConverter( gson ) )
                             .build();
 

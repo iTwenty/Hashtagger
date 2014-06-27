@@ -1,5 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit;
 
+import com.squareup.okhttp.OkHttpClient;
 import net.thetranquilpsychonaut.hashtagger.config.GPlusConfig;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSigningClient;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.Google2Api;
@@ -18,6 +19,11 @@ import java.io.IOException;
  */
 public class GPlusSigningClient extends SitesSigningClient
 {
+    public GPlusSigningClient( OkHttpClient client )
+    {
+        super( client );
+    }
+
     @Override
     protected String getScope()
     {
