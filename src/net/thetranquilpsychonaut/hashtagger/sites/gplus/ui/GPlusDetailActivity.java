@@ -1,5 +1,7 @@
 package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -34,6 +36,13 @@ public class GPlusDetailActivity extends SlidingActionsActivity
     private GPlusActionsFragment gPlusActionsFragment;
     private Activity             activity;
     private int                  activityType;
+
+    public static void createAndStartActivity( Activity activity, Context context )
+    {
+        Intent i = new Intent( context, GPlusDetailActivity.class );
+        i.putExtra( ACTIVITY_KEY, activity );
+        context.startActivity( i );
+    }
 
     @Override
     protected View initMainView( Bundle savedInstanceState )

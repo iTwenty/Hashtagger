@@ -40,6 +40,11 @@ public class GPlusButtons extends SitesButtons implements View.OnClickListener
         ccbComment = ( CenterContentButton ) findViewById( R.id.ccb_comment );
         ccbShare = ( CenterContentButton ) findViewById( R.id.ccb_share );
         ccbViewDetails = ( CenterContentButton ) findViewById( R.id.ccb_view_details );
+        setCenterDrawable( ccbPlusOne, mShowSmallButtons ? R.drawable.plus_small : R.drawable.plus );
+        setCenterDrawable( ccbComment, mShowSmallButtons ? R.drawable.comment_small : R.drawable.comment );
+        setCenterDrawable( ccbShare, mShowSmallButtons ? R.drawable.share_small : R.drawable.share );
+        setCenterDrawable( ccbViewDetails, mShowSmallButtons ? R.drawable.view_details_small : R.drawable.view_details );
+        ccbViewDetails.setVisibility( mShowViewDetailsButton ? VISIBLE : GONE );
     }
 
     @Override
@@ -91,7 +96,7 @@ public class GPlusButtons extends SitesButtons implements View.OnClickListener
     {
         if ( v.equals( ccbViewDetails ) )
         {
-            doViewDetails();
+            GPlusDetailActivity.createAndStartActivity( activity, getContext() );
         }
         else if ( v.equals( ccbPlusOne ) )
         {
@@ -109,12 +114,4 @@ public class GPlusButtons extends SitesButtons implements View.OnClickListener
             HashtaggerApp.bus.post( new GPlusActionClickedEvent( activity, GPlusActionClickedEvent.ACTION_RESHARE ) );
         }
     }
-
-    private void doViewDetails()
-    {
-        Intent i = new Intent( getContext(), GPlusDetailActivity.class );
-        i.putExtra( GPlusDetailActivity.ACTIVITY_KEY, activity );
-        getContext().startActivity( i );
-    }
-
 }

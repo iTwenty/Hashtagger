@@ -2,6 +2,7 @@
 
 <merge
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:hashtagger="http://schemas.android.com/apk/res/net.thetranquilpsychonaut.hashtagger"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -27,6 +28,8 @@
         android:id="@+id/gplus_buttons"
         android:layout_below="@id/gplus_detail_view"
         android:layout_width="match_parent"
+        hashtagger:showViewDetailsButton="true"
+        hashtagger:showSmallButtons="true"
         android:layout_height="0dp"/>
 
 </merge>

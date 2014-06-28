@@ -36,6 +36,10 @@ public class InstagramButtons extends SitesButtons implements View.OnClickListen
         ccbLike = ( CenterContentButton ) findViewById( R.id.ccb_like );
         ccbComment = ( CenterContentButton ) findViewById( R.id.ccb_comment );
         ccbViewDetails = ( CenterContentButton ) findViewById( R.id.ccb_view_details );
+        setCenterDrawable( ccbLike, mShowSmallButtons ? R.drawable.instagram_like_small : R.drawable.instagram_like );
+        setCenterDrawable( ccbComment, mShowSmallButtons ? R.drawable.comment_small : R.drawable.comment );
+        setCenterDrawable( ccbViewDetails, mShowSmallButtons ? R.drawable.view_details_small : R.drawable.view_details );
+        ccbViewDetails.setVisibility( mShowViewDetailsButton ? VISIBLE : GONE );
     }
 
     @Override
@@ -68,13 +72,11 @@ public class InstagramButtons extends SitesButtons implements View.OnClickListen
     {
         if ( userHasLiked )
         {
-            ccbLike.setCompoundDrawablesWithIntrinsicBounds(
-                    getResources().getDrawable( R.drawable.instagram_like_on_small ), null, null, null );
+            setCenterDrawable( ccbLike, mShowSmallButtons ? R.drawable.instagram_like_on_small : R.drawable.instagram_like_on );
         }
         else
         {
-            ccbLike.setCompoundDrawablesWithIntrinsicBounds(
-                    getResources().getDrawable( R.drawable.instagram_like_small ), null, null, null );
+            setCenterDrawable( ccbLike, mShowSmallButtons ? R.drawable.instagram_like_small : R.drawable.instagram_like );
         }
     }
 

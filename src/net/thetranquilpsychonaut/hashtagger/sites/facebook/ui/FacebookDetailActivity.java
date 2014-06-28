@@ -1,5 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,6 +34,12 @@ public class FacebookDetailActivity extends SlidingActionsActivity
     private int                     postType;
     private ViewStub                viewStub;
 
+    public static void createAndStartActivity( Post post, Context context )
+    {
+        Intent i = new Intent( context, FacebookDetailActivity.class );
+        i.putExtra( POST_KEY, post );
+        context.startActivity( i );
+    }
 
     @Override
     protected View initMainView( Bundle savedInstanceState )

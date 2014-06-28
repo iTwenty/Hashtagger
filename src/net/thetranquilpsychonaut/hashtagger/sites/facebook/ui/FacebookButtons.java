@@ -39,6 +39,10 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
         ccbLike = ( CenterContentButton ) findViewById( R.id.ccb_like );
         ccbComment = ( CenterContentButton ) findViewById( R.id.ccb_comment );
         ccbViewDetails = ( CenterContentButton ) findViewById( R.id.ccb_view_details );
+        setCenterDrawable( ccbLike, mShowSmallButtons ? R.drawable.facebook_like_small : R.drawable.facebook_like );
+        setCenterDrawable( ccbComment, mShowSmallButtons ? R.drawable.comment : R.drawable.comment_small );
+        setCenterDrawable( ccbViewDetails, mShowSmallButtons ? R.drawable.view_details_small : R.drawable.view_details );
+        ccbViewDetails.setVisibility( mShowViewDetailsButton ? VISIBLE : GONE );
     }
 
     @Override
@@ -89,15 +93,7 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
         }
         else if ( v.equals( ccbViewDetails ) )
         {
-            doViewDetails();
+            FacebookDetailActivity.createAndStartActivity( post, getContext() );
         }
     }
-
-    private void doViewDetails()
-    {
-        Intent i = new Intent( getContext(), FacebookDetailActivity.class );
-        i.putExtra( FacebookDetailActivity.POST_KEY, post );
-        getContext().startActivity( i );
-    }
-
 }
