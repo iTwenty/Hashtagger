@@ -15,10 +15,10 @@ import net.thetranquilpsychonaut.hashtagger.utils.Helper;
  */
 public class GPlusHeader extends SitesHeader
 {
-    private TextView  tvDisplayName;
-    private TextView  tvSharedName;
-    private TextView  tvPublishedTime;
-    private Activity  activity;
+    private TextView tvDisplayName;
+    private TextView tvSharedName;
+    private TextView tvPublishedTime;
+    private Activity activity;
 
     public GPlusHeader( Context context )
     {
@@ -61,10 +61,10 @@ public class GPlusHeader extends SitesHeader
     {
         this.activity = ( Activity ) result;
         Picasso.with( getContext() )
-            .load( activity.getActor().getImage().getUrl() )
-            .fit()
-            .centerCrop()
-            .into( profileImage );
+                .load( activity.getActor().getImage().getUrl() )
+                .fit()
+                .centerCrop()
+                .into( profileImage );
         tvDisplayName.setText( activity.getActor().getDisplayName() );
         tvPublishedTime.setText( Helper.getFuzzyDateTime( activity.getPublished().getTime() ) );
         if ( "share".equals( activity.getVerb() ) )

@@ -20,7 +20,7 @@ import net.thetranquilpsychonaut.hashtagger.widgets.VideoThumbnail;
 /**
  * Created by itwenty on 5/2/14.
  */
-public class FacebookMediaRow extends FacebookListRow implements View.OnClickListener
+public class FacebookMediaRow extends FacebookListRow
 {
     private VideoThumbnail imgvThumbnail;
 
@@ -89,6 +89,7 @@ public class FacebookMediaRow extends FacebookListRow implements View.OnClickLis
     @Override
     public void onClick( View v )
     {
+        super.onClick( v );
         if ( v.equals( imgvThumbnail ) )
         {
             if ( TextUtils.equals( "photo", post.getType() ) )

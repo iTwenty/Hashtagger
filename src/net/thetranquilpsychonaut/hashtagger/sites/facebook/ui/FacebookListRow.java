@@ -1,10 +1,15 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.AttributeSet;
+import android.view.MenuItem;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 
 /**
@@ -12,8 +17,8 @@ import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
  */
 public abstract class FacebookListRow extends SitesListRow
 {
-    protected TextView       tvPostText;
-    protected Post           post;
+    protected TextView tvPostText;
+    protected Post     post;
 
     protected FacebookListRow( Context context )
     {
@@ -44,5 +49,29 @@ public abstract class FacebookListRow extends SitesListRow
         super.updateRow( result );
         this.post = ( Post ) result;
         tvPostText.setText( post.getLinkedText() );
+    }
+
+    @Override
+    protected int getPopupMenuResId()
+    {
+        return R.menu.facebook_list_row_popup_menu;
+    }
+
+    @Override
+    protected boolean onPopupMenuItemClicked( PopupMenu menu, MenuItem item )
+    {
+        return true;
+    }
+
+    @Override
+    protected Uri getResultUrl()
+    {
+        return UrlModifier.getFacebookPostUrl( post );
+    }
+
+    @Override
+    protected String getResultText()
+    {
+        return post.getMessage();
     }
 }

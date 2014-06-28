@@ -63,4 +63,11 @@
     <string name="str_toast_instagram_logged_in_as">Logged in to Instagram as %s</string>
     <string name="str_toast_instagram_login_failed">Could not log in to Instagram</string>
     <string name="str_title_activity_instagram_login">Sign In With Instagram</string>
+    <string name="str_view_replies">View Replies</string>
+    <string name="str_view_retweets">View Retweets</string>
+    <string name="str_view_favorites">View Favorites</string>
+    <string name="str_view_likes">View Likes</string>
+    <string name="str_view_comments">View Comments</string>
+    <string name="str_view_plusones">View +1s</string>
+    <string name="str_view_reshares">View Reshares</string>
 </resources>

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 /**
  * Created by itwenty on 5/29/14.
  */
-public class GPlusAlbumRow extends GPlusListRow implements View.OnClickListener
+public class GPlusAlbumRow extends GPlusListRow
 {
     private AlbumThumbnail albumThumbnail;
     private int            albumCount;
@@ -101,6 +101,7 @@ public class GPlusAlbumRow extends GPlusListRow implements View.OnClickListener
     @Override
     public void onClick( View v )
     {
+        super.onClick( v );
         if ( v.equals( albumThumbnail ) )
         {
             if ( albumCount == 1 )

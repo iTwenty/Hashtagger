@@ -16,9 +16,9 @@ import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
  */
 public class FacebookHeader extends SitesHeader
 {
-    private TextView  tvUserName;
-    private TextView  tvCreatedTime;
-    private Post      post;
+    private TextView tvUserName;
+    private TextView tvCreatedTime;
+    private Post     post;
 
     public FacebookHeader( Context context )
     {

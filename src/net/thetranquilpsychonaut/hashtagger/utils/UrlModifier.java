@@ -52,8 +52,7 @@ public final class UrlModifier
 
     public static Uri getInstagramMediaUrl( Media media )
     {
-        // TODO
-        return null;
+        return Uri.parse( media.getLink() );
     }
 
     public static String getFacebookLargePhotoUrl( String smallPhotoUrl )

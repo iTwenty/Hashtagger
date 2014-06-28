@@ -2,15 +2,20 @@ package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.AttributeSet;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import net.thetranquilpsychonaut.hashtagger.R;
 
 /**
  * Created by itwenty on 4/15/14.
  */
-public abstract class SitesListRow extends RelativeLayout
+public abstract class SitesListRow extends RelativeLayout implements View.OnClickListener
 {
     protected SitesButtons sitesButtons;
     protected SitesHeader  sitesHeader;
@@ -33,10 +38,11 @@ public abstract class SitesListRow extends RelativeLayout
         sitesButtons = initSitesButtons();
         sitesHeader = initSitesHeader();
         popupMenuAnchor = initPopupMenuAnchor();
-        if ( null == sitesButtons || null == sitesHeader )
+        if ( null == sitesButtons || null == sitesHeader || null == popupMenuAnchor )
         {
-            throw new RuntimeException( "Either SitesButtons or SitesHeader is null." );
+            throw new RuntimeException( "SitesButtons, SitesHeader or PopupMenuAnchor must not be null!" );
         }
+        popupMenuAnchor.setOnClickListener( this );
     }
 
     protected abstract void init( Context context );
@@ -66,4 +72,50 @@ public abstract class SitesListRow extends RelativeLayout
     {
         return sitesButtons.mIsVisible;
     }
+
+    @Override
+    public void onClick( View v )
+    {
+        if ( v.equals( popupMenuAnchor ) )
+        {
+            final PopupMenu menu = new PopupMenu( getContext(), v );
+            menu.inflate( getPopupMenuResId() );
+            menu.inflate( R.menu.sites_list_row_popup_menu );
+            menu.setOnMenuItemClickListener( new PopupMenu.OnMenuItemClickListener()
+            {
+                @Override
+                public boolean onMenuItemClick( MenuItem item )
+                {
+                    if ( item.equals( menu.getMenu().findItem( R.id.it_open_in_browser ) ) )
+                    {
+                        Intent i = new Intent( Intent.ACTION_VIEW );
+                        i.setData( getResultUrl() );
+                        getContext().startActivity( i );
+                        return true;
+                    }
+                    else if ( item.equals( menu.getMenu().findItem( R.id.it_share ) ) )
+                    {
+                        Intent i = new Intent( Intent.ACTION_SEND );
+                        i.putExtra( Intent.EXTRA_TEXT, getResultText() );
+                        i.setType( "text/plain" );
+                        getContext().startActivity( i );
+                        return true;
+                    }
+                    else
+                    {
+                        return onPopupMenuItemClicked( menu, item );
+                    }
+                }
+            } );
+            menu.show();
+        }
+    }
+
+    protected abstract boolean onPopupMenuItemClicked( PopupMenu menu, MenuItem item );
+
+    protected abstract int getPopupMenuResId();
+
+    protected abstract Uri getResultUrl();
+
+    protected abstract String getResultText();
 }

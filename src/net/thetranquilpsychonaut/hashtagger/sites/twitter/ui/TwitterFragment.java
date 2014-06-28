@@ -1,6 +1,5 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
-import android.net.Uri;
 import android.widget.Toast;
 import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
@@ -21,7 +20,6 @@ import net.thetranquilpsychonaut.hashtagger.sites.ui.PersistentData;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
-import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -180,19 +178,6 @@ public class TwitterFragment extends SitesFragment implements TwitterActionsPerf
             ( ( List<Status> ) results ).addAll( newResults );
             resultTypes.addAll( newResultTypes );
         }
-    }
-
-    @Override
-    protected String getResultText( Object result )
-    {
-        Status status = ( Status ) result;
-        return status.isRetweet() ? status.getRetweetedStatus().getText() : status.getText();
-    }
-
-    @Override
-    protected Uri getResultUrl( Object result )
-    {
-        return UrlModifier.getTwitterStatusUrl( ( Status ) result );
     }
 
     @Subscribe

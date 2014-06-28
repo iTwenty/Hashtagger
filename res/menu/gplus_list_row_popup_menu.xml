@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/it_view_plusones"
+        android:title="@string/str_view_plusones"/>
+    <item
+        android:id="@+id/it_view_comments"
+        android:title="@string/str_view_comments"/>
+    <item
+        android:id="@+id/it_view_reshares"
+        android:title="@string/str_view_reshares"/>
+</menu>

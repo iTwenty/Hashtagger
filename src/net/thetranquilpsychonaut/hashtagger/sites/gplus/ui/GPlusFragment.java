@@ -1,6 +1,5 @@
 package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 
-import android.net.Uri;
 import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
@@ -16,7 +15,6 @@ import net.thetranquilpsychonaut.hashtagger.sites.ui.PersistentData;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
-import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -161,19 +159,6 @@ public class GPlusFragment extends SitesFragment
             ( ( List<Activity> ) results ).addAll( newResults );
             resultTypes.addAll( newResultTypes );
         }
-    }
-
-
-    @Override
-    protected String getResultText( Object result )
-    {
-        return ( ( Activity ) result ).getObject().getOriginalContent();
-    }
-
-    @Override
-    protected Uri getResultUrl( Object result )
-    {
-        return UrlModifier.getGPlusActivityUrl( ( Activity ) result );
     }
 
     @Subscribe

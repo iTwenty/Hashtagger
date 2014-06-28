@@ -20,7 +20,7 @@
     <style name="PopupMenuAnchor">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:src">@drawable/ic_overflow</item>
+        <item name="android:src">@drawable/selector_ic_overflow</item>
     </style>
 
     <style name="ErrorText" parent="TextView_Default">
@@ -79,7 +79,6 @@
     <style name="newResultsBarStyle" parent="AppTheme">
         <item name="android:background">#cc000000</item>
     </style>
-
 
     <style name="GPlusDetailViewStyle">
         <item name="android:background">@drawable/selector_picture_frame</item>

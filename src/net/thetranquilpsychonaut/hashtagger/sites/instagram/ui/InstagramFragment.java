@@ -1,6 +1,5 @@
 package net.thetranquilpsychonaut.hashtagger.sites.instagram.ui;
 
-import android.net.Uri;
 import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
@@ -14,7 +13,6 @@ import net.thetranquilpsychonaut.hashtagger.sites.ui.PersistentData;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListAdapter;
 import net.thetranquilpsychonaut.hashtagger.utils.AccountPrefs;
-import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -150,19 +148,6 @@ public class InstagramFragment extends SitesFragment
         }
         ( ( List<Media> ) results ).addAll( newResults );
         resultTypes.addAll( newResultTypes );
-    }
-
-    @Override
-    protected String getResultText( Object result )
-    {
-        Media media = ( Media ) result;
-        return media.getCaption().getText();
-    }
-
-    @Override
-    protected Uri getResultUrl( Object result )
-    {
-        return UrlModifier.getInstagramMediaUrl( ( Media ) result );
     }
 
     @Subscribe

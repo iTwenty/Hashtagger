@@ -17,6 +17,7 @@ public class TwitterSigningClient extends SitesSigningClient
     {
         super( client );
     }
+
     @Override
     protected String getScope()
     {

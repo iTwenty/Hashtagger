@@ -7,7 +7,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -25,7 +24,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
@@ -47,8 +45,7 @@ import java.util.List;
  */
 public abstract class SitesFragment extends Fragment implements
         AdapterView.OnItemClickListener,
-        SitesSearchHandler.SitesSearchListener,
-        AdapterView.OnItemLongClickListener
+        SitesSearchHandler.SitesSearchListener
 {
     private static final String ACTIVE_VIEW_KEY        = "active_view";
     private static final String ACTIVE_FOOTER_VIEW_KEY = "active_footer_view";
@@ -298,7 +295,6 @@ public abstract class SitesFragment extends Fragment implements
         lvResultsList.setAdapter( sitesListAdapter );
         lvResultsList.setEmptyView( sitesEmptyView );
         lvResultsList.setOnItemClickListener( this );
-        lvResultsList.setOnItemLongClickListener( this );
         lvResultsList.setOnScrollListener( newResultsBar );
     }
 
@@ -811,43 +807,6 @@ public abstract class SitesFragment extends Fragment implements
             lvResultsList.smoothScrollBy( hiddenHeight, 2 * hiddenHeight );
         }
     }
-
-    @Override
-    public boolean onItemLongClick( AdapterView<?> parent, View view, int position, long id )
-    {
-        final Object result = parent.getItemAtPosition( position );
-        PopupMenu popupMenu = new PopupMenu( view.getContext(), view );
-        popupMenu.getMenuInflater().inflate( R.menu.sites_list_row_popup_menu, popupMenu.getMenu() );
-        popupMenu.getMenu().findItem( R.id.it_open_in_browser ).setOnMenuItemClickListener( new MenuItem.OnMenuItemClickListener()
-        {
-            @Override
-            public boolean onMenuItemClick( MenuItem item )
-            {
-                Intent i = new Intent( Intent.ACTION_VIEW );
-                i.setData( getResultUrl( result ) );
-                getActivity().startActivity( i );
-                return true;
-            }
-        } );
-        popupMenu.getMenu().findItem( R.id.it_share ).setOnMenuItemClickListener( new MenuItem.OnMenuItemClickListener()
-        {
-            @Override
-            public boolean onMenuItemClick( MenuItem item )
-            {
-                Intent i = new Intent( Intent.ACTION_SEND );
-                i.putExtra( Intent.EXTRA_TEXT, getResultText( result ) );
-                i.setType( "text/plain" );
-                getActivity().startActivity( i );
-                return true;
-            }
-        } );
-        popupMenu.show();
-        return true;
-    }
-
-    protected abstract String getResultText( Object result );
-
-    protected abstract Uri getResultUrl( Object result );
 
     public int getActiveView()
     {

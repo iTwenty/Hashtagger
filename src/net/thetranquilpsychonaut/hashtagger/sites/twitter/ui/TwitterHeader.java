@@ -16,11 +16,11 @@ import net.thetranquilpsychonaut.hashtagger.utils.Helper;
  */
 public class TwitterHeader extends SitesHeader
 {
-    private TextView  tvName;
-    private TextView  tvScreenName;
-    private TextView  tvCreatedAt;
-    private TextView  tvRetweetName;
-    private Status    status;
+    private TextView tvName;
+    private TextView tvScreenName;
+    private TextView tvCreatedAt;
+    private TextView tvRetweetName;
+    private Status   status;
 
     public TwitterHeader( Context context )
     {

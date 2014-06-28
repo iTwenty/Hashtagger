@@ -16,7 +16,7 @@ import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 /**
  * Created by itwenty on 5/1/14.
  */
-public class TwitterPhotoRow extends TwitterListRow implements View.OnClickListener
+public class TwitterPhotoRow extends TwitterListRow
 {
     private ImageView imgvMediaThumb;
 
@@ -83,12 +83,16 @@ public class TwitterPhotoRow extends TwitterListRow implements View.OnClickListe
     @Override
     public void onClick( View v )
     {
-        ViewAlbumActivity.createAndStartActivity(
-                getContext(),
-                "@" + status.getUser().getScreenName(),
-                Helper.createStringArrayList(
-                        UrlModifier.getTwitterLargePhotoUrl(
-                                status.getEntities().getMedia().get( 0 ).getMediaUrl() ) ),
-                0 );
+        super.onClick( v );
+        if ( v.equals( imgvMediaThumb ) )
+        {
+            ViewAlbumActivity.createAndStartActivity(
+                    getContext(),
+                    "@" + status.getUser().getScreenName(),
+                    Helper.createStringArrayList(
+                            UrlModifier.getTwitterLargePhotoUrl(
+                                    status.getEntities().getMedia().get( 0 ).getMediaUrl() ) ),
+                    0 );
+        }
     }
 }

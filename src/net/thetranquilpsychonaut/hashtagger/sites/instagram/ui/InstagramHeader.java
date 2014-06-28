@@ -16,9 +16,9 @@ import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
  */
 public class InstagramHeader extends SitesHeader
 {
-    private TextView  tvUsername;
-    private TextView  tvCreatedTime;
-    private Media     media;
+    private TextView tvUsername;
+    private TextView tvCreatedTime;
+    private Media    media;
 
     public InstagramHeader( Context context )
     {

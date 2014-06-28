@@ -1,9 +1,14 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.AttributeSet;
+import android.view.MenuItem;
+import android.widget.PopupMenu;
+import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 
 /**
@@ -43,5 +48,29 @@ public abstract class TwitterListRow extends SitesListRow
         super.updateRow( result );
         this.status = ( Status ) result;
         tvStatusText.setText( status.isRetweet() ? status.getRetweetedStatus().getLinkedText() : status.getLinkedText() );
+    }
+
+    @Override
+    protected int getPopupMenuResId()
+    {
+        return R.menu.twitter_list_row_popup_menu;
+    }
+
+    @Override
+    protected boolean onPopupMenuItemClicked( PopupMenu menu, MenuItem item )
+    {
+        return true;
+    }
+
+    @Override
+    protected Uri getResultUrl()
+    {
+        return UrlModifier.getTwitterStatusUrl( status );
+    }
+
+    @Override
+    protected String getResultText()
+    {
+        return status.isRetweet() ? status.getRetweetedStatus().getText() : status.getText();
     }
 }

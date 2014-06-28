@@ -16,7 +16,7 @@ import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 /**
  * Created by itwenty on 5/31/14.
  */
-public class GPlusPhotoRow extends GPlusListRow implements View.OnClickListener
+public class GPlusPhotoRow extends GPlusListRow
 {
     private ImageView imgvThumbnail;
 
@@ -83,6 +83,7 @@ public class GPlusPhotoRow extends GPlusListRow implements View.OnClickListener
     @Override
     public void onClick( View v )
     {
+        super.onClick( v );
         if ( v.equals( imgvThumbnail ) )
         {
             String imageUrl;

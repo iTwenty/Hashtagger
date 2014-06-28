@@ -6,7 +6,6 @@ import net.thetranquilpsychonaut.hashtagger.events.TwitterReplyDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterRetweetDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.Twitter;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
-import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

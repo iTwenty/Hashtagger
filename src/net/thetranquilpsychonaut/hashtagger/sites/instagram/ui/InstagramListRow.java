@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.Media;
@@ -15,13 +17,14 @@ import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesHeader;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 import net.thetranquilpsychonaut.hashtagger.widgets.VideoThumbnail;
 
 /**
  * Created by itwenty on 6/25/14.
  */
-public class InstagramListRow extends SitesListRow implements View.OnClickListener
+public class InstagramListRow extends SitesListRow
 {
     private LinkifiedTextView tvMediaText;
     private VideoThumbnail    videoThumbnail;
@@ -93,6 +96,7 @@ public class InstagramListRow extends SitesListRow implements View.OnClickListen
     @Override
     public void onClick( View v )
     {
+        super.onClick( v );
         if ( v.equals( videoThumbnail ) )
         {
             if ( TextUtils.equals( "video", media.getType() ) )
@@ -110,5 +114,33 @@ public class InstagramListRow extends SitesListRow implements View.OnClickListen
                         0 );
             }
         }
+    }
+
+    @Override
+    protected int getPopupMenuResId()
+    {
+        return R.menu.instagram_list_row_popup_menu;
+    }
+
+    @Override
+    protected Uri getResultUrl()
+    {
+        return UrlModifier.getInstagramMediaUrl( media );
+    }
+
+    @Override
+    protected String getResultText()
+    {
+        if ( null == media.getCaption() )
+        {
+            return null;
+        }
+        return media.getCaption().getText();
+    }
+
+    @Override
+    protected boolean onPopupMenuItemClicked( PopupMenu menu, MenuItem item )
+    {
+        return true;
     }
 }

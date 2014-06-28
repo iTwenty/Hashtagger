@@ -1,7 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.View;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
