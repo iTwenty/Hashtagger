@@ -32,10 +32,10 @@ public abstract class TwitterListRow extends SitesListRow
     @Override
     protected void init( Context context )
     {
-        tvStatusText = initStatusText();
+        tvStatusText = initStatusTextView();
     }
 
-    protected abstract LinkifiedTextView initStatusText();
+    protected abstract LinkifiedTextView initStatusTextView();
 
     @Override
     public void updateRow( Object result )

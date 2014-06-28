@@ -16,7 +16,7 @@
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bottom_bar_shadow"
+        android:background="@drawable/card"
         android:layout_centerHorizontal="true"
         style="?android:buttonBarStyle"/>
 

@@ -119,5 +119,4 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
             TwitterDetailActivity.createAndStartActivity( status, getContext() );
         }
     }
-
 }

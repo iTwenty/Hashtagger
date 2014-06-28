@@ -45,7 +45,7 @@ public class TwitterPhotoRow extends TwitterListRow implements View.OnClickListe
     }
 
     @Override
-    protected LinkifiedTextView initStatusText()
+    protected LinkifiedTextView initStatusTextView()
     {
         return ( LinkifiedTextView ) findViewById( R.id.tv_status_text );
     }

@@ -35,7 +35,7 @@ public class TwitterNormalRow extends TwitterListRow
     }
 
     @Override
-    protected LinkifiedTextView initStatusText()
+    protected LinkifiedTextView initStatusTextView()
     {
         return ( LinkifiedTextView ) findViewById( R.id.tv_status_text );
     }

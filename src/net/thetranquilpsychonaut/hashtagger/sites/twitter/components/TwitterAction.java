@@ -65,8 +65,6 @@ public class TwitterAction
             @Override
             public void success( Status newStatus, Response response )
             {
-                Helper.debug( String.valueOf( newStatus.isFavorited() ) );
-                Helper.debug( String.valueOf( newStatus.getFavoriteCount() ) );
                 status.setFavorited( newStatus.isFavorited() );
                 status.setFavoriteCount( newStatus.getFavoriteCount() );
                 // Subscriber : TwitterFragment : onFavoriteDone()
