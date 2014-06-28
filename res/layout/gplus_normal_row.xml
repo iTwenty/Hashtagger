@@ -11,18 +11,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView
-        android:id="@+id/tv_activity_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <RelativeLayout
+        android:id="@+id/rl_wrapper"
         android:layout_below="@id/gplus_header"
-        android:maxLines="10"
-        android:ellipsize="end"
-        style="@style/MainMessage"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView
+            android:id="@+id/tv_activity_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="10"
+            android:ellipsize="end"
+            android:layout_toLeftOf="@id/popup_menu_anchor"
+            style="@style/MainMessage"/>
+
+        <ImageView
+            android:id="@+id/popup_menu_anchor"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            style="@style/PopupMenuAnchor"/>
+
+    </RelativeLayout>
 
     <net.thetranquilpsychonaut.hashtagger.sites.gplus.ui.GPlusButtons
         android:id="@+id/gplus_buttons"
-        android:layout_below="@id/tv_activity_text"
+        android:layout_below="@id/rl_wrapper"
         android:layout_width="match_parent"
         hashtagger:showViewDetailsButton="true"
         hashtagger:showSmallButtons="true"

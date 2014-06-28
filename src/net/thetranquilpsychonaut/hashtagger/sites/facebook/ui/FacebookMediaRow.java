@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
@@ -63,6 +64,12 @@ public class FacebookMediaRow extends FacebookListRow implements View.OnClickLis
     protected SitesHeader initSitesHeader()
     {
         return ( SitesHeader ) findViewById( R.id.facebook_header );
+    }
+
+    @Override
+    protected ImageView initPopupMenuAnchor()
+    {
+        return ( ImageView ) findViewById( R.id.popup_menu_anchor );
     }
 
     @Override

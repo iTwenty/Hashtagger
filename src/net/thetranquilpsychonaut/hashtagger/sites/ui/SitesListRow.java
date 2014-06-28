@@ -3,6 +3,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.ui;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import net.thetranquilpsychonaut.hashtagger.R;
 
@@ -12,7 +13,8 @@ import net.thetranquilpsychonaut.hashtagger.R;
 public abstract class SitesListRow extends RelativeLayout
 {
     protected SitesButtons sitesButtons;
-    protected SitesHeader sitesHeader;
+    protected SitesHeader  sitesHeader;
+    protected ImageView    popupMenuAnchor;
 
     protected SitesListRow( Context context )
     {
@@ -30,6 +32,7 @@ public abstract class SitesListRow extends RelativeLayout
         init( context );
         sitesButtons = initSitesButtons();
         sitesHeader = initSitesHeader();
+        popupMenuAnchor = initPopupMenuAnchor();
         if ( null == sitesButtons || null == sitesHeader )
         {
             throw new RuntimeException( "Either SitesButtons or SitesHeader is null." );
@@ -41,6 +44,8 @@ public abstract class SitesListRow extends RelativeLayout
     protected abstract SitesButtons initSitesButtons();
 
     protected abstract SitesHeader initSitesHeader();
+
+    protected abstract ImageView initPopupMenuAnchor();
 
     public void expandRow( final Object result, boolean animate, AnimatorListenerAdapter adapter )
     {

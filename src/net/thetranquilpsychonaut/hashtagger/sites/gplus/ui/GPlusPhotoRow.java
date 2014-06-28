@@ -63,6 +63,12 @@ public class GPlusPhotoRow extends GPlusListRow implements View.OnClickListener
     }
 
     @Override
+    protected ImageView initPopupMenuAnchor()
+    {
+        return ( ImageView ) findViewById( R.id.popup_menu_anchor );
+    }
+
+    @Override
     public void updateRow( Object result )
     {
         super.updateRow( result );

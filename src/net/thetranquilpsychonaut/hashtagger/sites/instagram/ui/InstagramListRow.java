@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.Media;
@@ -60,6 +61,12 @@ public class InstagramListRow extends SitesListRow implements View.OnClickListen
     protected SitesHeader initSitesHeader()
     {
         return ( SitesHeader ) findViewById( R.id.instagram_header );
+    }
+
+    @Override
+    protected ImageView initPopupMenuAnchor()
+    {
+        return ( ImageView ) findViewById( R.id.popup_menu_anchor );
     }
 
     @Override

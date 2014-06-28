@@ -26,9 +26,15 @@
 
         <net.thetranquilpsychonaut.hashtagger.widgets.VideoThumbnail
             android:id="@+id/video_thumbnail"
-            android:layout_alignParentRight="true"
+            android:layout_toLeftOf="@id/popup_menu_anchor"
             android:layout_centerVertical="true"
             style="@style/ListMediaImage"/>
+
+        <ImageView
+            android:id="@+id/popup_menu_anchor"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            style="@style/PopupMenuAnchor"/>
 
     </RelativeLayout>
 

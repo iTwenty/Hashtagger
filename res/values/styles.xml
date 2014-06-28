@@ -17,6 +17,12 @@
         <item name="android:textColor">@color/text_faded</item>
     </style>
 
+    <style name="PopupMenuAnchor">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:src">@drawable/ic_overflow</item>
+    </style>
+
     <style name="ErrorText" parent="TextView_Default">
         <item name="android:textSize">20sp</item>
         <item name="android:lineSpacingMultiplier">1.2</item>

@@ -2,6 +2,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.widget.ImageView;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesHeader;
@@ -50,6 +51,12 @@ public class TwitterNormalRow extends TwitterListRow
     protected SitesHeader initSitesHeader()
     {
         return ( SitesHeader ) findViewById( R.id.twitter_header );
+    }
+
+    @Override
+    protected ImageView initPopupMenuAnchor()
+    {
+        return ( ImageView ) findViewById( R.id.popup_menu_anchor );
     }
 
     @Override

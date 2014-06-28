@@ -3,6 +3,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
@@ -67,6 +68,12 @@ public class GPlusAlbumRow extends GPlusListRow implements View.OnClickListener
     protected SitesHeader initSitesHeader()
     {
         return ( GPlusHeader ) findViewById( R.id.gplus_header );
+    }
+
+    @Override
+    protected ImageView initPopupMenuAnchor()
+    {
+        return ( ImageView ) findViewById( R.id.popup_menu_anchor );
     }
 
     @Override

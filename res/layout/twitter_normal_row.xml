@@ -11,16 +11,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView
-        android:id="@+id/tv_status_text"
+    <RelativeLayout
+        android:id="@id/rl_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/twitter_header"
-        style="@style/MainMessage"/>
+        android:layout_below="@id/twitter_header">
+
+        <net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView
+            android:id="@+id/tv_status_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/popup_menu_anchor"
+            style="@style/MainMessage"/>
+
+        <ImageView
+            android:id="@id/popup_menu_anchor"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            style="@style/PopupMenuAnchor"/>
+
+    </RelativeLayout>
 
     <net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterButtons
         android:id="@+id/twitter_buttons"
-        android:layout_below="@id/tv_status_text"
+        android:layout_below="@id/rl_wrapper"
         android:layout_width="match_parent"
         hashtagger:showViewDetailsButton="true"
         hashtagger:showSmallButtons="true"
