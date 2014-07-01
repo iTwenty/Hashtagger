@@ -12,10 +12,9 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.events.GPlusActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Thumbnail;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SlidingActionsActivity;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.BaseActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumThumbnailsFragment;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
@@ -27,15 +26,14 @@ import java.util.List;
 /**
  * Created by itwenty on 5/16/14.
  */
-public class GPlusDetailActivity extends SlidingActionsActivity
+public class GPlusDetailActivity extends BaseActivity
 {
     public static final String ACTIVITY_KEY = "activity";
-    private LinkifiedTextView    tvActivityText;
-    private GPlusHeader          gPlusHeader;
-    private ViewStub             viewStub;
-    private GPlusActionsFragment gPlusActionsFragment;
-    private Activity             activity;
-    private int                  activityType;
+    private LinkifiedTextView tvActivityText;
+    private GPlusHeader       gPlusHeader;
+    private ViewStub          viewStub;
+    private Activity          activity;
+    private int               activityType;
 
     public static void createAndStartActivity( Activity activity, Context context )
     {
@@ -45,12 +43,13 @@ public class GPlusDetailActivity extends SlidingActionsActivity
     }
 
     @Override
-    protected View initMainView( Bundle savedInstanceState )
+    protected void onCreate( Bundle savedInstanceState )
     {
-        View v = getLayoutInflater().inflate( R.layout.activity_gplus_detail, null );
-        tvActivityText = ( LinkifiedTextView ) v.findViewById( R.id.tv_activity_text );
-        gPlusHeader = ( GPlusHeader ) v.findViewById( R.id.gplus_header );
-        viewStub = ( ViewStub ) v.findViewById( R.id.gplus_view_stub );
+        super.onCreate( savedInstanceState );
+        setContentView( R.layout.activity_gplus_detail );
+        tvActivityText = ( LinkifiedTextView ) findViewById( R.id.tv_activity_text );
+        gPlusHeader = ( GPlusHeader ) findViewById( R.id.gplus_header );
+        viewStub = ( ViewStub ) findViewById( R.id.gplus_view_stub );
         if ( null == getIntent() )
         {
             finish();
@@ -77,26 +76,6 @@ public class GPlusDetailActivity extends SlidingActionsActivity
         {
             showAlbumThumbnails( savedInstanceState );
         }
-
-        if ( null == getSupportFragmentManager().findFragmentByTag( GPlusActionsFragment.TAG ) )
-        {
-            gPlusActionsFragment = GPlusActionsFragment.newInstance( activity, GPlusActionClickedEvent.ACTION_PLUS_ONE );
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add( getSlidingViewContainer().getId(), gPlusActionsFragment, GPlusActionsFragment.TAG )
-                    .commit();
-        }
-        else
-        {
-            gPlusActionsFragment = ( GPlusActionsFragment ) getSupportFragmentManager().findFragmentByTag( GPlusActionsFragment.TAG );
-        }
-        return v;
-    }
-
-    @Override
-    protected View getDragView()
-    {
-        return gPlusActionsFragment.getViewPagerIndicator();
     }
 
     private void showPhoto( Bundle savedInstanceState )

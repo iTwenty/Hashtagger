@@ -26,12 +26,12 @@ public class FacebookDetailActivity extends BaseActivity
 {
     public static final String POST_KEY = "post";
 
-    private FacebookHeader          facebookHeader;
-    private LinkifiedTextView       tvPostText;
-    private Post                    post;
-    private int                     postType;
-    private ViewStub                viewStub;
-    private FacebookButtons         facebookButtons;
+    private FacebookHeader    facebookHeader;
+    private LinkifiedTextView tvPostText;
+    private Post              post;
+    private int               postType;
+    private ViewStub          viewStub;
+    private FacebookButtons   facebookButtons;
 
     public static void createAndStartActivity( Post post, Context context )
     {

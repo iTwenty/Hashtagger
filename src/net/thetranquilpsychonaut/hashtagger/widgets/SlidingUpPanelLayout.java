@@ -1094,7 +1094,7 @@ public class SlidingUpPanelLayout extends ViewGroup
         smoothSlideTo( computeSlideOffset( newTop ), 0 );
     }
 
-    @SuppressLint("NewApi")
+    @SuppressLint( "NewApi" )
     private void onPanelDragged( int newTop )
     {
         mSlideState = SlideState.DRAGGING;
