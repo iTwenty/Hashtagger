@@ -39,7 +39,7 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
         ccbComment = ( CenterContentButton ) findViewById( R.id.ccb_comment );
         ccbViewDetails = ( CenterContentButton ) findViewById( R.id.ccb_view_details );
         setCenterDrawable( ccbLike, mShowSmallButtons ? R.drawable.facebook_like_small : R.drawable.facebook_like );
-        setCenterDrawable( ccbComment, mShowSmallButtons ? R.drawable.comment : R.drawable.comment_small );
+        setCenterDrawable( ccbComment, mShowSmallButtons ? R.drawable.comment_small : R.drawable.comment );
         setCenterDrawable( ccbViewDetails, mShowSmallButtons ? R.drawable.view_details_small : R.drawable.view_details );
         ccbViewDetails.setVisibility( mShowViewDetailsButton ? VISIBLE : GONE );
     }

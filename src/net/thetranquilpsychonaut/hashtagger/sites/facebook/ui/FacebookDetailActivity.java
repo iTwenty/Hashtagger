@@ -11,9 +11,8 @@ import android.widget.FrameLayout;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.events.FacebookActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.SlidingActionsActivity;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.BaseActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
@@ -23,16 +22,16 @@ import net.thetranquilpsychonaut.hashtagger.widgets.VideoThumbnail;
 /**
  * Created by itwenty on 5/18/14.
  */
-public class FacebookDetailActivity extends SlidingActionsActivity
+public class FacebookDetailActivity extends BaseActivity
 {
     public static final String POST_KEY = "post";
 
     private FacebookHeader          facebookHeader;
     private LinkifiedTextView       tvPostText;
-    private FacebookActionsFragment facebookActionsFragment;
     private Post                    post;
     private int                     postType;
     private ViewStub                viewStub;
+    private FacebookButtons         facebookButtons;
 
     public static void createAndStartActivity( Post post, Context context )
     {
@@ -42,12 +41,14 @@ public class FacebookDetailActivity extends SlidingActionsActivity
     }
 
     @Override
-    protected View initMainView( Bundle savedInstanceState )
+    protected void onCreate( Bundle savedInstanceState )
     {
-        View v = getLayoutInflater().inflate( R.layout.activity_facebook_detail, null );
-        facebookHeader = ( FacebookHeader ) v.findViewById( R.id.facebook_header );
-        tvPostText = ( LinkifiedTextView ) v.findViewById( R.id.tv_post_text );
-        viewStub = ( ViewStub ) v.findViewById( R.id.facebook_view_stub );
+        super.onCreate( savedInstanceState );
+        setContentView( R.layout.activity_facebook_detail );
+        facebookHeader = ( FacebookHeader ) findViewById( R.id.facebook_header );
+        tvPostText = ( LinkifiedTextView ) findViewById( R.id.tv_post_text );
+        viewStub = ( ViewStub ) findViewById( R.id.facebook_view_stub );
+        facebookButtons = ( FacebookButtons ) findViewById( R.id.facebook_buttons );
         if ( null == getIntent() )
         {
             finish();
@@ -60,30 +61,12 @@ public class FacebookDetailActivity extends SlidingActionsActivity
         setTitle( post.getFrom().getName() + "'s post" );
         this.postType = FacebookListAdapter.getPostType( this.post );
         facebookHeader.updateHeader( post );
+        facebookButtons.updateButtons( post );
         tvPostText.setText( post.getLinkedText() );
         if ( postType == FacebookListAdapter.POST_TYPE_MEDIA )
         {
             showMedia( savedInstanceState );
         }
-        if ( null == getSupportFragmentManager().findFragmentByTag( FacebookActionsFragment.TAG ) )
-        {
-            facebookActionsFragment = FacebookActionsFragment.newInstance( post, FacebookActionClickedEvent.ACTION_LIKE );
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add( getSlidingViewContainer().getId(), facebookActionsFragment, FacebookActionsFragment.TAG )
-                    .commit();
-        }
-        else
-        {
-            facebookActionsFragment = ( FacebookActionsFragment ) getSupportFragmentManager().findFragmentByTag( FacebookActionsFragment.TAG );
-        }
-        return v;
-    }
-
-    @Override
-    protected View getDragView()
-    {
-        return facebookActionsFragment.getViewPagerIndicator();
     }
 
     private void showMedia( Bundle savedInstancState )

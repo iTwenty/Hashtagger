@@ -22,8 +22,6 @@
             android:ellipsize="end"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:maxLines="10"
-            android:layout_below="@id/facebook_header"
             android:layout_toLeftOf="@id/popup_menu_anchor"
             style="@style/MainMessage"/>
 
