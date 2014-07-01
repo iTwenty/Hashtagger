@@ -89,6 +89,10 @@
         </activity>
 
         <activity
+            android:name=".sites.instagram.ui.InstagramDetailActivity">
+        </activity>
+
+        <activity
             android:name=".sites.ui.ViewAlbumActivity">
         </activity>
 

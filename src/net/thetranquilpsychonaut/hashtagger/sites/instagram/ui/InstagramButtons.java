@@ -102,7 +102,7 @@ public class InstagramButtons extends SitesButtons implements View.OnClickListen
         }
         if ( v.equals( ccbViewDetails ) )
         {
-            Helper.debug( media.getLink() );
+            InstagramDetailActivity.createAndStartActivity( media, getContext() );
         }
     }
 }
