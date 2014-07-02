@@ -61,6 +61,7 @@ public class TwitterDetailActivity extends BaseActivity
         {
             status = ( Status ) savedInstanceState.getSerializable( STATUS_KEY );
         }
+        // Should never happen
         if ( null == status )
         {
             finish();
