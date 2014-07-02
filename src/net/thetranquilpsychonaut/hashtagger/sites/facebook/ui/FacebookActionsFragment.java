@@ -13,7 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.events.FacebookActionClickedEvent;
+import net.thetranquilpsychonaut.hashtagger.enums.Actions;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Comment;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.From;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
@@ -83,7 +83,7 @@ public class FacebookActionsFragment extends SitesActionsFragment implements Ada
         facebookActionsPagerIndicator = ( IconPagerIndicator ) v.findViewById( R.id.facebook_actions_pager_indicator );
         facebookActionsPager.setAdapter( facebookActionsPagerAdapter );
         facebookActionsPagerIndicator.setViewPager( facebookActionsPager );
-        if ( actionType == FacebookActionClickedEvent.ACTION_COMMENT )
+        if ( actionType == Actions.ACTION_FACEBOOK_COMMENT )
         {
             facebookActionsPager.setCurrentItem( 1 );
         }

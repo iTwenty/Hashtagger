@@ -6,7 +6,6 @@ import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.PageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.SimplePageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
-import net.thetranquilpsychonaut.hashtagger.events.GPlusActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.events.SearchHashtagEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.components.GPlusSearchHandler;
@@ -165,12 +164,5 @@ public class GPlusFragment extends SitesFragment
     public void searchHashtag( SearchHashtagEvent event )
     {
         super.searchHashtag( event );
-    }
-
-    @Subscribe
-    public void onGPlusActionClicked( GPlusActionClickedEvent event )
-    {
-        GPlusActionsFragment fragment = GPlusActionsFragment.newInstance( event.getActivity(), event.getActionType() );
-        fragment.show( getChildFragmentManager(), fragment.TAG );
     }
 }

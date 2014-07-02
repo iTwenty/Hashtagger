@@ -2,11 +2,14 @@ package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.v4.app.FragmentActivity;
 import android.util.AttributeSet;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.enums.Actions;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
@@ -60,6 +63,26 @@ public abstract class GPlusListRow extends SitesListRow
     @Override
     protected boolean onPopupMenuItemClicked( PopupMenu menu, MenuItem item )
     {
+        int actionType;
+        Menu itemsMenu = menu.getMenu();
+        if ( item.equals( itemsMenu.findItem( R.id.it_view_plusones ) ) )
+        {
+            actionType = Actions.ACTION_GPLUS_ONE;
+        }
+        else if ( item.equals( itemsMenu.findItem( R.id.it_view_comments ) ) )
+        {
+            actionType = Actions.ACTION_GPLUS_COMMENT;
+        }
+        else if ( item.equals( itemsMenu.findItem( R.id.it_view_reshares ) ) )
+        {
+            actionType = Actions.ACTION_GPLUS_RESHARE;
+        }
+        else
+        {
+            return false;
+        }
+        GPlusActionsFragment fragment = GPlusActionsFragment.newInstance( activity, actionType );
+        fragment.show( ( ( FragmentActivity ) getContext() ).getSupportFragmentManager(), GPlusActionsFragment.TAG );
         return true;
     }
 

@@ -3,9 +3,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.events.GPlusActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton;
@@ -99,18 +97,12 @@ public class GPlusButtons extends SitesButtons implements View.OnClickListener
         }
         else if ( v.equals( ccbPlusOne ) )
         {
-            // Subscriber : GPlusFragment : onGPlusActionClicked()
-            HashtaggerApp.bus.post( new GPlusActionClickedEvent( activity, GPlusActionClickedEvent.ACTION_PLUS_ONE ) );
         }
         else if ( v.equals( ccbComment ) )
         {
-            // Subscriber : GPlusFragment : onGPlusActionClicked()
-            HashtaggerApp.bus.post( new GPlusActionClickedEvent( activity, GPlusActionClickedEvent.ACTION_REPLY ) );
         }
         else if ( v.equals( ccbShare ) )
         {
-            // Subscriber : GPlusFragment : onGPlusActionClicked()
-            HashtaggerApp.bus.post( new GPlusActionClickedEvent( activity, GPlusActionClickedEvent.ACTION_RESHARE ) );
         }
     }
 }

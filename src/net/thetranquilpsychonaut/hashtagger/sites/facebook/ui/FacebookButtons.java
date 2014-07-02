@@ -3,9 +3,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.events.FacebookActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
@@ -82,13 +80,9 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
     {
         if ( v.equals( ccbLike ) )
         {
-            // Subscriber : FacebookFragment : onFacebookActionClicked()
-            HashtaggerApp.bus.post( new FacebookActionClickedEvent( post, FacebookActionClickedEvent.ACTION_LIKE ) );
         }
         else if ( v.equals( ccbComment ) )
         {
-            // Subscriber : FacebookFragment : onFacebookActionClicked()
-            HashtaggerApp.bus.post( new FacebookActionClickedEvent( post, FacebookActionClickedEvent.ACTION_COMMENT ) );
         }
         else if ( v.equals( ccbViewDetails ) )
         {

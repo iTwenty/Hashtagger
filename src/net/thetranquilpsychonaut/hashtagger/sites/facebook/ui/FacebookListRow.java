@@ -2,11 +2,14 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.v4.app.FragmentActivity;
 import android.util.AttributeSet;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.enums.Actions;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
@@ -60,6 +63,22 @@ public abstract class FacebookListRow extends SitesListRow
     @Override
     protected boolean onPopupMenuItemClicked( PopupMenu menu, MenuItem item )
     {
+        int actionType;
+        Menu itemsMenu = menu.getMenu();
+        if ( item.equals( itemsMenu.findItem( R.id.it_view_likes ) ) )
+        {
+            actionType = Actions.ACTION_FACEBOOK_LIKE;
+        }
+        else if ( item.equals( itemsMenu.findItem( R.id.it_view_comments ) ) )
+        {
+            actionType = Actions.ACTION_FACEBOOK_COMMENT;
+        }
+        else
+        {
+            return false;
+        }
+        FacebookActionsFragment fragment = FacebookActionsFragment.newInstance( post, actionType );
+        fragment.show( ( ( FragmentActivity ) getContext() ).getSupportFragmentManager(), FacebookActionsFragment.TAG );
         return true;
     }
 

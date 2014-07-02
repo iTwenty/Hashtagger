@@ -50,12 +50,12 @@ public class Instagram
         public SearchResult getRecentMedia( @Path("tagName") String tagName,
                                             @QueryMap Map<String, String> params );
 
-        @POST( "/media/{mediaId}/likes" )
-        public void postLike( @Path( "mediaId" ) String mediaId,
+        @POST("/media/{mediaId}/likes")
+        public void postLike( @Path("mediaId") String mediaId,
                               Callback<Response> callback );
 
-        @DELETE( "/media/{mediaId}/likes" )
-        public void deleteLike( @Path( "mediaId" ) String mediaId,
+        @DELETE("/media/{mediaId}/likes")
+        public void deleteLike( @Path("mediaId") String mediaId,
                                 Callback<Response> callback );
     }
 }

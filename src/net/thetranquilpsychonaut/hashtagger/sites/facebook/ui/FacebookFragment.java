@@ -6,7 +6,6 @@ import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.PageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.SimplePageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
-import net.thetranquilpsychonaut.hashtagger.events.FacebookActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.events.SearchHashtagEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.components.FacebookSearchHandler;
@@ -164,12 +163,5 @@ public class FacebookFragment extends SitesFragment
     public void searchHashtag( SearchHashtagEvent event )
     {
         super.searchHashtag( event );
-    }
-
-    @Subscribe
-    public void onFacebookActionClicked( FacebookActionClickedEvent event )
-    {
-        FacebookActionsFragment fragment = FacebookActionsFragment.newInstance( event.getPost(), event.getActionType() );
-        fragment.show( getChildFragmentManager(), FacebookActionsFragment.TAG );
     }
 }

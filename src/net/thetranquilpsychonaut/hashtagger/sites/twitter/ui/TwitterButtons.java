@@ -112,7 +112,7 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
             TwitterReplyDialog dialog = TwitterReplyDialog.newInstance( status );
             dialog.show( ( ( FragmentActivity ) getContext() ).getSupportFragmentManager(), TwitterReplyDialog.TAG );
         }
-        if ( v.equals( ccbRetweet ) )
+        else if ( v.equals( ccbRetweet ) )
         {
             if ( status.isRetweeted() )
             {
@@ -127,7 +127,7 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
             TwitterRetweetDialog dialog = TwitterRetweetDialog.newInstance( status );
             dialog.show( ( ( FragmentActivity ) getContext() ).getSupportFragmentManager(), TwitterRetweetDialog.TAG );
         }
-        if ( v.equals( ccbFavorite ) )
+        else if ( v.equals( ccbFavorite ) )
         {
             if ( !HashtaggerApp.isNetworkConnected() )
             {
@@ -136,7 +136,7 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
             }
             TwitterActions.executeFavoriteAction( status );
         }
-        if ( v.equals( ccbViewDetails ) )
+        else if ( v.equals( ccbViewDetails ) )
         {
             TwitterDetailActivity.createAndStartActivity( status, getContext() );
         }

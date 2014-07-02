@@ -17,8 +17,8 @@ import android.widget.TextView;
 import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.enums.Actions;
 import net.thetranquilpsychonaut.hashtagger.events.CommentFeedEvent;
-import net.thetranquilpsychonaut.hashtagger.events.GPlusActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.events.PeopleFeedEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.GPlus;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
@@ -112,13 +112,13 @@ public class GPlusActionsFragment extends SitesActionsFragment implements Adapte
         gPlusActionsPager.setOffscreenPageLimit( 2 );
         switch ( actionType )
         {
-            case GPlusActionClickedEvent.ACTION_PLUS_ONE:
+            case Actions.ACTION_GPLUS_ONE:
                 gPlusActionsPager.setCurrentItem( 0 );
                 break;
-            case GPlusActionClickedEvent.ACTION_REPLY:
+            case Actions.ACTION_GPLUS_COMMENT:
                 gPlusActionsPager.setCurrentItem( 1 );
                 break;
-            case GPlusActionClickedEvent.ACTION_RESHARE:
+            case Actions.ACTION_GPLUS_RESHARE:
                 gPlusActionsPager.setCurrentItem( 2 );
                 break;
         }

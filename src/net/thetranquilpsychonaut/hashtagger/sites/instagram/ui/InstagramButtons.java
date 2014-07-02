@@ -102,11 +102,11 @@ public class InstagramButtons extends SitesButtons implements View.OnClickListen
             }
             InstagramActions.executeLikeAction( media );
         }
-        if ( v.equals( ccbComment ) )
+        else if ( v.equals( ccbComment ) )
         {
 
         }
-        if ( v.equals( ccbViewDetails ) )
+        else if ( v.equals( ccbViewDetails ) )
         {
             InstagramDetailActivity.createAndStartActivity( media, getContext() );
         }

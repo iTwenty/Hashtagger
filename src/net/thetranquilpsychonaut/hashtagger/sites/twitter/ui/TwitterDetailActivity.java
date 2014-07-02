@@ -28,11 +28,11 @@ import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 public class TwitterDetailActivity extends BaseActivity
 {
     public static final String STATUS_KEY = "status";
-    private LinkifiedTextView       tvStatusText;
-    private TwitterHeader           twitterHeader;
-    private ViewStub                viewStub;
-    private TwitterButtons          twitterButtons;
-    private int                     statusType;
+    private LinkifiedTextView tvStatusText;
+    private TwitterHeader     twitterHeader;
+    private ViewStub          viewStub;
+    private TwitterButtons    twitterButtons;
+    private int               statusType;
 
     // Passing status via Intent.putExtra() seems to pass a new copy of the status
     // rather than reference to same status. So we pass the status to this activity
