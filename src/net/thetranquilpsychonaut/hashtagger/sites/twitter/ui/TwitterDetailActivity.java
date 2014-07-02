@@ -12,11 +12,9 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.events.TwitterActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterFavoriteDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterReplyDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterRetweetDoneEvent;
-import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterActionsPerformer;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.BaseActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
@@ -27,14 +25,13 @@ import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 /**
  * Created by itwenty on 5/10/14.
  */
-public class TwitterDetailActivity extends BaseActivity implements TwitterActionsPerformer.OnTwitterActionDoneListener
+public class TwitterDetailActivity extends BaseActivity
 {
     public static final String STATUS_KEY = "status";
     private LinkifiedTextView       tvStatusText;
     private TwitterHeader           twitterHeader;
     private ViewStub                viewStub;
     private TwitterButtons          twitterButtons;
-    private TwitterActionsPerformer twitterActionsPerformer;
     private int                     statusType;
 
     // Passing status via Intent.putExtra() seems to pass a new copy of the status
@@ -117,7 +114,6 @@ public class TwitterDetailActivity extends BaseActivity implements TwitterAction
     {
         super.onStart();
         HashtaggerApp.bus.register( this );
-        twitterActionsPerformer = new TwitterActionsPerformer( getSupportFragmentManager() );
     }
 
     @Override
@@ -125,7 +121,6 @@ public class TwitterDetailActivity extends BaseActivity implements TwitterAction
     {
         super.onStop();
         HashtaggerApp.bus.unregister( this );
-        twitterActionsPerformer = null;
         status = null;
     }
 
@@ -134,26 +129,6 @@ public class TwitterDetailActivity extends BaseActivity implements TwitterAction
     {
         super.onSaveInstanceState( outState );
         outState.putSerializable( STATUS_KEY, status );
-    }
-
-    @Subscribe
-    public void onTwitterActionClicked( TwitterActionClickedEvent event )
-    {
-        Status status = event.getStatus();
-        switch ( event.getActionType() )
-        {
-            case TwitterActionClickedEvent.ACTION_REPLY:
-                twitterActionsPerformer.doReply( status );
-                break;
-            case TwitterActionClickedEvent.ACTION_RETWEET:
-                twitterActionsPerformer.doRetweet( status );
-                break;
-            case TwitterActionClickedEvent.ACTION_FAVORITE:
-                twitterActionsPerformer.doFavorite( status );
-                break;
-            default:
-                break;
-        }
     }
 
     @Subscribe

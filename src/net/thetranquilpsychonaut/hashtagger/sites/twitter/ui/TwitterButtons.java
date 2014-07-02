@@ -1,13 +1,17 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Toast;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterActionClickedEvent;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterAction;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.widgets.CenterContentButton;
 
 
@@ -101,18 +105,37 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
     {
         if ( v.equals( ccbReply ) )
         {
-            // Subscriber : TwitterFragment : onTwitterActionClicked()
-            HashtaggerApp.bus.post( new TwitterActionClickedEvent( status, TwitterActionClickedEvent.ACTION_REPLY ) );
+            if ( !HashtaggerApp.isNetworkConnected() )
+            {
+                Helper.showNoNetworkToast( HashtaggerApp.app );
+                return;
+            }
+            TwitterReplyDialog dialog = TwitterReplyDialog.newInstance( status );
+            dialog.show( ( ( FragmentActivity ) getContext() ).getSupportFragmentManager(), TwitterReplyDialog.TAG );
         }
         if ( v.equals( ccbRetweet ) )
         {
-            // Subscriber : TwitterFragment : onTwitterActionClicked()
-            HashtaggerApp.bus.post( new TwitterActionClickedEvent( status, TwitterActionClickedEvent.ACTION_RETWEET ) );
+            if ( status.isRetweeted() )
+            {
+                Toast.makeText( HashtaggerApp.app, "You have already retweeted this", Toast.LENGTH_SHORT ).show();
+                return;
+            }
+            if ( !HashtaggerApp.isNetworkConnected() )
+            {
+                Helper.showNoNetworkToast( HashtaggerApp.app );
+                return;
+            }
+            TwitterRetweetDialog dialog = TwitterRetweetDialog.newInstance( status );
+            dialog.show( ( ( FragmentActivity ) getContext() ).getSupportFragmentManager(), TwitterRetweetDialog.TAG );
         }
         if ( v.equals( ccbFavorite ) )
         {
-            // Subscriber : TwitterFragment : onTwitterActionClicked()
-            HashtaggerApp.bus.post( new TwitterActionClickedEvent( status, TwitterActionClickedEvent.ACTION_FAVORITE ) );
+            if ( !HashtaggerApp.isNetworkConnected() )
+            {
+                Helper.showNoNetworkToast( HashtaggerApp.app );
+                return;
+            }
+            new TwitterAction().executeFavoriteAction( status );
         }
         if ( v.equals( ccbViewDetails ) )
         {

@@ -8,12 +8,10 @@ import net.thetranquilpsychonaut.hashtagger.cwacpager.PageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.SimplePageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.enums.SearchType;
 import net.thetranquilpsychonaut.hashtagger.events.SearchHashtagEvent;
-import net.thetranquilpsychonaut.hashtagger.events.TwitterActionClickedEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterFavoriteDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterReplyDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterRetweetDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
-import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterActionsPerformer;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.PersistentData;
@@ -27,24 +25,9 @@ import java.util.List;
 /**
  * Created by itwenty on 2/26/14.
  */
-public class TwitterFragment extends SitesFragment implements TwitterActionsPerformer.OnTwitterActionDoneListener
+public class TwitterFragment extends SitesFragment
 {
     public static final SimplePageDescriptor DESCRIPTOR = new SimplePageDescriptor( HashtaggerApp.TWITTER, HashtaggerApp.TWITTER );
-    private TwitterActionsPerformer twitterActionsPerformer;
-
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-        twitterActionsPerformer = new TwitterActionsPerformer( getChildFragmentManager() );
-    }
-
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-        twitterActionsPerformer = null;
-    }
 
     @Override
     protected int getFlatIconResId()
@@ -177,26 +160,6 @@ public class TwitterFragment extends SitesFragment implements TwitterActionsPerf
         {
             ( ( List<Status> ) results ).addAll( newResults );
             resultTypes.addAll( newResultTypes );
-        }
-    }
-
-    @Subscribe
-    public void onTwitterActionClicked( TwitterActionClickedEvent event )
-    {
-        Status status = event.getStatus();
-        switch ( event.getActionType() )
-        {
-            case TwitterActionClickedEvent.ACTION_REPLY:
-                twitterActionsPerformer.doReply( status );
-                break;
-            case TwitterActionClickedEvent.ACTION_RETWEET:
-                twitterActionsPerformer.doRetweet( status );
-                break;
-            case TwitterActionClickedEvent.ACTION_FAVORITE:
-                twitterActionsPerformer.doFavorite( status );
-                break;
-            default:
-                break;
         }
     }
 
