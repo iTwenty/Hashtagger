@@ -3,6 +3,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.instagram.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.Media;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
@@ -94,7 +95,12 @@ public class InstagramButtons extends SitesButtons implements View.OnClickListen
     {
         if ( v.equals( ccbLike ) )
         {
-
+            if ( !HashtaggerApp.isNetworkConnected() )
+            {
+                Helper.showNoNetworkToast( getContext() );
+                return;
+            }
+            InstagramActions.executeLikeAction( media );
         }
         if ( v.equals( ccbComment ) )
         {

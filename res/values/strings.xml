@@ -70,4 +70,6 @@
     <string name="str_view_comments">View Comments</string>
     <string name="str_view_plusones">View +1s</string>
     <string name="str_view_reshares">View Reshares</string>
+    <string name="str_instagram_post_like_failed">Failed to like</string>
+    <string name="str_instagram_delete_like_failed">Failed to unlike</string>
 </resources>

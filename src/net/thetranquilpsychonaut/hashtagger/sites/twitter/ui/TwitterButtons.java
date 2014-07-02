@@ -106,7 +106,7 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
         {
             if ( !HashtaggerApp.isNetworkConnected() )
             {
-                Helper.showNoNetworkToast( HashtaggerApp.app );
+                Helper.showNoNetworkToast( getContext() );
                 return;
             }
             TwitterReplyDialog dialog = TwitterReplyDialog.newInstance( status );
@@ -121,7 +121,7 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
             }
             if ( !HashtaggerApp.isNetworkConnected() )
             {
-                Helper.showNoNetworkToast( HashtaggerApp.app );
+                Helper.showNoNetworkToast( getContext() );
                 return;
             }
             TwitterRetweetDialog dialog = TwitterRetweetDialog.newInstance( status );
@@ -131,7 +131,7 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
         {
             if ( !HashtaggerApp.isNetworkConnected() )
             {
-                Helper.showNoNetworkToast( HashtaggerApp.app );
+                Helper.showNoNetworkToast( getContext() );
                 return;
             }
             TwitterActions.executeFavoriteAction( status );

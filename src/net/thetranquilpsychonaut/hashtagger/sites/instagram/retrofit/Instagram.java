@@ -3,8 +3,12 @@ package net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit;
 import com.squareup.okhttp.OkHttpClient;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.SearchResult;
+import retrofit.Callback;
 import retrofit.RestAdapter;
+import retrofit.client.Response;
+import retrofit.http.DELETE;
 import retrofit.http.GET;
+import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.QueryMap;
 
@@ -45,5 +49,13 @@ public class Instagram
         @GET("/tags/{tagName}/media/recent")
         public SearchResult getRecentMedia( @Path("tagName") String tagName,
                                             @QueryMap Map<String, String> params );
+
+        @POST( "/media/{mediaId}/likes" )
+        public void postLike( @Path( "mediaId" ) String mediaId,
+                              Callback<Response> callback );
+
+        @DELETE( "/media/{mediaId}/likes" )
+        public void deleteLike( @Path( "mediaId" ) String mediaId,
+                                Callback<Response> callback );
     }
 }

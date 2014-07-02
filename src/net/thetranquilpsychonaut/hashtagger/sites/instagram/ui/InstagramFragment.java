@@ -1,10 +1,12 @@
 package net.thetranquilpsychonaut.hashtagger.sites.instagram.ui;
 
+import android.widget.Toast;
 import com.squareup.otto.Subscribe;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.PageDescriptor;
 import net.thetranquilpsychonaut.hashtagger.cwacpager.SimplePageDescriptor;
+import net.thetranquilpsychonaut.hashtagger.events.InstagramLikeDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.events.SearchHashtagEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.components.SitesSearchHandler;
 import net.thetranquilpsychonaut.hashtagger.sites.instagram.components.InstagramSearchHandler;
@@ -154,5 +156,23 @@ public class InstagramFragment extends SitesFragment
     public void searchHashtag( SearchHashtagEvent event )
     {
         super.searchHashtag( event );
+    }
+
+    @Subscribe
+    public void onInstagramLikeDone( InstagramLikeDoneEvent event )
+    {
+        if ( event.isSuccess() )
+        {
+            sitesListAdapter.notifyDataSetChanged();
+        }
+        else
+        {
+            Toast.makeText( getActivity(),
+                    event.getMedia().isUserHasLiked() ?
+                            getResources().getString( R.string.str_instagram_delete_like_failed ) :
+                            getResources().getString( R.string.str_instagram_post_like_failed ),
+                    Toast.LENGTH_SHORT )
+                    .show();
+        }
     }
 }
