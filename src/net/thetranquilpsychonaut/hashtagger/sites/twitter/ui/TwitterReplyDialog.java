@@ -12,7 +12,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterAction;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterActions;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 
 /**
@@ -76,7 +76,7 @@ public class TwitterReplyDialog extends DialogFragment implements TextWatcher, V
 
     public void doReply()
     {
-        new TwitterAction().executeReplyAction( edtReplyText.getText().toString(), this.status );
+        TwitterActions.executeReplyAction( edtReplyText.getText().toString(), this.status );
     }
 
     @Override

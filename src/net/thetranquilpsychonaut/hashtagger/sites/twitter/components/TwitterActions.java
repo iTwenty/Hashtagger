@@ -13,9 +13,9 @@ import retrofit.client.Response;
 /**
  * Created by itwenty on 5/11/14.
  */
-public class TwitterAction
+public class TwitterActions
 {
-    public void executeReplyAction( String reply, final Status status )
+    public static void executeReplyAction( String reply, final Status status )
     {
         Twitter.api().replyToStatus( reply, status.getInReplyToStatusIdStr(), new Callback<Status>()
         {
@@ -35,7 +35,7 @@ public class TwitterAction
         } );
     }
 
-    public void executeRetweetAction( final Status status )
+    public static void executeRetweetAction( final Status status )
     {
         Twitter.api().retweetStatus( status.getIdStr(), new Callback<Status>()
         {
@@ -57,7 +57,7 @@ public class TwitterAction
         } );
     }
 
-    public void executeFavoriteAction( final Status status )
+    public static void executeFavoriteAction( final Status status )
     {
         Callback<Status> cb = new Callback<Status>()
         {

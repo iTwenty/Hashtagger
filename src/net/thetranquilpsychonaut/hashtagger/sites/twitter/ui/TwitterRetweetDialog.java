@@ -6,7 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterAction;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterActions;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 
 /**
@@ -55,6 +55,6 @@ public class TwitterRetweetDialog extends DialogFragment
 
     private void doRetweet()
     {
-        new TwitterAction().executeRetweetAction( status );
+        TwitterActions.executeRetweetAction( status );
     }
 }

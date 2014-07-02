@@ -7,8 +7,7 @@ import android.view.View;
 import android.widget.Toast;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.events.TwitterActionClickedEvent;
-import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterAction;
+import net.thetranquilpsychonaut.hashtagger.sites.twitter.components.TwitterActions;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
@@ -135,7 +134,7 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
                 Helper.showNoNetworkToast( HashtaggerApp.app );
                 return;
             }
-            new TwitterAction().executeFavoriteAction( status );
+            TwitterActions.executeFavoriteAction( status );
         }
         if ( v.equals( ccbViewDetails ) )
         {
