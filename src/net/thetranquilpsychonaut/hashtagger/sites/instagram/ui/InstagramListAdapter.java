@@ -15,9 +15,8 @@ import java.util.List;
  */
 public class InstagramListAdapter extends SitesListAdapter
 {
-    public static final  int MEDIA_TYPE_IMAGE = 0;
-    public static final  int MEDIA_TYPE_VIDEO = 1;
-    private static final int MEDIA_TYPE_COUNT = 2;
+    public static final  int MEDIA_TYPE_MEDIA = 0;
+    private static final int MEDIA_TYPE_COUNT = 1;
 
     public InstagramListAdapter( Context context, int textViewResourceId, List<?> objects, List<Integer> resultTypes )
     {
@@ -48,11 +47,6 @@ public class InstagramListAdapter extends SitesListAdapter
 
     public static int getMediaType( Media media )
     {
-        int mediaType = MEDIA_TYPE_IMAGE;
-        if ( TextUtils.equals( "video", media.getType() ) )
-        {
-            mediaType = MEDIA_TYPE_VIDEO;
-        }
-        return mediaType;
+        return MEDIA_TYPE_MEDIA;
     }
 }

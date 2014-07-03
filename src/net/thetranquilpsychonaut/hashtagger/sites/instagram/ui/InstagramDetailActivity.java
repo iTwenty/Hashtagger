@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 import com.squareup.otto.Subscribe;
@@ -32,7 +33,6 @@ public class InstagramDetailActivity extends BaseActivity
     private LinkifiedTextView tvMediaText;
     private VideoThumbnail    videoThumbnail;
     private InstagramButtons  instagramButtons;
-    private int               mediaType;
 
     public static void createAndStartActivity( Media media, Context context )
     {
@@ -81,7 +81,6 @@ public class InstagramDetailActivity extends BaseActivity
         {
             finish();
         }
-        mediaType = InstagramListAdapter.getMediaType( media );
         instagramHeader.updateHeader( media );
         instagramButtons.updateButtons( media );
         tvMediaText.setText( null == media.getCaption() ? "" : media.getCaption().getLinkedText() );
@@ -93,7 +92,7 @@ public class InstagramDetailActivity extends BaseActivity
                     public void onSuccess()
                     {
                         videoThumbnail.setVisibility( View.VISIBLE );
-                        videoThumbnail.showPlayButton( mediaType == InstagramListAdapter.MEDIA_TYPE_VIDEO );
+                        videoThumbnail.showPlayButton( TextUtils.equals( "video", media.getType() ) );
                     }
 
                     @Override
@@ -107,7 +106,7 @@ public class InstagramDetailActivity extends BaseActivity
             @Override
             public void onClick( View v )
             {
-                if ( mediaType == InstagramListAdapter.MEDIA_TYPE_VIDEO )
+                if ( TextUtils.equals( "video", media.getType() ) )
                 {
                     Intent i = new Intent( Intent.ACTION_VIEW );
                     i.setData( Uri.parse( media.getVideos().getStandardResolution().getUrl() ) );
