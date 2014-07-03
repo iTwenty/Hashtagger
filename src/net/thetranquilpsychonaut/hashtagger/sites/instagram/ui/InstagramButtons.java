@@ -3,6 +3,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.instagram.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Toast;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.Media;
@@ -104,7 +105,7 @@ public class InstagramButtons extends SitesButtons implements View.OnClickListen
         }
         else if ( v.equals( ccbComment ) )
         {
-
+            Toast.makeText( getContext(), "Not available yet.", Toast.LENGTH_SHORT ).show();
         }
         else if ( v.equals( ccbViewDetails ) )
         {

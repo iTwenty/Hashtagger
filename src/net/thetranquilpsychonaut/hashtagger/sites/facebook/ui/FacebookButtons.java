@@ -3,6 +3,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Toast;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
@@ -80,9 +81,11 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
     {
         if ( v.equals( ccbLike ) )
         {
+            Toast.makeText( getContext(), "Not available yet.", Toast.LENGTH_SHORT ).show();
         }
         else if ( v.equals( ccbComment ) )
         {
+            Toast.makeText( getContext(), "Not available yet.", Toast.LENGTH_SHORT ).show();
         }
         else if ( v.equals( ccbViewDetails ) )
         {

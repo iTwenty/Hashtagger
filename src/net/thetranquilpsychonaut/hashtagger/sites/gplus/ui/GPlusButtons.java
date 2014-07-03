@@ -3,6 +3,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Toast;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
@@ -97,12 +98,15 @@ public class GPlusButtons extends SitesButtons implements View.OnClickListener
         }
         else if ( v.equals( ccbPlusOne ) )
         {
+            Toast.makeText( getContext(), "Not available yet.", Toast.LENGTH_SHORT ).show();
         }
         else if ( v.equals( ccbComment ) )
         {
+            Toast.makeText( getContext(), "Not available yet.", Toast.LENGTH_SHORT ).show();
         }
         else if ( v.equals( ccbShare ) )
         {
+            Toast.makeText( getContext(), "Not available yet.", Toast.LENGTH_SHORT ).show();
         }
     }
 }
