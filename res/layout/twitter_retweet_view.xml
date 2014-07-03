@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/retweet_image"
+        style="@style/ActionsProfileImage"/>
+
+    <TextView
+        android:id="@+id/retweet_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/retweet_image"
+        style="@style/ProfileName"/>
+
+    <TextView
+        android:id="@+id/retweet_screen_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/retweet_image"
+        android:layout_below="@id/retweet_name"
+        style="@style/TextView_Small"/>
+
+</RelativeLayout>

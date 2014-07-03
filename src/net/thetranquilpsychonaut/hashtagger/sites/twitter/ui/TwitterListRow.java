@@ -2,10 +2,12 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.v4.app.FragmentActivity;
 import android.util.AttributeSet;
 import android.view.MenuItem;
 import android.widget.PopupMenu;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.enums.Actions;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesListRow;
 import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
@@ -47,7 +49,8 @@ public abstract class TwitterListRow extends SitesListRow
     {
         super.updateRow( result );
         this.status = ( Status ) result;
-        tvStatusText.setText( status.isRetweet() ? status.getRetweetedStatus().getLinkedText() : status.getLinkedText() );
+        tvStatusText.setText(
+                status.isRetweet() ? status.getRetweetedStatus().getLinkedText() : status.getLinkedText() );
     }
 
     @Override
@@ -59,6 +62,15 @@ public abstract class TwitterListRow extends SitesListRow
     @Override
     protected boolean onPopupMenuItemClicked( PopupMenu menu, MenuItem item )
     {
+        if ( item.equals( menu.getMenu().findItem( R.id.it_view_retweets ) ) )
+        {
+            TwitterActionsFragment fragment = TwitterActionsFragment.newInstance(
+                    status.isRetweet() ? status.getRetweetedStatus() : status,
+                    Actions.ACTION_TWITTER_RETWEET );
+
+            fragment.show( ( ( FragmentActivity ) getContext() ).getSupportFragmentManager(),
+                    TwitterActionsFragment.TAG );
+        }
         return true;
     }
 

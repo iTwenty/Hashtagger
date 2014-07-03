@@ -1,7 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.instagram.ui;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.Media;

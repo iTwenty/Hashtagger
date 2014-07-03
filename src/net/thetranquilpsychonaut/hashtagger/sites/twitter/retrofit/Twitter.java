@@ -89,5 +89,8 @@ public class Twitter
 
         @GET("/1.1/trends/place.json")
         public List<Trends> getTrendsForPlace( @Query("id") int woeid );
+
+        @GET( "/1.1/statuses/retweets/{id}.json" )
+        public void getRetweets( @Path( "id" ) String statusId, Callback<List<Status>> callback );
     }
 }
