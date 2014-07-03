@@ -2,6 +2,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.instagram.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -13,6 +14,8 @@ import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.events.InstagramLikeDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.Media;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.BaseActivity;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
 import net.thetranquilpsychonaut.hashtagger.widgets.VideoThumbnail;
 
@@ -90,10 +93,7 @@ public class InstagramDetailActivity extends BaseActivity
                     public void onSuccess()
                     {
                         videoThumbnail.setVisibility( View.VISIBLE );
-                        if ( mediaType == InstagramListAdapter.MEDIA_TYPE_VIDEO )
-                        {
-                            videoThumbnail.showPlayButton( true );
-                        }
+                        videoThumbnail.showPlayButton( mediaType == InstagramListAdapter.MEDIA_TYPE_VIDEO );
                     }
 
                     @Override
@@ -102,6 +102,27 @@ public class InstagramDetailActivity extends BaseActivity
 
                     }
                 } );
+        videoThumbnail.setOnClickListener( new View.OnClickListener()
+        {
+            @Override
+            public void onClick( View v )
+            {
+                if ( mediaType == InstagramListAdapter.MEDIA_TYPE_VIDEO )
+                {
+                    Intent i = new Intent( Intent.ACTION_VIEW );
+                    i.setData( Uri.parse( media.getVideos().getStandardResolution().getUrl() ) );
+                    startActivity( i );
+                }
+                else
+                {
+                    ViewAlbumActivity.createAndStartActivity(
+                            InstagramDetailActivity.this,
+                            media.getUser().getUserName(),
+                            Helper.createStringArrayList( media.getImages().getStandardResolution().getUrl() ),
+                            0 );
+                }
+            }
+        } );
     }
 
     @Subscribe
