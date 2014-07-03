@@ -65,7 +65,8 @@ public class SitesActivity extends NavDrawerActivity
         sitesPagerIndicator = ( IconPagerIndicator ) findViewById( R.id.sites_pager_indicator );
         sitesPagerAdapter = new SitesPagerAdapter( getSupportFragmentManager(), new ArrayList<PageDescriptor>() );
         sitesPager.setAdapter( sitesPagerAdapter );
-        sitesPager.setOffscreenPageLimit( 2 );
+        // The total active pages is actually governed by MAX_ACTIVE_SITES in SettingsFragment
+        sitesPager.setOffscreenPageLimit( HashtaggerApp.TOTAL_SITES_COUNT );
 
         sitesPagerIndicator.setViewPager( sitesPager );
         hashtags = null == PersistentData.SitesActivityData.hashtags ?
