@@ -133,12 +133,6 @@ public class FacebookActionsFragment extends SitesActionsFragment implements Ada
         startActivity( i );
     }
 
-    @Override
-    public IconPagerIndicator getViewPagerIndicator()
-    {
-        return facebookActionsPagerIndicator;
-    }
-
     private class FacebookActionsPagerAdapter extends PagerAdapter implements IconPagerAdapter
     {
         @Override

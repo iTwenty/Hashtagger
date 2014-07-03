@@ -307,12 +307,6 @@ public class GPlusActionsFragment extends SitesActionsFragment implements Adapte
         }
     }
 
-    @Override
-    public IconPagerIndicator getViewPagerIndicator()
-    {
-        return gPlusActionsPagerIndicator;
-    }
-
     private class GPlusActionsPagerAdapter extends PagerAdapter implements IconPagerAdapter
     {
         @Override
