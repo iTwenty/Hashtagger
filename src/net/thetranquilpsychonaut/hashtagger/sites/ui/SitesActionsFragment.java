@@ -47,6 +47,9 @@ public abstract class SitesActionsFragment extends DialogFragment
         View v = inflater.inflate( R.layout.fragment_sites_actions, container, false );
         sitesActionsPager = ( ViewPager ) v.findViewById( R.id.sites_actions_pager );
         sitesActionsPagerIndicator = ( IconPagerIndicator ) v.findViewById( R.id.sites_actions_pager_indicator );
+        sitesActionsPager.setAdapter( sitesActionsPagerAdapter );
+        sitesActionsPagerIndicator.setViewPager( sitesActionsPager );
+        sitesActionsPager.setOffscreenPageLimit( Integer.MAX_VALUE );
         sitesActionsPager.setCurrentItem( getSelectedAction() );
         return v;
     }
@@ -69,7 +72,6 @@ public abstract class SitesActionsFragment extends DialogFragment
 
     protected abstract class SitesActionsPagerAdapter extends PagerAdapter implements IconPagerAdapter
     {
-
         @Override
         public int getSelectedColor( int position )
         {
