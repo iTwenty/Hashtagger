@@ -1,8 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
 import android.os.Bundle;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +16,6 @@ import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.Twitter;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesActionsFragment;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
-import net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerAdapter;
-import net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerIndicator;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -34,10 +30,6 @@ public class TwitterActionsFragment extends SitesActionsFragment implements Adap
 {
     private static final String RETWEETS_KEY = "rt";
     public static final  String TAG          = TwitterActionsFragment.class.getSimpleName();
-
-    private ViewPager                  twitterActionsPager;
-    private IconPagerIndicator         twitterActionsPagerIndicator;
-    private TwitterActionsPagerAdapter twitterActionsPagerAdapter;
 
     private List<Status>    retweets;
     private ListView        lvRetweets;
@@ -67,32 +59,19 @@ public class TwitterActionsFragment extends SitesActionsFragment implements Adap
                 new ArrayList<Status>() :
                 ( List<Status> ) savedInstanceState.getSerializable( RETWEETS_KEY );
         retweetsAdapter = new RetweetsAdapter( retweets );
-        twitterActionsPagerAdapter = new TwitterActionsPagerAdapter();
     }
 
     @Override
-    public void onStart()
+    protected SitesActionsPagerAdapter initSitesActionsPagerAdapter()
     {
-        super.onStart();
-        HashtaggerApp.bus.register( this );
+        return new TwitterActionsPagerAdapter();
     }
 
     @Override
-    public void onStop()
+    protected int getSelectedAction()
     {
-        super.onStop();
-        HashtaggerApp.bus.unregister( this );
-    }
-
-    @Override
-    public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
-    {
-        View v = inflater.inflate( R.layout.fragment_twitter_actions, container, false );
-        twitterActionsPager = ( ViewPager ) v.findViewById( R.id.twitter_actions_pager );
-        twitterActionsPagerIndicator = ( IconPagerIndicator ) v.findViewById( R.id.twitter_actions_pager_indicator );
-        twitterActionsPager.setAdapter( twitterActionsPagerAdapter );
-        twitterActionsPagerIndicator.setViewPager( twitterActionsPager );
-        return v;
+        // Return 0 since only one page to show
+        return 0;
     }
 
     @Override
@@ -101,7 +80,7 @@ public class TwitterActionsFragment extends SitesActionsFragment implements Adap
         super.onViewCreated( view, savedInstanceState );
         if ( null == savedInstanceState )
         {
-            twitterActionsPager.post( new Runnable()
+            sitesActionsPager.post( new Runnable()
             {
                 @Override
                 public void run()
@@ -164,18 +143,12 @@ public class TwitterActionsFragment extends SitesActionsFragment implements Adap
 
     }
 
-    private class TwitterActionsPagerAdapter extends PagerAdapter implements IconPagerAdapter
+    private class TwitterActionsPagerAdapter extends SitesActionsPagerAdapter
     {
         @Override
         public int getIconResId( int position )
         {
             return R.drawable.retweet;
-        }
-
-        @Override
-        public int getSelectedColor( int position )
-        {
-            return R.color.orange;
         }
 
         @Override
@@ -194,12 +167,6 @@ public class TwitterActionsFragment extends SitesActionsFragment implements Adap
         public void destroyItem( ViewGroup container, int position, Object object )
         {
             container.removeView( ( View ) object );
-        }
-
-        @Override
-        public boolean isViewFromObject( View view, Object o )
-        {
-            return view == o;
         }
     }
 

@@ -3,8 +3,6 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +17,6 @@ import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.From;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesActionsFragment;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
-import net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerAdapter;
-import net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerIndicator;
 
 import java.util.Collections;
 import java.util.List;
@@ -30,13 +26,10 @@ import java.util.List;
  */
 public class FacebookActionsFragment extends SitesActionsFragment implements AdapterView.OnItemClickListener
 {
-    public static final String TAG = "FacebookActionsFragment";
+    public static final String TAG = FacebookActionsFragment.class.getSimpleName();
 
-    private ViewPager                   facebookActionsPager;
-    private FacebookActionsPagerAdapter facebookActionsPagerAdapter;
-    private IconPagerIndicator          facebookActionsPagerIndicator;
-    private Post                        post;
-    private int                         actionType;
+    private Post post;
+    private int  actionType;
 
     private List<From>   likes;
     private ListView     lvLikes;
@@ -64,7 +57,6 @@ public class FacebookActionsFragment extends SitesActionsFragment implements Ada
         super.onCreate( savedInstanceState );
         post = ( Post ) getArguments().getSerializable( "post" );
         actionType = getArguments().getInt( "actionType" );
-        facebookActionsPagerAdapter = new FacebookActionsPagerAdapter();
         likes = null == post.getLikes() || Helper.isNullOrEmpty( post.getLikes().getData() ) ?
                 Collections.<From>emptyList() :
                 post.getLikes().getData();
@@ -76,18 +68,22 @@ public class FacebookActionsFragment extends SitesActionsFragment implements Ada
     }
 
     @Override
-    public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
+    protected SitesActionsPagerAdapter initSitesActionsPagerAdapter()
     {
-        View v = inflater.inflate( R.layout.fragment_facebook_actions, container, false );
-        facebookActionsPager = ( ViewPager ) v.findViewById( R.id.facebook_actions_pager );
-        facebookActionsPagerIndicator = ( IconPagerIndicator ) v.findViewById( R.id.facebook_actions_pager_indicator );
-        facebookActionsPager.setAdapter( facebookActionsPagerAdapter );
-        facebookActionsPagerIndicator.setViewPager( facebookActionsPager );
-        if ( actionType == Actions.ACTION_FACEBOOK_COMMENT )
+        return new FacebookActionsPagerAdapter();
+    }
+
+    @Override
+    protected int getSelectedAction()
+    {
+        switch ( actionType )
         {
-            facebookActionsPager.setCurrentItem( 1 );
+            case Actions.ACTION_FACEBOOK_COMMENT:
+                return 1;
+            case Actions.ACTION_FACEBOOK_LIKE: // fall through
+            default:
+                return 0;
         }
-        return v;
     }
 
     private Object initLikes( ViewGroup container )
@@ -133,7 +129,7 @@ public class FacebookActionsFragment extends SitesActionsFragment implements Ada
         startActivity( i );
     }
 
-    private class FacebookActionsPagerAdapter extends PagerAdapter implements IconPagerAdapter
+    private class FacebookActionsPagerAdapter extends SitesActionsPagerAdapter
     {
         @Override
         public int getIconResId( int position )
@@ -149,34 +145,9 @@ public class FacebookActionsFragment extends SitesActionsFragment implements Ada
         }
 
         @Override
-        public int getSelectedColor( int position )
-        {
-            return R.color.orange;
-        }
-
-        @Override
         public int getCount()
         {
             return 2;
-        }
-
-        @Override
-        public boolean isViewFromObject( View view, Object o )
-        {
-            return view == o;
-        }
-
-        @Override
-        public CharSequence getPageTitle( int position )
-        {
-            switch ( position )
-            {
-                case 0:
-                    return "Likes";
-                case 1:
-                    return "Comments";
-            }
-            return null;
         }
 
         @Override

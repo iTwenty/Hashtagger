@@ -3,8 +3,6 @@ package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -29,8 +27,6 @@ import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.PeopleFee
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Person;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesActionsFragment;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
-import net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerAdapter;
-import net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerIndicator;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -43,17 +39,14 @@ import java.util.List;
  */
 public class GPlusActionsFragment extends SitesActionsFragment implements AdapterView.OnItemClickListener
 {
-    public static final String TAG = "GPlusActionsFragment";
+    public static final String TAG = GPlusActionsFragment.class.getSimpleName();
 
     private static final String PLUSONERS_KEY = "ps";
     private static final String RESHARERS_KEY = "rs";
     private static final String COMMENTS_KEY  = "cmts";
 
-    private ViewPager                gPlusActionsPager;
-    private GPlusActionsPagerAdapter gPlusActionsPagerAdapter;
-    private IconPagerIndicator       gPlusActionsPagerIndicator;
-    private Activity                 activity;
-    private int                      actionType;
+    private Activity activity;
+    private int      actionType;
 
     private List<Person>   plusoners;
     private ListView       lvPlusOners;
@@ -86,7 +79,6 @@ public class GPlusActionsFragment extends SitesActionsFragment implements Adapte
         super.onCreate( savedInstanceState );
         activity = ( Activity ) getArguments().getSerializable( "activity" );
         actionType = getArguments().getInt( "actionType" );
-        gPlusActionsPagerAdapter = new GPlusActionsPagerAdapter();
         plusoners = null == savedInstanceState ?
                 new ArrayList<Person>() :
                 ( List<Person> ) savedInstanceState.getSerializable( PLUSONERS_KEY );
@@ -102,27 +94,25 @@ public class GPlusActionsFragment extends SitesActionsFragment implements Adapte
     }
 
     @Override
-    public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
+    protected SitesActionsPagerAdapter initSitesActionsPagerAdapter()
     {
-        View v = inflater.inflate( R.layout.fragment_gplus_actions, container, false );
-        gPlusActionsPager = ( ViewPager ) v.findViewById( R.id.gplus_actions_pager );
-        gPlusActionsPagerIndicator = ( IconPagerIndicator ) v.findViewById( R.id.gplus_actions_pager_indicator );
-        gPlusActionsPager.setAdapter( gPlusActionsPagerAdapter );
-        gPlusActionsPagerIndicator.setViewPager( gPlusActionsPager );
-        gPlusActionsPager.setOffscreenPageLimit( 2 );
+        return new GPlusActionsPagerAdapter();
+    }
+
+    @Override
+    protected int getSelectedAction()
+    {
         switch ( actionType )
         {
             case Actions.ACTION_GPLUS_ONE:
-                gPlusActionsPager.setCurrentItem( 0 );
-                break;
+                return 0;
             case Actions.ACTION_GPLUS_COMMENT:
-                gPlusActionsPager.setCurrentItem( 1 );
-                break;
+                return 1;
             case Actions.ACTION_GPLUS_RESHARE:
-                gPlusActionsPager.setCurrentItem( 2 );
-                break;
+                return 2;
+            default:
+                return 0;
         }
-        return v;
     }
 
     @Override
@@ -131,7 +121,7 @@ public class GPlusActionsFragment extends SitesActionsFragment implements Adapte
         super.onViewCreated( view, savedInstanceState );
         if ( null == savedInstanceState )
         {
-            gPlusActionsPager.post( new Runnable()
+            sitesActionsPager.post( new Runnable()
             {
                 @Override
                 public void run()
@@ -167,20 +157,6 @@ public class GPlusActionsFragment extends SitesActionsFragment implements Adapte
                 }
             } );
         }
-    }
-
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-        HashtaggerApp.bus.register( this );
-    }
-
-    @Override
-    public void onStop()
-    {
-        super.onStop();
-        HashtaggerApp.bus.unregister( this );
     }
 
     @Override
@@ -307,33 +283,12 @@ public class GPlusActionsFragment extends SitesActionsFragment implements Adapte
         }
     }
 
-    private class GPlusActionsPagerAdapter extends PagerAdapter implements IconPagerAdapter
+    private class GPlusActionsPagerAdapter extends SitesActionsPagerAdapter
     {
         @Override
         public int getCount()
         {
             return 3;
-        }
-
-        @Override
-        public boolean isViewFromObject( View view, Object o )
-        {
-            return view == o;
-        }
-
-        @Override
-        public CharSequence getPageTitle( int position )
-        {
-            switch ( position )
-            {
-                case 0:
-                    return "+1'ers";
-                case 1:
-                    return "Replies";
-                case 2:
-                    return "Resharers";
-            }
-            return null;
         }
 
         @Override
@@ -370,12 +325,6 @@ public class GPlusActionsFragment extends SitesActionsFragment implements Adapte
                     return R.drawable.share;
             }
             return -1;
-        }
-
-        @Override
-        public int getSelectedColor( int position )
-        {
-            return R.color.orange;
         }
     }
 
