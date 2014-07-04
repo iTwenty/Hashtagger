@@ -359,16 +359,16 @@ public class GPlusActionsFragment extends SitesActionsFragment implements Adapte
         @Override
         public View getView( int position, View convertView, ViewGroup parent )
         {
-            GPlusPersonView view;
+            PlusoneView view;
             if ( null == convertView )
             {
-                view = new GPlusPersonView( parent.getContext() );
+                view = new PlusoneView( parent.getContext() );
             }
             else
             {
-                view = ( GPlusPersonView ) convertView;
+                view = ( PlusoneView ) convertView;
             }
-            view.update( ( Person ) getItem( position ) );
+            view.update( persons.get( position ) );
             return view;
         }
     }
@@ -413,7 +413,7 @@ public class GPlusActionsFragment extends SitesActionsFragment implements Adapte
             {
                 view = ( GPlusCommentView ) convertView;
             }
-            view.update( ( Comment ) getItem( position ) );
+            view.update( comments.get( position ) );
             return view;
         }
     }

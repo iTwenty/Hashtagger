@@ -1,4 +1,4 @@
-package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
+package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -7,43 +7,44 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Person;
 
 /**
- * Created by itwenty on 6/14/14.
+ * Created by itwenty on 7/4/14.
  */
-public class GPlusPersonView extends RelativeLayout
+public abstract class PersonView extends RelativeLayout
 {
     private ImageView personImage;
     private TextView  personName;
-    private Person    person;
 
-    public GPlusPersonView( Context context )
+    public PersonView( Context context )
     {
         this( context, null, 0 );
     }
 
-    public GPlusPersonView( Context context, AttributeSet attrs )
+    public PersonView( Context context, AttributeSet attrs )
     {
         this( context, attrs, 0 );
     }
 
-    public GPlusPersonView( Context context, AttributeSet attrs, int defStyle )
+    public PersonView( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
-        inflate( context, R.layout.gplus_person_view, this );
+        inflate( context, R.layout.person_view, this );
         personImage = ( ImageView ) findViewById( R.id.person_image );
         personName = ( TextView ) findViewById( R.id.person_name );
     }
 
-    public void update( Person person )
+    public void update( Object result )
     {
-        this.person = person;
         Picasso.with( getContext() )
-                .load( person.getImage().getUrl() )
-                .centerCrop()
+                .load( getPersonImageUrl( result ) )
                 .fit()
+                .centerCrop()
                 .into( personImage );
-        personName.setText( person.getDisplayName() );
+        personName.setText( getPersonName( result ) );
     }
+
+    protected abstract String getPersonImageUrl( Object result );
+
+    protected abstract String getPersonName( Object result );
 }

@@ -6,22 +6,23 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/from_image"
+        android:id="@+id/commenter_image"
+        android:layout_centerVertical="true"
         style="@style/ActionsProfileImage"/>
 
     <TextView
-        android:id="@+id/from_name"
+        android:id="@+id/commenter_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/from_image"
+        android:layout_toRightOf="@id/commenter_image"
         style="@style/ProfileName"/>
 
     <TextView
-        android:id="@+id/message"
+        android:id="@+id/comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/from_name"
-        android:layout_toRightOf="@id/from_image"
+        android:layout_below="@id/commenter_name"
+        android:layout_toRightOf="@id/commenter_image"
+        android:text="\n\n\n\n\ng"
         style="@style/Comment"/>
-
 </merge>

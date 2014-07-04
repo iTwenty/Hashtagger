@@ -1,7 +1,5 @@
-package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
+package net.thetranquilpsychonaut.hashtagger.sites.instagram.ui;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +10,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.enums.Actions;
-import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Comment;
-import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.From;
-import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
+import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.Comment;
+import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.From;
+import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.Media;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesActionsFragment;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 
@@ -22,14 +20,14 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by itwenty on 6/13/14.
+ * Created by itwenty on 7/4/14.
  */
-public class FacebookActionsFragment extends SitesActionsFragment implements AdapterView.OnItemClickListener
+public class InstagramActionsFragment extends SitesActionsFragment implements AdapterView.OnItemClickListener
 {
-    public static final String TAG = FacebookActionsFragment.class.getSimpleName();
+    public static final String TAG = InstagramActionsFragment.class.getSimpleName();
 
-    private Post post;
-    private int  actionType;
+    private Media media;
+    private int   actionType;
 
     private List<From>   likes;
     private ListView     lvLikes;
@@ -41,28 +39,28 @@ public class FacebookActionsFragment extends SitesActionsFragment implements Ada
     private TextView        lvCommentsEmpty;
     private CommentsAdapter commentsAdapter;
 
-    public static final FacebookActionsFragment newInstance( Post post, int actionType )
+    public static InstagramActionsFragment newInstance( Media media, int actionType )
     {
-        FacebookActionsFragment f = new FacebookActionsFragment();
+        InstagramActionsFragment fragment = new InstagramActionsFragment();
         Bundle b = new Bundle();
-        b.putSerializable( "post", post );
+        b.putSerializable( "media", media );
         b.putInt( "actionType", actionType );
-        f.setArguments( b );
-        return f;
+        fragment.setArguments( b );
+        return fragment;
     }
 
     @Override
     public void onCreate( Bundle savedInstanceState )
     {
         super.onCreate( savedInstanceState );
-        post = ( Post ) getArguments().getSerializable( "post" );
+        media = ( Media ) getArguments().getSerializable( "media" );
         actionType = getArguments().getInt( "actionType" );
-        likes = null == post.getLikes() || Helper.isNullOrEmpty( post.getLikes().getData() ) ?
+        likes = null == media.getLikes() || Helper.isNullOrEmpty( media.getLikes().getData() ) ?
                 Collections.<From>emptyList() :
-                post.getLikes().getData();
-        comments = null == post.getComments() || Helper.isNullOrEmpty( post.getComments().getData() ) ?
+                media.getLikes().getData();
+        comments = null == media.getComments() || Helper.isNullOrEmpty( media.getComments().getData() ) ?
                 Collections.<Comment>emptyList() :
-                post.getComments().getData();
+                media.getComments().getData();
         likesAdapter = new LikesAdapter( likes );
         commentsAdapter = new CommentsAdapter( comments );
     }
@@ -70,7 +68,7 @@ public class FacebookActionsFragment extends SitesActionsFragment implements Ada
     @Override
     protected SitesActionsPagerAdapter initSitesActionsPagerAdapter()
     {
-        return new FacebookActionsPagerAdapter();
+        return new InstagramActionsPagerAdaper();
     }
 
     @Override
@@ -78,17 +76,23 @@ public class FacebookActionsFragment extends SitesActionsFragment implements Ada
     {
         switch ( actionType )
         {
-            case Actions.ACTION_FACEBOOK_COMMENT:
+            case Actions.ACTION_INSTAGRAM_COMMENT:
                 return 1;
-            case Actions.ACTION_FACEBOOK_LIKE: // fall through
+            case Actions.ACTION_INSTAGRAM_LIKE: // fall through
             default:
                 return 0;
         }
     }
 
+    @Override
+    public void onItemClick( AdapterView<?> parent, View view, int position, long id )
+    {
+
+    }
+
     private Object initLikes( ViewGroup container )
     {
-        View v = LayoutInflater.from( container.getContext() ).inflate( R.layout.facebook_actions_likes, container, false );
+        View v = LayoutInflater.from( container.getContext() ).inflate( R.layout.instagram_actions_likes, container, false );
         lvLikes = ( ListView ) v.findViewById( R.id.lv_likes );
         lvLikesEmpty = ( TextView ) v.findViewById( R.id.lv_likes_empty );
         lvLikesEmpty.setText( "No likes" );
@@ -101,7 +105,7 @@ public class FacebookActionsFragment extends SitesActionsFragment implements Ada
 
     private Object initComments( ViewGroup container )
     {
-        View v = LayoutInflater.from( container.getContext() ).inflate( R.layout.facebook_actions_comments, container, false );
+        View v = LayoutInflater.from( container.getContext() ).inflate( R.layout.instagram_actions_comments, container, false );
         lvComments = ( ListView ) v.findViewById( R.id.lv_comments );
         lvCommentsEmpty = ( TextView ) v.findViewById( R.id.lv_comments_empty );
         lvCommentsEmpty.setText( "No comments" );
@@ -112,38 +116,8 @@ public class FacebookActionsFragment extends SitesActionsFragment implements Ada
         return v;
     }
 
-    @Override
-    public void onItemClick( AdapterView<?> parent, View view, int position, long id )
+    private class InstagramActionsPagerAdaper extends SitesActionsPagerAdapter
     {
-        String idStr;
-        if ( parent.equals( lvLikes ) )
-        {
-            idStr = ( ( From ) parent.getItemAtPosition( position ) ).getId();
-        }
-        else
-        {
-            idStr = ( ( Comment ) parent.getItemAtPosition( position ) ).getId();
-        }
-        Intent i = new Intent( Intent.ACTION_VIEW );
-        i.setData( Uri.parse( "https://facebook.com/" + idStr ) );
-        startActivity( i );
-    }
-
-    private class FacebookActionsPagerAdapter extends SitesActionsPagerAdapter
-    {
-        @Override
-        public int getIconResId( int position )
-        {
-            switch ( position )
-            {
-                case 0:
-                    return R.drawable.facebook_like;
-                case 1:
-                    return R.drawable.comment;
-            }
-            return -1;
-        }
-
         @Override
         public int getCount()
         {
@@ -168,6 +142,19 @@ public class FacebookActionsFragment extends SitesActionsFragment implements Ada
         {
             container.removeView( ( View ) object );
         }
+
+        @Override
+        public int getIconResId( int position )
+        {
+            switch ( position )
+            {
+                case 0:
+                    return R.drawable.instagram_like;
+                case 1:
+                    return R.drawable.comment;
+            }
+            return -1;
+        }
     }
 
     private static class LikesAdapter extends BaseAdapter
@@ -176,7 +163,6 @@ public class FacebookActionsFragment extends SitesActionsFragment implements Ada
 
         public LikesAdapter( List<From> likes )
         {
-            super();
             this.likes = likes;
         }
 
@@ -201,14 +187,14 @@ public class FacebookActionsFragment extends SitesActionsFragment implements Ada
         @Override
         public View getView( int position, View convertView, ViewGroup parent )
         {
-            FacebookLikeView view;
+            InstagramLikeView view;
             if ( null == convertView )
             {
-                view = new FacebookLikeView( parent.getContext() );
+                view = new InstagramLikeView( parent.getContext() );
             }
             else
             {
-                view = ( FacebookLikeView ) convertView;
+                view = ( InstagramLikeView ) convertView;
             }
             view.update( likes.get( position ) );
             return view;
@@ -221,7 +207,6 @@ public class FacebookActionsFragment extends SitesActionsFragment implements Ada
 
         public CommentsAdapter( List<Comment> comments )
         {
-            super();
             this.comments = comments;
         }
 
@@ -243,18 +228,17 @@ public class FacebookActionsFragment extends SitesActionsFragment implements Ada
             return position;
         }
 
-
         @Override
         public View getView( int position, View convertView, ViewGroup parent )
         {
-            FacebookCommentView view;
+            InstagramCommentView view;
             if ( null == convertView )
             {
-                view = new FacebookCommentView( parent.getContext() );
+                view = new InstagramCommentView( parent.getContext() );
             }
             else
             {
-                view = ( FacebookCommentView ) convertView;
+                view = ( InstagramCommentView ) convertView;
             }
             view.update( comments.get( position ) );
             return view;

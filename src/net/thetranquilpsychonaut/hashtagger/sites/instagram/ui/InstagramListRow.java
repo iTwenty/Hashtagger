@@ -3,6 +3,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.instagram.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MenuItem;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.enums.Actions;
 import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.Media;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesHeader;
@@ -141,6 +143,13 @@ public class InstagramListRow extends SitesListRow
     @Override
     protected boolean onPopupMenuItemClicked( PopupMenu menu, MenuItem item )
     {
+        int actionType = Actions.ACTION_INSTAGRAM_LIKE;
+        if ( item.equals( menu.getMenu().findItem( R.id.it_view_comments ) ) )
+        {
+            actionType = Actions.ACTION_INSTAGRAM_COMMENT;
+        }
+        InstagramActionsFragment fragment = InstagramActionsFragment.newInstance( media, actionType );
+        fragment.show( ( ( FragmentActivity ) getContext() ).getSupportFragmentManager(), InstagramActionsFragment.TAG );
         return true;
     }
 }

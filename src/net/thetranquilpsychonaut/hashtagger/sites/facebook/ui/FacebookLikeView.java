@@ -2,47 +2,39 @@ package net.thetranquilpsychonaut.hashtagger.sites.facebook.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import com.squareup.picasso.Picasso;
-import net.thetranquilpsychonaut.hashtagger.R;
-import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.From;
+import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.PersonView;
 import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 
 /**
  * Created by itwenty on 6/14/14.
  */
-public class FacebookLikeView extends RelativeLayout
+public class FacebookLikeView extends PersonView
 {
-    private ImageView likeImage;
-    private TextView  likeName;
-
     public FacebookLikeView( Context context )
     {
-        this( context, null, 0 );
+        super( context );
     }
 
     public FacebookLikeView( Context context, AttributeSet attrs )
     {
-        this( context, attrs, 0 );
+        super( context, attrs );
     }
 
     public FacebookLikeView( Context context, AttributeSet attrs, int defStyle )
     {
         super( context, attrs, defStyle );
-        inflate( context, R.layout.facebook_like_view, this );
-        likeImage = ( ImageView ) findViewById( R.id.like_image );
-        likeName = ( TextView ) findViewById( R.id.like_name );
     }
 
-    public void update( From from )
+    @Override
+    protected String getPersonImageUrl( Object result )
     {
-        Picasso.with( getContext() )
-                .load( UrlModifier.getFacebookProfilePictureUrl( from.getId() ) )
-                .fit()
-                .centerCrop()
-                .into( likeImage );
-        likeName.setText( from.getName() );
+        return UrlModifier.getFacebookProfilePictureUrl( ( ( Post ) result ).getFrom().getId() );
+    }
+
+    @Override
+    protected String getPersonName( Object result )
+    {
+        return ( ( Post ) result ).getFrom().getName();
     }
 }
