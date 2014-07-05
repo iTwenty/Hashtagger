@@ -3,6 +3,7 @@ package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
+import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Person;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.PersonView;
 
 /**
@@ -28,12 +29,12 @@ public class PlusoneView extends PersonView
     @Override
     protected String getPersonImageUrl( Object result )
     {
-        return ( ( Activity ) result ).getActor().getImage().getUrl();
+        return ( ( Person ) result ).getImage().getUrl();
     }
 
     @Override
     protected String getPersonName( Object result )
     {
-        return ( ( Activity ) result ).getActor().getDisplayName();
+        return ( ( Person ) result ).getDisplayName();
     }
 }

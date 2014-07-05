@@ -1,5 +1,7 @@
 package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.Twitter;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesActionsFragment;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -140,7 +143,13 @@ public class TwitterActionsFragment extends SitesActionsFragment implements Adap
     @Override
     public void onItemClick( AdapterView<?> parent, View view, int position, long id )
     {
-
+        if ( parent.equals( lvRetweets ) )
+        {
+            String userName = ( ( Status ) parent.getItemAtPosition( position ) ).getUser().getScreenName();
+            Intent i = new Intent( Intent.ACTION_VIEW );
+            i.setData( Uri.parse( UrlModifier.getTwitterUserUrl( userName ) ) );
+            startActivity( i );
+        }
     }
 
     private class TwitterActionsPagerAdapter extends SitesActionsPagerAdapter

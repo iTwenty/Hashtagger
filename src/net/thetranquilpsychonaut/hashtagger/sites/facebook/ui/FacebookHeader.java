@@ -52,7 +52,7 @@ public class FacebookHeader extends SitesHeader
     @Override
     protected String getProfileUrl()
     {
-        return "http://facebook.com/" + post.getFrom().getId();
+        return UrlModifier.getFacebookUserUrl( post.getFrom().getId() );
     }
 
     @Override

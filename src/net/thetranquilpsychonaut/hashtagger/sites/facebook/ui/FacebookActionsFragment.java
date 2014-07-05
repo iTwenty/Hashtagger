@@ -17,6 +17,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.From;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesActionsFragment;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 
 import java.util.Collections;
 import java.util.List;
@@ -115,18 +116,13 @@ public class FacebookActionsFragment extends SitesActionsFragment implements Ada
     @Override
     public void onItemClick( AdapterView<?> parent, View view, int position, long id )
     {
-        String idStr;
         if ( parent.equals( lvLikes ) )
         {
-            idStr = ( ( From ) parent.getItemAtPosition( position ) ).getId();
+            String userId = ( ( From ) parent.getItemAtPosition( position ) ).getId();
+            Intent i = new Intent( Intent.ACTION_VIEW );
+            i.setData( Uri.parse( UrlModifier.getFacebookUserUrl( userId ) ) );
+            startActivity( i );
         }
-        else
-        {
-            idStr = ( ( Comment ) parent.getItemAtPosition( position ) ).getId();
-        }
-        Intent i = new Intent( Intent.ACTION_VIEW );
-        i.setData( Uri.parse( "https://facebook.com/" + idStr ) );
-        startActivity( i );
     }
 
     private class FacebookActionsPagerAdapter extends SitesActionsPagerAdapter

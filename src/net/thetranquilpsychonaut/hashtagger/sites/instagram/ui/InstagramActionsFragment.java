@@ -1,5 +1,7 @@
 package net.thetranquilpsychonaut.hashtagger.sites.instagram.ui;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.Likes
 import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.Media;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesActionsFragment;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -38,7 +41,7 @@ public class InstagramActionsFragment extends SitesActionsFragment implements Ad
 {
     public static final String TAG = InstagramActionsFragment.class.getSimpleName();
 
-    private static final String LIKES_KEY = "lk";
+    private static final String LIKES_KEY    = "lk";
     private static final String COMMENTS_KEY = "cmt";
 
     private Media media;
@@ -180,7 +183,13 @@ public class InstagramActionsFragment extends SitesActionsFragment implements Ad
     @Override
     public void onItemClick( AdapterView<?> parent, View view, int position, long id )
     {
-
+        if ( parent.equals( lvLikes ) )
+        {
+            String userName = ( ( From ) parent.getItemAtPosition( position ) ).getUserName();
+            Intent i = new Intent( Intent.ACTION_VIEW );
+            i.setData( Uri.parse( UrlModifier.getInstagramUserUrl( userName ) ) );
+            startActivity( i );
+        }
     }
 
     private Object initLikes( ViewGroup container )

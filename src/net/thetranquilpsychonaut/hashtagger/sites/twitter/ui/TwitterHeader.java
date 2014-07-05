@@ -10,6 +10,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.User;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesHeader;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
+import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 
 /**
  * Created by itwenty on 5/8/14.
@@ -56,7 +57,7 @@ public class TwitterHeader extends SitesHeader
     @Override
     protected String getProfileUrl()
     {
-        return "http://twitter.com/" + status.getUser().getScreenName();
+        return UrlModifier.getTwitterUserUrl( status.getUser().getScreenName() );
     }
 
     @Override

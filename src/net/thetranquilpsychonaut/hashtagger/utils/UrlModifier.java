@@ -35,6 +35,16 @@ public final class UrlModifier
         return String.format( "https://instagram.com/%s", userName );
     }
 
+    public static String getTwitterUserUrl( String userName )
+    {
+        return String.format( "https://twitter.com/%s", userName );
+    }
+
+    public static final String getFacebookUserUrl( String userId )
+    {
+        return String.format( "https://facebook.com/%s", userId );
+    }
+
     public static Uri getTwitterStatusUrl( Status status )
     {
         return Uri.parse( String.format( "http://twitter.com/%s/status/%s", status.getUser().getIdStr(), status.getIdStr() ) );

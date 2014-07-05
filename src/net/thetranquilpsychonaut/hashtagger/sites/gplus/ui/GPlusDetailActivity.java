@@ -31,6 +31,7 @@ public class GPlusDetailActivity extends BaseActivity
     public static final String ACTIVITY_KEY = "activity";
     private LinkifiedTextView tvActivityText;
     private GPlusHeader       gPlusHeader;
+    private GPlusButtons      gPlusButtons;
     private ViewStub          viewStub;
     private Activity          activity;
     private int               activityType;
@@ -49,6 +50,7 @@ public class GPlusDetailActivity extends BaseActivity
         setContentView( R.layout.activity_gplus_detail );
         tvActivityText = ( LinkifiedTextView ) findViewById( R.id.tv_activity_text );
         gPlusHeader = ( GPlusHeader ) findViewById( R.id.gplus_header );
+        gPlusButtons = ( GPlusButtons ) findViewById( R.id.gplus_buttons );
         viewStub = ( ViewStub ) findViewById( R.id.gplus_view_stub );
         if ( null == getIntent() )
         {
@@ -62,6 +64,7 @@ public class GPlusDetailActivity extends BaseActivity
         setTitle( activity.getActor().getDisplayName() + "'s post" );
         activityType = GPlusListAdapter.getActivityType( activity );
         gPlusHeader.updateHeader( activity );
+        gPlusButtons.updateButtons( activity );
         tvActivityText.setText( activity.getObject().getLinkedText() );
         if ( activityType == GPlusListAdapter.ACTIVITY_TYPE_PHOTO )
         {
