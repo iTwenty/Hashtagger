@@ -2,6 +2,10 @@ package net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit;
 
 import com.squareup.okhttp.OkHttpClient;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
+import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.Comment;
+import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.Comments;
+import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.From;
+import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.Likes;
 import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.SearchResult;
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -12,6 +16,7 @@ import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.QueryMap;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -57,5 +62,13 @@ public class Instagram
         @DELETE("/media/{mediaId}/likes")
         public void deleteLike( @Path("mediaId") String mediaId,
                                 Callback<Response> callback );
+
+        @GET("/media/{mediaId}/likes")
+        public void getLikes( @Path("mediaId") String mediaId,
+                              Callback<Likes> callback );
+
+        @GET( "/media/{mediaId}/comments" )
+        public void getComments( @Path( "mediaId" ) String mediaId,
+                                 Callback<Comments> callback );
     }
 }
