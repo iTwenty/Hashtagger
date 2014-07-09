@@ -30,12 +30,18 @@
                 android:layout_below="@id/facebook_header"
                 style="@style/MainMessage_Detail"/>
 
+            <TextView
+                android:id="@+id/tv_actions_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_post_text"/>
+
             <ViewStub
                 android:id="@+id/facebook_view_stub"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inflatedId="@+id/facebook_attachment"
-                android:layout_below="@id/tv_post_text"
+                android:layout_below="@id/tv_actions_count"
                 android:layout_centerHorizontal="true"/>
 
         </RelativeLayout>

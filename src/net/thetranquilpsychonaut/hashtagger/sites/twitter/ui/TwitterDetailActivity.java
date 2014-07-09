@@ -3,9 +3,11 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Callback;
@@ -21,6 +23,7 @@ import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
+import org.apache.http.HttpConnection;
 
 /**
  * Created by itwenty on 5/10/14.
@@ -30,6 +33,7 @@ public class TwitterDetailActivity extends BaseActivity
     public static final String STATUS_KEY = "status";
     private LinkifiedTextView tvStatusText;
     private TwitterHeader     twitterHeader;
+    private TextView          tvActionsCount;
     private ViewStub          viewStub;
     private TwitterButtons    twitterButtons;
     private int               statusType;
@@ -55,6 +59,7 @@ public class TwitterDetailActivity extends BaseActivity
         setContentView( R.layout.activity_twitter_detail );
         tvStatusText = ( LinkifiedTextView ) findViewById( R.id.tv_status_text );
         twitterHeader = ( TwitterHeader ) findViewById( R.id.twitter_header );
+        tvActionsCount = ( TextView ) findViewById( R.id.tv_actions_count );
         viewStub = ( ViewStub ) findViewById( R.id.twitter_view_stub );
         twitterButtons = ( TwitterButtons ) findViewById( R.id.twitter_buttons );
         if ( null != savedInstanceState )
@@ -70,6 +75,7 @@ public class TwitterDetailActivity extends BaseActivity
         this.statusType = TwitterListAdapter.getStatusType( status );
         twitterHeader.updateHeader( status );
         tvStatusText.setText( status.isRetweet() ? status.getRetweetedStatus().getLinkedText() : status.getLinkedText() );
+        tvActionsCount.setText( Html.fromHtml( String.format( getString( R.string.str_twitter_actions ), status.getRetweetCount(), status.getFavoriteCount() ) ) );
         twitterButtons.updateButtons( status );
         if ( statusType == TwitterListAdapter.STATUS_TYPE_PHOTO )
         {

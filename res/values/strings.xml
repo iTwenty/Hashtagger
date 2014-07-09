@@ -72,4 +72,8 @@
     <string name="str_view_reshares">View Reshares</string>
     <string name="str_instagram_post_like_failed">Failed to like</string>
     <string name="str_instagram_delete_like_failed">Failed to unlike</string>
+    <string name="str_facebook_actions" formatted="false">&lt;b>%d&lt;/b> LIKES &lt;b>%d&lt;/b> COMMENTS</string>
+    <string name="str_twitter_actions" formatted="false">&lt;b>%d&lt;/b> RETWEETS &lt;b>%d&lt;/b> FAVORITES</string>
+    <string name="str_gplus_actions" formatted="false">&lt;b>%d&lt;/b> +1s &lt;b>%d&lt;/b> REPLIES</string>
+    <string name="str_instagram_actions" formatted="false">&lt;b>%d&lt;/b> LIKES &lt;b>%d&lt;/b> REPLIES</string>
 </resources>
