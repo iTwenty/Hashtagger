@@ -31,7 +31,6 @@ public class FacebookDetailActivity extends BaseActivity
     private FacebookHeader    facebookHeader;
     private LinkifiedTextView tvPostText;
     private Post              post;
-    private TextView          tvActionsCount;
     private int               postType;
     private ViewStub          viewStub;
     private FacebookButtons   facebookButtons;
@@ -50,7 +49,6 @@ public class FacebookDetailActivity extends BaseActivity
         setContentView( R.layout.activity_facebook_detail );
         facebookHeader = ( FacebookHeader ) findViewById( R.id.facebook_header );
         tvPostText = ( LinkifiedTextView ) findViewById( R.id.tv_post_text );
-        tvActionsCount = ( TextView ) findViewById( R.id.tv_actions_count );
         viewStub = ( ViewStub ) findViewById( R.id.facebook_view_stub );
         facebookButtons = ( FacebookButtons ) findViewById( R.id.facebook_buttons );
         if ( null == getIntent() )
@@ -69,7 +67,6 @@ public class FacebookDetailActivity extends BaseActivity
         tvPostText.setText( post.getLinkedText() );
         int likesCount = null == post.getLikes() ? 0 : post.getLikes().getData().size();
         int commentsCount = null == post.getComments() ? 0 : post.getComments().getData().size();
-        tvActionsCount.setText( Html.fromHtml( String.format( getString( R.string.str_facebook_actions ), likesCount, commentsCount ) ) );
         if ( postType == FacebookListAdapter.POST_TYPE_MEDIA )
         {
             showMedia( savedInstanceState );

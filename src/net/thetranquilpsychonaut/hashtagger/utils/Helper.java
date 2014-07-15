@@ -24,7 +24,7 @@ public final class Helper
         throw new RuntimeException( "Class Helper must not be instantiated" );
     }
 
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     public static void debug( String s )
     {

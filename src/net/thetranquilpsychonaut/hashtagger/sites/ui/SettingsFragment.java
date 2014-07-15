@@ -19,7 +19,7 @@ import net.thetranquilpsychonaut.hashtagger.utils.DefaultPrefs;
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener
 {
     // Max sites that can be active simultaneously.
-    private static final int MAX_ACTIVE_SITES = 4;
+    private static final int MAX_ACTIVE_SITES = 3;
 
     PreferenceCategory activeSites;
     CheckBoxPreference cbpTwitter;
