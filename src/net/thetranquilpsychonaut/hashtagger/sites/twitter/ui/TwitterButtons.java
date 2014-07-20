@@ -51,7 +51,7 @@ public class TwitterButtons extends SitesButtons implements View.OnClickListener
     }
 
     @Override
-    protected void updateButtons( Object result )
+    public void updateButtons( Object result )
     {
         this.status = ( Status ) result;
         ccbReply.setOnClickListener( this );

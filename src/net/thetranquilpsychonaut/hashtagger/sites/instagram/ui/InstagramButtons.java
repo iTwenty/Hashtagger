@@ -45,7 +45,7 @@ public class InstagramButtons extends SitesButtons implements View.OnClickListen
     }
 
     @Override
-    protected void updateButtons( Object result )
+    public void updateButtons( Object result )
     {
         this.media = ( Media ) result;
         ccbLike.setOnClickListener( this );

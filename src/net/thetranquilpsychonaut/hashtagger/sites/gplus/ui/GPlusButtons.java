@@ -46,7 +46,7 @@ public class GPlusButtons extends SitesButtons implements View.OnClickListener
     }
 
     @Override
-    protected void updateButtons( Object result )
+    public void updateButtons( Object result )
     {
         this.activity = ( Activity ) result;
         ccbPlusOne.setOnClickListener( this );

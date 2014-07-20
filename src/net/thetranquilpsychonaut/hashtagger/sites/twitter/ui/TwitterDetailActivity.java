@@ -3,38 +3,39 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Html;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.enums.Actions;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterFavoriteDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterReplyDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterRetweetDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.BaseActivity;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SlidingUpPanelDetailActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
 import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
-import org.apache.http.HttpConnection;
 
 /**
  * Created by itwenty on 5/10/14.
  */
-public class TwitterDetailActivity extends BaseActivity
+public class TwitterDetailActivity extends SlidingUpPanelDetailActivity
 {
     public static final String STATUS_KEY = "status";
+
     private LinkifiedTextView tvStatusText;
     private TwitterHeader     twitterHeader;
     private ViewStub          viewStub;
-    private TwitterButtons    twitterButtons;
     private int               statusType;
 
     // Passing status via Intent.putExtra() seems to pass a new copy of the status
@@ -52,14 +53,20 @@ public class TwitterDetailActivity extends BaseActivity
     }
 
     @Override
-    protected void onCreate( Bundle savedInstanceState )
+    protected SitesButtons initSitesButtons()
     {
-        super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_twitter_detail );
-        tvStatusText = ( LinkifiedTextView ) findViewById( R.id.tv_status_text );
-        twitterHeader = ( TwitterHeader ) findViewById( R.id.twitter_header );
-        viewStub = ( ViewStub ) findViewById( R.id.twitter_view_stub );
-        twitterButtons = ( TwitterButtons ) findViewById( R.id.twitter_buttons );
+        SitesButtons buttons = ( SitesButtons ) LayoutInflater.from( this ).inflate( R.layout.activity_twitter_detail_buttons, null );
+        buttons.updateButtons( status );
+        return buttons;
+    }
+
+    @Override
+    protected View initMainView( Bundle savedInstanceState )
+    {
+        View v = LayoutInflater.from( this ).inflate( R.layout.activity_twitter_detail, null );
+        tvStatusText = ( LinkifiedTextView ) v.findViewById( R.id.tv_status_text );
+        twitterHeader = ( TwitterHeader ) v.findViewById( R.id.twitter_header );
+        viewStub = ( ViewStub ) v.findViewById( R.id.twitter_view_stub );
         if ( null != savedInstanceState )
         {
             status = ( Status ) savedInstanceState.getSerializable( STATUS_KEY );
@@ -73,11 +80,23 @@ public class TwitterDetailActivity extends BaseActivity
         this.statusType = TwitterListAdapter.getStatusType( status );
         twitterHeader.updateHeader( status );
         tvStatusText.setText( status.isRetweet() ? status.getRetweetedStatus().getLinkedText() : status.getLinkedText() );
-        twitterButtons.updateButtons( status );
         if ( statusType == TwitterListAdapter.STATUS_TYPE_PHOTO )
         {
             showPhoto( savedInstanceState );
         }
+        return v;
+    }
+
+    @Override
+    protected String getSitesActionsFragmentTag()
+    {
+        return TwitterActionsFragment.TAG;
+    }
+
+    @Override
+    protected Fragment initSitesActionsFragment()
+    {
+        return TwitterActionsFragment.newInstance( status.isRetweet() ? status.getRetweetedStatus() : status, Actions.ACTION_TWITTER_RETWEET );
     }
 
     private void showPhoto( Bundle savedInstanceState )
@@ -114,17 +133,9 @@ public class TwitterDetailActivity extends BaseActivity
     }
 
     @Override
-    protected void onStart()
-    {
-        super.onStart();
-        HashtaggerApp.bus.register( this );
-    }
-
-    @Override
     protected void onStop()
     {
         super.onStop();
-        HashtaggerApp.bus.unregister( this );
         status = null;
     }
 
@@ -140,7 +151,7 @@ public class TwitterDetailActivity extends BaseActivity
     {
         if ( event.isSuccess() )
         {
-            twitterButtons.updateButtons( status );
+            sitesButtons.updateButtons( status );
             Toast.makeText( this, "Retweeted like a champ!", Toast.LENGTH_SHORT ).show();
         }
         else
@@ -155,7 +166,7 @@ public class TwitterDetailActivity extends BaseActivity
         Helper.debug( event.getStatus() == status ? "equal" : "unequal" );
         if ( event.isSuccess() )
         {
-            twitterButtons.updateButtons( status );
+            sitesButtons.updateButtons( status );
         }
         else
         {

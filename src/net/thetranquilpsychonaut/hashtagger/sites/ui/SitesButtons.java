@@ -81,7 +81,7 @@ public abstract class SitesButtons extends LinearLayout
         updateButtons( result );
     }
 
-    protected abstract void updateButtons( Object result );
+    public abstract void updateButtons( Object result );
 
     public void hide( boolean animate )
     {

@@ -44,7 +44,7 @@ public class FacebookButtons extends SitesButtons implements View.OnClickListene
     }
 
     @Override
-    protected void updateButtons( Object result )
+    public void updateButtons( Object result )
     {
         this.post = ( Post ) result;
         ccbLike.setOnClickListener( this );

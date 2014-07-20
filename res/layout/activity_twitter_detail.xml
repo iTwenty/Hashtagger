@@ -1,52 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
+
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:layout_above="@+id/twitter_buttons"
+    android:paddingBottom="5dp">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:layout_above="@+id/twitter_buttons"
-        android:paddingBottom="5dp">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/card">
-
-            <net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterHeader
-                android:id="@+id/twitter_header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView
-                android:id="@+id/tv_status_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/twitter_header"
-                style="@style/MainMessage_Detail"/>
-
-            <ViewStub
-                android:id="@+id/twitter_view_stub"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv_status_text"
-                android:inflatedId="@+id/twitter_attachment"
-                android:layout_centerHorizontal="true"/>
-
-        </RelativeLayout>
-
-    </ScrollView>
-
-    <net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterButtons
-        android:id="@id/twitter_buttons"
-        android:layout_alignParentBottom="true"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/card"
-        android:padding="0dp"/>
+        android:background="@drawable/card">
 
-</RelativeLayout>
+        <net.thetranquilpsychonaut.hashtagger.sites.twitter.ui.TwitterHeader
+            android:id="@+id/twitter_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView
+            android:id="@+id/tv_status_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/twitter_header"
+            style="@style/MainMessage_Detail"/>
+
+        <ViewStub
+            android:id="@+id/twitter_view_stub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_status_text"
+            android:inflatedId="@+id/twitter_attachment"
+            android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
+
+</ScrollView>
