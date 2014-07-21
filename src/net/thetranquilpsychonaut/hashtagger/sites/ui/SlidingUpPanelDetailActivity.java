@@ -87,6 +87,19 @@ public abstract class SlidingUpPanelDetailActivity extends BaseActivity
         HashtaggerApp.bus.unregister( this );
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        if ( slider.isPanelExpanded() )
+        {
+            slider.collapsePanel();
+        }
+        else
+        {
+            super.onBackPressed();
+        }
+    }
+
     protected abstract SitesButtons initSitesButtons();
 
     protected abstract View initMainView( Bundle savedInstanceState );
