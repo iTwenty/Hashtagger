@@ -1,53 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:paddingBottom="5dp">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/instagram_buttons"
-        android:fillViewport="true"
-        android:paddingBottom="5dp">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/card">
-
-            <net.thetranquilpsychonaut.hashtagger.sites.instagram.ui.InstagramHeader
-                android:id="@+id/instagram_header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView
-                android:id="@+id/tv_media_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/instagram_header"
-                style="@style/MainMessage_Detail"/>
-
-            <net.thetranquilpsychonaut.hashtagger.widgets.VideoThumbnail
-                android:id="@+id/video_thumbnail"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@id/tv_media_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/selector_picture_frame"
-                android:visibility="gone"/>
-
-        </RelativeLayout>
-
-    </ScrollView>
-
-    <net.thetranquilpsychonaut.hashtagger.sites.instagram.ui.InstagramButtons
-        android:id="@id/instagram_buttons"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:padding="0dp"
-        android:background="@drawable/card"/>
+        android:background="@drawable/card">
 
-</RelativeLayout>
+        <net.thetranquilpsychonaut.hashtagger.sites.instagram.ui.InstagramHeader
+            android:id="@+id/instagram_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView
+            android:id="@+id/tv_media_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/instagram_header"
+            style="@style/MainMessage_Detail"/>
+
+        <net.thetranquilpsychonaut.hashtagger.widgets.VideoThumbnail
+            android:id="@+id/video_thumbnail"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/tv_media_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_picture_frame"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
+</ScrollView>

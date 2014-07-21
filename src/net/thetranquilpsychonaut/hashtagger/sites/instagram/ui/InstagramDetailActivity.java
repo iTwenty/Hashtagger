@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 import com.squareup.otto.Subscribe;
@@ -12,9 +14,12 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.enums.Actions;
 import net.thetranquilpsychonaut.hashtagger.events.InstagramLikeDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.Media;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.BaseActivity;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SlidingUpPanelDetailActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView;
@@ -23,7 +28,7 @@ import net.thetranquilpsychonaut.hashtagger.widgets.VideoThumbnail;
 /**
  * Created by itwenty on 7/1/14.
  */
-public class InstagramDetailActivity extends BaseActivity
+public class InstagramDetailActivity extends SlidingUpPanelDetailActivity
 {
     private static Media media = null;
 
@@ -32,7 +37,6 @@ public class InstagramDetailActivity extends BaseActivity
     private InstagramHeader   instagramHeader;
     private LinkifiedTextView tvMediaText;
     private VideoThumbnail    videoThumbnail;
-    private InstagramButtons  instagramButtons;
 
     public static void createAndStartActivity( Media media, Context context )
     {
@@ -42,36 +46,27 @@ public class InstagramDetailActivity extends BaseActivity
     }
 
     @Override
-    protected void onStart()
-    {
-        super.onStart();
-        HashtaggerApp.bus.register( this );
-    }
-
-    @Override
     protected void onStop()
     {
         super.onStop();
-        HashtaggerApp.bus.unregister( this );
         media = null;
     }
 
     @Override
-    protected void onSaveInstanceState( Bundle outState )
+    protected SitesButtons initSitesButtons()
     {
-        super.onSaveInstanceState( outState );
-        outState.putSerializable( MEDIA_KEY, media );
+        InstagramButtons buttons = ( InstagramButtons ) LayoutInflater.from( this ).inflate( R.layout.activity_instagram_detail_buttons, null );
+        buttons.updateButtons( media );
+        return buttons;
     }
 
     @Override
-    protected void onCreate( Bundle savedInstanceState )
+    protected View initMainView( Bundle savedInstanceState )
     {
-        super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_instagram_detail );
-        instagramHeader = ( InstagramHeader ) findViewById( R.id.instagram_header );
-        tvMediaText = ( LinkifiedTextView ) findViewById( R.id.tv_media_text );
-        videoThumbnail = ( VideoThumbnail ) findViewById( R.id.video_thumbnail );
-        instagramButtons = ( InstagramButtons ) findViewById( R.id.instagram_buttons );
+        View v = LayoutInflater.from( this ).inflate( R.layout.activity_instagram_detail, null );
+        instagramHeader = ( InstagramHeader ) v.findViewById( R.id.instagram_header );
+        tvMediaText = ( LinkifiedTextView ) v.findViewById( R.id.tv_media_text );
+        videoThumbnail = ( VideoThumbnail ) v.findViewById( R.id.video_thumbnail );
         if ( null != savedInstanceState )
         {
             media = ( Media ) savedInstanceState.getSerializable( MEDIA_KEY );
@@ -82,7 +77,6 @@ public class InstagramDetailActivity extends BaseActivity
             finish();
         }
         instagramHeader.updateHeader( media );
-        instagramButtons.updateButtons( media );
         tvMediaText.setText( null == media.getCaption() ? "" : media.getCaption().getLinkedText() );
         Picasso.with( this )
                 .load( media.getImages().getStandardResolution().getUrl() )
@@ -122,6 +116,26 @@ public class InstagramDetailActivity extends BaseActivity
                 }
             }
         } );
+        return v;
+    }
+
+    @Override
+    protected String getSitesActionsFragmentTag()
+    {
+        return InstagramActionsFragment.TAG;
+    }
+
+    @Override
+    protected Fragment initSitesActionsFragment()
+    {
+        return InstagramActionsFragment.newInstance( media, Actions.ACTION_INSTAGRAM_LIKE );
+    }
+
+    @Override
+    protected void onSaveInstanceState( Bundle outState )
+    {
+        super.onSaveInstanceState( outState );
+        outState.putSerializable( MEDIA_KEY, media );
     }
 
     @Subscribe
@@ -129,7 +143,7 @@ public class InstagramDetailActivity extends BaseActivity
     {
         if ( event.isSuccess() )
         {
-            instagramButtons.updateButtons( media );
+            sitesButtons.updateButtons( media );
         }
         else
         {
