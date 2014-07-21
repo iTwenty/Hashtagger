@@ -2,7 +2,6 @@ package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Person;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.PersonView;
 

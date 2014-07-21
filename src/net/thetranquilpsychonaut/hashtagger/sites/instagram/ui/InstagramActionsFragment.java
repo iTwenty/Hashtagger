@@ -15,7 +15,6 @@ import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.enums.Actions;
 import net.thetranquilpsychonaut.hashtagger.events.InstagramCommentsListEvent;
-import net.thetranquilpsychonaut.hashtagger.events.InstagramLikeDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.events.InstagramLikesListEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.Instagram;
 import net.thetranquilpsychonaut.hashtagger.sites.instagram.retrofit.pojos.Comment;
@@ -31,7 +30,6 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

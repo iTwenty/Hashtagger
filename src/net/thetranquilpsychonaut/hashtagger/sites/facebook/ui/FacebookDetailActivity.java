@@ -4,15 +4,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.FrameLayout;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.enums.Actions;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.BaseActivity;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SlidingUpPanelDetailActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
 import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.utils.UrlModifier;
@@ -22,7 +27,7 @@ import net.thetranquilpsychonaut.hashtagger.widgets.VideoThumbnail;
 /**
  * Created by itwenty on 5/18/14.
  */
-public class FacebookDetailActivity extends BaseActivity
+public class FacebookDetailActivity extends SlidingUpPanelDetailActivity
 {
     public static final String POST_KEY = "post";
 
@@ -31,7 +36,6 @@ public class FacebookDetailActivity extends BaseActivity
     private Post              post;
     private int               postType;
     private ViewStub          viewStub;
-    private FacebookButtons   facebookButtons;
 
     public static void createAndStartActivity( Post post, Context context )
     {
@@ -41,14 +45,20 @@ public class FacebookDetailActivity extends BaseActivity
     }
 
     @Override
-    protected void onCreate( Bundle savedInstanceState )
+    protected SitesButtons initSitesButtons()
     {
-        super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_facebook_detail );
-        facebookHeader = ( FacebookHeader ) findViewById( R.id.facebook_header );
-        tvPostText = ( LinkifiedTextView ) findViewById( R.id.tv_post_text );
-        viewStub = ( ViewStub ) findViewById( R.id.facebook_view_stub );
-        facebookButtons = ( FacebookButtons ) findViewById( R.id.facebook_buttons );
+        FacebookButtons buttons = ( FacebookButtons ) LayoutInflater.from( this ).inflate( R.layout.activity_facebook_detail_buttons, null );
+        buttons.updateButtons( post );
+        return buttons;
+    }
+
+    @Override
+    protected View initMainView( Bundle savedInstanceState )
+    {
+        View v = LayoutInflater.from( this ).inflate( R.layout.activity_facebook_detail, null );
+        facebookHeader = ( FacebookHeader ) v.findViewById( R.id.facebook_header );
+        tvPostText = ( LinkifiedTextView ) v.findViewById( R.id.tv_post_text );
+        viewStub = ( ViewStub ) v.findViewById( R.id.facebook_view_stub );
         if ( null == getIntent() )
         {
             finish();
@@ -61,17 +71,27 @@ public class FacebookDetailActivity extends BaseActivity
         setTitle( post.getFrom().getName() + "'s post" );
         this.postType = FacebookListAdapter.getPostType( this.post );
         facebookHeader.updateHeader( post );
-        facebookButtons.updateButtons( post );
         tvPostText.setText( post.getLinkedText() );
-        int likesCount = null == post.getLikes() ? 0 : post.getLikes().getData().size();
-        int commentsCount = null == post.getComments() ? 0 : post.getComments().getData().size();
         if ( postType == FacebookListAdapter.POST_TYPE_MEDIA )
         {
             showMedia( savedInstanceState );
         }
+        return v;
     }
 
-    private void showMedia( Bundle savedInstancState )
+    @Override
+    protected String getSitesActionsFragmentTag()
+    {
+        return FacebookActionsFragment.TAG;
+    }
+
+    @Override
+    protected Fragment initSitesActionsFragment()
+    {
+        return FacebookActionsFragment.newInstance( post, Actions.ACTION_INSTAGRAM_LIKE );
+    }
+
+    private void showMedia( Bundle savedInstanceState )
     {
         viewStub.setLayoutResource( R.layout.facebook_detail_activity_type_video );
         FrameLayout temp = ( FrameLayout ) viewStub.inflate();

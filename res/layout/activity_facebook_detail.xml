@@ -1,53 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:layout_above="@+id/facebook_buttons"
+    android:paddingBottom="@dimen/layout_padding">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:layout_above="@+id/facebook_buttons"
-        android:paddingBottom="@dimen/layout_padding">
-
-        <RelativeLayout
-            android:id="@+id/rl_root"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/card">
-
-            <net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookHeader
-                android:id="@+id/facebook_header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView
-                android:id="@+id/tv_post_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/facebook_header"
-                style="@style/MainMessage_Detail"/>
-
-            <ViewStub
-                android:id="@+id/facebook_view_stub"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inflatedId="@+id/facebook_attachment"
-                android:layout_below="@id/tv_post_text"
-                android:layout_centerHorizontal="true"/>
-
-        </RelativeLayout>
-
-    </ScrollView>
-
-    <net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookButtons
-        android:id="@id/facebook_buttons"
+    <RelativeLayout
+        android:id="@+id/rl_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/card"
-        android:padding="0dp"/>
+        android:background="@drawable/card">
 
-</RelativeLayout>
+        <net.thetranquilpsychonaut.hashtagger.sites.facebook.ui.FacebookHeader
+            android:id="@+id/facebook_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <net.thetranquilpsychonaut.hashtagger.widgets.LinkifiedTextView
+            android:id="@+id/tv_post_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/facebook_header"
+            style="@style/MainMessage_Detail"/>
+
+        <ViewStub
+            android:id="@+id/facebook_view_stub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inflatedId="@+id/facebook_attachment"
+            android:layout_below="@id/tv_post_text"
+            android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
+
+</ScrollView>
