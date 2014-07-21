@@ -74,6 +74,7 @@ public class InstagramDetailActivity extends SlidingUpPanelDetailActivity
         {
             finish();
         }
+        setTitle( String.format( "%s's post", media.getUser().getUserName() ) );
         instagramHeader.updateHeader( media );
         tvMediaText.setText( null == media.getCaption() ? "" : media.getCaption().getLinkedText() );
         Picasso.with( this )
