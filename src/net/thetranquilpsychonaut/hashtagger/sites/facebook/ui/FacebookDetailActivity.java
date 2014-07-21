@@ -15,7 +15,6 @@ import com.squareup.picasso.Picasso;
 import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.enums.Actions;
 import net.thetranquilpsychonaut.hashtagger.sites.facebook.retrofit.pojos.Post;
-import net.thetranquilpsychonaut.hashtagger.sites.ui.BaseActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SlidingUpPanelDetailActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
