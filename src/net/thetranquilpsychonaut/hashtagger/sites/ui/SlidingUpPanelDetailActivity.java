@@ -1,7 +1,6 @@
 package net.thetranquilpsychonaut.hashtagger.sites.ui;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ViewAnimator;
@@ -21,6 +20,7 @@ public abstract class SlidingUpPanelDetailActivity extends BaseActivity
     private SlidingUpPanelLayout slider;
     private ViewAnimator         vaButtonsActionsFragmentHolder;
     private FrameLayout          sitesActionsFragmentContainer;
+    private SitesActionsFragment sitesActionsFragment;
 
     protected SitesButtons sitesButtons;
 
@@ -36,9 +36,10 @@ public abstract class SlidingUpPanelDetailActivity extends BaseActivity
         vaButtonsActionsFragmentHolder.addView( sitesButtons, 0 );
         vaButtonsActionsFragmentHolder.setDisplayedChild( vaButtonsActionsFragmentHolder.indexOfChild( sitesButtons ) );
         sitesActionsFragmentContainer = ( FrameLayout ) findViewById( R.id.sites_actions_fragment_container );
+        sitesActionsFragment = initSitesActionsFragment();
         getSupportFragmentManager().beginTransaction()
-                .add( sitesActionsFragmentContainer.getId(),
-                        initSitesActionsFragment(),
+                .replace( sitesActionsFragmentContainer.getId(),
+                        sitesActionsFragment,
                         getSitesActionsFragmentTag() )
                 .commit();
         slider.setDragView( sitesButtons );
@@ -49,12 +50,14 @@ public abstract class SlidingUpPanelDetailActivity extends BaseActivity
             public void onPanelExpanded( View panel )
             {
                 vaButtonsActionsFragmentHolder.setDisplayedChild( vaButtonsActionsFragmentHolder.indexOfChild( sitesActionsFragmentContainer ) );
+                slider.setDragView( sitesActionsFragment.getSitesActionsPagerIndicator() );
             }
 
             @Override
             public void onPanelCollapsed( View panel )
             {
                 vaButtonsActionsFragmentHolder.setDisplayedChild( vaButtonsActionsFragmentHolder.indexOfChild( sitesButtons ) );
+                slider.setDragView( sitesButtons );
             }
         } );
     }
@@ -106,5 +109,5 @@ public abstract class SlidingUpPanelDetailActivity extends BaseActivity
 
     protected abstract String getSitesActionsFragmentTag();
 
-    protected abstract Fragment initSitesActionsFragment();
+    protected abstract SitesActionsFragment initSitesActionsFragment();
 }

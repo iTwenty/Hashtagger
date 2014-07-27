@@ -3,7 +3,6 @@ package net.thetranquilpsychonaut.hashtagger.sites.gplus.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +16,7 @@ import net.thetranquilpsychonaut.hashtagger.R;
 import net.thetranquilpsychonaut.hashtagger.enums.Actions;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Activity;
 import net.thetranquilpsychonaut.hashtagger.sites.gplus.retrofit.pojos.Thumbnail;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesActionsFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SlidingUpPanelDetailActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
@@ -97,7 +97,7 @@ public class GPlusDetailActivity extends SlidingUpPanelDetailActivity
     }
 
     @Override
-    protected Fragment initSitesActionsFragment()
+    protected SitesActionsFragment initSitesActionsFragment()
     {
         return GPlusActionsFragment.newInstance( activity, Actions.ACTION_GPLUS_ONE );
     }

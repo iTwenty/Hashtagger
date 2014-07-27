@@ -3,7 +3,6 @@ package net.thetranquilpsychonaut.hashtagger.sites.twitter.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewStub;
@@ -18,6 +17,7 @@ import net.thetranquilpsychonaut.hashtagger.events.TwitterFavoriteDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterReplyDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.events.TwitterRetweetDoneEvent;
 import net.thetranquilpsychonaut.hashtagger.sites.twitter.retrofit.pojos.Status;
+import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesActionsFragment;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SitesButtons;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.SlidingUpPanelDetailActivity;
 import net.thetranquilpsychonaut.hashtagger.sites.ui.ViewAlbumActivity;
@@ -93,7 +93,7 @@ public class TwitterDetailActivity extends SlidingUpPanelDetailActivity
     }
 
     @Override
-    protected Fragment initSitesActionsFragment()
+    protected SitesActionsFragment initSitesActionsFragment()
     {
         return TwitterActionsFragment.newInstance( status.isRetweet() ? status.getRetweetedStatus() : status, Actions.ACTION_TWITTER_RETWEET );
     }

@@ -68,6 +68,11 @@ public abstract class SitesActionsFragment extends DialogFragment
         HashtaggerApp.bus.unregister( this );
     }
 
+    public IconPagerIndicator getSitesActionsPagerIndicator()
+    {
+        return this.sitesActionsPagerIndicator;
+    }
+
     protected abstract int getSelectedAction();
 
     protected abstract class SitesActionsPagerAdapter extends PagerAdapter implements IconPagerAdapter
