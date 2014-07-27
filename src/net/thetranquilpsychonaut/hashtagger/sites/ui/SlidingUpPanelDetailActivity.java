@@ -36,13 +36,27 @@ public abstract class SlidingUpPanelDetailActivity extends BaseActivity
         vaButtonsActionsFragmentHolder.addView( sitesButtons, 0 );
         vaButtonsActionsFragmentHolder.setDisplayedChild( vaButtonsActionsFragmentHolder.indexOfChild( sitesButtons ) );
         sitesActionsFragmentContainer = ( FrameLayout ) findViewById( R.id.sites_actions_fragment_container );
-        sitesActionsFragment = initSitesActionsFragment();
-        getSupportFragmentManager().beginTransaction()
-                .replace( sitesActionsFragmentContainer.getId(),
-                        sitesActionsFragment,
-                        getSitesActionsFragmentTag() )
-                .commit();
-        slider.setDragView( sitesButtons );
+        if ( null == savedInstanceState )
+        {
+            sitesActionsFragment = initSitesActionsFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add( sitesActionsFragmentContainer.getId(),
+                            sitesActionsFragment,
+                            getSitesActionsFragmentTag() )
+                    .commit();
+        }
+        else
+        {
+            sitesActionsFragment = ( SitesActionsFragment ) getSupportFragmentManager().findFragmentByTag( getSitesActionsFragmentTag() );
+        }
+        if ( slider.isPanelExpanded() )
+        {
+            slider.setDragView( sitesActionsFragment.getSitesActionsPagerIndicator() );
+        }
+        else
+        {
+            slider.setDragView( sitesButtons );
+        }
         slider.setEnableDragViewTouchEvents( true );
         slider.setPanelSlideListener( new SlidingUpPanelLayout.SimplePanelSlideListener()
         {

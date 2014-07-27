@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import net.thetranquilpsychonaut.hashtagger.HashtaggerApp;
 import net.thetranquilpsychonaut.hashtagger.R;
+import net.thetranquilpsychonaut.hashtagger.utils.Helper;
 import net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerAdapter;
 import net.thetranquilpsychonaut.hashtagger.widgets.iconpagerindicator.IconPagerIndicator;
 
@@ -29,6 +30,14 @@ public abstract class SitesActionsFragment extends DialogFragment
     {
         super.onCreate( savedInstanceState );
         sitesActionsPagerAdapter = initSitesActionsPagerAdapter();
+        Helper.debug( "sitesActionsFragment created" );
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        Helper.debug( "sitesActionsFragment destroyed" );
     }
 
     protected abstract SitesActionsPagerAdapter initSitesActionsPagerAdapter();
