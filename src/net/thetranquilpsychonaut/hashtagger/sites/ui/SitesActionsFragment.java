@@ -30,14 +30,6 @@ public abstract class SitesActionsFragment extends DialogFragment
     {
         super.onCreate( savedInstanceState );
         sitesActionsPagerAdapter = initSitesActionsPagerAdapter();
-        Helper.debug( "sitesActionsFragment created" );
-    }
-
-    @Override
-    public void onDestroy()
-    {
-        super.onDestroy();
-        Helper.debug( "sitesActionsFragment destroyed" );
     }
 
     protected abstract SitesActionsPagerAdapter initSitesActionsPagerAdapter();
