@@ -271,7 +271,10 @@ public class SitesActivity extends NavDrawerActivity
         {
             for ( Fragment f : fragments )
             {
-                f.onActivityResult( requestCode, resultCode, data );
+                if ( null != f )
+                {
+                    f.onActivityResult( requestCode, resultCode, data );
+                }
             }
         }
     }
