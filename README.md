@@ -6,7 +6,7 @@ Hashtagger is an Android application that allows you to search your favorite soc
 
 This application was developed on Intellij IDEA. I don't know whether importing to Eclipse works or not.
 
-To get it running, you first need to configure the app on Twitter, Google+ and Facebook developer pages.
+To get it running, you first need to configure the app on Twitter, Google+, Instagram and Facebook developer pages.
 When done properly, you should have the following keys with you:
 
 
@@ -14,6 +14,9 @@ When done properly, you should have the following keys with you:
   - Consumer Key
   - Consumer Secret
 - Google+
+  - Client ID
+  - Client Secret
+- Instagram
   - Client ID
   - Client Secret
 - Facebook
@@ -46,6 +49,20 @@ public final class GPlusConfig
     public static final String GPLUS_OAUTH_CLIENT_ID     = "<GPLUS-CLIENT-ID>";
     public static final String GPLUS_OAUTH_CLIENT_SECRET = "<GPLUS-CLIENT-SECRET>";
     public static final String GPLUS_ACCESS_SCOPE        = "https://www.googleapis.com/auth/plus.login";
+}
+
+```
+
+### InstagramConfig.java
+
+```
+package net.thetranquilpsychonaut.hashtagger.config;
+
+public final class InstagramConfig
+{
+    public static final String INSTAGRAM_CLIENT_ID     = "<INSTAGRAM-CLIENT-ID>";
+    public static final String INSTAGRAM_CLIENT_SECRET = "<INSTAGRAM-CLIENT-SECRET>";
+    public static final String INSTAGRAM_SCOPE         = "likes";
 }
 
 ```
